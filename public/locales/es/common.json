@@ -17,7 +17,20 @@
     "open": "Abrir",
     "loading": "Cargando…",
     "search_placeholder": "Buscar…",
-    "not_found": "No encontrado"
+    "not_found": "No encontrado",
+    "dismiss": "Descartar",
+    "sending": "Enviando…",
+    "done": "Hecho",
+    "more": "Más",
+    "submit": "Enviar",
+    "send": "Enviar",
+    "restore": "Restaurar",
+    "discard": "Descartar",
+    "continue": "Continuar",
+    "retry": "Inténtalo de nuevo",
+    "less": "Menos",
+    "add": "Añadir",
+    "remove": "Eliminar"
   },
   "nav": {
     "overview": "Resumen",
@@ -38,7 +51,70 @@
     "signed_in_as": "Iniciado sesión como",
     "owner_tools": "Herramientas para propietarios",
     "test_accounts": "Cuentas de prueba",
-    "more": "Más"
+    "more": "Más",
+    "assistant": "Asistente",
+    "search": "Buscar"
+  },
+  "search_ui": {
+    "placeholder": "Buscar…",
+    "empty": "No hay resultados.",
+    "try_different": "Prueba con otra búsqueda.",
+    "group_students": "Estudiantes",
+    "group_sessions": "Sesiones",
+    "group_invoices": "Facturas",
+    "group_messages": "Mensajes"
+  },
+  "assistant": {
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "confirm_typed_button": "Confirmar",
+    "cancel": "Cancelar",
+    "placeholder": "Pregunta algo…",
+    "new_conversation": "Nueva conversación",
+    "conversations": "Conversaciones",
+    "thinking": "Pensando…",
+    "confirm_typed_label": "Escribe «confirmar» para continuar",
+    "execute": "Ejecutar",
+    "capability_title": "¿Qué puede hacer el asistente?",
+    "capability_close": "Entendido"
+  },
+  "notifications": {
+    "all": "Todas",
+    "dismiss": "Descartar",
+    "bell_label": "Notificaciones",
+    "empty": "Sin notificaciones.",
+    "unread": "No leído",
+    "mark_all_read": "Marcar todo como leído",
+    "mark_read": "Marcar como leído",
+    "see_all": "Ver todo →"
+  },
+  "quick_log": {
+    "log_session": "Registro de sesión",
+    "add_student": "Añadir alumno",
+    "label": "Inicio de sesión rápido",
+    "title": "Registra algo rápidamente",
+    "voice_note": "Nota de voz"
+  },
+  "support": {
+    "message": "Mensaje",
+    "send": "Enviar",
+    "close": "Cerrar",
+    "open_button": "¿Necesitas ayuda?",
+    "title": "Cuéntanos qué tal",
+    "subject": "Asunto",
+    "sent_title": "Entendido, gracias.",
+    "sent_body": "Te responderemos al correo electrónico de tu cuenta. Recibirás una respuesta en el plazo de un día laborable.",
+    "error": "No se ha podido enviar. Inténtalo de nuevo dentro de un momento."
+  },
+  "billing_gate": {
+    "cta_subscribe": "Suscríbete",
+    "trial_expired_title": "Tu periodo de prueba ha finalizado",
+    "trial_expired_body": "Suscríbete para seguir utilizando Crestio.",
+    "past_due_title": "La suscripción está vencida",
+    "past_due_body": "Actualiza tu método de pago para continuar.",
+    "canceled_title": "Suscripción cancelada",
+    "canceled_body": "Reactiva la cuenta para seguir trabajando.",
+    "cta_manage": "Gestionar la facturación"
   },
   "status": {
     "draft": "Borrador",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
-    "not_signed_in": "No has iniciado sesión."
+    "not_signed_in": "No has iniciado sesión.",
+    "rate_limited": "Demasiadas solicitudes. Inténtalo de nuevo dentro de un momento.",
+    "network": "Problema de red. Comprueba tu conexión."
+  },
+  "connectors": {
+    "at_time": "en",
+    "with_tutor": "con {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "Calendario",
+    "new_session": "Nueva sesión",
+    "today": "Hoy",
+    "week": "Semana",
+    "day": "Día",
+    "review": "Revisar →",
+    "pending_requests_one": "{{count}} Solicitud de los padres a la espera de tu respuesta",
+    "pending_requests_other": "{{count}} Solicitudes de los padres que esperan tu respuesta"
+  },
+  "voice_recorder": {
+    "start": "Empezar a grabar",
+    "stop": "Detener",
+    "recording": "Grabando…",
+    "transcribing": "Transcribiendo…",
+    "error": "No se ha podido transcribir. Inténtalo de nuevo."
+  },
+  "error_boundary": {
+    "title": "Se ha roto algo.",
+    "body": "Se ha producido un error inesperado en la página. Intenta actualizarla. Si el problema persiste, ponte en contacto con el servicio de asistencia.",
+    "reload": "Actualizar",
+    "contact_support": "Ponte en contacto con el servicio de asistencia"
   }
 }

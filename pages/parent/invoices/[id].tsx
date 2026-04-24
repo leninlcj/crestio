@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../../components/AuthGuardParent';
 import { supabase } from '../../../lib/supabase';
+import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
 type LineItem = {
   id: string;
@@ -33,29 +35,26 @@ type InvoiceData = {
   student: { id: string; name: string } | null;
 };
 
-function formatAud(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
-    style: 'currency', currency: 'AUD',
-    maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
-  }).format(cents / 100);
-}
-function fmtDate(d: string | null | undefined): string {
-  if (!d) return '—';
-  return new Date(d).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-function fmtDateTime(d: string | null): string {
-  if (!d) return '—';
-  return new Date(d).toLocaleString('en-AU', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
-}
-
 function ParentInvoiceDetailInner() {
+  const { t } = useTranslation('parent');
   const router = useRouter();
   const { id } = router.query;
+  const { formatMoney, formatDate, formatDateTime } = useLocaleFormatters();
   const [loading, setLoading] = useState(true);
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [legacySessions, setLegacySessions] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  const formatAud = (cents: number) => formatMoney(cents, 'AUD', { maximumFractionDigits: cents % 100 === 0 ? 0 : 2 });
+  const fmtDate = (d: string | null | undefined) => {
+    if (!d) return t('invoice_detail.em_dash');
+    return formatDate(d, { day: 'numeric', month: 'short', year: 'numeric' });
+  };
+  const fmtDateTime = (d: string | null) => {
+    if (!d) return t('invoice_detail.em_dash');
+    return formatDateTime(d, { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  };
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -66,7 +65,7 @@ function ParentInvoiceDetailInner() {
         .select('id, number, issued_on, due_on, total_cents, status, notes, billing_period_start, billing_period_end, is_batch_generated, household_id, student_id, household:households(id, display_name), student:students(id, name)')
         .eq('id', id)
         .maybeSingle();
-      if (invErr || !inv) { setError('Invoice not found.'); setLoading(false); return; }
+      if (invErr || !inv) { setError(t('invoice_detail.not_found')); setLoading(false); return; }
       setInvoice(inv as any);
 
       if ((inv as any).household_id) {
@@ -92,7 +91,7 @@ function ParentInvoiceDetailInner() {
           id: l.id,
           session_id: l.session_id,
           student_id: l.student_id,
-          student_name: studentById.get(l.student_id)?.name ?? '—',
+          student_name: studentById.get(l.student_id)?.name ?? t('invoice_detail.em_dash'),
           scheduled_at: sessionById.get(l.session_id)?.scheduled_at ?? null,
           duration_minutes: l.duration_minutes,
           subject: sessionById.get(l.session_id)?.subject ?? null,
@@ -114,6 +113,7 @@ function ParentInvoiceDetailInner() {
       }
       setLoading(false);
     })();
+
   }, [id]);
 
   const grouped = useMemo(() => {
@@ -125,11 +125,11 @@ function ParentInvoiceDetailInner() {
     }
     return Array.from(map.entries()).map(([sid, items]) => ({
       student_id: sid,
-      student_name: items[0]?.student_name ?? '—',
+      student_name: items[0]?.student_name ?? t('invoice_detail.em_dash'),
       items,
       subtotal: items.reduce((a, i) => a + i.amount_cents, 0),
     }));
-  }, [lineItems]);
+  }, [lineItems, t]);
 
   const overdue =
     invoice?.due_on && invoice.status !== 'paid' && invoice.status !== 'void' &&
@@ -141,23 +141,23 @@ function ParentInvoiceDetailInner() {
         <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>
         </Link>
-        <Link href="/parent/invoices" className="text-sm text-ink-muted hover:text-ink">← Invoices</Link>
+        <Link href="/parent/invoices" className="text-sm text-ink-muted hover:text-ink">{t('invoice_detail.back')}</Link>
       </nav>
 
       <main className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
         {loading ? (
-          <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+          <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
         ) : error || !invoice ? (
-          <div className="card p-6 text-sm text-claret">{error ?? 'Invoice not found.'}</div>
+          <div className="card p-6 text-sm text-claret">{error ?? t('invoice_detail.not_found')}</div>
         ) : (
           <>
             <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
               <div>
                 <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">
-                  Invoice {invoice.number}
+                  {t('invoice_detail.number_label', { number: invoice.number })}
                 </div>
                 <h1 className="font-display text-3xl tracking-tightest">
-                  {invoice.household?.display_name ?? invoice.student?.name ?? 'Invoice'}
+                  {invoice.household?.display_name ?? invoice.student?.name ?? t('invoice_detail.heading_fallback')}
                 </h1>
               </div>
               <div className="text-right">
@@ -172,7 +172,9 @@ function ParentInvoiceDetailInner() {
                     invoice.status === 'draft' ? 'badge-neutral' :
                     'badge-neutral'
                   }>
-                    {invoice.status === 'paid' ? 'Paid' : overdue ? 'Overdue' : invoice.status}
+                    {invoice.status === 'paid' ? t('invoice_detail.status_paid')
+                      : overdue ? t('invoice_detail.status_overdue')
+                      : invoice.status}
                   </span>
                 </div>
               </div>
@@ -180,26 +182,26 @@ function ParentInvoiceDetailInner() {
 
             <div className="card p-5 mb-6 grid grid-cols-2 gap-6 text-sm">
               <div>
-                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Issued</div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoice_detail.issued')}</div>
                 <div>{fmtDate(invoice.issued_on)}</div>
               </div>
               <div>
-                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Due</div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoice_detail.due')}</div>
                 <div>{fmtDate(invoice.due_on)}</div>
               </div>
               {invoice.billing_period_start && invoice.billing_period_end && (
                 <div className="col-span-2">
-                  <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Period</div>
+                  <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoice_detail.period')}</div>
                   <div>{fmtDate(invoice.billing_period_start)} – {fmtDate(invoice.billing_period_end)}</div>
                 </div>
               )}
             </div>
 
             <div className="card p-5 mb-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Sessions</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('invoice_detail.sessions')}</div>
               {invoice.household_id ? (
                 grouped.length === 0 ? (
-                  <div className="text-sm text-ink-muted">No line items.</div>
+                  <div className="text-sm text-ink-muted">{t('invoice_detail.no_line_items')}</div>
                 ) : (
                   <div className="space-y-5">
                     {grouped.map((g) => (
@@ -211,10 +213,10 @@ function ParentInvoiceDetailInner() {
                               <div className="min-w-0">
                                 <div className="text-sm text-ink">
                                   {fmtDateTime(l.scheduled_at)}
-                                  <span className="text-ink-soft text-2xs"> · {l.duration_minutes} min</span>
+                                  <span className="text-ink-soft text-2xs"> · {t('invoice_detail.minutes_suffix', { minutes: l.duration_minutes })}</span>
                                 </div>
                                 <div className="text-2xs text-ink-muted">
-                                  {[l.subject, l.topic].filter(Boolean).join(' · ') || 'Tutoring session'}
+                                  {[l.subject, l.topic].filter(Boolean).join(' · ') || t('invoice_detail.tutoring_session')}
                                 </div>
                               </div>
                               <div className="font-mono text-sm shrink-0">{formatAud(l.amount_cents)}</div>
@@ -222,14 +224,14 @@ function ParentInvoiceDetailInner() {
                           ))}
                         </ul>
                         <div className="text-right text-2xs text-ink-muted mt-2">
-                          Subtotal: <span className="font-mono text-sm text-ink">{formatAud(g.subtotal)}</span>
+                          {t('invoice_detail.subtotal')} <span className="font-mono text-sm text-ink">{formatAud(g.subtotal)}</span>
                         </div>
                       </div>
                     ))}
                   </div>
                 )
               ) : legacySessions.length === 0 ? (
-                <div className="text-sm text-ink-muted">No sessions on this invoice.</div>
+                <div className="text-sm text-ink-muted">{t('invoice_detail.no_sessions')}</div>
               ) : (
                 <ul className="divide-y divide-ruleSoft">
                   {legacySessions.map((s: any) => {
@@ -239,10 +241,10 @@ function ParentInvoiceDetailInner() {
                         <div className="min-w-0">
                           <div className="text-sm text-ink">
                             {fmtDateTime(s.scheduled_at)}
-                            <span className="text-ink-soft text-2xs"> · {s.duration_minutes} min</span>
+                            <span className="text-ink-soft text-2xs"> · {t('invoice_detail.minutes_suffix', { minutes: s.duration_minutes })}</span>
                           </div>
                           <div className="text-2xs text-ink-muted">
-                            {[s.subject, s.topic].filter(Boolean).join(' · ') || 'Tutoring session'}
+                            {[s.subject, s.topic].filter(Boolean).join(' · ') || t('invoice_detail.tutoring_session')}
                           </div>
                         </div>
                         <div className="font-mono text-sm shrink-0">{formatAud(amount)}</div>
@@ -255,13 +257,13 @@ function ParentInvoiceDetailInner() {
 
             {invoice.notes && (
               <div className="card p-5 mb-6">
-                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">Notes</div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('invoice_detail.notes')}</div>
                 <p className="text-sm text-ink whitespace-pre-wrap">{invoice.notes}</p>
               </div>
             )}
 
             <div className="flex justify-end">
-              <button onClick={() => window.print()} className="btn-secondary text-sm">Download / print</button>
+              <button onClick={() => window.print()} className="btn-secondary text-sm">{t('invoice_detail.download_print')}</button>
             </div>
           </>
         )}

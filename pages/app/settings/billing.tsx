@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import SettingsTabs from '../../../components/SettingsTabs';
@@ -9,31 +10,21 @@ import { useOrganization } from '../../../lib/organizationContext';
 import { useMembership } from '../../../lib/membershipContext';
 import { useBilling } from '../../../lib/billingContext';
 import { Badge } from '../../../components/design/Badge';
+import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
-function formatTrialDays(days: number | null | undefined): string {
-  if (days == null || days < 0) return '';
-  if (days === 0) return 'Less than a day';
-  if (days === 1) return '1 day';
-  return `${days} days`;
-}
-function formatDMY(iso: string | null | undefined): string | null {
-  if (!iso) return null;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-const PLAN_PRICE: Record<string, Record<string, { price: string; period: string }>> = {
-  solo: { monthly: { price: '$24 AUD', period: '/month' }, annual: { price: '$240 AUD', period: '/year' } },
-  team: { monthly: { price: '$59 AUD', period: '/month' }, annual: { price: '$590 AUD', period: '/year' } },
-  growth: { monthly: { price: '$129 AUD', period: '/month' }, annual: { price: '$1,290 AUD', period: '/year' } },
+const PLAN_PRICE_DOLLARS: Record<string, Record<string, number>> = {
+  solo: { monthly: 24, annual: 240 },
+  team: { monthly: 59, annual: 590 },
+  growth: { monthly: 129, annual: 1290 },
 };
 
 function BillingInner() {
+  const { t } = useTranslation('settings');
   const router = useRouter();
   const { organization } = useOrganization();
   const { membership } = useMembership();
   const { status, loading, error } = useBilling();
+  const { formatMoney, formatDate } = useLocaleFormatters();
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [toast, setToast] = useState<{ kind: 'success' | 'cancelled'; show: boolean } | null>(null);
@@ -51,16 +42,30 @@ function BillingInner() {
     setToast({ kind: q as 'success' | 'cancelled', show: true });
     const { billing, ...rest } = router.query;
     router.replace({ pathname: router.pathname, query: rest }, undefined, { shallow: true });
-    const fade = setTimeout(() => setToast((t) => (t ? { ...t, show: false } : null)), 5000);
+    const fade = setTimeout(() => setToast((tst) => (tst ? { ...tst, show: false } : null)), 5000);
     return () => clearTimeout(fade);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.billing]);
+
+  function formatTrialDays(days: number | null | undefined): string {
+    if (days == null || days < 0) return '';
+    if (days === 0) return t('billing.trial_days_zero');
+    if (days === 1) return t('billing.trial_days_one');
+    return t('billing.trial_days_other', { count: days });
+  }
+
+  function formatDMY(iso: string | null | undefined): string | null {
+    if (!iso) return null;
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return null;
+    return formatDate(d, { day: 'numeric', month: 'short', year: 'numeric' });
+  }
 
   async function startCheckout(plan?: 'solo' | 'team') {
     setBusy(true); setErr(null);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) { setErr('Not signed in.'); return; }
+      if (!session?.access_token) { setErr(t('common.not_signed_in')); return; }
       const body: any = {};
       if (plan) {
         body.plan = plan;
@@ -73,7 +78,7 @@ function BillingInner() {
       });
       const payload = await res.json().catch(() => ({}));
       if (!res.ok || !payload?.url) {
-        setErr(payload?.error ?? 'Could not start checkout. Please try again.');
+        setErr(payload?.error ?? t('billing.checkout_error'));
         return;
       }
       window.location.href = payload.url;
@@ -86,14 +91,14 @@ function BillingInner() {
     setBusy(true); setErr(null);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) { setErr('Not signed in.'); return; }
+      if (!session?.access_token) { setErr(t('common.not_signed_in')); return; }
       const res = await fetch('/api/billing/create-portal-session', {
         method: 'POST',
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       const payload = await res.json().catch(() => ({}));
       if (!res.ok || !payload?.url) {
-        setErr(payload?.error ?? 'Could not open the billing portal. Please try again.');
+        setErr(payload?.error ?? t('billing.portal_error'));
         return;
       }
       window.location.href = payload.url;
@@ -104,7 +109,7 @@ function BillingInner() {
 
   if (loading && !status) {
     return (
-      <Layout subtitle="Billing" title="Settings">
+      <Layout subtitle={t('tabs.billing')} title={t('page_title')}>
         <SettingsTabs />
         <div className="max-w-2xl">
           <div className="card p-8 animate-pulse space-y-3">
@@ -127,7 +132,13 @@ function BillingInner() {
 
   const planTier = organization?.plan_tier ?? 'solo';
   const billingInterval = organization?.billing_interval ?? 'monthly';
-  const priceDisplay = PLAN_PRICE[planTier]?.[billingInterval];
+  const planDollars = PLAN_PRICE_DOLLARS[planTier]?.[billingInterval];
+  const priceDisplay = planDollars
+    ? {
+        price: formatMoney(planDollars * 100, 'AUD', { maximumFractionDigits: 0 }),
+        period: billingInterval === 'monthly' ? t('billing.period_monthly') : t('billing.period_annual'),
+      }
+    : null;
 
   let headline: string = '';
   let tone: 'default' | 'warning' = 'default';
@@ -135,34 +146,39 @@ function BillingInner() {
 
   if (s === 'active') {
     headline = cancelAtEnd && periodEndDisplay
-      ? `Ending ${periodEndDisplay} — access continues until then`
-      : periodEndDisplay ? `Renews ${periodEndDisplay}` : 'Active';
+      ? t('billing.headline_ending', { date: periodEndDisplay })
+      : periodEndDisplay ? t('billing.headline_renews', { date: periodEndDisplay }) : t('billing.headline_active');
   } else if (s === 'trialing' && customerPresent && subPresent) {
     headline = trialEndsDisplay
-      ? `Free trial — converts on ${trialEndsDisplay}`
-      : 'Free trial';
+      ? t('billing.headline_trial_converts', { date: trialEndsDisplay })
+      : t('billing.headline_trial');
   } else if (s === 'trialing') {
-    if (daysLeft != null && daysLeft >= 0) headline = `Free trial — ${formatTrialDays(daysLeft)} left`;
-    else headline = 'Trial expired';
+    if (daysLeft != null && daysLeft >= 0) headline = t('billing.headline_trial_days', { days_left: formatTrialDays(daysLeft) });
+    else headline = t('billing.headline_trial_expired');
     showSubscribe = true;
   } else if (s === 'past_due') {
-    headline = 'Payment past due — update your card to keep access';
+    headline = t('billing.headline_past_due');
     tone = 'warning';
   } else if (s === 'canceled') {
-    headline = 'Cancelled';
+    headline = t('billing.headline_cancelled');
     showSubscribe = true;
   } else if (s === 'incomplete' || s === 'incomplete_expired' || s === 'unpaid') {
-    headline = 'Subscription issue';
+    headline = t('billing.headline_issue');
     tone = 'warning';
     showSubscribe = !customerPresent;
   } else if (s === 'paused') {
-    headline = 'Paused';
+    headline = t('billing.headline_paused');
   } else if (s) {
     headline = s;
   }
 
+  const tierLabel = planTier === 'solo' ? t('billing.plan_solo')
+    : planTier === 'team' ? t('billing.plan_team')
+    : t('billing.plan_growth');
+  const intervalLabel = billingInterval === 'monthly' ? t('billing.interval_monthly') : t('billing.interval_annual');
+
   return (
-    <Layout subtitle="Billing" title="Settings">
+    <Layout subtitle={t('tabs.billing')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
         {toast?.show && (
@@ -171,8 +187,8 @@ function BillingInner() {
             role="status"
           >
             {toast.kind === 'success'
-              ? 'Subscription confirmed.'
-              : 'Checkout was cancelled. Your card was not charged.'}
+              ? t('billing.toast_success')
+              : t('billing.toast_cancelled')}
           </div>
         )}
 
@@ -184,23 +200,27 @@ function BillingInner() {
           <div className="card p-8 space-y-5">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xs uppercase tracking-widest text-ink-muted">Current plan</span>
+                <span className="text-2xs uppercase tracking-widest text-ink-muted">{t('billing.current_plan')}</span>
                 <Badge variant={planTier === 'team' ? 'success' : 'neutral'}>
-                  {planTier === 'solo' ? 'Solo' : planTier === 'team' ? 'Team' : 'Growth'}
+                  {tierLabel}
                 </Badge>
               </div>
               <h2 className="font-display text-2xl tracking-tightest mb-1">
-                Crestio {planTier === 'solo' ? 'Solo' : planTier === 'team' ? 'Team' : 'Growth'}
+                {t('billing.tier_name', { tier: tierLabel })}
               </h2>
               {priceDisplay && (
                 <div className="text-sm text-ink-muted">
-                  {priceDisplay.price}<span className="text-ink-soft">{priceDisplay.period}</span> · billed {billingInterval}
+                  {t('billing.billed_line', {
+                    price: priceDisplay.price,
+                    period: priceDisplay.period,
+                    interval: intervalLabel,
+                  })}
                 </div>
               )}
             </div>
 
             <div className={['text-sm', tone === 'warning' ? 'text-claret' : 'text-ink-muted'].join(' ')}>
-              Status: <span className={tone === 'warning' ? 'text-claret font-medium' : 'text-ink font-medium'}>{headline}</span>
+              {t('billing.status_label')} <span className={tone === 'warning' ? 'text-claret font-medium' : 'text-ink font-medium'}>{headline}</span>
             </div>
 
             {err && <div className="text-sm text-claret">{err}</div>}
@@ -209,15 +229,15 @@ function BillingInner() {
               {!showSubscribe && customerPresent ? (
                 <>
                   <button type="button" onClick={openPortal} disabled={busy} className="btn-primary">
-                    {busy ? 'Redirecting…' : 'Manage billing →'}
+                    {busy ? t('billing.redirecting') : t('billing.manage')}
                   </button>
                   <button type="button" onClick={openPortal} disabled={busy} className="btn-secondary">
-                    Update payment method
+                    {t('billing.update_payment')}
                   </button>
                 </>
               ) : (
                 <button type="button" onClick={() => startCheckout()} disabled={busy} className="btn-primary">
-                  {busy ? 'Redirecting…' : s === 'canceled' ? 'Resubscribe' : 'Subscribe'}
+                  {busy ? t('billing.redirecting') : s === 'canceled' ? t('billing.resubscribe') : t('billing.subscribe')}
                 </button>
               )}
             </div>
@@ -226,18 +246,18 @@ function BillingInner() {
 
         <div className="card p-8 space-y-4">
           <div>
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Change plan</div>
-            <h2 className="font-display text-xl tracking-tightest">Switch tier or interval</h2>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('billing.change_plan_eyebrow')}</div>
+            <h2 className="font-display text-xl tracking-tightest">{t('billing.change_plan_heading')}</h2>
           </div>
 
           {billingInterval === 'monthly' && (
             <div className="flex items-center justify-between gap-4 p-4 border border-rule rounded">
               <div>
-                <div className="text-sm text-ink font-medium">Switch to annual billing</div>
-                <div className="text-xs text-ink-muted mt-0.5">Save 2 months vs monthly.</div>
+                <div className="text-sm text-ink font-medium">{t('billing.switch_to_annual')}</div>
+                <div className="text-xs text-ink-muted mt-0.5">{t('billing.switch_to_annual_note')}</div>
               </div>
               <Link href="/app/onboarding/plan?interval=annual" className="btn-secondary text-xs">
-                Switch to annual
+                {t('billing.switch_to_annual_cta')}
               </Link>
             </div>
           )}
@@ -245,11 +265,11 @@ function BillingInner() {
           {planTier === 'solo' && (
             <div className="flex items-center justify-between gap-4 p-4 border border-forest/30 bg-forest-soft/40 rounded">
               <div>
-                <div className="text-sm text-forest-ink font-medium">Upgrade to Team</div>
-                <div className="text-xs text-forest-ink/80 mt-0.5">Add tutors, manage payouts, invite your team.</div>
+                <div className="text-sm text-forest-ink font-medium">{t('billing.upgrade_team')}</div>
+                <div className="text-xs text-forest-ink/80 mt-0.5">{t('billing.upgrade_team_note')}</div>
               </div>
               <Link href="/app/onboarding/plan?plan=team" className="btn-primary text-xs">
-                Upgrade to Team
+                {t('billing.upgrade_team')}
               </Link>
             </div>
           )}
@@ -257,18 +277,18 @@ function BillingInner() {
           {planTier === 'team' && (
             <div className="flex items-center justify-between gap-4 p-4 border border-rule rounded">
               <div>
-                <div className="text-sm text-ink">Downgrade to Solo</div>
-                <div className="text-xs text-ink-muted mt-0.5">Applies at the end of your current billing cycle.</div>
+                <div className="text-sm text-ink">{t('billing.downgrade_solo')}</div>
+                <div className="text-xs text-ink-muted mt-0.5">{t('billing.downgrade_solo_note')}</div>
               </div>
               <button type="button" onClick={openPortal} disabled={busy} className="btn-ghost text-xs">
-                Manage in portal
+                {t('billing.manage_in_portal')}
               </button>
             </div>
           )}
         </div>
 
         <div className="text-2xs text-ink-soft pt-1">
-          Payments handled by Stripe. All prices in Australian Dollars, inclusive of GST where applicable.
+          {t('billing.gst_note')}
         </div>
       </div>
     </Layout>

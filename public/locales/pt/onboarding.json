@@ -1,0 +1,37 @@
+{
+  "setup": {
+    "saving": "Salvando…",
+    "kicker": "Configuração",
+    "heading": "Vamos criar sua empresa",
+    "intro": "Basta preencher alguns detalhes e pronto. Você pode alterar tudo isso mais tarde.",
+    "name_label": "Seu nome",
+    "name_placeholder": "por exemplo, Alex Morgan",
+    "business_label": "Nome da empresa",
+    "business_placeholder": "por exemplo, Morgan Tutoring",
+    "business_hint": "Aparece nas faturas e na parte superior do seu painel.",
+    "phone_label": "Telefone (opcional)",
+    "default_rate_label": "Taxa horária padrão",
+    "currency_label": "Moeda",
+    "session_expired": "A sessão expirou. Faça login novamente.",
+    "continue": "Continuar"
+  },
+  "plan": {
+    "sign_out": "Sair",
+    "monthly": "Mensal",
+    "annual": "Anual",
+    "not_signed_in": "Não está conectado.",
+    "kicker": "Escolha seu plano",
+    "heading": "Escolha o que melhor se adapta ao seu estilo de aulas particulares.",
+    "subheading": "Comece com um teste gratuito. Cancele a qualquer momento. Sem surpresas.",
+    "save_2_months": "Economize 2 meses",
+    "referral_discount": "{{discount}} — não é necessário inserir nenhum código. Aplica-se automaticamente assim que sua avaliação for convertida.",
+    "repeat_customer": "Bem-vindo de volta — sua conta será cobrada imediatamente após a inscrição, já que você já tinha uma conta anteriormente.",
+    "most_popular": "Mais populares",
+    "tier_name": "Crestio {{tier}}",
+    "contact_sales": "Entre em contato com o departamento de vendas",
+    "start_trial": "Comece um teste gratuito de {{days}} dias",
+    "redirecting": "Redirecionando…",
+    "checkout_error": "Não foi possível iniciar o checkout. Tente novamente.",
+    "footer_note": "Preços em AUD, incluindo GST, quando aplicável. Você pode alterar o plano ou cancelar a qualquer momento pelo portal de cobrança."
+  }
+}

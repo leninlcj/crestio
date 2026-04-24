@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "Tim",
+    "title": "Pengajar"
+  },
+  "table": {
+    "name": "Nama",
+    "subjects": "Mata pelajaran",
+    "students": "Siswa",
+    "em_dash": "—",
+    "linked_login": "Masuk melalui akun terhubung",
+    "pay_rate": "Tarif pembayaran",
+    "this_month": "Bulan ini",
+    "linked_yes": "Ya",
+    "linked_no": "Tidak"
+  },
+  "new": {
+    "page_subtitle": "Pengajar",
+    "email_label": "Email",
+    "phone_label": "Telepon",
+    "notes_label": "Catatan",
+    "saving": "Menyimpan…",
+    "cancel": "Batalkan",
+    "not_signed_in": "Belum masuk.",
+    "no_organization": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai.",
+    "page_title": "Tutor baru",
+    "name_label": "Nama *",
+    "subjects_label": "Mata pelajaran yang mereka ajarkan",
+    "subjects_placeholder": "Matematika, Kimia",
+    "subjects_hint": "Dipisahkan dengan koma.",
+    "pay_rate_label": "Tarif per jam",
+    "pay_rate_placeholder": "misalnya 55",
+    "submit": "Buat tutor"
+  },
+  "common": {
+    "loading": "Sedang dimuat…"
+  },
+  "actions": {
+    "add": "Tambahkan tutor",
+    "add_one": "Tambahkan tutor"
+  },
+  "empty": {
+    "title": "Belum ada tutor",
+    "description": "Tambahkan tutor saat Anda merekrut orang untuk mengajar di bisnis Anda. Jika Anda adalah tutor mandiri, Anda dapat melewati langkah ini."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "loading": "Cargando…"
+  },
+  "page": {
+    "subtitle": "Enseñanza",
+    "title": "Planes de clase"
+  },
+  "actions": {
+    "new": "Nuevo plan",
+    "generate": "Generar un plan"
+  },
+  "empty": {
+    "title": "Aún no hay planes de clase",
+    "description": "Crea uno con Claude en unos diez segundos y, a continuación, guárdalo, edítalo o reutilízalo."
+  },
+  "card": {
+    "ai_badge": "IA",
+    "unassigned": "Sin asignar"
+  }
+}

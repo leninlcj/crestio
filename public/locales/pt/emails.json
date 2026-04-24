@@ -12,5 +12,81 @@
     "manage_notifications": "Gerenciar notificações",
     "manage_notifications_text": "Gerenciar notificações: {{url}}",
     "footer_sender": "Do Crestio — software empresarial para tutores."
+  },
+  "message_received": {
+    "title": "Nova mensagem sobre {{student}}",
+    "body": "{{sender}} enviou uma mensagem para você. Abra o portal para ler e responder."
+  },
+  "message_urgent": {
+    "title": "Mensagem urgente de {{sender}} sobre {{student}}",
+    "body": "{{sender}} Marcou isso como urgente. Abra o portal para ler e responder."
+  },
+  "session_reminder_1h": {
+    "title": "Sessão com {{student}} em 1 hora",
+    "body": "{{student}} em {{time}}. {{duration}} min, {{subject}}."
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} tem aula particular amanhã",
+    "body": "Amanhã às {{time}}. {{duration}} min {{subject_suffix}}."
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "Novo horário: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "A sessão marcada para {{old_time}} foi cancelada."
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} solicitado o reagendamento da sessão d{{student}}",
+    "body": "Novo horário proposto: {{new_time}}. Verifique e aceite ou recuse no calendário."
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "Novo horário: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "A sessão mantém-se conforme programado."
+  },
+  "invoice_sent": {
+    "title": "Nova fatura {{number}} enviada pelo seu tutor",
+    "body": "{{student_or_household}} · {{session_count}} session {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "Fatura {{number}} marcada como paga",
+    "body": "Obrigado pelo pagamento."
+  },
+  "invoice_overdue": {
+    "title": "A fatura {{number}} está vencida há mais de 14 dias",
+    "body": "{{student}} · {{amount}} · prazo: {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} publicou uma atualização sobre {{student}}",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} marcado como concluído o dever de casa de {{student}}",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\nO prazo era {{due_date}}. Marque como concluído no portal quando terminar."
+  },
+  "tutor_invited": {
+    "title": "Você foi convidado para uma sessão de \"{{org}}\" no Crestio",
+    "body": "Clique no link deste e-mail para aceitar o convite e configurar sua conta."
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} entrou em {{org}}",
+    "body": "Agora eles têm acesso ao tutor e podem registrar as sessões."
+  },
+  "payment_failed": {
+    "title": "Seu pagamento no Crestio falhou",
+    "body": "Não foi possível cobrar no seu cartão. Atualize sua forma de pagamento para manter o acesso."
+  },
+  "trial_ending": {
+    "title": "Seu período de avaliação do Crestio termina em {{days}} dias",
+    "body": "Inscreva-se para manter o acesso às sessões, ao faturamento e ao assistente."
+  },
+  "subscription_cancelled": {
+    "title": "Sua assinatura do Crestio foi cancelada",
+    "body": "Você manterá o acesso até {{ends_on}}. Renove sua assinatura a qualquer momento em Configurações → Cobrança."
   }
 }

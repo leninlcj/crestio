@@ -1,44 +1,42 @@
 {
   "dashboard": {
-    "loading_error": "No se ha podido cargar tu panel de control.",
-    "this_week": "Esta semana",
-    "stats": {
-      "paid": "De pago",
-      "sessions_this_month": "Sesiones de este mes",
-      "sessions_this_year": "Sesiones de este año",
-      "outstanding": "Sobresaliente"
-    },
     "kicker": "Bienvenido",
     "greeting": "Hola, {{name}}",
     "greeting_fallback": "Tu panel de control",
+    "loading_error": "No se ha podido cargar tu panel de control.",
     "this_week_empty": "Esta semana no hay sesiones.",
-    "recent_updates": "Últimas novedades de tu tutor",
-    "your_children": "Tus hijos",
-    "at_a_glance": "De un vistazo",
     "no_access": "No tienes acceso.",
+    "this_week": "Esta semana",
+    "recent_updates": "Últimas novedades de tu tutor",
+    "your_children": "Sus hijos",
+    "at_a_glance": "De un vistazo",
+    "stats": {
+      "sessions_this_month": "Sesiones de este mes",
+      "sessions_this_year": "Sesiones de este año",
+      "paid": "De pago",
+      "outstanding": "Pendientes"
+    },
     "change_requested": "Solicitud de cambio"
   },
   "nav": {
+    "calendar": "Calendario",
     "messages": "Mensajes",
     "invoices": "Facturas",
-    "sign_out": "Cerrar sesión",
-    "calendar": "Calendario",
     "settings": "Configuración",
-    "all_children": "← Todos los niños"
+    "sign_out": "Cerrar sesión",
+    "all_children": "← Todos los niños",
+    "back_dashboard": "← Panel de control",
+    "back_messages": "← Mensajes",
+    "back_invoices": "← Facturas",
+    "back_settings": "← Ajustes"
+  },
+  "common": {
+    "loading": "Cargando…"
   },
   "student": {
     "loading": "Cargando…",
-    "next_session": "Próxima sesión",
-    "homework": {
-      "heading": "Deberes",
-      "overdue": "Vencido",
-      "mark_done": "Marcar como completado",
-      "undo": "Deshacer",
-      "done": "Hecho",
-      "pending": "Pendiente",
-      "no_homework": "Aún no se han asignado deberes."
-    },
     "student": "Estudiante",
+    "next_session": "Próxima sesión",
     "view_changes": "Ver / solicitar cambios →",
     "tabs": {
       "calendar": "calendario",
@@ -54,10 +52,161 @@
       "no_past": "Aún no hay sesiones anteriores.",
       "no_notes": "Aún no se han compartido notas para esta sesión."
     },
+    "homework": {
+      "heading": "Deberes",
+      "mark_done": "Marcar como completado",
+      "undo": "Deshacer",
+      "done": "Hecho",
+      "overdue": "Vencido",
+      "pending": "Pendiente",
+      "no_homework": "Aún no se han asignado deberes."
+    },
     "invoices": {
       "none": "Aún no hay facturas para este estudiante.",
       "payment_instructions": "Para realizar el pago, sigue las instrucciones que figuran en cada factura que te envíe tu tutor."
     },
     "updates_none": "Tu tutor aún no ha enviado ninguna actualización."
+  },
+  "calendar": {
+    "kicker": "Calendario",
+    "heading": "Esta semana",
+    "today": "Hoy",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "Facturas",
+    "due_label": "{{date}}",
+    "status_paid": "De pago",
+    "status_overdue": "Vencido",
+    "heading": "Tus facturas",
+    "empty": "Aún no hay facturas.",
+    "outstanding_eyebrow": "Pendientes",
+    "outstanding_note": "Para pagar, sigue las instrucciones que figuran en cada factura de tu tutor.",
+    "family_badge": "FAMILIA",
+    "issued_label": "Publicado el {{date}}"
+  },
+  "invoice_detail": {
+    "not_found": "No se ha encontrado la factura.",
+    "status_paid": "De pago",
+    "status_overdue": "Vencido",
+    "issued": "Emitidas",
+    "due": "A pagar",
+    "sessions": "Sesiones",
+    "back": "← Facturas",
+    "number_label": "Factura {{number}}",
+    "heading_fallback": "Factura",
+    "period": "Periodo",
+    "no_line_items": "No hay partidas.",
+    "no_sessions": "No hay sesiones en esta factura.",
+    "minutes_suffix": "{{minutes}} min",
+    "tutoring_session": "Sesión de tutoría",
+    "subtotal": "Subtotal:",
+    "notes": "Notas",
+    "download_print": "Descargar / imprimir",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "Mensajes",
+    "heading": "Tus mensajes"
+  },
+  "notifications_page": {
+    "kicker": "Notificaciones",
+    "heading": "Tus notificaciones"
+  },
+  "signin": {
+    "heading": "Iniciar sesión",
+    "email_label": "Correo electrónico",
+    "password_label": "Contraseña",
+    "submit": "Iniciar sesión",
+    "submitting": "Iniciando sesión…",
+    "kicker": "Portal para padres",
+    "forgot": "¿Ha olvidado su contraseña?",
+    "error_generic": "Error al iniciar sesión.",
+    "error_not_parent": "Este inicio de sesión es solo para padres. Si eres tutor, inicia sesión en /auth/signin.",
+    "forgot_need_email": "Introduce primero tu correo electrónico y, a continuación, pulsa en «Olvidé mi contraseña».",
+    "forgot_sent": "Comprueba tu correo electrónico para encontrar el enlace de restablecimiento.",
+    "invitation_hint": "¿Aún no has recibido una invitación de tu tutor? Pídele que te envíe una."
+  },
+  "settings_page": {
+    "heading": "Configuración",
+    "loading": "Cargando…",
+    "email_label": "Correo electrónico",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "saved": "Guardado.",
+    "new_password_label": "Nueva contraseña",
+    "updating": "Actualizando...",
+    "sign_out_heading": "Cerrar sesión",
+    "sign_out": "Cerrar sesión",
+    "kicker": "Cuenta",
+    "details_heading": "Tus datos",
+    "email_hint": "Ponte en contacto con tu tutor si necesitas cambiar tu dirección de correo electrónico.",
+    "name_label": "Nombre",
+    "change_password": "Cambiar contraseña",
+    "password_min": "Mínimo 8 caracteres.",
+    "password_too_short": "La contraseña debe tener al menos 8 caracteres.",
+    "password_updated": "Contraseña actualizada.",
+    "update_password": "Actualizar contraseña",
+    "sign_out_body": "Al cerrar sesión, se dará por finalizada esta sesión.",
+    "msg_notifs_heading": "Notificaciones de mensajes",
+    "msg_notifs_body": "Elige cuándo quieres que Crestio te envíe correos electrónicos. Los mensajes dentro de la aplicación aparecerán independientemente de ello.",
+    "msg_when_label": "Envíame un correo electrónico cuando mi tutor me envíe un mensaje",
+    "msg_when_hint": "Limitadas a un máximo de una vez cada 30 minutos por hilo.",
+    "msg_urgent_label": "Envíame un correo electrónico solo para mensajes urgentes",
+    "msg_urgent_hint": "Omitir correos electrónicos para mensajes normales o informativos."
+  },
+  "settings_notifications_page": {
+    "kicker": "Configuración",
+    "saved": "Guardado.",
+    "heading": "Notificaciones por correo electrónico",
+    "intro": "Las notificaciones dentro de la aplicación siempre aparecen, independientemente de estos ajustes. Estos solo controlan el envío de correos electrónicos.",
+    "toggles": {
+      "session_reminders": {
+        "label": "Recordatorios de sesión",
+        "description": "Te enviaremos un correo electrónico 24 horas antes de cada sesión programada."
+      },
+      "reschedule_events": {
+        "label": "Cambios de horario y cancelaciones",
+        "description": "Cuando tu tutor cambie o cancele una sesión."
+      },
+      "invoice_events": {
+        "label": "Notificaciones de facturas",
+        "description": "Cuando se envía una nueva factura."
+      },
+      "parent_updates": {
+        "label": "Actualizaciones de tu tutor",
+        "description": "Cuando su tutor publique una actualización en el portal sobre su hijo."
+      },
+      "messages_email": {
+        "label": "Mensajes de tu tutor",
+        "description": "Recibirás un correo electrónico cuando el tutor te envíe un mensaje. Limitado a una vez cada 30 minutos."
+      },
+      "messages_urgent_only": {
+        "label": "Solo mensajes urgentes",
+        "description": "Si está activada, se omitirán los correos electrónicos para mensajes normales o informativos."
+      }
+    }
+  },
+  "accept": {
+    "email_label": "Correo electrónico",
+    "name_label": "Tu nombre",
+    "creating": "Creando cuenta…",
+    "kicker": "Portal para padres",
+    "checking": "Comprobando la invitación…",
+    "missing_token": "A este enlace le falta el token de invitación.",
+    "verify_failed": "No se ha podido verificar la invitación. Inténtalo de nuevo más tarde.",
+    "invalid_heading": "Invitación no disponible",
+    "invalid_default": "Este enlace de invitación ya no es válido.",
+    "invalid_body_suffix": " Si se trata de un error, pide a tu tutor que te envíe una nueva invitación.",
+    "back_home": "Volver a la página de inicio",
+    "accept_heading": "Acepta tu invitación",
+    "accept_body": "{{tutor}} te ha invitado a ver las sesiones de tutoría de {{student}}.",
+    "email_hint": "De tu invitación. No se pueden cambiar aquí.",
+    "name_placeholder": "Opcional",
+    "password_label": "Crear contraseña",
+    "password_min": "Mínimo 8 caracteres.",
+    "password_too_short": "La contraseña debe tener al menos 8 caracteres.",
+    "create": "Crear cuenta de padre",
+    "create_failed": "No se ha podido crear la cuenta."
   }
 }

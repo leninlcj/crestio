@@ -64,8 +64,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const result = await createNotification(admin, {
           userId: uid,
           type: 'parent_update_posted',
-          title: `${studentName}'s homework is overdue`,
-          body: `${snippet}\n\nWas due ${dueLabel}. Mark it complete in the portal when done.`,
+          titleKey: 'parent_update_posted.homework_overdue_title',
+          bodyKey: 'parent_update_posted.homework_overdue_body',
+          templateVars: { student: studentName, snippet, due_date: dueLabel },
           linkUrl: `/parent/student/${studentId}?tab=homework`,
           context: { session_id: s.id, student_id: studentId },
           dedupeKey: `homework_overdue:${s.id}:${uid}:${today}`,

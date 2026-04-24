@@ -1,0 +1,37 @@
+{
+  "setup": {
+    "saving": "正在保存……",
+    "kicker": "设置",
+    "heading": "让我们来为您开设业务",
+    "intro": "只需填写几个信息，即可完成注册。这些信息日后均可修改。",
+    "name_label": "您的姓名",
+    "name_placeholder": "例如：Alex Morgan",
+    "business_label": "企业名称",
+    "business_placeholder": "例如：摩根家教",
+    "business_hint": "显示在发票上以及您的仪表盘顶部。",
+    "phone_label": "电话（可选）",
+    "default_rate_label": "默认小时费率",
+    "currency_label": "货币",
+    "session_expired": "会话已过期。请重新登录。",
+    "continue": "继续"
+  },
+  "plan": {
+    "sign_out": "注销",
+    "monthly": "每月",
+    "annual": "年度",
+    "not_signed_in": "尚未登录。",
+    "kicker": "选择您的套餐",
+    "heading": "请选择最符合您授课方式的选项。",
+    "subheading": "立即免费试用。随时取消。绝无隐藏费用。",
+    "save_2_months": "节省2个月",
+    "referral_discount": "{{discount}} — 无需输入代码。试用期结束后将自动生效。",
+    "repeat_customer": "欢迎回来——由于您之前已有账户，注册时将立即从您的卡中扣款。",
+    "most_popular": "最受欢迎",
+    "tier_name": "Crestio {{tier}}",
+    "contact_sales": "联系销售",
+    "start_trial": "立即开始{{days}}天免费试用",
+    "redirecting": "正在重定向……",
+    "checkout_error": "无法开始结账。请重试。",
+    "footer_note": "价格以澳元（AUD）计价，如适用，已包含商品及服务税（GST）。您可随时通过计费门户更改套餐或取消服务。"
+  }
+}

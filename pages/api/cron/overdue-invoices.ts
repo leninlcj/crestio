@@ -43,8 +43,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await createNotification(admin, {
         userId: inv.owner_id,
         type: 'invoice_overdue',
-        title: `Invoice ${inv.number} is more than 14 days overdue`,
-        body: `${inv.student?.name ?? 'A student'} · ${amount} · due ${inv.due_on}`,
+        titleKey: 'invoice_overdue.title',
+        bodyKey: 'invoice_overdue.body',
+        templateVars: {
+          number: inv.number,
+          student: inv.student?.name ?? 'A student',
+          amount,
+          due_date: inv.due_on,
+        },
         linkUrl: `/app/invoices/${inv.id}`,
         context: { invoice_id: inv.id, student_id: inv.student?.id },
         dedupeKey: `invoice_overdue_14d:${inv.id}`,

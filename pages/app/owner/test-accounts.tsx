@@ -4,6 +4,7 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
 import { isPlatformOwner } from '../../../lib/owner';
+import { activeLocale } from '../../../lib/utils';
 
 type Account = {
   user_id: string;
@@ -176,11 +177,11 @@ function OwnerTestAccountsInner() {
                     <td className="text-ink">{a.name ?? '—'}</td>
                     <td className="font-mono text-2xs text-ink-muted">{a.email}</td>
                     <td className="text-2xs text-ink-soft">
-                      {new Date(a.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                      {new Date(a.created_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
                     </td>
                     <td className="text-2xs text-ink-soft">
                       {a.last_login
-                        ? new Date(a.last_login).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })
+                        ? new Date(a.last_login).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })
                         : '—'}
                     </td>
                     <td className="text-right">
@@ -278,7 +279,7 @@ function OwnerTestAccountsInner() {
                     <span className="text-ink-soft"> · {acct?.role ?? 'unknown'}</span>
                   </div>
                   <div className="text-ink-soft text-2xs">
-                    {new Date(s.started_at).toLocaleString('en-AU', {
+                    {new Date(s.started_at).toLocaleString(activeLocale(), {
                       day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit',
                     })}
                     {s.ended_at && ' · ended'}

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "loading": "Chargement en cours…"
+  },
+  "page": {
+    "subtitle": "Enseignement",
+    "title": "Plans de cours"
+  },
+  "actions": {
+    "new": "Nouveau plan",
+    "generate": "Générer un plan"
+  },
+  "empty": {
+    "title": "Pas encore de plans de cours",
+    "description": "Créez-en un avec Claude en une dizaine de secondes, puis enregistrez-le, modifiez-le ou réutilisez-le."
+  },
+  "card": {
+    "ai_badge": "IA",
+    "unassigned": "Non attribué"
+  }
+}

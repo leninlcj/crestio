@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { supabase } from '../../../lib/supabase';
 import { Tutor } from '../../../lib/types';
-import { formatCents, initials, startOfMonth } from '../../../lib/utils';
+import { initials, startOfMonth } from '../../../lib/utils';
+import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
 type TutorWithExtras = Tutor & {
   assigned_student_count: number;
@@ -14,6 +16,8 @@ type TutorWithExtras = Tutor & {
 };
 
 function TutorsInner() {
+  const { t } = useTranslation('tutors');
+  const { formatMoney } = useLocaleFormatters();
   const [loading, setLoading] = useState(true);
   const [tutors, setTutors] = useState<TutorWithExtras[]>([]);
   const [currency, setCurrency] = useState('AUD');
@@ -38,7 +42,6 @@ function TutorsInner() {
         baseTutors = baseTutors.filter((t: any) => !t.auth_user_id || !testUserIds.has(t.auth_user_id));
       }
 
-      // Student counts per tutor.
       const { data: studentsForCount } = await supabase
         .from('students')
         .select('id, primary_tutor_id')
@@ -49,7 +52,6 @@ function TutorsInner() {
         studentCount.set(id, (studentCount.get(id) ?? 0) + 1);
       }
 
-      // This month's payouts per tutor (by tutor_user_id = auth_user_id).
       const monthStart = startOfMonth(new Date()).toISOString();
       const { data: monthSessions } = await supabase
         .from('sessions')
@@ -64,70 +66,73 @@ function TutorsInner() {
         payoutByUserId.set(s.tutor_user_id, (payoutByUserId.get(s.tutor_user_id) ?? 0) + payout);
       }
 
-      setTutors(baseTutors.map((t) => ({
-        ...t,
-        assigned_student_count: studentCount.get(t.id) ?? 0,
-        month_payout_cents: t.auth_user_id ? (payoutByUserId.get(t.auth_user_id) ?? 0) : 0,
+      setTutors(baseTutors.map((tu) => ({
+        ...tu,
+        assigned_student_count: studentCount.get(tu.id) ?? 0,
+        month_payout_cents: tu.auth_user_id ? (payoutByUserId.get(tu.auth_user_id) ?? 0) : 0,
       })));
       setLoading(false);
     })();
   }, []);
 
+  const formatAmount = (cents: number | null | undefined, showZero = false) =>
+    formatMoney(cents, currency, { showZero, maximumFractionDigits: 0 });
+
   return (
     <Layout
-      subtitle="Team"
-      title="Tutors"
-      actions={<Link href="/app/tutors/new" className="btn-primary">Add tutor</Link>}
+      subtitle={t('page.subtitle')}
+      title={t('page.title')}
+      actions={<Link href="/app/tutors/new" className="btn-primary">{t('actions.add')}</Link>}
     >
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       ) : tutors.length === 0 ? (
         <EmptyState
-          title="No tutors yet"
-          description="Add tutors when you bring people on to teach for your business. If you're a solo tutor, you can skip this."
-          action={<Link href="/app/tutors/new" className="btn-primary">Add a tutor</Link>}
+          title={t('empty.title')}
+          description={t('empty.description')}
+          action={<Link href="/app/tutors/new" className="btn-primary">{t('actions.add_one')}</Link>}
         />
       ) : (
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Subjects</th>
-                <th>Linked login</th>
-                <th className="text-right">Students</th>
-                <th className="text-right">Pay rate</th>
-                <th className="text-right">This month</th>
+                <th>{t('table.name')}</th>
+                <th>{t('table.subjects')}</th>
+                <th>{t('table.linked_login')}</th>
+                <th className="text-right">{t('table.students')}</th>
+                <th className="text-right">{t('table.pay_rate')}</th>
+                <th className="text-right">{t('table.this_month')}</th>
               </tr>
             </thead>
             <tbody>
-              {tutors.map((t) => (
-                <tr key={t.id} className="row-link"
-                  onClick={() => window.location.assign(`/app/tutors/${t.id}`)}>
+              {tutors.map((tu) => (
+                <tr key={tu.id} className="row-link"
+                  onClick={() => window.location.assign(`/app/tutors/${tu.id}`)}>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-full bg-forest text-cream grid place-items-center text-2xs font-mono font-medium">
-                        {initials(t.name)}
+                        {initials(tu.name)}
                       </div>
-                      <div className="text-ink font-medium">{t.name}</div>
+                      <div className="text-ink font-medium">{tu.name}</div>
                     </div>
                   </td>
                   <td className="text-ink-muted">
-                    {t.subjects && t.subjects.length > 0 ? t.subjects.join(', ') : '—'}
+                    {tu.subjects && tu.subjects.length > 0 ? tu.subjects.join(', ') : t('table.em_dash')}
                   </td>
                   <td>
-                    {t.auth_user_id
-                      ? <span className="text-2xs uppercase tracking-widest text-forest">Yes</span>
-                      : <span className="text-2xs uppercase tracking-widest text-ink-soft">No</span>}
+                    {tu.auth_user_id
+                      ? <span className="text-2xs uppercase tracking-widest text-forest">{t('table.linked_yes')}</span>
+                      : <span className="text-2xs uppercase tracking-widest text-ink-soft">{t('table.linked_no')}</span>}
                   </td>
                   <td className="text-right font-mono num text-sm text-ink-muted">
-                    {t.assigned_student_count}
+                    {tu.assigned_student_count}
                   </td>
                   <td className="text-right font-mono num text-sm">
-                    {formatCents(t.pay_rate_cents, currency)}
+                    {formatAmount(tu.pay_rate_cents)}
                   </td>
                   <td className="text-right font-mono num text-sm">
-                    {t.auth_user_id ? formatCents(t.month_payout_cents, currency, { showZero: true }) : '—'}
+                    {tu.auth_user_id ? formatAmount(tu.month_payout_cents, true) : t('table.em_dash')}
                   </td>
                 </tr>
               ))}

@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "Cancelar",
+    "new": "+ Nuevo hogar",
+    "create": "Crear",
+    "creating": "Creando…"
+  },
+  "filters": {
+    "active": "Activo",
+    "archived": "Archivado",
+    "search_placeholder": "Buscar hogar, padre, estudiante…"
+  },
+  "common": {
+    "loading": "Cargando…",
+    "load_failed": "No se han podido cargar los hogares.",
+    "create_failed": "No se ha podido crear el hogar.",
+    "apply_failed": "No se ha podido aplicar la sugerencia."
+  },
+  "card": {
+    "archived_badge": "Archivado",
+    "students_one": "{{count}} estudiante",
+    "students_other": "{{count}} estudiantes",
+    "parent_label_fallback": "Padre",
+    "needs_primary": "Necesita un progenitor principal",
+    "no_students": "No hay estudiantes",
+    "parents_one": "{{count}} padre",
+    "parents_other": "{{count}} padres",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "Descartar",
+    "fallback_parent": "un progenitor compartido",
+    "question_existing": "{{students}} compartir {{parent}}. ¿Agruparlos en un solo hogar?",
+    "question_new": "{{students}} compartir {{parent}}. ¿Agruparlos en un nuevo hogar?",
+    "accept": "Grupo →"
+  },
+  "page": {
+    "subtitle": "Personas",
+    "title": "Hogares"
+  },
+  "form": {
+    "name_label": "Nombre del hogar",
+    "name_placeholder": "p. ej., la familia Chen"
+  },
+  "empty": {
+    "none": "Aún no hay hogares",
+    "archived_none": "No hay hogares archivados",
+    "description": "Un hogar agrupa a los hermanos bajo un único contacto de facturación. Cuando vinculas a un padre o madre con un alumno, se crea automáticamente un hogar.",
+    "create": "Crear un hogar"
+  }
+}

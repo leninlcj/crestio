@@ -1,39 +1,162 @@
 {
+  "subtitle": "Personnes",
+  "subtitle_student": "Étudiant",
+  "title_list": "Les élèves",
+  "title_new": "Nouvel élève",
   "title_loading": "…",
   "title_not_available": "Non disponible",
   "title_not_found": "Introuvable",
   "actions": {
     "add": "Ajouter un élève",
+    "new_cta": "Nouvel élève",
     "edit": "Modifier",
+    "log_session": "Journal de session",
     "archive": "Archives",
     "unarchive": "Réactiver",
-    "delete": "Supprimer",
-    "new_cta": "Nouvel élève",
-    "log_session": "Journal de session"
-  },
-  "loading": "Chargement en cours…",
-  "tabs": {
-    "sessions": "Séances",
-    "homework": "Devoirs",
-    "record": "Dossier",
-    "track": "Suivi"
-  },
-  "subtitle": "Personnes",
-  "title_list": "Les élèves",
-  "title_new": "Nouvel élève",
-  "filters": {
-    "active": "Actif",
-    "archived": "Archivé"
+    "delete": "Supprimer"
   },
   "empty": {
     "no_students": "Pas encore d'élèves",
     "no_archived": "Aucun élève archivé",
     "description_owner": "Ajoutez votre premier élève pour commencer à suivre les séances et à établir la facturation.",
     "description_tutor": "Le responsable de votre organisation vous attribuera des élèves.",
-    "no_tutor_record": "Aucun élève n'a encore été affecté",
     "show_archived": "Les anciens élèves apparaissent ici.",
-    "add_first": "Ajouter un élève"
+    "add_first": "Ajouter un élève",
+    "no_tutor_record": "Aucun étudiant n'a encore été affecté"
   },
+  "loading": "Chargement en cours…",
   "denied": "Vous n'avez pas accès à cet élève. Demandez au responsable de votre organisation de vous l'attribuer.",
-  "not_found": "Cet élève n'existe pas, ou vous n'y avez pas accès."
+  "not_found": "Cet élève n'existe pas, ou vous n'y avez pas accès.",
+  "tabs": {
+    "sessions": "Séances",
+    "homework": "Devoirs",
+    "record": "Dossier",
+    "track": "Suivi"
+  },
+  "columns": {
+    "name": "Nom",
+    "year": "Année",
+    "subjects": "Matières",
+    "parent": "Parents",
+    "rate": "Tarif"
+  },
+  "cards": {
+    "contact": "Contact",
+    "billing": "Facturation",
+    "notes_heading": "Remarques",
+    "assigned_saved": "Enregistré.",
+    "contact_parent": "Parent : ",
+    "contact_email": "E-mail : ",
+    "contact_phone": "Téléphone : ",
+    "no_contact": "Aucun contact avec les parents pour l'instant.",
+    "academic": "Études",
+    "year": "Année : ",
+    "school": "Établissement : ",
+    "subjects": "Matières : ",
+    "rate": "Tarif : ",
+    "rate_per_hour": " / h",
+    "lifetime": "À vie : ",
+    "sessions": "Sessions : ",
+    "assigned_tutor": "Tuteur attitré",
+    "unassigned_option": "Non attribué (géré directement par le propriétaire)",
+    "assigned_tutor_hint": "Seuls les tuteurs ayant accepté leur invitation apparaissent ici."
+  },
+  "new_form": {
+    "notes": "Remarques",
+    "save": "Ajouter un élève",
+    "cancel": "Annuler",
+    "name_required": "Nom *",
+    "name_placeholder": "par exemple, Sam Chen",
+    "year_level": "Niveau scolaire",
+    "year_level_placeholder": "par exemple, en 10e année",
+    "school": "École",
+    "school_placeholder": "par exemple, le lycée pour garçons de Sydney",
+    "subjects": "Matières (séparées par des virgules)",
+    "subjects_placeholder": "par exemple, mathématiques, physique",
+    "parent_name": "Nom du parent",
+    "parent_phone": "Numéro de téléphone des parents",
+    "parent_email": "Adresse e-mail des parents",
+    "hourly_rate": "Tarif horaire",
+    "saving": "Ajout en cours…"
+  },
+  "parent_access": {
+    "pending_heading": "En attente",
+    "inviting": "Envoi en cours…",
+    "kicker": "Accès parents",
+    "heading": "Qui peut voir les notes de cet étudiant ?",
+    "none_yet": "Aucun parent n'est encore associé ou invité.",
+    "linked_heading": "Liens",
+    "invited_when": "{{when}}s invités",
+    "revoke": "Révoquer l'accès",
+    "revoke_confirm": "Supprimer l'accès de ce parent ? Il ne verra plus aucune session.",
+    "cancel_invitation": "Annuler l'invitation",
+    "parent_email": "Adresse e-mail des parents",
+    "parent_email_placeholder": "parent@example.com",
+    "invite": "Inviter un parent",
+    "invitation_sent": "Invitation envoyée à {{email}}.",
+    "invitation_created": "Invitation créée.",
+    "invitation_share_hint": "Partagez ce lien avec le parent s'il ne reçoit pas l'e-mail :"
+  },
+  "sessions_heading": {
+    "kicker": "Dossier",
+    "heading": "Séances",
+    "new": "Nouvelle session"
+  },
+  "homework_heading": {
+    "heading": "Devoirs",
+    "mark_as_done": "Marquer comme terminé",
+    "completed": "Terminé",
+    "overdue": "En retard",
+    "due_label": "{{date}}",
+    "kicker": "Suivi",
+    "none": "Aucun devoir n'a encore été attribué. Ajoutez les devoirs lors de l'enregistrement d'une session.",
+    "marking": "Marquage…",
+    "due_today": "À payer aujourd'hui",
+    "due_tomorrow": "À payer demain",
+    "due_in_days_one": "Échéance dans un délai d'{{count}}",
+    "due_in_days_other": "Échéance dans {{count}} jours",
+    "marked_complete_on": "Marqué comme terminé sur {{date}}"
+  },
+  "from_last_session": {
+    "hours_ago_one": "Il y a 1 heure",
+    "hours_ago_other": "{{count}} il y a quelques heures",
+    "days_ago_one": "Il y a 1 jour",
+    "days_ago_other": "{{count}} il y a quelques jours",
+    "kicker": "Depuis la dernière session",
+    "covered_prefix": "Ce que vous avez vu la dernière fois : ",
+    "homework_done": "✓ Devoirs terminés : {{description}}",
+    "homework_overdue": "⚠ Devoirs en retard : {{description}}",
+    "homework_assigned": "Devoirs à faire : ",
+    "homework_due_parens": " ({{date}} à venir)",
+    "planned_for_today": "Au programme aujourd'hui : ",
+    "open_last_session": "Ouvrir la dernière session →",
+    "log_new_session": "Enregistrer une nouvelle session avec ce contexte →",
+    "yesterday": "hier",
+    "earlier_today": "plus tôt dans la journée"
+  },
+  "household": {
+    "kicker": "Ménage",
+    "remove": "Supprimer",
+    "loading": "Chargement en cours…",
+    "not_in_household": "N'appartient pas à un ménage.",
+    "billing_note": " · la facturation regroupe les frères et sœurs",
+    "assign": "Attribuer un foyer",
+    "change": "Modifier",
+    "remove_confirm": "Souhaitez-vous retirer cet étudiant du foyer ? Il reste dans l'organisation.",
+    "pick_placeholder": "Choisissez un foyer…"
+  },
+  "subtitle_archived": "Anciens étudiants",
+  "filters": {
+    "active": "Actifs",
+    "archived": "Archives"
+  },
+  "filter_banner": {
+    "homework_pending": "Affichage des étudiants ayant des devoirs en attente.",
+    "clear_filter": "Effacer le filtre"
+  },
+  "search_placeholder": "Rechercher par nom, établissement, parent…",
+  "test_pill": "TEST",
+  "delete_confirm": "Supprimer définitivement {{name}} ? Cela supprimera également toutes leurs sessions. Cette action est irréversible.",
+  "archive_confirm_archive": "Archiver {{name}} ? Vous pouvez les désarchiver ultérieurement.",
+  "archive_confirm_restore": "Restaurer l'{{name}} ?"
 }

@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "Team",
+    "title": "Tutors"
+  },
+  "actions": {
+    "add": "Add tutor",
+    "add_one": "Add a tutor"
+  },
+  "empty": {
+    "title": "No tutors yet",
+    "description": "Add tutors when you bring people on to teach for your business. If you're a solo tutor, you can skip this."
+  },
+  "table": {
+    "name": "Name",
+    "subjects": "Subjects",
+    "linked_login": "Linked login",
+    "students": "Students",
+    "pay_rate": "Pay rate",
+    "this_month": "This month",
+    "linked_yes": "Yes",
+    "linked_no": "No",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "Tutors",
+    "page_title": "New tutor",
+    "name_label": "Name *",
+    "email_label": "Email",
+    "phone_label": "Phone",
+    "subjects_label": "Subjects they teach",
+    "subjects_placeholder": "Maths, Chemistry",
+    "subjects_hint": "Comma separated.",
+    "pay_rate_label": "Pay rate per hour",
+    "pay_rate_placeholder": "e.g. 55",
+    "notes_label": "Notes",
+    "submit": "Create tutor",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "not_signed_in": "Not signed in.",
+    "no_organization": "No organisation is linked to your account. Contact support@crestio.ai."
+  },
+  "common": {
+    "loading": "Loading…"
+  }
+}

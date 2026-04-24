@@ -1,44 +1,42 @@
 {
   "dashboard": {
-    "loading_error": "آپ کا ڈیش بورڈ لوڈ نہیں ہو سکا۔",
-    "this_week": "اس ہفتے",
-    "stats": {
-      "paid": "ادائیگی شدہ",
-      "sessions_this_month": "اس ماہ کے سیشنز",
-      "sessions_this_year": "اس سال کے سیشنز",
-      "outstanding": "شاندار"
-    },
     "kicker": "خیرمقدم",
     "greeting": "ہیلو {{name}}",
     "greeting_fallback": "آپ کا ڈیش بورڈ",
+    "loading_error": "آپ کا ڈیش بورڈ لوڈ نہیں ہو سکا۔",
     "this_week_empty": "اس ہفتے کوئی سیشن نہیں۔",
-    "recent_updates": "آپ کے ٹیوٹر کی جانب سے تازہ ترین اپ ڈیٹس",
+    "no_access": "آپ کے پاس رسائی نہیں ہے۔",
+    "this_week": "اس ہفتے",
+    "recent_updates": "آپ کے ٹیوٹر کی تازہ ترین اپ ڈیٹس",
     "your_children": "آپ کے بچے",
     "at_a_glance": "ایک نظر میں",
-    "no_access": "آپ کے پاس رسائی نہیں ہے۔",
-    "change_requested": "درخواست کردہ تبدیلی"
+    "stats": {
+      "sessions_this_month": "اس ماہ کے سیشنز",
+      "sessions_this_year": "اس سال کے سیشنز",
+      "paid": "ادائیگی شدہ",
+      "outstanding": "بہترین"
+    },
+    "change_requested": "تبدیلی کی درخواست"
   },
   "nav": {
+    "calendar": "کلینڈر",
     "messages": "پیغامات",
     "invoices": "انوائسز",
-    "sign_out": "سائن آؤٹ",
-    "calendar": "کلینڈر",
     "settings": "ترتیبات",
-    "all_children": "← تمام بچے"
+    "sign_out": "سائن آؤٹ",
+    "all_children": "← تمام بچے",
+    "back_dashboard": "← ڈیش بورڈ",
+    "back_messages": "← پیغامات",
+    "back_invoices": "← انوائسز",
+    "back_settings": "← ترتیبات"
+  },
+  "common": {
+    "loading": "لوڈ ہو رہا ہے…"
   },
   "student": {
     "loading": "لوڈ ہو رہا ہے…",
-    "next_session": "اگلا سیشن",
-    "homework": {
-      "heading": "گھر کا کام",
-      "overdue": "باقی ماندہ",
-      "mark_done": "پورا ہونے کے طور پر نشان لگائیں",
-      "undo": "واپس",
-      "done": "مکمل",
-      "pending": "معطل",
-      "no_homework": "ابھی تک کوئی ہوم ورک نہیں دیا گیا۔"
-    },
     "student": "طالب علم",
+    "next_session": "اگلا سیشن",
     "view_changes": "تبدیلیاں دیکھیں / درخواست کریں →",
     "tabs": {
       "calendar": "کیلنڈر",
@@ -54,10 +52,161 @@
       "no_past": "ابھی تک کوئی پچھلے سیشنز نہیں ہیں۔",
       "no_notes": "اس سیشن کے لیے ابھی تک کوئی نوٹس شیئر نہیں کیے گئے۔"
     },
+    "homework": {
+      "heading": "گھر کا کام",
+      "mark_done": "پورا ہونے کے طور پر نشان لگائیں",
+      "undo": "واپس",
+      "done": "مکمل",
+      "overdue": "باقی ماندہ",
+      "pending": "معطل",
+      "no_homework": "ابھی تک کوئی ہوم ورک نہیں دیا گیا۔"
+    },
     "invoices": {
       "none": "اس طالب علم کے لیے ابھی تک کوئی انوائس نہیں ہے۔",
       "payment_instructions": "ادائیگی کے لیے، براہِ کرم اپنے ٹیوٹر کی جانب سے بھیجی گئی ہر انوائس پر دی گئی ہدایات پر عمل کریں۔"
     },
     "updates_none": "آپ کے ٹیوٹر کی جانب سے ابھی تک کوئی اپ ڈیٹ نہیں۔"
+  },
+  "calendar": {
+    "kicker": "کلینڈر",
+    "heading": "اس ہفتے",
+    "today": "آج",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "انوائسز",
+    "due_label": "جمع کروائیں: {{date}}",
+    "status_paid": "ادائیگی شدہ",
+    "status_overdue": "باقی ماندہ",
+    "heading": "آپ کے انوائسز",
+    "empty": "ابھی تک کوئی انوائس نہیں۔",
+    "outstanding_eyebrow": "بہترین",
+    "outstanding_note": "ادائیگی کے لیے اپنے ٹیوٹر کی جانب سے بھیجی گئی ہر انوائس پر دی گئی ہدایات پر عمل کریں۔",
+    "family_badge": "خاندان",
+    "issued_label": "جاری کٔرنہٕ آمُت{{date}}"
+  },
+  "invoice_detail": {
+    "not_found": "انوائس نہیں ملا۔",
+    "status_paid": "ادائیگی شدہ",
+    "status_overdue": "باقی ماندہ",
+    "issued": "جاری کردہ",
+    "due": " واجب الادا",
+    "sessions": "سیشنز",
+    "back": "← انوائسز",
+    "number_label": "انوائس {{number}}",
+    "heading_fallback": "انوائس",
+    "period": "دورانیہ",
+    "no_line_items": "کوئی لائن آئٹمز نہیں۔",
+    "no_sessions": "اس انوائس پر کوئی سیشن نہیں ہیں۔",
+    "minutes_suffix": "{{minutes}} منٹ",
+    "tutoring_session": "ٹوٹیورنگ سیشن",
+    "subtotal": "جزوی مجموعی:",
+    "notes": "نوٹس",
+    "download_print": "ڈاؤن لوڈ / پرنٹ",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "پیغامات",
+    "heading": "آپ کے پیغامات"
+  },
+  "notifications_page": {
+    "kicker": "اطلاعات",
+    "heading": "آپ کی اطلاعات"
+  },
+  "signin": {
+    "heading": "سائن ان",
+    "email_label": "ای میل",
+    "password_label": "پاس ورڈ",
+    "submit": "سائن ان",
+    "submitting": "داخل ہو رہے ہیں…",
+    "kicker": "والدین کا پورٹل",
+    "forgot": "پاس ورڈ بھول گئے؟",
+    "error_generic": "سائن ان ناکام رہا۔",
+    "error_not_parent": "یہ سائن ان صرف والدین کے لیے ہے۔ اگر آپ ٹیوٹر ہیں تو /auth/signin پر سائن ان کریں۔",
+    "forgot_need_email": "سب سے پہلے اپنا ای میل درج کریں، پھر 'پاس ورڈ بھول گئے' پر ٹیپ کریں۔",
+    "forgot_sent": "اپنا ای میل چیک کریں اور ری سیٹ لنک حاصل کریں۔",
+    "invitation_hint": "کیا آپ کو ابھی تک اپنے ٹیوٹر کی طرف سے دعوت نامہ موصول نہیں ہوا؟ ان سے کہیں کہ ایک بھیج دیں۔"
+  },
+  "settings_page": {
+    "heading": "ترتیبات",
+    "loading": "لوڈ ہو رہا ہے…",
+    "email_label": "ای میل",
+    "save": "محفوظ کریں",
+    "saving": "محفوظ کر رہے ہیں…",
+    "saved": "محفوظ ہو گیا۔",
+    "new_password_label": "نیا پاس ورڈ",
+    "updating": "اپ ڈیٹ ہو رہا ہے…",
+    "sign_out_heading": "سائن آؤٹ",
+    "sign_out": "سائن آؤٹ",
+    "kicker": "اکاؤنٹ",
+    "details_heading": "آپ کی تفصیلات",
+    "email_hint": "اگر آپ کی ای میل تبدیل کروانی ہو تو اپنے ٹیوٹر سے رابطہ کریں۔",
+    "name_label": "نام",
+    "change_password": "پاس ورڈ تبدیل کریں",
+    "password_min": "کم از کم 8 حروف۔",
+    "password_too_short": "پاس ورڈ کم از کم 8 حروف پر مشتمل ہونا چاہیے۔",
+    "password_updated": "پاس ورڈ اپ ڈیٹ کر دیا گیا۔",
+    "update_password": "اپنا پاس ورڈ اپ ڈیٹ کریں",
+    "sign_out_body": "سائن آؤٹ کرنے سے یہ سیشن ختم ہو جائے گا۔",
+    "msg_notifs_heading": "پیغام کی اطلاعیں",
+    "msg_notifs_body": "منتخب کریں کہ Crestio آپ کو کب ای میل بھیجے۔ ایپ کے اندر پیغامات بہرحال ظاہر ہوتے ہیں۔",
+    "msg_when_label": "جب میرا ٹیوٹر مجھے پیغام بھیجے تو مجھے ای میل کریں",
+    "msg_when_hint": "فی تھریڈ زیادہ سے زیادہ ہر 30 منٹ میں ایک بار محدود کیا گیا ہے۔",
+    "msg_urgent_label": "مجھے صرف ہنگامی پیغامات کے لیے ای میل کریں",
+    "msg_urgent_hint": "عام یا معلوماتی پیغامات کے لیے ای میلز کو چھوڑیں۔"
+  },
+  "settings_notifications_page": {
+    "kicker": "ترتیبات",
+    "saved": "محفوظ ہو گیا۔",
+    "heading": "ای میل اطلاعات",
+    "intro": "ایپ کے اندر نوٹیفیکیشنز ان ٹوگلز سے قطع نظر ہمیشہ ظاہر ہوتی ہیں۔ یہ صرف ای میل کی ترسیل کو کنٹرول کرتی ہیں۔",
+    "toggles": {
+      "session_reminders": {
+        "label": "سیشن کی یاد دہانیاں",
+        "description": "ہر شیڈول شدہ سیشن سے 24 گھنٹے قبل آپ کو ای میل بھیجی جائے گی۔"
+      },
+      "reschedule_events": {
+        "label": "دوبارہ شیڈول اور منسوخی",
+        "description": "جب آپ کا ٹیوٹر کسی سیشن کو تبدیل یا منسوخ کرتا ہے۔"
+      },
+      "invoice_events": {
+        "label": "انوائس اطلاعات",
+        "description": "جب نیا انوائس بھیجا جاتا ہے۔"
+      },
+      "parent_updates": {
+        "label": "آپ کے ٹیوٹر کی جانب سے تازہ کاریاں",
+        "description": "جب آپ کا ٹیوٹر آپ کے بچے کے بارے میں پورٹل پر اپ ڈیٹ پوسٹ کرتا ہے۔"
+      },
+      "messages_email": {
+        "label": "آپ کے ٹیوٹر کے پیغامات",
+        "description": "جب ٹیوٹر آپ کو پیغام بھیجے تو آپ کو ای میل بھیجی جائے۔ ہر 30 منٹ میں ایک بار محدود کیا گیا ہے۔"
+      },
+      "messages_urgent_only": {
+        "label": "صرف فوری پیغامات",
+        "description": "اگر آن ہو تو عام یا معلوماتی پیغامات کے لیے ای میلز کو نظر انداز کریں۔"
+      }
+    }
+  },
+  "accept": {
+    "email_label": "ای میل",
+    "name_label": "آپ کا نام",
+    "creating": "اکاؤنٹ بنا رہے ہیں…",
+    "kicker": "والدین کا پورٹل",
+    "checking": "دعوت نامہ چیک کیا جا رہا ہے…",
+    "missing_token": "اس لنک میں دعوت نامے کا ٹوکن موجود نہیں ہے۔",
+    "verify_failed": "دعوت نامہ کی تصدیق نہیں ہو سکی۔ براہ کرم بعد میں دوبارہ کوشش کریں۔",
+    "invalid_heading": "دعوت نامہ دستیاب نہیں ہے",
+    "invalid_default": "یہ دعوت نامہ کا لنک اب مزید معتبر نہیں ہے۔",
+    "invalid_body_suffix": " اگر یہ غلطی ہے تو اپنے ٹیوٹر سے نیا دعوت نامہ بھیجنے کو کہیں۔",
+    "back_home": "گھر واپس",
+    "accept_heading": "اپنی دعوت قبول کریں",
+    "accept_body": "{{tutor}} نے آپ کو {{student}} کے ٹیوٹرنگ سیشنز دیکھنے کی دعوت دی ہے۔",
+    "email_hint": "آپ کی دعوت نامہ سے۔ یہاں تبدیل نہیں کیا جا سکتا۔",
+    "name_placeholder": "اختیاری",
+    "password_label": "پاس ورڈ بنائیں",
+    "password_min": "کم از کم 8 حروف۔",
+    "password_too_short": "پاس ورڈ کم از کم 8 حروف پر مشتمل ہونا چاہیے۔",
+    "create": "والدین کا اکاؤنٹ بنائیں",
+    "create_failed": "اکاؤنٹ نہیں بنایا جا سکا۔"
   }
 }

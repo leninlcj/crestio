@@ -1,3 +1,4 @@
+import { activeLocale } from '../../lib/utils';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -403,7 +404,7 @@ export function WeekAheadCard({
 
   // Day-strip labels come from Intl — no hardcoded "M T W..." array.
   // Week starts Monday, so shift Sun-indexed Intl output.
-  const narrowFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en-AU' : locale, { weekday: 'narrow' });
+  const narrowFmt = new Intl.DateTimeFormat(locale === 'en' ? activeLocale() : locale, { weekday: 'narrow' });
   const dayLabels = (() => {
     // Seed with a known Monday (2024-01-01 is a Monday) and walk forward.
     const base = new Date(Date.UTC(2024, 0, 1));

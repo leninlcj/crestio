@@ -187,8 +187,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await createNotification(admin, {
           userId: parent.auth_user_id as string,
           type: urgency === 'urgent' ? 'message_urgent' : 'message_received',
-          title: `New message from ${tutorName} about ${studentName}`,
-          body: previewOfBody(messageBody, 140),
+          titleKey: urgency === 'urgent' ? 'message_urgent.title' : 'message_received.title',
+          bodyKey: urgency === 'urgent' ? 'message_urgent.body' : 'message_received.body',
+          templateVars: { sender: tutorName, student: studentName },
           linkUrl: `/parent/messages/${threadId}`,
           context: { thread_id: threadId, student_id: studentId, sender_user_id: userId, urgency },
           emailOverride: false, // notifyOther() handles email via Session 13E's throttling
@@ -202,8 +203,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await createNotification(admin, {
         userId: tutorUserId,
         type: 'message_received',
-        title: `New message from ${parentName} about ${studentName}`,
-        body: previewOfBody(messageBody, 140),
+        titleKey: 'message_received.title',
+        bodyKey: 'message_received.body',
+        templateVars: { sender: parentName, student: studentName },
         linkUrl: `/app/messages/${threadId}`,
         context: { thread_id: threadId, student_id: studentId, sender_user_id: userId },
         emailOverride: false,

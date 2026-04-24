@@ -124,25 +124,25 @@ function NewStudentInner() {
         <form onSubmit={onSubmit} className="card p-8 space-y-5">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Name *</label>
+              <label className="label">{t('students:new_form.name_required')}</label>
               <input
                 type="text" required autoFocus
                 value={form.name} onChange={(e) => update('name', e.target.value)}
-                className="input" placeholder="e.g. Sam Chen"
+                className="input" placeholder={t('students:new_form.name_placeholder')}
               />
             </div>
             <div>
-              <label className="label">Year level</label>
+              <label className="label">{t('students:new_form.year_level')}</label>
               <input
                 type="text"
                 value={form.year_level} onChange={(e) => update('year_level', e.target.value)}
-                className="input" placeholder="e.g. Year 11"
+                className="input" placeholder={t('students:new_form.year_level_placeholder')}
               />
             </div>
           </div>
 
           <div>
-            <label className="label">School</label>
+            <label className="label">{t('students:new_form.school')}</label>
             <input
               type="text"
               value={form.school} onChange={(e) => update('school', e.target.value)}
@@ -151,20 +151,19 @@ function NewStudentInner() {
           </div>
 
           <div>
-            <label className="label">Subjects</label>
+            <label className="label">{t('students:new_form.subjects')}</label>
             <input
               type="text"
               value={form.subjects} onChange={(e) => update('subjects', e.target.value)}
-              className="input" placeholder="Maths Advanced, Physics"
+              className="input" placeholder={t('students:new_form.subjects_placeholder')}
             />
-            <div className="text-2xs text-ink-soft mt-1.5">Comma separated.</div>
           </div>
 
           <div className="pt-2 border-t border-ruleSoft">
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3 mt-4">Parent / guardian</div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3 mt-4">{t('students:cards.contact')}</div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="label">Name</label>
+                <label className="label">{t('students:new_form.parent_name')}</label>
                 <input
                   type="text"
                   value={form.parent_name} onChange={(e) => update('parent_name', e.target.value)}
@@ -172,7 +171,7 @@ function NewStudentInner() {
                 />
               </div>
               <div>
-                <label className="label">Phone</label>
+                <label className="label">{t('students:new_form.parent_phone')}</label>
                 <input
                   type="tel"
                   value={form.parent_phone} onChange={(e) => update('parent_phone', e.target.value)}
@@ -181,7 +180,7 @@ function NewStudentInner() {
               </div>
             </div>
             <div className="mt-4">
-              <label className="label">Email</label>
+              <label className="label">{t('students:new_form.parent_email')}</label>
               <input
                 type="email"
                 value={form.parent_email} onChange={(e) => update('parent_email', e.target.value)}
@@ -192,25 +191,22 @@ function NewStudentInner() {
 
           <div className="pt-2 border-t border-ruleSoft">
             <div className="mt-4">
-              <label className="label">Hourly rate</label>
+              <label className="label">{t('students:new_form.hourly_rate')}</label>
               <input
                 type="number" min="0" step="1"
                 value={form.hourly_rate} onChange={(e) => update('hourly_rate', e.target.value)}
                 className="input"
-                placeholder={defaultRate ? `Default: ${defaultRate / 100}` : 'e.g. 80'}
+                placeholder={defaultRate ? String(defaultRate / 100) : ''}
               />
-              <div className="text-2xs text-ink-soft mt-1.5">
-                Leave blank to use your default rate.
-              </div>
             </div>
           </div>
 
           <div>
-            <label className="label">Notes</label>
+            <label className="label">{t('students:new_form.notes')}</label>
             <textarea
               rows={3}
               value={form.notes} onChange={(e) => update('notes', e.target.value)}
-              className="input" placeholder="Learning style, goals, things to remember…"
+              className="input"
             />
           </div>
 
@@ -218,9 +214,9 @@ function NewStudentInner() {
 
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? 'Saving…' : 'Create student'}
+              {loading ? t('students:new_form.saving') : t('students:new_form.save')}
             </button>
-            <Link href="/app/students" className="btn-ghost">Cancel</Link>
+            <Link href="/app/students" className="btn-ghost">{t('students:new_form.cancel')}</Link>
           </div>
         </form>
       </div>

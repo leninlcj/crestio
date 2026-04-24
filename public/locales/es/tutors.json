@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "Equipo",
+    "title": "Tutores"
+  },
+  "table": {
+    "name": "Nombre",
+    "subjects": "Asignaturas",
+    "students": "Estudiantes",
+    "em_dash": "—",
+    "linked_login": "Inicio de sesión vinculado",
+    "pay_rate": "Tarifa",
+    "this_month": "Este mes",
+    "linked_yes": "Sí",
+    "linked_no": "No"
+  },
+  "new": {
+    "page_subtitle": "Tutores",
+    "email_label": "Correo electrónico",
+    "phone_label": "Teléfono",
+    "notes_label": "Notas",
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "not_signed_in": "No has iniciado sesión.",
+    "no_organization": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai.",
+    "page_title": "Nuevo tutor",
+    "name_label": "Nombre *",
+    "subjects_label": "Asignaturas que imparten",
+    "subjects_placeholder": "Matemáticas, Química",
+    "subjects_hint": "Separados por comas.",
+    "pay_rate_label": "Tarifa por hora",
+    "pay_rate_placeholder": "p. ej. 55",
+    "submit": "Crear tutor"
+  },
+  "common": {
+    "loading": "Cargando…"
+  },
+  "actions": {
+    "add": "Añadir tutor",
+    "add_one": "Añadir un tutor"
+  },
+  "empty": {
+    "title": "Aún no hay tutores",
+    "description": "Añade tutores cuando contrates a personas para que impartan clases en tu empresa. Si eres un tutor autónomo, puedes saltarte este paso."
+  }
+}

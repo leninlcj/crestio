@@ -1,4 +1,21 @@
 // -----------------------------------------------------------------------------
+// Locale resolution — every formatter reads the active UI locale from the
+// <html lang> attribute (set by lib/i18n.ts when the user changes language).
+// Falls back to 'en-AU' on the server or before init.
+// -----------------------------------------------------------------------------
+const LOCALE_DEFAULTS: Record<string, string> = {
+  en: 'en-AU', es: 'es-419', zh: 'zh-Hans-CN', hi: 'hi-IN', ar: 'ar-SA',
+  fr: 'fr-FR', bn: 'bn-BD', pt: 'pt-BR', id: 'id-ID', ur: 'ur-PK',
+};
+
+export function activeLocale(): string {
+  if (typeof document === 'undefined') return 'en-AU';
+  const raw = (document.documentElement.lang || 'en').toLowerCase();
+  if (raw.includes('-')) return raw;
+  return LOCALE_DEFAULTS[raw] ?? raw;
+}
+
+// -----------------------------------------------------------------------------
 // Currency
 // -----------------------------------------------------------------------------
 export function formatCents(
@@ -8,7 +25,7 @@ export function formatCents(
 ): string {
   if (cents === null || cents === undefined) return '—';
   if (cents === 0 && !opts.showZero) return '—';
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat(activeLocale(), {
     style: 'currency',
     currency,
     maximumFractionDigits: 0,
@@ -16,7 +33,7 @@ export function formatCents(
 }
 
 export function formatCentsDetailed(cents: number, currency = 'AUD'): string {
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat(activeLocale(), {
     style: 'currency',
     currency,
   }).format(cents / 100);
@@ -39,13 +56,13 @@ export function centsToDollars(cents: number | null | undefined): string {
 export function formatDate(iso: string | null | undefined, opts?: Intl.DateTimeFormatOptions): string {
   if (!iso) return '—';
   const d = new Date(iso);
-  return d.toLocaleDateString('en-AU', opts ?? { day: 'numeric', month: 'short', year: 'numeric' });
+  return d.toLocaleDateString(activeLocale(), opts ?? { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export function formatDateTime(iso: string | null | undefined): string {
   if (!iso) return '—';
   const d = new Date(iso);
-  return d.toLocaleString('en-AU', {
+  return d.toLocaleString(activeLocale(), {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -57,12 +74,12 @@ export function formatDateTime(iso: string | null | undefined): string {
 export function formatTime(iso: string | null | undefined): string {
   if (!iso) return '—';
   const d = new Date(iso);
-  return d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+  return d.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' });
 }
 
 export function formatDayLong(iso: string): string {
   const d = new Date(iso);
-  return d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
+  return d.toLocaleDateString(activeLocale(), { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
 export function relativeDay(iso: string): string {

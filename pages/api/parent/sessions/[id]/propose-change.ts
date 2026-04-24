@@ -125,8 +125,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await createNotification(admin, {
       userId: session.tutor_user_id,
       type: 'reschedule_requested',
-      title,
-      body: bodyParts.join('\n'),
+      titleKey: 'reschedule_requested.title',
+      bodyKey: 'reschedule_requested.body',
+      templateVars: {
+        parent: parentName,
+        student: studentName,
+        new_time: newWhen ?? oldWhen,
+      },
       linkUrl: `/app/sessions/${sessionId}`,
       context: { session_id: sessionId, kind, proposed_new_start_time: newWhen },
       dedupeKey: `reschedule_requested:${sessionId}:${new Date().toISOString()}`,

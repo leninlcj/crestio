@@ -1,25 +1,19 @@
 {
+  "kicker": "Hari ini",
+  "loading_error": "Tidak dapat memuat dasbor Anda.",
   "trial_banner": {
-    "dismiss": "Tutup",
     "days_left_one": "Anda memiliki sisa 1 hari masa uji coba.",
     "days_left_other": "Anda masih memiliki {{count}} hari tersisa dalam masa uji coba Anda.",
-    "subscribe": "Berlangganan"
+    "subscribe": "Berlangganan",
+    "dismiss": "Tutup"
   },
   "sections": {
     "next_up": {
-      "open": "Buka",
       "kicker": "Sesi berikutnya",
       "kicker_soon": "Segera dimulai",
+      "open": "Buka",
       "reschedule": "Jadwalkan ulang",
       "log_notes": "Catatan harian"
-    },
-    "reschedules": {
-      "open": "Buka",
-      "kicker": "Butuh tanggapan Anda",
-      "title_one": "{{count}} Permintaan penjadwalan ulang sedang menunggu",
-      "title_other": "{{count}} permintaan penjadwalan ulang yang sedang menunggu",
-      "accept": "Setuju",
-      "reject": "Tolak"
     },
     "polish": {
       "kicker": "Perlu diperbaiki",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} keluarga saat ini memiliki sesi yang belum ditagih",
       "title_other": "{{count}} keluarga-keluarga saat ini memiliki sesi yang belum ditagih",
       "total_uninvoiced": "Total yang belum ditagih: {{amount}}",
-      "cta": "Tagih semuanya →"
+      "cta": "Tagih semuanya →",
+      "student_count_one": "{{count}} siswa",
+      "student_count_other": "{{count}} siswa"
+    },
+    "reschedules": {
+      "kicker": "Butuh tanggapan Anda",
+      "title_one": "{{count}} Permintaan penjadwalan ulang sedang menunggu",
+      "title_other": "{{count}} permintaan penjadwalan ulang yang sedang menunggu",
+      "accept": "Setuju",
+      "reject": "Tolak",
+      "open": "Buka",
+      "row_description": "{{parent}} usulan penundaan sesi yang dijadwalkan untuk {{student}}.",
+      "row_original": "Asli:",
+      "row_proposed": "Usulan:"
     },
     "week_ahead": {
       "kicker": "Minggu ini",
@@ -59,6 +66,7 @@
       "add_student": "Tambahkan siswa →"
     }
   },
-  "kicker": "Hari ini",
-  "loading_error": "Tidak dapat memuat dasbor Anda."
+  "greeting_morning": "Selamat pagi, {{name}}",
+  "greeting_afternoon": "Selamat siang, {{name}}",
+  "greeting_evening": "Selamat malam, {{name}}"
 }

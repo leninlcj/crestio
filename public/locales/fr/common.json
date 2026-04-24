@@ -17,7 +17,20 @@
     "open": "Ouvrir",
     "loading": "Chargement en cours…",
     "search_placeholder": "Rechercher…",
-    "not_found": "Introuvable"
+    "not_found": "Introuvable",
+    "dismiss": "Ignorer",
+    "sending": "Envoi en cours…",
+    "done": "Terminé",
+    "more": "Plus",
+    "submit": "Envoyer",
+    "send": "Envoyer",
+    "restore": "Restaurer",
+    "discard": "Ignorer",
+    "continue": "Continuer",
+    "retry": "Réessayer",
+    "less": "Moins",
+    "add": "Ajouter",
+    "remove": "Supprimer"
   },
   "nav": {
     "overview": "Aperçu",
@@ -38,7 +51,70 @@
     "signed_in_as": "Connecté en tant que",
     "owner_tools": "Outils pour les propriétaires",
     "test_accounts": "Comptes d'essai",
-    "more": "Plus"
+    "more": "Plus",
+    "assistant": "Assistant",
+    "search": "Rechercher"
+  },
+  "search_ui": {
+    "placeholder": "Rechercher…",
+    "empty": "Aucun résultat.",
+    "try_different": "Essayez une autre recherche.",
+    "group_students": "Étudiants",
+    "group_sessions": "Séances",
+    "group_invoices": "Factures",
+    "group_messages": "Messages"
+  },
+  "assistant": {
+    "send": "Envoyer",
+    "sending": "Envoi en cours…",
+    "confirm_typed_button": "Confirmer",
+    "cancel": "Annuler",
+    "placeholder": "Posez une question…",
+    "new_conversation": "Nouvelle conversation",
+    "conversations": "Conversations",
+    "thinking": "Je réfléchis…",
+    "confirm_typed_label": "Tapez « confirm » pour continuer",
+    "execute": "Exécuter",
+    "capability_title": "Que peut faire l'assistant ?",
+    "capability_close": "D'accord"
+  },
+  "notifications": {
+    "all": "Tout",
+    "dismiss": "Ignorer",
+    "bell_label": "Notifications",
+    "empty": "Aucune notification.",
+    "unread": "Non lu",
+    "mark_all_read": "Marquer tout comme lu",
+    "mark_read": "Marquer comme lu",
+    "see_all": "Tout voir →"
+  },
+  "quick_log": {
+    "log_session": "Journal de session",
+    "add_student": "Ajouter un élève",
+    "label": "Connexion rapide",
+    "title": "Enregistrer rapidement une information",
+    "voice_note": "Note vocale"
+  },
+  "support": {
+    "message": "Message",
+    "send": "Envoyer",
+    "close": "Fermer",
+    "open_button": "Besoin d'aide ?",
+    "title": "Dites-nous ce qui se passe",
+    "subject": "Objet",
+    "sent_title": "D'accord, merci.",
+    "sent_body": "Nous répondrons à l'e-mail associé à votre compte. Vous recevrez une réponse dans un délai d'un jour ouvrable.",
+    "error": "L'envoi a échoué. Veuillez réessayer dans quelques instants."
+  },
+  "billing_gate": {
+    "cta_subscribe": "S'abonner",
+    "trial_expired_title": "Votre période d'essai est terminée",
+    "trial_expired_body": "Abonnez-vous pour continuer à utiliser Crestio.",
+    "past_due_title": "L'abonnement est en retard",
+    "past_due_body": "Mettez à jour votre mode de paiement pour continuer.",
+    "canceled_title": "Abonnement résilié",
+    "canceled_body": "Réactivez-le pour continuer à travailler.",
+    "cta_manage": "Gérer la facturation"
   },
   "status": {
     "draft": "Brouillon",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "Une erreur s'est produite. Veuillez réessayer.",
-    "not_signed_in": "Vous n'êtes pas connecté."
+    "not_signed_in": "Vous n'êtes pas connecté.",
+    "rate_limited": "Trop de requêtes. Veuillez réessayer dans quelques instants.",
+    "network": "Problème de réseau. Vérifiez votre connexion."
+  },
+  "connectors": {
+    "at_time": "à",
+    "with_tutor": "avec {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "Calendrier",
+    "new_session": "Nouvelle session",
+    "today": "Aujourd'hui",
+    "week": "Semaine",
+    "day": "Jour",
+    "review": "Consulter →",
+    "pending_requests_one": "{{count}} Demande parentale en attente de votre réponse",
+    "pending_requests_other": "{{count}} Demandes des parents en attente de votre réponse"
+  },
+  "voice_recorder": {
+    "start": "Commencer l'enregistrement",
+    "stop": "Arrêter",
+    "recording": "Enregistrement…",
+    "transcribing": "Transcription en cours…",
+    "error": "Impossible de transcrire cela — veuillez réessayer."
+  },
+  "error_boundary": {
+    "title": "Quelque chose s'est cassé.",
+    "body": "Une erreur inattendue s'est produite. Veuillez actualiser la page. Si le problème persiste, contactez le service d'assistance.",
+    "reload": "Actualiser",
+    "contact_support": "Contacter le service d'assistance"
   }
 }

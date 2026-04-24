@@ -1,0 +1,51 @@
+{
+  "page": {
+    "subtitle": "People",
+    "title": "Households"
+  },
+  "actions": {
+    "new": "+ New household",
+    "cancel": "Cancel",
+    "create": "Create",
+    "creating": "Creating…"
+  },
+  "form": {
+    "name_label": "Household name",
+    "name_placeholder": "e.g. Chen family"
+  },
+  "filters": {
+    "search_placeholder": "Search household, parent, student…",
+    "active": "Active",
+    "archived": "Archived"
+  },
+  "empty": {
+    "none": "No households yet",
+    "archived_none": "No archived households",
+    "description": "A household groups siblings under one billing contact. When you link a parent to a student, a household is created automatically.",
+    "create": "Create a household"
+  },
+  "common": {
+    "loading": "Loading…",
+    "load_failed": "Could not load households.",
+    "create_failed": "Could not create household.",
+    "apply_failed": "Could not apply suggestion."
+  },
+  "card": {
+    "archived_badge": "Archived",
+    "parent_label_fallback": "Parent",
+    "needs_primary": "Needs a primary parent",
+    "no_students": "No students",
+    "students_one": "{{count}} student",
+    "students_other": "{{count}} students",
+    "parents_one": "{{count}} parent",
+    "parents_other": "{{count}} parents",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "fallback_parent": "a shared parent",
+    "question_existing": "{{students}} share {{parent}}. Group them into one household?",
+    "question_new": "{{students}} share {{parent}}. Group them into a new household?",
+    "accept": "Group →",
+    "dismiss": "Dismiss"
+  }
+}

@@ -1,15 +1,15 @@
 {
   "subtitle": "Messages",
-  "loading": "Chargement en cours…",
-  "compose": {
-    "sending": "Envoi en cours…",
-    "placeholder": "Écrivez un message…",
-    "send": "Envoyer"
-  },
   "title_list": "Messages",
   "title_thread": "Message",
+  "loading": "Chargement en cours…",
   "empty": {
     "no_threads": "Aucun message pour l'instant.",
     "no_messages": "Il n'y a pas encore de messages dans ce fil de discussion."
+  },
+  "compose": {
+    "placeholder": "Écrivez un message…",
+    "send": "Envoyer",
+    "sending": "Envoi en cours…"
   }
 }

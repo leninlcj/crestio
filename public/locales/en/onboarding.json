@@ -1,0 +1,37 @@
+{
+  "setup": {
+    "kicker": "Setup",
+    "heading": "Let's set up your business",
+    "intro": "A couple of details, then you're in. You can change all of this later.",
+    "name_label": "Your name",
+    "name_placeholder": "e.g. Alex Morgan",
+    "business_label": "Business name",
+    "business_placeholder": "e.g. Morgan Tutoring",
+    "business_hint": "Shown on invoices and at the top of your dashboard.",
+    "phone_label": "Phone (optional)",
+    "default_rate_label": "Default hourly rate",
+    "currency_label": "Currency",
+    "session_expired": "Session expired. Please sign in again.",
+    "continue": "Continue",
+    "saving": "Saving…"
+  },
+  "plan": {
+    "sign_out": "Sign out",
+    "kicker": "Choose your plan",
+    "heading": "Pick what fits how you tutor.",
+    "subheading": "Start with a free trial. Cancel anytime. No surprises.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save_2_months": "Save 2 months",
+    "referral_discount": "{{discount}} — no code to enter. Applies automatically once your trial converts.",
+    "repeat_customer": "Welcome back — your card will be charged immediately on signup since you've previously had an account.",
+    "most_popular": "Most popular",
+    "tier_name": "Crestio {{tier}}",
+    "contact_sales": "Contact sales",
+    "start_trial": "Start {{days}}-day free trial",
+    "redirecting": "Redirecting…",
+    "checkout_error": "Could not start checkout. Please try again.",
+    "not_signed_in": "Not signed in.",
+    "footer_note": "Prices in AUD, inclusive of GST where applicable. You can change plan or cancel anytime from the billing portal."
+  }
+}

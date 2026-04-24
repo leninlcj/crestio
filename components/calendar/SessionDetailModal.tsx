@@ -3,6 +3,7 @@ import { Modal } from '../design/Modal';
 import { Badge } from '../design/Badge';
 import { supabase } from '../../lib/supabase';
 import type { CalendarSession } from './types';
+import { activeLocale } from '../../lib/utils';
 
 type Props = {
   open: boolean;
@@ -89,12 +90,12 @@ export function SessionDetailModal({ open, onClose, session, onChanged, mode }: 
     if (ok) { onChanged(); onClose(); }
   }
 
-  const whenDisplay = scheduled.toLocaleString('en-AU', {
+  const whenDisplay = scheduled.toLocaleString(activeLocale(), {
     weekday: 'long', day: 'numeric', month: 'long',
     hour: 'numeric', minute: '2-digit',
   });
   const proposedDisplay = session.proposed_new_start_time
-    ? new Date(session.proposed_new_start_time).toLocaleString('en-AU', {
+    ? new Date(session.proposed_new_start_time).toLocaleString(activeLocale(), {
         weekday: 'long', day: 'numeric', month: 'long',
         hour: 'numeric', minute: '2-digit',
       })

@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import SettingsTabs from '../../../components/SettingsTabs';
@@ -9,6 +10,7 @@ import { useMembership } from '../../../lib/membershipContext';
 import { centsToDollars, dollarsToCents, formatCents } from '../../../lib/utils';
 
 function AccountInner() {
+  const { t } = useTranslation('settings');
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [form, setForm] = useState<any>(null);
@@ -29,9 +31,9 @@ function AccountInner() {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
-      const { data: t } = await supabase
+      const { data: tutor } = await supabase
         .from('tutors').select('pay_rate_cents').eq('auth_user_id', session.user.id).maybeSingle();
-      if (t) setMyPayRateCents((t as any).pay_rate_cents ?? null);
+      if (tutor) setMyPayRateCents((tutor as any).pay_rate_cents ?? null);
       const { data: p } = await supabase
         .from('profiles').select('currency').eq('id', session.user.id).maybeSingle();
       if (p?.currency) setMyCurrency(p.currency);
@@ -114,7 +116,7 @@ function AccountInner() {
       setMfaFactorId(data.id);
       setMfaEnrolling(true);
     } catch (e: any) {
-      setMfaError(e?.message ?? 'Could not start enrollment.');
+      setMfaError(e?.message ?? t('account.mfa_could_not_start'));
     } finally {
       setMfaBusy(false);
     }
@@ -134,7 +136,7 @@ function AccountInner() {
       setMfaEnrolling(false); setMfaCode(''); setMfaQrCode(''); setMfaSecret(''); setMfaFactorId('');
       await loadFactors();
     } catch {
-      setMfaError('Invalid code. Check your authenticator app and try again.');
+      setMfaError(t('account.mfa_invalid_code'));
     } finally {
       setMfaBusy(false);
     }
@@ -146,7 +148,7 @@ function AccountInner() {
   }
 
   async function disableMfa() {
-    if (!window.confirm('Are you sure? You will only need your password to sign in.')) return;
+    if (!window.confirm(t('account.mfa_disable_confirm'))) return;
     setMfaError(null);
     setMfaBusy(true);
     try {
@@ -157,7 +159,7 @@ function AccountInner() {
       }
       await loadFactors();
     } catch (e: any) {
-      setMfaError(e?.message ?? 'Could not disable two-factor authentication.');
+      setMfaError(e?.message ?? t('account.mfa_could_not_disable'));
     } finally {
       setMfaBusy(false);
     }
@@ -168,7 +170,7 @@ function AccountInner() {
     setDeleting(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) throw new Error('Not signed in.');
+      if (!session?.access_token) throw new Error(t('common.not_signed_in'));
       const res = await fetch('/api/delete-account', {
         method: 'POST',
         headers: { Authorization: `Bearer ${session.access_token}` },
@@ -180,57 +182,59 @@ function AccountInner() {
       await supabase.auth.signOut();
       router.push('/?deleted=true');
     } catch (e: any) {
-      setDeleteError(e?.message ?? 'Something went wrong.');
+      setDeleteError(e?.message ?? t('common.something_wrong'));
       setDeleting(false);
     }
   }
 
   if (!form) {
     return (
-      <Layout subtitle="Account" title="Settings">
+      <Layout subtitle={t('tabs.account')} title={t('page_title')}>
         <SettingsTabs />
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       </Layout>
     );
   }
 
+  const deleteKeyword = t('account.delete_confirm_keyword');
+
   return (
-    <Layout subtitle="Account" title="Settings">
+    <Layout subtitle={t('tabs.account')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
         {isTutor && (
           <div className="card p-8">
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Your pay rate</div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('account.pay_eyebrow')}</div>
             <h2 className="font-display text-xl tracking-tightest">
               {myPayRateCents !== null
-                ? <>{formatCents(myPayRateCents, myCurrency)} <span className="text-ink-soft text-sm">/ hour</span></>
-                : 'Not set — ask your owner.'}
+                ? <>{formatCents(myPayRateCents, myCurrency)} <span className="text-ink-soft text-sm">{t('account.pay_per_hour')}</span></>
+                : t('account.pay_not_set')}
             </h2>
             <div className="text-2xs text-ink-soft mt-3">
-              Set by your organisation owner. If this looks wrong, talk to them.
+              {t('account.pay_hint')}
             </div>
           </div>
         )}
 
         <form onSubmit={save} className="card p-8 space-y-5">
           <div>
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Profile</div>
-            <h2 className="font-display text-xl tracking-tightest">{isTutor ? 'Your profile' : 'Your business details'}</h2>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('account.profile_eyebrow')}</div>
+            <h2 className="font-display text-xl tracking-tightest">{isTutor ? t('account.profile_heading_tutor') : t('account.profile_heading_owner')}</h2>
           </div>
           <div>
-            <label className="label">Your name</label>
+            <label className="label">{t('account.name_label')}</label>
             <input className="input" value={form.owner_name}
               onChange={(e) => setForm({ ...form, owner_name: e.target.value })} />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Contact email</label>
+              <label className="label">{t('account.email_label')}</label>
               <input type="email" className="input" value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              <div className="text-2xs text-ink-soft mt-1.5">Shown on invoices.</div>
+              <div className="text-2xs text-ink-soft mt-1.5">{t('account.email_hint')}</div>
             </div>
             <div>
-              <label className="label">Phone</label>
+              <label className="label">{t('account.phone_label')}</label>
               <input type="tel" className="input" value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             </div>
@@ -238,12 +242,12 @@ function AccountInner() {
           {!isTutor && (
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="label">Default hourly rate</label>
+                <label className="label">{t('account.default_rate_label')}</label>
                 <input type="number" min="0" className="input" value={form.default_rate}
                   onChange={(e) => setForm({ ...form, default_rate: e.target.value })} />
               </div>
               <div>
-                <label className="label">Currency</label>
+                <label className="label">{t('account.currency_label')}</label>
                 <select className="input" value={form.currency}
                   onChange={(e) => setForm({ ...form, currency: e.target.value })}>
                   <option value="AUD">AUD</option>
@@ -258,34 +262,34 @@ function AccountInner() {
           )}
 
           {error && <div className="text-sm text-claret">{error}</div>}
-          {saved && <div className="text-sm text-forest">Saved.</div>}
+          {saved && <div className="text-sm text-forest">{t('common.saved')}</div>}
           <div className="pt-2">
             <button type="submit" disabled={saving} className="btn-primary">
-              {saving ? 'Saving…' : 'Save changes'}
+              {saving ? t('common.saving') : t('common.save_changes')}
             </button>
           </div>
         </form>
 
         <div className="card p-8">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Security</div>
-          <h2 className="font-display text-xl tracking-tightest mb-3">Two-factor authentication</h2>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('account.security_eyebrow')}</div>
+          <h2 className="font-display text-xl tracking-tightest mb-3">{t('account.mfa_heading')}</h2>
 
           {mfaLoading ? (
-            <div className="text-sm text-ink-muted">Loading…</div>
+            <div className="text-sm text-ink-muted">{t('common.loading')}</div>
           ) : mfaEnrolling ? (
             <div className="space-y-5">
               <p className="text-sm text-ink-muted leading-relaxed">
-                Scan this QR code with Google Authenticator, Authy, or 1Password, then enter the 6-digit code below to verify.
+                {t('account.mfa_scan_prompt')}
               </p>
               <div className="flex flex-col items-center gap-4 p-6 border border-rule rounded bg-cream">
-                {mfaQrCode && <img src={mfaQrCode} alt="Two-factor authentication QR code" className="w-44 h-44" />}
+                {mfaQrCode && <img src={mfaQrCode} alt={t('account.mfa_qr_alt')} className="w-44 h-44" />}
                 <div className="text-center">
-                  <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Secret (manual entry)</div>
+                  <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('account.mfa_secret_label')}</div>
                   <div className="font-mono text-xs text-ink break-all max-w-xs select-all">{mfaSecret}</div>
                 </div>
               </div>
               <form onSubmit={verifyMfaEnroll} className="space-y-3 max-w-sm">
-                <label className="label">6-digit code</label>
+                <label className="label">{t('account.mfa_code_label')}</label>
                 <input type="text" inputMode="numeric" pattern="[0-9]*" autoComplete="one-time-code" maxLength={6}
                   required autoFocus value={mfaCode}
                   onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
@@ -293,9 +297,9 @@ function AccountInner() {
                 {mfaError && <div className="text-sm text-claret">{mfaError}</div>}
                 <div className="flex gap-3">
                   <button type="submit" disabled={mfaBusy || mfaCode.length !== 6} className="btn-primary flex-1">
-                    {mfaBusy ? 'Verifying…' : 'Verify and enable'}
+                    {mfaBusy ? t('account.mfa_verifying') : t('account.mfa_verify_and_enable')}
                   </button>
-                  <button type="button" onClick={cancelMfaEnroll} disabled={mfaBusy} className="btn-ghost">Cancel</button>
+                  <button type="button" onClick={cancelMfaEnroll} disabled={mfaBusy} className="btn-ghost">{t('common.cancel')}</button>
                 </div>
               </form>
             </div>
@@ -303,24 +307,24 @@ function AccountInner() {
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm text-forest">
                 <span className="inline-block w-2 h-2 rounded-full bg-forest" aria-hidden="true" />
-                <span>Two-factor authentication is enabled.</span>
+                <span>{t('account.mfa_enabled_state')}</span>
               </div>
               <p className="text-sm text-ink-muted leading-relaxed">
-                You'll be asked for a 6-digit code from your authenticator app whenever you sign in.
+                {t('account.mfa_enabled_body')}
               </p>
               {mfaError && <div className="text-sm text-claret">{mfaError}</div>}
               <button type="button" onClick={disableMfa} disabled={mfaBusy} className="btn-secondary">
-                {mfaBusy ? 'Disabling…' : 'Disable two-factor authentication'}
+                {mfaBusy ? t('account.mfa_disabling') : t('account.mfa_disable')}
               </button>
             </div>
           ) : (
             <div className="space-y-4">
               <p className="text-sm text-ink-muted leading-relaxed">
-                Add an extra layer of security. When enabled, you'll need your password and a 6-digit code from your authenticator app to sign in.
+                {t('account.mfa_disabled_body')}
               </p>
               {mfaError && <div className="text-sm text-claret">{mfaError}</div>}
               <button type="button" onClick={startMfaEnroll} disabled={mfaBusy} className="btn-primary">
-                {mfaBusy ? 'Starting…' : 'Enable two-factor authentication'}
+                {mfaBusy ? t('account.mfa_starting') : t('account.mfa_enable')}
               </button>
             </div>
           )}
@@ -331,19 +335,19 @@ function AccountInner() {
         <OwnerExemptionCard />
 
         <div className="card p-8 border-claret/30 bg-claret/5">
-          <div className="text-2xs uppercase tracking-widest text-claret/80 mb-1">Danger zone</div>
-          <h2 className="font-display text-xl tracking-tightest mb-3 text-claret">Delete account</h2>
+          <div className="text-2xs uppercase tracking-widest text-claret/80 mb-1">{t('account.danger_eyebrow')}</div>
+          <h2 className="font-display text-xl tracking-tightest mb-3 text-claret">{t('account.delete_heading')}</h2>
           <p className="text-sm text-ink-muted mb-4 leading-relaxed">
-            This permanently deletes your account, all your students, sessions, invoices, and lesson plans. This cannot be undone. Type <code className="font-mono text-ink">DELETE</code> below to confirm.
+            {t('account.delete_body_prefix')}<code className="font-mono text-ink">{deleteKeyword}</code>{t('account.delete_body_suffix')}
           </p>
           <div className="space-y-3 max-w-sm">
-            <input type="text" className="input" placeholder="Type DELETE to confirm"
+            <input type="text" className="input" placeholder={t('account.delete_placeholder')}
               value={confirmText} onChange={(e) => setConfirmText(e.target.value)}
               disabled={deleting} autoComplete="off" />
             <button type="button" onClick={deleteAccount}
-              disabled={confirmText !== 'DELETE' || deleting}
+              disabled={confirmText !== deleteKeyword || deleting}
               className="btn-danger w-full">
-              {deleting ? 'Deleting…' : 'Permanently delete my account'}
+              {deleting ? t('account.deleting') : t('account.delete_button')}
             </button>
             {deleteError && <div className="text-sm text-claret">{deleteError}</div>}
           </div>
@@ -354,6 +358,7 @@ function AccountInner() {
 }
 
 function VoiceUsageCard() {
+  const { t } = useTranslation('settings');
   const [usage, setUsage] = useState<{
     count_today: number; max_count: number;
     minutes_today: number; max_minutes: number;
@@ -375,29 +380,34 @@ function VoiceUsageCard() {
 
   return (
     <div className="card p-8">
-      <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Voice usage today</div>
-      <h2 className="font-display text-xl tracking-tightest mb-3">Dictation limits</h2>
+      <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('account.voice_eyebrow')}</div>
+      <h2 className="font-display text-xl tracking-tightest mb-3">{t('account.voice_heading')}</h2>
       {loading ? (
-        <div className="text-sm text-ink-muted">Loading…</div>
+        <div className="text-sm text-ink-muted">{t('common.loading')}</div>
       ) : usage ? (
         <div className="space-y-1 text-sm text-ink">
           <div>
-            <strong>{usage.count_today}</strong> of <strong>{usage.max_count}</strong> transcriptions used · {' '}
-            <strong>{usage.minutes_today}</strong> of <strong>{usage.max_minutes}</strong> minutes
+            {t('account.voice_usage_line', {
+              count: usage.count_today,
+              max_count: usage.max_count,
+              minutes: usage.minutes_today,
+              max_minutes: usage.max_minutes,
+            })}
           </div>
-          <div className="text-2xs text-ink-soft">Resets at midnight Sydney time.</div>
+          <div className="text-2xs text-ink-soft">{t('account.voice_resets')}</div>
         </div>
       ) : (
-        <div className="text-sm text-ink-muted">Couldn't load usage.</div>
+        <div className="text-sm text-ink-muted">{t('account.voice_load_fail')}</div>
       )}
       <div className="text-2xs text-ink-soft leading-relaxed mt-4">
-        Voice uses OpenAI Whisper. Your audio is sent only when you use the microphone, is not stored after transcription, and is never used to train models.
+        {t('account.voice_privacy')}
       </div>
     </div>
   );
 }
 
 function OwnerExemptionCard() {
+  const { t } = useTranslation('settings');
   const [loaded, setLoaded] = useState(false);
   const [isOwnerEmail, setIsOwnerEmail] = useState(false);
   const [active, setActive] = useState(true);
@@ -453,12 +463,10 @@ function OwnerExemptionCard() {
 
   return (
     <div className="card p-8 mb-6 border-amber/40 bg-amber-soft/40">
-      <div className="text-2xs uppercase tracking-widest text-amber-ink/80 mb-1">Owner tools</div>
-      <h2 className="font-display text-xl tracking-tightest mb-3">Billing exemption</h2>
+      <div className="text-2xs uppercase tracking-widest text-amber-ink/80 mb-1">{t('account.owner_eyebrow')}</div>
+      <h2 className="font-display text-xl tracking-tightest mb-3">{t('account.owner_heading')}</h2>
       <p className="text-sm text-ink-muted mb-4 leading-relaxed">
-        As the platform owner you have unlimited access to every feature. Toggle exemption off to
-        temporarily experience the app as a paying customer — paywalls, trial prompts, and upgrade
-        nudges will behave exactly as they do for real users.
+        {t('account.owner_body')}
       </p>
       <div className="flex items-center gap-3">
         <button
@@ -471,12 +479,12 @@ function OwnerExemptionCard() {
           }`}
         >
           <span className={`inline-block w-2 h-2 rounded-full ${active ? 'bg-cream' : 'bg-claret'}`} aria-hidden="true" />
-          Exemption {active ? 'active' : 'off'}
+          {active ? t('account.owner_exemption_active') : t('account.owner_exemption_off')}
         </button>
         <span className="text-2xs text-ink-soft">
           {active
-            ? 'Unlimited access. No paywalls will show.'
-            : 'You are subject to normal Stripe gating.'}
+            ? t('account.owner_state_active')
+            : t('account.owner_state_off')}
         </span>
       </div>
 
@@ -490,9 +498,9 @@ function OwnerExemptionCard() {
             disabled={saving}
           />
           <div>
-            <div className="text-sm text-ink">Show test accounts in lists</div>
+            <div className="text-sm text-ink">{t('account.owner_test_accounts_label')}</div>
             <div className="text-2xs text-ink-soft">
-              When on, test accounts appear in the Students, Tutors, and other lists with a TEST pill. Off by default.
+              {t('account.owner_test_accounts_body')}
             </div>
           </div>
         </label>

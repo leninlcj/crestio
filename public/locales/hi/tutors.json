@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "टीम",
+    "title": "ट्यूटर्स"
+  },
+  "table": {
+    "name": "नाम",
+    "subjects": "विषय",
+    "students": "छात्र",
+    "em_dash": "—",
+    "linked_login": "लिंक्ड लॉगिन",
+    "pay_rate": "भुगतान दर",
+    "this_month": "इस महीने",
+    "linked_yes": "हाँ",
+    "linked_no": "नहीं"
+  },
+  "new": {
+    "page_subtitle": "ट्यूटर्स",
+    "email_label": "ईमेल",
+    "phone_label": "फ़ोन",
+    "notes_label": "टिप्पणियाँ",
+    "saving": "बचाना…",
+    "cancel": "रद्द करें",
+    "not_signed_in": "साइन इन नहीं किया गया।",
+    "no_organization": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।",
+    "page_title": "नया ट्यूटर",
+    "name_label": "नाम *",
+    "subjects_label": "वे विषय जिन्हें वे पढ़ाते हैं",
+    "subjects_placeholder": "गणित, रसायन विज्ञान",
+    "subjects_hint": "अल्पविराम से अलग।",
+    "pay_rate_label": "प्रति घंटे का भुगतान दर",
+    "pay_rate_placeholder": "उदाहरण के लिए 55",
+    "submit": "ट्यूटर बनाएँ"
+  },
+  "common": {
+    "loading": "लोड हो रहा है…"
+  },
+  "actions": {
+    "add": "ट्यूटर जोड़ें",
+    "add_one": "ट्यूटर जोड़ें"
+  },
+  "empty": {
+    "title": "अभी तक कोई ट्यूटर नहीं है",
+    "description": "जब आप अपने व्यवसाय में पढ़ाने के लिए लोगों को शामिल करते हैं, तो ट्यूटर्स जोड़ें। यदि आप अकेले ट्यूटर हैं, तो आप इसे छोड़ सकते हैं।"
+  }
+}

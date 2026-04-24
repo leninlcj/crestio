@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "sign_in": "Iniciar sesión"
+  },
+  "english_notice": {
+    "title": "El inglés es la versión oficial",
+    "body": "Esta página ha sido traducida automáticamente para su comodidad. Solo el texto en inglés de nuestros Términos y nuestra Política de privacidad es legalmente vinculante. Si encuentra algo que no le queda claro en su idioma, lea la versión en inglés o envíe un correo electrónico a support@crestio.ai antes de basarse en la traducción.",
+    "view_english": "Ver la versión en inglés"
+  },
+  "last_updated": "Última actualización: {{date}}",
+  "contents": "Índice",
+  "toc_aria": "Índice",
+  "footer": {
+    "copyright": "© {{year}} Crestio",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "contact": "Contacto"
+  }
+}

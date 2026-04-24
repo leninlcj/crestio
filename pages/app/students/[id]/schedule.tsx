@@ -1,3 +1,4 @@
+import { activeLocale } from '../../../../lib/utils';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -119,10 +120,10 @@ function formatTime(hms: string): string {
   const [hh, mm] = hms.split(':');
   const h = Number(hh); const m = Number(mm);
   const d = new Date(); d.setHours(h, m, 0, 0);
-  return d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+  return d.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' });
 }
 function formatDate(iso: string): string {
-  return new Date(iso + 'T00:00:00').toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(iso + 'T00:00:00').toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export default function Page() {

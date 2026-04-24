@@ -1,29 +1,10 @@
 {
-  "title_not_found": "Tidak ditemukan",
-  "batch": {
-    "period_this_week": "Minggu ini",
-    "households": "Rumah tangga",
-    "sessions": "Sesi",
-    "loading": "Sedang dimuat…",
-    "period": "Periode",
-    "period_last_week": "Minggu lalu",
-    "period_this_month": "Bulan ini",
-    "period_last_month": "Bulan lalu",
-    "period_custom": "Rentang khusus…",
-    "from": "Dari",
-    "to": "Untuk",
-    "back_to_list": "Kembali ke daftar faktur",
-    "unbilled_total": "Total yang belum ditagih",
-    "nothing_title": "Tidak ada yang perlu ditagih",
-    "nothing_body": "Tidak ada sesi yang telah diselesaikan namun belum ditagih pada periode ini. Catat lebih banyak sesi atau pilih rentang tanggal yang berbeda.",
-    "save_drafts": "Simpan sebagai draf",
-    "send": "Kirim faktur"
-  },
   "subtitle": "Penagihan",
   "title_list": "Tagihan",
   "title_new": "Tagihan baru",
   "title_batch": "Faktur massal",
   "title_loading": "…",
+  "title_not_found": "Tidak ditemukan",
   "actions": {
     "new": "Tagihan baru",
     "batch": "Faktur massal",
@@ -39,11 +20,11 @@
     "per_student": "Per siswa"
   },
   "columns": {
-    "number": "Jumlah",
     "billed_to": "Ditagih kepada",
+    "status": "Status",
+    "number": "Nomor",
     "issued": "Diterbitkan",
     "due": "Jatuh tempo",
-    "status": "Status",
     "total": "Total"
   },
   "not_found": "Tagihan tidak ditemukan.",
@@ -51,6 +32,25 @@
     "no_invoices_title": "Belum ada faktur",
     "no_invoices_body": "Gabungkan sesi yang telah selesai ke dalam sebuah faktur untuk dikirimkan kepada orang tua.",
     "cta_batch": "Faktur massal"
+  },
+  "batch": {
+    "period": "Periode",
+    "period_this_week": "Minggu ini",
+    "period_last_week": "Minggu lalu",
+    "period_this_month": "Bulan ini",
+    "period_last_month": "Bulan lalu",
+    "period_custom": "Rentang khusus…",
+    "from": "Dari",
+    "to": "Untuk",
+    "households": "Rumah tangga",
+    "sessions": "Sesi",
+    "unbilled_total": "Total yang belum ditagih",
+    "nothing_body": "Tidak ada sesi yang telah diselesaikan namun belum ditagih pada periode ini. Catat lebih banyak sesi atau pilih rentang tanggal yang berbeda.",
+    "loading": "Sedang dimuat…",
+    "back_to_list": "Kembali ke daftar faktur",
+    "nothing_title": "Tidak ada yang perlu ditagih",
+    "save_drafts": "Simpan sebagai draf",
+    "send": "Kirim faktur"
   },
   "batch_toast_created": "Tagihan yang dibuat secara massal. Daftar tagihan tersebut tercantum di bawah ini."
 }

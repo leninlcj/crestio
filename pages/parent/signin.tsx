@@ -1,9 +1,11 @@
 import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
 
 export default function ParentSignIn() {
+  const { t } = useTranslation('parent');
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +37,7 @@ export default function ParentSignIn() {
     }
     if (!signInData.user) {
       setLoading(false);
-      setError('Sign-in failed.');
+      setError(t('signin.error_generic'));
       return;
     }
     const { data: parent } = await supabase
@@ -46,9 +48,7 @@ export default function ParentSignIn() {
     setLoading(false);
     if (!parent) {
       await supabase.auth.signOut();
-      setError(
-        "This sign-in is for parents only. If you're a tutor, sign in at /auth/signin."
-      );
+      setError(t('signin.error_not_parent'));
       return;
     }
     router.push('/parent/dashboard');
@@ -56,7 +56,7 @@ export default function ParentSignIn() {
 
   async function forgotPassword() {
     if (!email) {
-      setError('Enter your email first, then tap Forgot password.');
+      setError(t('signin.forgot_need_email'));
       return;
     }
     setError(null);
@@ -64,7 +64,7 @@ export default function ParentSignIn() {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     });
     if (err) setError(err.message);
-    else setError('Check your email for a reset link.');
+    else setError(t('signin.forgot_sent'));
   }
 
   return (
@@ -77,17 +77,17 @@ export default function ParentSignIn() {
 
       <div className="flex-1 flex items-center justify-center px-6 pb-16">
         <div className="w-full max-w-sm">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Parent portal</div>
-          <h1 className="font-display text-4xl tracking-tightest mb-10">Sign in</h1>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('signin.kicker')}</div>
+          <h1 className="font-display text-4xl tracking-tightest mb-10">{t('signin.heading')}</h1>
 
           <form onSubmit={onSubmit} className="space-y-5">
             <div>
-              <label className="label">Email</label>
+              <label className="label">{t('signin.email_label')}</label>
               <input type="email" required autoFocus value={email}
                 onChange={(e) => setEmail(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="label">Password</label>
+              <label className="label">{t('signin.password_label')}</label>
               <input type="password" required value={password}
                 onChange={(e) => setPassword(e.target.value)} className="input" />
             </div>
@@ -97,17 +97,17 @@ export default function ParentSignIn() {
             <div className="flex items-center justify-end -mt-1">
               <button type="button" onClick={forgotPassword}
                 className="text-2xs uppercase tracking-widest text-ink-muted hover:text-ink">
-                Forgot password?
+                {t('signin.forgot')}
               </button>
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full py-3">
-              {loading ? 'Signing in…' : 'Sign in'}
+              {loading ? t('signin.submitting') : t('signin.submit')}
             </button>
           </form>
 
           <div className="mt-8 text-sm text-ink-muted text-center">
-            Haven't received an invitation from your tutor yet? Ask them to send one.
+            {t('signin.invitation_hint')}
           </div>
         </div>
       </div>

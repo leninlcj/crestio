@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "sign_in": "Masuk"
+  },
+  "english_notice": {
+    "title": "Bahasa Inggris adalah versi yang sah",
+    "body": "Halaman ini telah diterjemahkan secara otomatis untuk kenyamanan Anda. Hanya teks bahasa Inggris dari Syarat dan Ketentuan serta Kebijakan Privasi kami yang memiliki kekuatan hukum. Jika Anda menemukan hal yang tidak jelas dalam bahasa Anda, bacalah versi bahasa Inggris atau kirim email ke support@crestio.ai sebelum mengandalkan terjemahan tersebut.",
+    "view_english": "Lihat versi bahasa Inggris"
+  },
+  "last_updated": "Diperbarui terakhir: {{date}}",
+  "contents": "Daftar Isi",
+  "toc_aria": "Daftar isi",
+  "footer": {
+    "copyright": "© {{year}} Crestio",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "contact": "Hubungi kami"
+  }
+}

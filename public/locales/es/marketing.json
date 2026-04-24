@@ -1,0 +1,157 @@
+{
+  "nav": {
+    "sign_in": "Iniciar sesión",
+    "pricing": "Precios",
+    "start_trial": "Empieza tu prueba gratuita",
+    "open_menu": "Abrir menú",
+    "close_menu": "Cerrar menú"
+  },
+  "footer": {
+    "sign_in": "Iniciar sesión",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "made_in": "Fabricado en Australia · 2026",
+    "support": "Asistencia"
+  },
+  "contact": {
+    "email_label": "Correo electrónico",
+    "eyebrow": "Ponte en contacto",
+    "heading": "Saluda",
+    "intro": "Preguntas, informes de errores, comentarios, elogios, quejas... todo es bienvenido. Una persona lee estos mensajes y responde, normalmente en el plazo de un día.",
+    "copy": "Copia",
+    "copied": "Copiado",
+    "or_send_via_mail": "O envíalo a través de tu aplicación de correo",
+    "name_label": "Tu nombre (opcional)",
+    "email_field_label": "Tu correo electrónico (opcional)",
+    "email_hint": "Incluye esto si quieres recibir una respuesta.",
+    "message_label": "Mensaje *",
+    "message_placeholder": "¿Qué te preocupa?",
+    "submit": "Abrir en Mail",
+    "submit_note": "Esto abre tu aplicación de correo electrónico predeterminada con el mensaje redactado. No se envía nada hasta que tú mismo lo envíes.",
+    "footer_location": "crestio · Sídney · 2026",
+    "subject_named": "Mensaje de {{name}}",
+    "subject_anonymous": "Mensaje de la página web de Crestio",
+    "body_from": "Fuente: {{name}}",
+    "body_reply_to": "Responder a: {{email}}"
+  },
+  "meta": {
+    "home_title": "Crestio: software para tutores australianos",
+    "home_description": "Gestiona a los alumnos, registra las sesiones, perfecciona los apuntes con IA y comparte el progreso con los padres, todo desde un único panel de control. Desde 24 $ al mes. Prueba gratuita de 7 días.",
+    "contact_title": "Contacto · Crestio"
+  },
+  "deleted_banner": "Tu cuenta ha sido eliminada. Lamentamos que te vayas.",
+  "hero": {
+    "eyebrow": "Para profesores particulares y pequeños equipos",
+    "heading": "La herramienta todo en uno para profesores particulares que se toman su trabajo en serio.",
+    "subheading": "Gestiona a los alumnos, registra las sesiones, perfecciona los apuntes con IA y comparte el progreso con los padres, todo desde un único panel de control. Para tutores independientes y equipos pequeños.",
+    "cta": "Empieza tu prueba gratuita",
+    "price_note": "Desde {{price}} al mes. 7 días de prueba gratuita. Cancela en cualquier momento.",
+    "see_plans": "Ver todos los planes →"
+  },
+  "pain": {
+    "heading": "Dirigir una academia de clases particulares no debería ser así.",
+    "line_1": "Esta semana has impartido seis clases y aún no has facturado dos de ellas.",
+    "line_2": "Has tomado apuntes en papel, los has pasado a un documento de Google Docs y, finalmente, los resumirás para los padres.",
+    "line_3": "Esta noche te han enviado un mensaje tres padres con la misma pregunta.",
+    "line_4": "Dedicas dos horas a tareas administrativas por cada cinco horas de clases particulares."
+  },
+  "how": {
+    "heading": "Cómo funciona Crestio"
+  },
+  "features": {
+    "session_log": {
+      "title": "Registra sesiones en segundos",
+      "body": "Elige un alumno, elige la hora, toma notas. El mismo formulario sirve tanto para la sesión de hoy como para la que olvidaste registrar el martes pasado. Sin necesidad de pasar por una aplicación de calendario.",
+      "alt": "Formulario de registro de sesiones de Crestio con campos para el alumno, la asignatura, el tema, los deberes y las notas.",
+      "caption": "Formulario de registro de sesiones."
+    },
+    "polish": {
+      "title": "Notas de polaco con IA",
+      "body": "Escribe rápidamente un borrador. Con un solo clic, se reescribe en un texto que los padres puedan leer: breve, cálido y concreto. Tus notas siguen siendo tuyas; la versión pulida es independiente.",
+      "alt": "Vista comparativa de las notas preliminares de la sesión y las notas pulidas por IA dirigidas a los padres.",
+      "caption": "Borrador a la izquierda, versión pulida a la derecha."
+    },
+    "invoices": {
+      "title": "Factura sin persecuciones",
+      "body": "Las sesiones completadas se convierten en partidas. Genera una factura y márcala como pagada cuando se reciba la transferencia bancaria. No hace falta una hoja de cálculo aparte para llevar la cuenta de quién debe qué.",
+      "alt": "Lista de facturas de Crestio que muestra las facturas pagadas y pendientes de pago con los importes y las fechas de vencimiento.",
+      "caption": "La lista de facturas: pagadas frente a pendientes de pago."
+    },
+    "parent_portal": {
+      "title": "Ofrece a los padres su propio portal",
+      "body": "Invita a un padre o madre y obtendrán una visión general de las sesiones, los deberes y los apuntes revisados de su hijo. Dejarán de enviarte mensajes a las 9 de la noche porque ya sabrán cómo van las cosas.",
+      "alt": "Portal para padres que muestra las últimas sesiones del niño con los deberes y las notas del tutor.",
+      "caption": "El portal para padres."
+    }
+  },
+  "pricing": {
+    "heading": "Una herramienta. Tres planes. Elige el que más te convenga.",
+    "subheading": "La mayoría de los tutores australianos empiezan en Solo. ¿Quieres ampliar tu equipo? Pásate a Team.",
+    "monthly": "Mensual",
+    "annual": "Anual",
+    "annual_save_note": "(ahorra 2 meses)",
+    "period_monthly": "AUD al mes",
+    "period_annual": "al año — unos {{monthly_equivalent}} al mes, facturados anualmente",
+    "recommended_banner": "Recomendado para la mayoría de los tutores",
+    "tier_name": "Crestio {{tier}}",
+    "footer_note": "Precios en AUD. Incluyen el IVA cuando sea aplicable. Cancela en cualquier momento."
+  },
+  "tiers": {
+    "solo": {
+      "label": "Solo",
+      "subhead": "Una lista de un tutor y un alumno.",
+      "features": {
+        "unlimited": "Número ilimitado de alumnos y sesiones",
+        "polish": "Notas mejoradas con IA para los padres",
+        "parent_portal": "Portal para padres y facturación",
+        "trial": "7 días de prueba gratuita"
+      },
+      "cta": "Empieza tu prueba gratuita de 7 días"
+    },
+    "team": {
+      "label": "Team",
+      "subhead": "Para propietarios con un pequeño equipo de tutores.",
+      "features": {
+        "inherits": "Todo lo que incluye Solo, además de:",
+        "up_to_5": "Hasta 5 tutores con acceso basado en roles",
+        "payouts": "Pagos por tutor e informes",
+        "trial": "14 días de prueba gratuita"
+      },
+      "cta": "Comienza tu prueba gratuita de 14 días"
+    },
+    "growth": {
+      "label": "Crecimiento",
+      "subhead": "Para empresas de clases particulares en expansión.",
+      "features": {
+        "inherits": "Todo lo que incluye Team, además de:",
+        "up_to_15": "Hasta 15 tutores",
+        "priority": "Asistencia prioritaria",
+        "onboarding": "Incorporación personalizada"
+      },
+      "cta": "Contáctanos"
+    }
+  },
+  "faq": {
+    "heading": "Preguntas de los tutores",
+    "q1": "¿Están seguros los datos de mis alumnos?",
+    "a1_part1": "Sí. Los datos se almacenan en la infraestructura de Supabase y los pagos se procesan a través de Stripe, por lo que Crestio nunca tiene acceso a los datos de tu tarjeta. Los datos de cada organización están aislados: ningún tutor puede ver a los alumnos de otra empresa. Todos los detalles en el ",
+    "a1_privacy_link": "Política de privacidad",
+    "a1_part2": ".",
+    "q2": "¿Qué hace realmente la IA? ¿Se entrena con mis datos?",
+    "a2": "La IA perfecciona tus notas de sesión preliminares para que los padres puedan leerlas con claridad. Solo ve lo que le envías en esa solicitud específica, no almacena nada entre sesiones y no se entrena con tus datos. Siempre conservas tus notas originales; el perfeccionamiento con IA es opcional en cada sesión. El proveedor cuenta con la certificación SOC 2 Tipo II.",
+    "q3": "¿Qué ocurre después de la prueba gratuita?",
+    "a3": "El importe del plan que elijas se cargará en tu tarjeta. Si cancelas antes de que finalice el periodo de prueba, no se te cobrará nada. Si cancelas después de que comience la facturación, seguirás teniendo acceso hasta el final del periodo que hayas pagado y, a partir de ahí, se interrumpirá el servicio.",
+    "q4": "¿Pueden los padres verlo todo?",
+    "a4": "Solo lo que compartas. Las notas de las sesiones se dividen en internas (tuyas) y dirigidas a los padres (compartidas). Los padres solo ven las sesiones que les has facilitado, y solo las de su propio hijo.",
+    "q5": "¿Es para empresas de clases particulares o para profesores particulares?",
+    "a5": "Ambos. Solo es para tutores independientes. Team es adecuado para pequeñas empresas de clases particulares de hasta 5 tutores. Growth admite hasta 15. Si gestionas una empresa más grande, envía un correo electrónico a support@crestio.ai y te orientaremos adecuadamente.",
+    "q6": "¿Quién dirige Crestio?",
+    "a6": "El equipo de Crestio. Somos un pequeño equipo con sede en Australia que desarrolla software para tutores que valoran su tiempo. ¿Tienes alguna pregunta o comentario? Envía un correo electrónico a support@crestio.ai y alguien leerá cada mensaje."
+  },
+  "final_cta": {
+    "headline": "Prueba Crestio durante una semana. Comprueba si te conviene.",
+    "button": "Empieza la prueba gratuita",
+    "questions_part1": "¿Tienes alguna pregunta? Envía un correo electrónico ",
+    "questions_part2": "."
+  }
+}

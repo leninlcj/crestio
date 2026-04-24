@@ -1,15 +1,15 @@
 {
   "subtitle": "Pesan",
-  "loading": "Sedang dimuat…",
-  "compose": {
-    "sending": "Mengirim…",
-    "placeholder": "Ketik pesan…",
-    "send": "Kirim"
-  },
   "title_list": "Pesan",
   "title_thread": "Pesan",
+  "loading": "Sedang dimuat…",
   "empty": {
     "no_threads": "Belum ada pesan.",
     "no_messages": "Belum ada pesan di utas ini."
+  },
+  "compose": {
+    "placeholder": "Ketik pesan…",
+    "send": "Kirim",
+    "sending": "Mengirim…"
   }
 }

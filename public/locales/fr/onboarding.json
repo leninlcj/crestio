@@ -1,0 +1,37 @@
+{
+  "setup": {
+    "saving": "Enregistrement en cours…",
+    "kicker": "Configuration",
+    "heading": "Créons votre entreprise",
+    "intro": "Quelques informations, et c'est parti. Vous pourrez modifier tout cela plus tard.",
+    "name_label": "Votre nom",
+    "name_placeholder": "par exemple : Alex Morgan",
+    "business_label": "Nom de l'entreprise",
+    "business_placeholder": "par exemple : Morgan Tutoring",
+    "business_hint": "Indiqué sur les factures et en haut de votre tableau de bord.",
+    "phone_label": "Téléphone (facultatif)",
+    "default_rate_label": "Tarif horaire par défaut",
+    "currency_label": "Devise",
+    "session_expired": "La session a expiré. Veuillez vous reconnecter.",
+    "continue": "Continuer"
+  },
+  "plan": {
+    "sign_out": "Se déconnecter",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "not_signed_in": "Vous n'êtes pas connecté.",
+    "kicker": "Choisissez votre formule",
+    "heading": "Choisissez ce qui correspond à votre façon de donner des cours particuliers.",
+    "subheading": "Commencez par un essai gratuit. Résiliez à tout moment. Pas de mauvaises surprises.",
+    "save_2_months": "Économisez 2 mois",
+    "referral_discount": "{{discount}} — aucun code à saisir. S'applique automatiquement une fois votre période d'essai convertie.",
+    "repeat_customer": "Bienvenue à nouveau — votre carte sera débitée immédiatement lors de votre inscription, car vous aviez déjà un compte.",
+    "most_popular": "Les plus populaires",
+    "tier_name": "Crestio {{tier}}",
+    "contact_sales": "Contacter le service commercial",
+    "start_trial": "Commencez votre essai gratuit de {{days}} jours",
+    "redirecting": "Redirection en cours…",
+    "checkout_error": "Impossible de lancer le paiement. Veuillez réessayer.",
+    "footer_note": "Prix en AUD, TVA comprise le cas échéant. Vous pouvez modifier votre forfait ou résilier votre abonnement à tout moment depuis le portail de facturation."
+  }
+}

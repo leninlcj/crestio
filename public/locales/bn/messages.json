@@ -1,15 +1,15 @@
 {
   "subtitle": "বার্তা",
-  "loading": "লোড হচ্ছে…",
-  "compose": {
-    "sending": "প্রেরণ…",
-    "placeholder": "একটি বার্তা লিখুন…",
-    "send": "প্রেরণ করুন"
-  },
   "title_list": "বার্তা",
   "title_thread": "বার্তা",
+  "loading": "লোড হচ্ছে…",
   "empty": {
     "no_threads": "এখনো কোনো বার্তা নেই।",
     "no_messages": "এই থ্রেডে এখনও কোনো বার্তা নেই।"
+  },
+  "compose": {
+    "placeholder": "একটি বার্তা লিখুন…",
+    "send": "প্রেরণ করুন",
+    "sending": "প্রেরণ…"
   }
 }

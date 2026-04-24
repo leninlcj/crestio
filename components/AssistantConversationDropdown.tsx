@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, KeyboardEvent } from 'react';
 import { useAssistantConversation, Conversation } from '../lib/assistantConversation';
+import { activeLocale } from '../lib/utils';
 
 function formatRelative(iso: string): string {
   const d = new Date(iso);
@@ -13,7 +14,7 @@ function formatRelative(iso: string): string {
   const days = Math.floor(hr / 24);
   if (days === 1) return 'yesterday';
   if (days < 7) return `${days}d ago`;
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' });
 }
 
 export default function AssistantConversationDropdown() {

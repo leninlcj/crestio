@@ -112,8 +112,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await createNotification(admin, {
         userId: session.tutor_user_id,
         type: 'parent_update_posted',
-        title: `${parentLabel} marked ${studentName}'s homework complete`,
-        body: snippet,
+        titleKey: 'parent_update_posted.homework_marked_title',
+        bodyKey: 'parent_update_posted.homework_marked_body',
+        templateVars: { parent: parentLabel, student: studentName, snippet },
         linkUrl: `/app/students/${session.student_id}`,
         context: { session_id: session.id },
         dedupeKey: `homework_completed:${session.id}`,

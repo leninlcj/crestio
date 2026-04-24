@@ -1,0 +1,21 @@
+{
+  "page": {
+    "subtitle": "Teaching",
+    "title": "Lesson plans"
+  },
+  "actions": {
+    "new": "New plan",
+    "generate": "Generate a plan"
+  },
+  "empty": {
+    "title": "No lesson plans yet",
+    "description": "Generate one with Claude in about ten seconds, then save, edit, or reuse it."
+  },
+  "card": {
+    "ai_badge": "AI",
+    "unassigned": "Unassigned"
+  },
+  "common": {
+    "loading": "Loading…"
+  }
+}

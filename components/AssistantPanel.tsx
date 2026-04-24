@@ -27,6 +27,7 @@ import AssistantConversationDropdown from './AssistantConversationDropdown';
 import { useMembership } from '../lib/membershipContext';
 import { getChipsForPath, WELCOME_CHIPS } from './assistantChipsByPage';
 import AssistantCapabilityModal from './AssistantCapabilityModal';
+import { activeLocale } from '../lib/utils';
 
 const WELCOME_DISMISS_KEY = 'crestio.assistant.welcomeDismissed';
 
@@ -771,7 +772,7 @@ function renderPreviewBody(preview: AnyPreview): React.ReactNode {
 }
 
 function CreateBatchInvoicesBody({ p }: { p: CreateBatchInvoicesPreview }) {
-  const fmt = (c: number) => new Intl.NumberFormat('en-AU', {
+  const fmt = (c: number) => new Intl.NumberFormat(activeLocale(), {
     style: 'currency', currency: p.currency || 'AUD',
     maximumFractionDigits: c % 100 === 0 ? 0 : 2,
   }).format(c / 100);
@@ -1044,7 +1045,7 @@ function AssignStudentToTutorBody({ p }: { p: AssignStudentToTutorPreview }) {
 }
 
 function formatCents(cents: number, currency = 'AUD'): string {
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat(activeLocale(), {
     style: 'currency',
     currency,
     maximumFractionDigits: (cents % 100 === 0) ? 0 : 2,

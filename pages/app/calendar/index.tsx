@@ -1,6 +1,8 @@
+import { activeLocale } from '../../../lib/utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
@@ -16,13 +18,14 @@ type View = 'week' | 'day';
 function formatWeekLabel(d: Date): string {
   const end = new Date(d); end.setDate(end.getDate() + 6);
   const sameMonth = d.getMonth() === end.getMonth();
-  const left = d.toLocaleDateString('en-AU', { day: 'numeric', month: sameMonth ? undefined : 'short' });
-  const right = end.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  const left = d.toLocaleDateString(activeLocale(), { day: 'numeric', month: sameMonth ? undefined : 'short' });
+  const right = end.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
   return `${left} – ${right}`;
 }
 
 function CalendarInner() {
   const { t } = useTranslation(['common']);
+  const fmt = useLocaleFormatters();
   const { membership } = useMembership();
   const { organization } = useOrganization();
   // Default to day view on mobile, week view on larger screens.
@@ -142,29 +145,29 @@ function CalendarInner() {
   }
 
   return (
-    <Layout subtitle="Schedule" title={t('common:nav.calendar')} actions={
+    <Layout subtitle={t('common:calendar_page.subtitle')} title={t('common:nav.calendar')} actions={
       <>
         <button type="button" onClick={() => { setQuickCreateStart(new Date()); setQuickCreateOpen(true); }}
-          className="btn-primary text-xs">New session</button>
+          className="btn-primary text-xs">{t('common:calendar_page.new_session')}</button>
       </>
     }>
       {pendingProposals.length > 0 && (
         <div className="card p-4 mb-6 border-amber/50 bg-amber-soft/30">
           <div className="text-2xs uppercase tracking-widest text-amber-ink mb-2">
-            {pendingProposals.length} parent request{pendingProposals.length === 1 ? '' : 's'} awaiting your response
+            {t('common:calendar_page.pending_requests', { count: pendingProposals.length })}
           </div>
           <ul className="space-y-2">
             {pendingProposals.map((s) => (
               <li key={s.id} className="flex items-center justify-between text-sm">
                 <div>
-                  <strong>{s.student_name}</strong> · {new Date(s.scheduled_at).toLocaleString('en-AU', {
+                  <strong>{s.student_name}</strong> · {fmt.formatDateTime(s.scheduled_at, {
                     weekday: 'short', day: 'numeric', month: 'short',
                     hour: 'numeric', minute: '2-digit',
                   })}
                 </div>
                 <button type="button" onClick={() => setDetailSession(s)}
                   className="text-xs text-forest hover:text-forest-ink underline">
-                  Review →
+                  {t('common:calendar_page.review')}
                 </button>
               </li>
             ))}
@@ -175,12 +178,12 @@ function CalendarInner() {
       <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <button onClick={goPrev} className="btn-ghost text-xs">‹</button>
-          <button onClick={goToday} className="btn-ghost text-xs">Today</button>
+          <button onClick={goToday} className="btn-ghost text-xs">{t('common:calendar_page.today')}</button>
           <button onClick={goNext} className="btn-ghost text-xs">›</button>
           <span className="text-sm text-ink ml-2">
             {view === 'week'
               ? formatWeekLabel(rangeStart)
-              : rangeStart.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}
+              : fmt.formatDate(rangeStart, { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}
           </span>
         </div>
         <div className="inline-flex border border-rule rounded bg-surface p-1 gap-1">
@@ -188,17 +191,17 @@ function CalendarInner() {
             className={[
               'px-3 py-1 text-xs rounded',
               view === 'week' ? 'bg-forest text-cream' : 'text-ink-muted hover:text-ink',
-            ].join(' ')}>Week</button>
+            ].join(' ')}>{t('common:calendar_page.week')}</button>
           <button onClick={() => setView('day')}
             className={[
               'px-3 py-1 text-xs rounded',
               view === 'day' ? 'bg-forest text-cream' : 'text-ink-muted hover:text-ink',
-            ].join(' ')}>Day</button>
+            ].join(' ')}>{t('common:calendar_page.day')}</button>
         </div>
       </div>
 
       {loading && sessions.length === 0 ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : (
         <WeekCalendar
           weekStart={rangeStart}

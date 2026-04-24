@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "إلغاء",
+    "new": "+ أسرة جديدة",
+    "create": "إنشاء",
+    "creating": "جاري الإنشاء..."
+  },
+  "filters": {
+    "active": "نشط",
+    "archived": "المحفوظات",
+    "search_placeholder": "البحث عن الأسرة، الوالد، الطالب..."
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "load_failed": "تعذر تحميل الأسر.",
+    "create_failed": "تعذر إنشاء الأسرة.",
+    "apply_failed": "تعذر تطبيق الاقتراح."
+  },
+  "card": {
+    "archived_badge": "المحفوظات",
+    "students_one": "{{count}} طالب",
+    "students_other": "{{count}} الطلاب",
+    "parent_label_fallback": "الوالد",
+    "needs_primary": "يحتاج إلى والد أو والدة رئيسيين",
+    "no_students": "لا يوجد طلاب",
+    "parents_one": "{{count}} الوالد",
+    "parents_other": "{{count}} الوالدين",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "تجاهل",
+    "fallback_parent": "والد مشترك",
+    "question_existing": "{{students}} {{parent}}. هل يتم تجميعهم في أسرة واحدة؟",
+    "question_new": "{{students}} {{parent}}. هل يتم تجميعهم في أسرة جديدة؟",
+    "accept": "المجموعة →"
+  },
+  "page": {
+    "subtitle": "الأشخاص",
+    "title": "الأسر"
+  },
+  "form": {
+    "name_label": "اسم الأسرة",
+    "name_placeholder": "مثال: عائلة تشين"
+  },
+  "empty": {
+    "none": "لا توجد أسر حتى الآن",
+    "archived_none": "لا توجد أسر محفوظة",
+    "description": "يجمع الأسرة الأشقاء تحت جهة اتصال واحدة للفواتير. عند ربط أحد الوالدين بطالب، يتم إنشاء أسرة تلقائيًا.",
+    "create": "إنشاء أسرة"
+  }
+}

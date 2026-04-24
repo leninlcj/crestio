@@ -1,44 +1,42 @@
 {
   "dashboard": {
-    "loading_error": "Impossible de charger votre tableau de bord.",
-    "this_week": "Cette semaine",
-    "stats": {
-      "paid": "Payant",
-      "sessions_this_month": "Séances de ce mois-ci",
-      "sessions_this_year": "Sessions de cette année",
-      "outstanding": "Remarquable"
-    },
     "kicker": "Bienvenue",
     "greeting": "Bonjour {{name}}",
     "greeting_fallback": "Votre tableau de bord",
+    "loading_error": "Impossible de charger votre tableau de bord.",
     "this_week_empty": "Pas de session cette semaine.",
+    "no_access": "Vous n'y avez pas accès.",
+    "this_week": "Cette semaine",
     "recent_updates": "Dernières mises à jour de votre tuteur",
     "your_children": "Vos enfants",
     "at_a_glance": "En bref",
-    "no_access": "Vous n'y avez pas accès.",
+    "stats": {
+      "sessions_this_month": "Séances de ce mois-ci",
+      "sessions_this_year": "Séances de cette année",
+      "paid": "Payant",
+      "outstanding": "En attente"
+    },
     "change_requested": "Modification demandée"
   },
   "nav": {
+    "calendar": "Calendrier",
     "messages": "Messages",
     "invoices": "Factures",
-    "sign_out": "Se déconnecter",
-    "calendar": "Calendrier",
     "settings": "Paramètres",
-    "all_children": "← Tous les enfants"
+    "sign_out": "Se déconnecter",
+    "all_children": "← Tous les enfants",
+    "back_dashboard": "← Tableau de bord",
+    "back_messages": "← Messages",
+    "back_invoices": "← Factures",
+    "back_settings": "← Paramètres"
+  },
+  "common": {
+    "loading": "Chargement en cours…"
   },
   "student": {
     "loading": "Chargement en cours…",
-    "next_session": "Prochaine session",
-    "homework": {
-      "heading": "Devoirs",
-      "overdue": "En retard",
-      "mark_done": "Marquer comme terminé",
-      "undo": "Annuler",
-      "done": "Terminé",
-      "pending": "En attente",
-      "no_homework": "Aucun devoir n'a encore été donné."
-    },
     "student": "Étudiant",
+    "next_session": "Prochaine session",
     "view_changes": "Afficher / demander des modifications →",
     "tabs": {
       "calendar": "calendrier",
@@ -54,10 +52,161 @@
       "no_past": "Aucune session passée pour l'instant.",
       "no_notes": "Aucune note n'a encore été partagée pour cette session."
     },
+    "homework": {
+      "heading": "Devoirs",
+      "mark_done": "Marquer comme terminé",
+      "undo": "Annuler",
+      "done": "Terminé",
+      "overdue": "En retard",
+      "pending": "En attente",
+      "no_homework": "Aucun devoir n'a encore été donné."
+    },
     "invoices": {
       "none": "Aucune facture n'a encore été émise pour cet étudiant.",
       "payment_instructions": "Pour effectuer le paiement, veuillez suivre les instructions figurant sur chaque facture envoyée par votre tuteur."
     },
     "updates_none": "Aucune mise à jour de la part de votre tuteur pour l'instant."
+  },
+  "calendar": {
+    "kicker": "Calendrier",
+    "heading": "Cette semaine",
+    "today": "Aujourd'hui",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "Factures",
+    "due_label": "{{date}}",
+    "status_paid": "Payant",
+    "status_overdue": "En retard",
+    "heading": "Vos factures",
+    "empty": "Aucune facture pour l'instant.",
+    "outstanding_eyebrow": "En attente",
+    "outstanding_note": "Pour effectuer le paiement, suivez les instructions figurant sur chaque facture envoyée par votre tuteur.",
+    "family_badge": "FAMILLE",
+    "issued_label": "Publié l'{{date}}"
+  },
+  "invoice_detail": {
+    "not_found": "Facture introuvable.",
+    "status_paid": "Payant",
+    "status_overdue": "En retard",
+    "issued": "Émises",
+    "due": "À payer",
+    "sessions": "Séances",
+    "back": "← Factures",
+    "number_label": "{{number}} des factures",
+    "heading_fallback": "Facture",
+    "period": "Période",
+    "no_line_items": "Aucun élément.",
+    "no_sessions": "Cette facture ne comporte aucune séance.",
+    "minutes_suffix": "{{minutes}} min",
+    "tutoring_session": "Séance de tutorat",
+    "subtotal": "Sous-total :",
+    "notes": "Remarques",
+    "download_print": "Télécharger / imprimer",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "Messages",
+    "heading": "Vos messages"
+  },
+  "notifications_page": {
+    "kicker": "Notifications",
+    "heading": "Vos notifications"
+  },
+  "signin": {
+    "heading": "Se connecter",
+    "email_label": "E-mail",
+    "password_label": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion en cours…",
+    "kicker": "Portail des parents",
+    "forgot": "Mot de passe oublié ?",
+    "error_generic": "Échec de la connexion.",
+    "error_not_parent": "Cette connexion est réservée aux parents. Si vous êtes tuteur, connectez-vous à l'adresse /auth/signin.",
+    "forgot_need_email": "Entrez d'abord votre adresse e-mail, puis appuyez sur « Mot de passe oublié ».",
+    "forgot_sent": "Vérifiez votre boîte mail pour obtenir un lien de réinitialisation.",
+    "invitation_hint": "Vous n'avez pas encore reçu d'invitation de votre tuteur ? Demandez-lui de vous en envoyer une."
+  },
+  "settings_page": {
+    "heading": "Paramètres",
+    "loading": "Chargement en cours…",
+    "email_label": "E-mail",
+    "save": "Enregistrer",
+    "saving": "Enregistrement en cours…",
+    "saved": "Enregistré.",
+    "new_password_label": "Nouveau mot de passe",
+    "updating": "Mise à jour en cours…",
+    "sign_out_heading": "Se déconnecter",
+    "sign_out": "Se déconnecter",
+    "kicker": "Compte",
+    "details_heading": "Vos coordonnées",
+    "email_hint": "Contactez votre tuteur si vous devez changer d'adresse e-mail.",
+    "name_label": "Nom",
+    "change_password": "Modifier le mot de passe",
+    "password_min": "Au moins 8 caractères.",
+    "password_too_short": "Le mot de passe doit comporter au moins 8 caractères.",
+    "password_updated": "Mot de passe mis à jour.",
+    "update_password": "Mettre à jour le mot de passe",
+    "sign_out_body": "La déconnexion met fin à cette session.",
+    "msg_notifs_heading": "Notifications de messages",
+    "msg_notifs_body": "Choisissez quand Crestio vous envoie des e-mails. Les messages dans l'application s'affichent quoi qu'il arrive.",
+    "msg_when_label": "M'envoyer un e-mail lorsque mon tuteur m'envoie un message",
+    "msg_when_hint": "Limitées à une fois toutes les 30 minutes maximum par fil de discussion.",
+    "msg_urgent_label": "Ne m'envoyez des e-mails que pour les messages urgents",
+    "msg_urgent_hint": "Ignorer les e-mails pour les messages normaux ou d'information."
+  },
+  "settings_notifications_page": {
+    "kicker": "Paramètres",
+    "saved": "Enregistré.",
+    "heading": "Notifications par e-mail",
+    "intro": "Les notifications dans l'application s'affichent toujours, quel que soit le réglage de ces options. Celles-ci ne concernent que l'envoi des e-mails.",
+    "toggles": {
+      "session_reminders": {
+        "label": "Rappels de session",
+        "description": "Vous envoyer un e-mail 24 heures avant chaque session prévue."
+      },
+      "reschedule_events": {
+        "label": "Report et annulation",
+        "description": "Lorsque votre tuteur modifie ou annule une session."
+      },
+      "invoice_events": {
+        "label": "Notifications de factures",
+        "description": "Lorsqu'une nouvelle facture est envoyée."
+      },
+      "parent_updates": {
+        "label": "Mises à jour de votre tuteur",
+        "description": "Lorsque votre tuteur publie une mise à jour sur le portail concernant votre enfant."
+      },
+      "messages_email": {
+        "label": "Messages de votre tuteur",
+        "description": "Recevez un e-mail lorsque le tuteur vous envoie un message. Limité à une fois toutes les 30 minutes."
+      },
+      "messages_urgent_only": {
+        "label": "Messages urgents uniquement",
+        "description": "Si cette option est activée, les e-mails concernant les messages normaux ou d'information ne seront pas envoyés."
+      }
+    }
+  },
+  "accept": {
+    "email_label": "E-mail",
+    "name_label": "Votre nom",
+    "creating": "Création du compte…",
+    "kicker": "Portail des parents",
+    "checking": "Vérification de l'invitation…",
+    "missing_token": "Ce lien ne contient pas de jeton d'invitation.",
+    "verify_failed": "Impossible de vérifier l'invitation. Veuillez réessayer plus tard.",
+    "invalid_heading": "Invitation indisponible",
+    "invalid_default": "Ce lien d'invitation n'est plus valide.",
+    "invalid_body_suffix": " S'il s'agit d'une erreur, demandez à votre tuteur de vous envoyer une nouvelle invitation.",
+    "back_home": "Retour à la page d'accueil",
+    "accept_heading": "Acceptez votre invitation",
+    "accept_body": "{{tutor}} vous a invité à consulter les sessions de tutorat d'{{student}}.",
+    "email_hint": "Elles proviennent de votre invitation. Elles ne peuvent pas être modifiées ici.",
+    "name_placeholder": "Facultatif",
+    "password_label": "Créer un mot de passe",
+    "password_min": "Au moins 8 caractères.",
+    "password_too_short": "Le mot de passe doit comporter au moins 8 caractères.",
+    "create": "Créer un compte parent",
+    "create_failed": "Impossible de créer un compte."
   }
 }

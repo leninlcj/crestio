@@ -12,5 +12,81 @@
     "manage_notifications": "إدارة الإشعارات",
     "manage_notifications_text": "إدارة الإشعارات: {{url}}",
     "footer_sender": "من Crestio — برنامج إدارة أعمال المعلمين."
+  },
+  "message_received": {
+    "title": "رسالة جديدة حول {{student}}",
+    "body": "{{sender}} أرسل لك رسالة. افتح البوابة الإلكترونية لقراءتها والرد عليها."
+  },
+  "message_urgent": {
+    "title": "رسالة عاجلة من {{sender}} بشأن {{student}}",
+    "body": "{{sender}} تم وضع علامة \"عاجل\" على هذا. افتح البوابة الإلكترونية لقراءته والرد عليه."
+  },
+  "session_reminder_1h": {
+    "title": "الجلسة مع {{student}} بعد ساعة واحدة",
+    "body": "{{student}} على {{time}}. {{duration}} دقيقة، {{subject}}."
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} لديه درس خصوصي غدًا",
+    "body": "غدًا في {{time}}. {{duration}} min {{subject_suffix}}."
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "الموعد الجديد: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "تم إلغاء الجلسة المقررة في {{old_time}}."
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} طلبت إعادة جدولة جلسة {{student}}",
+    "body": "الوقت المقترح الجديد: {{new_time}}. راجع وقم بالقبول أو الرفض في التقويم."
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "الموعد الجديد: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "ستعقد الجلسة كما هو مقرر."
+  },
+  "invoice_sent": {
+    "title": "فاتورة جديدة {{number}} من مدرسك",
+    "body": "{{student_or_household}} · {{session_count}} session {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "تم وضع علامة \"مدفوع\" على الفاتورة {{number}}",
+    "body": "شكراً على الدفع."
+  },
+  "invoice_overdue": {
+    "title": "الفاتورة رقم {{number}} متأخرة عن السداد بأكثر من 14 يومًا",
+    "body": "{{student}} · {{amount}} · الموعد النهائي {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} نشر تحديثًا حول {{student}}",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} تم وضع علامة \"مكتمل\" على واجب {{student}}",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\nكان من المقرر إرساله إلى {{due_date}}. قم بوضع علامة \"مكتمل\" في البوابة الإلكترونية عند الانتهاء."
+  },
+  "tutor_invited": {
+    "title": "تمت دعوتك إلى {{org}} على Crestio",
+    "body": "انقر على الرابط الموجود في هذه الرسالة الإلكترونية لقبول الدعوة وإنشاء حسابك."
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} انضم إلى {{org}}",
+    "body": "أصبح بإمكانهم الآن الوصول إلى المعلم وتسجيل الجلسات."
+  },
+  "payment_failed": {
+    "title": "فشل دفعك عبر Crestio",
+    "body": "لم نتمكن من خصم المبلغ من بطاقتك. قم بتحديث طريقة الدفع للحفاظ على إمكانية الوصول."
+  },
+  "trial_ending": {
+    "title": "تنتهي فترة تجربة Crestio الخاصة بك بعد {{days}} يومًا",
+    "body": "اشترك للحفاظ على إمكانية الوصول إلى الجلسات والفواتير والمساعد."
+  },
+  "subscription_cancelled": {
+    "title": "تم إلغاء اشتراكك في Crestio",
+    "body": "ستظل تتمتع بإمكانية الوصول حتى {{ends_on}}. يمكنك تجديد اشتراكك في أي وقت من خلال \"الإعدادات\" → \"الفوترة\"."
   }
 }

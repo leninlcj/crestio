@@ -1,44 +1,42 @@
 {
   "dashboard": {
-    "loading_error": "无法加载您的仪表板。",
-    "this_week": "本周",
-    "stats": {
-      "paid": "付费",
-      "sessions_this_month": "本月会议",
-      "sessions_this_year": "今年的会议",
-      "outstanding": "杰出"
-    },
     "kicker": "欢迎",
     "greeting": "你好，{{name}}",
     "greeting_fallback": "您的仪表盘",
+    "loading_error": "无法加载您的仪表板。",
     "this_week_empty": "本周没有会议。",
+    "no_access": "您没有访问权限。",
+    "this_week": "本周",
     "recent_updates": "导师的最新动态",
     "your_children": "您的孩子",
     "at_a_glance": "一览",
-    "no_access": "您没有访问权限。",
-    "change_requested": "请求修改"
+    "stats": {
+      "sessions_this_month": "本月课程",
+      "sessions_this_year": "今年的会议",
+      "paid": "已付费",
+      "outstanding": "待处理"
+    },
+    "change_requested": "请求更改"
   },
   "nav": {
+    "calendar": "日历",
     "messages": "消息",
     "invoices": "发票",
-    "sign_out": "注销",
-    "calendar": "日历",
     "settings": "设置",
-    "all_children": "← 所有子项"
+    "sign_out": "注销",
+    "all_children": "← 所有子项",
+    "back_dashboard": "← 仪表盘",
+    "back_messages": "← 消息",
+    "back_invoices": "← 发票",
+    "back_settings": "← 设置"
+  },
+  "common": {
+    "loading": "正在加载……"
   },
   "student": {
     "loading": "正在加载……",
-    "next_session": "下次会议",
-    "homework": {
-      "heading": "家庭作业",
-      "overdue": "逾期",
-      "mark_done": "标记为已完成",
-      "undo": "撤销",
-      "done": "已完成",
-      "pending": "待定",
-      "no_homework": "尚未布置作业。"
-    },
     "student": "学生",
+    "next_session": "下次会议",
     "view_changes": "查看/请求更改 →",
     "tabs": {
       "calendar": "日历",
@@ -54,10 +52,161 @@
       "no_past": "目前尚无往期会议。",
       "no_notes": "本次会议尚未分享任何笔记。"
     },
+    "homework": {
+      "heading": "家庭作业",
+      "mark_done": "标记为已完成",
+      "undo": "撤销",
+      "done": "已完成",
+      "overdue": "逾期",
+      "pending": "待定",
+      "no_homework": "尚未布置作业。"
+    },
     "invoices": {
       "none": "该学生目前尚无发票。",
       "payment_instructions": "付款时，请按照导师开具的每张发票上的说明操作。"
     },
     "updates_none": "您的导师尚未发布更新。"
+  },
+  "calendar": {
+    "kicker": "日历",
+    "heading": "本周",
+    "today": "今天",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "发票",
+    "due_label": "来源：{{date}}",
+    "status_paid": "付费",
+    "status_overdue": "逾期",
+    "heading": "您的发票",
+    "empty": "尚无发票。",
+    "outstanding_eyebrow": "待处理",
+    "outstanding_note": "如需付款，请按照导师开具的每张发票上的说明操作。",
+    "family_badge": "家庭",
+    "issued_label": "发布于 {{date}}"
+  },
+  "invoice_detail": {
+    "not_found": "未找到该发票。",
+    "status_paid": "付费",
+    "status_overdue": "逾期",
+    "issued": "已开具",
+    "due": "应付",
+    "sessions": "课程",
+    "back": "← 发票",
+    "number_label": "发票 {{number}}",
+    "heading_fallback": "发票",
+    "period": "时段",
+    "no_line_items": "无具体项目。",
+    "no_sessions": "此发票上没有课程。",
+    "minutes_suffix": "{{minutes}} 分钟",
+    "tutoring_session": "辅导课",
+    "subtotal": "小计：",
+    "notes": "备注",
+    "download_print": "下载 / 打印",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "消息",
+    "heading": "您的消息"
+  },
+  "notifications_page": {
+    "kicker": "通知",
+    "heading": "您的通知"
+  },
+  "signin": {
+    "heading": "登录",
+    "email_label": "电子邮件",
+    "password_label": "密码",
+    "submit": "登录",
+    "submitting": "正在登录……",
+    "kicker": "家长门户",
+    "forgot": "忘记密码了吗？",
+    "error_generic": "登录失败。",
+    "error_not_parent": "此登录仅限家长使用。如果您是辅导老师，请访问 /auth/signin 登录。",
+    "forgot_need_email": "请先输入您的电子邮件地址，然后点击“忘记密码”。",
+    "forgot_sent": "请查收您的电子邮件，获取重置链接。",
+    "invitation_hint": "还没收到导师的邀请吗？请他们发一份给你。"
+  },
+  "settings_page": {
+    "heading": "设置",
+    "loading": "正在加载……",
+    "email_label": "电子邮件",
+    "save": "保存",
+    "saving": "正在保存……",
+    "saved": "已保存。",
+    "new_password_label": "新密码",
+    "updating": "正在更新……",
+    "sign_out_heading": "注销",
+    "sign_out": "注销",
+    "kicker": "账户",
+    "details_heading": "您的详细信息",
+    "email_hint": "如需更改电子邮箱，请联系您的导师。",
+    "name_label": "名称",
+    "change_password": "更改密码",
+    "password_min": "至少8个字符。",
+    "password_too_short": "密码必须至少为8个字符。",
+    "password_updated": "密码已更新。",
+    "update_password": "更新密码",
+    "sign_out_body": "退出登录将结束本次会话。",
+    "msg_notifs_heading": "消息通知",
+    "msg_notifs_body": "选择 Crestio 向您发送邮件的时间。应用内消息无论如何都会显示。",
+    "msg_when_label": "当我的导师给我发消息时，请通过电子邮件通知我",
+    "msg_when_hint": "每个主题最多每 30 分钟发送一次。",
+    "msg_urgent_label": "仅在有紧急消息时发送邮件给我",
+    "msg_urgent_hint": "跳过普通消息或信息类邮件。"
+  },
+  "settings_notifications_page": {
+    "kicker": "设置",
+    "saved": "已保存。",
+    "heading": "电子邮件通知",
+    "intro": "无论这些开关如何设置，应用内通知都会正常显示。这些设置仅控制电子邮件的发送。",
+    "toggles": {
+      "session_reminders": {
+        "label": "会话提醒",
+        "description": "在每次预定课程开始前 24 小时向您发送电子邮件。"
+      },
+      "reschedule_events": {
+        "label": "重新安排和取消",
+        "description": "当您的导师更改或取消课程时。"
+      },
+      "invoice_events": {
+        "label": "发票通知",
+        "description": "当发送新发票时。"
+      },
+      "parent_updates": {
+        "label": "导师的更新",
+        "description": "当您的导师在门户网站上发布关于您孩子的更新时。"
+      },
+      "messages_email": {
+        "label": "来自导师的消息",
+        "description": "当导师向您发送消息时，系统会向您发送电子邮件。每30分钟仅发送一次。"
+      },
+      "messages_urgent_only": {
+        "label": "仅接收紧急消息",
+        "description": "如果启用此选项，将跳过普通消息或信息类消息的电子邮件通知。"
+      }
+    }
+  },
+  "accept": {
+    "email_label": "电子邮件",
+    "name_label": "您的姓名",
+    "creating": "正在创建账户……",
+    "kicker": "家长门户",
+    "checking": "正在检查邀请……",
+    "missing_token": "此链接缺少邀请令牌。",
+    "verify_failed": "无法验证邀请。请稍后再试。",
+    "invalid_heading": "邀请不可用",
+    "invalid_default": "此邀请链接已失效。",
+    "invalid_body_suffix": " 如果这是个误操作，请让您的导师重新发送邀请。",
+    "back_home": "返回首页",
+    "accept_heading": "接受您的邀请",
+    "accept_body": "{{tutor}} 已邀请您查看 {{student}} 的辅导课程。",
+    "email_hint": "来自您的邀请。此处无法更改。",
+    "name_placeholder": "可选",
+    "password_label": "创建密码",
+    "password_min": "至少 8 个字符。",
+    "password_too_short": "密码必须至少为 8 个字符。",
+    "create": "创建家长账户",
+    "create_failed": "无法创建账户。"
   }
 }

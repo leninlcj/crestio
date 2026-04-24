@@ -12,5 +12,81 @@
     "manage_notifications": "اطلاعات کا انتظام کریں",
     "manage_notifications_text": "اطلاعات کا انتظام کریں: {{url}}",
     "footer_sender": "کریسٹِیو کی جانب سے — ٹیوٹر بزنس سافٹ ویئر۔"
+  },
+  "message_received": {
+    "title": "{{student}} کے بارے میں نیا پیغام",
+    "body": "{{sender}} آپ کو ایک پیغام بھیجا گیا ہے۔ پورٹل کھولیں تاکہ پڑھ سکیں اور جواب دے سکیں۔"
+  },
+  "message_urgent": {
+    "title": "{{sender}} کی جانب سے {{student}} کے بارے میں فوری پیغام",
+    "body": "{{sender}} اسے فوری کے طور پر نشان زد کیا گیا۔ پڑھنے اور جواب دینے کے لیے پورٹل کھولیں۔"
+  },
+  "session_reminder_1h": {
+    "title": "{{student}} کے ساتھ سیشن ایک گھنٹے میں",
+    "body": "{{student}} {{time}} پر۔ {{duration}} منٹ، {{subject}}۔"
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} کل ٹیوشن ہے۔",
+    "body": "کل صبح {{time}} بجے۔ {{duration}} منٹ {{subject_suffix}}۔"
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "نیا وقت: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "{{old_time}} کے لیے شیڈول شدہ سیشن منسوخ کر دیا گیا ہے۔"
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} {{student}} کے سیشن کو دوبارہ شیڈول کرنے کی درخواست کی گئی",
+    "body": "نیا تجویز کردہ وقت: {{new_time}}۔ کیلنڈر میں جائزہ لیں اور قبول یا مسترد کریں۔"
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "نیا وقت: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "سیشن شیڈول کے مطابق ہی رہے گا۔"
+  },
+  "invoice_sent": {
+    "title": "نیا انوائس {{number}} آپ کے ٹیوٹر کی جانب سے",
+    "body": "{{student_or_household}} · {{session_count}} سیشن {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "انوائس {{number}} کو ادا شدہ کے طور پر نشان زد کریں",
+    "body": "ادائیگی کا شکریہ۔"
+  },
+  "invoice_overdue": {
+    "title": "انوائس {{number}} کو 14 دن سے زیادہ تاخیر ہو چکی ہے۔",
+    "body": "{{student}} · {{amount}} · جمع کروائیں {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} نے '{{student}}' کے بارے میں ایک اپ ڈیٹ پوسٹ کیا۔",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} {{student}} کے ہوم ورک کو مکمل کے طور پر نشان زد کیا گیا",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\n{{due_date}} پر جمع کروانے کی تاریخ تھی۔ مکمل ہونے پر پورٹل میں اسے مکمل کے طور پر نشان زد کریں۔"
+  },
+  "tutor_invited": {
+    "title": "آپ کو Crestio پر {{org}} میں مدعو کیا گیا ہے۔",
+    "body": "اس ای میل میں موجود لنک پر کلک کریں تاکہ دعوت قبول کریں اور اپنا اکاؤنٹ قائم کریں۔"
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} {{org}} میں شامل ہوئے",
+    "body": "اب ان کے پاس ٹیوٹر تک رسائی ہے اور وہ سیشنز ریکارڈ کر سکتے ہیں۔"
+  },
+  "payment_failed": {
+    "title": "آپ کی کریسٹو ادائیگی ناکام ہو گئی",
+    "body": "ہم آپ کے کارڈ سے رقم وصول نہیں کر سکے۔ رسائی برقرار رکھنے کے لیے اپنا ادائیگی کا طریقہ اپ ڈیٹ کریں۔"
+  },
+  "trial_ending": {
+    "title": "آپ کا Crestio ٹرائل {{days}} دنوں میں ختم ہو جائے گا",
+    "body": "سیشنز، انوائسنگ اور اسسٹنٹ تک رسائی برقرار رکھنے کے لیے سبسکرائب کریں۔"
+  },
+  "subscription_cancelled": {
+    "title": "آپ کی کریسٹو سبسکرپشن منسوخ کر دی گئی ہے",
+    "body": "آپ کے پاس رسائی '{{ends_on}}' تک رہے گی۔  سیٹنگز → بلنگ سے کسی بھی وقت دوبارہ سبسکرائب کریں۔"
   }
 }

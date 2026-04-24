@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "দল",
+    "title": "টিউটররা"
+  },
+  "table": {
+    "name": "নাম",
+    "subjects": "বিষয়সমূহ",
+    "students": "শিক্ষার্থীরা",
+    "em_dash": "—",
+    "linked_login": "লিঙ্কড লগইন",
+    "pay_rate": "বেতন হার",
+    "this_month": "এই মাসে",
+    "linked_yes": "হ্যাঁ",
+    "linked_no": "না"
+  },
+  "new": {
+    "page_subtitle": "শিক্ষকবৃন্দ",
+    "email_label": "ইমেল",
+    "phone_label": "ফোন",
+    "notes_label": "নোটস",
+    "saving": "সংরক্ষণ হচ্ছে…",
+    "cancel": "বাতিল করুন",
+    "not_signed_in": "সাইন ইন করা নেই।",
+    "no_organization": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।",
+    "page_title": "নতুন শিক্ষক",
+    "name_label": "নাম *",
+    "subjects_label": "তারা যে বিষয়গুলো পড়ান",
+    "subjects_placeholder": "গণিত, রসায়ন",
+    "subjects_hint": "কমা দ্বারা পৃথক।",
+    "pay_rate_label": "প্রতি ঘণ্টার বেতন",
+    "pay_rate_placeholder": "যেমন ৫৫",
+    "submit": "টিউটর তৈরি করুন"
+  },
+  "common": {
+    "loading": "লোড হচ্ছে…"
+  },
+  "actions": {
+    "add": "টিউটর যোগ করুন",
+    "add_one": "একজন টিউটর যোগ করুন"
+  },
+  "empty": {
+    "title": "এখনও কোনো টিউটর নেই",
+    "description": "যখন আপনি আপনার ব্যবসায় পড়ানোর জন্য কাউকে যুক্ত করবেন, তখন তাদের টিউটর হিসেবে যোগ করুন। যদি আপনি একক টিউটর হন, তাহলে এটি এড়িয়ে যেতে পারেন।"
+  }
+}

@@ -45,12 +45,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await createNotification(admin, {
         userId: s.tutor_user_id,
         type: 'session_reminder_1h',
-        title: `Session in about 1 hour: ${s.student?.name ?? 'student'}`,
-        body: [
-          s.subject,
-          `${s.duration_minutes} min`,
-          formatAuDateTime(s.scheduled_at),
-        ].filter(Boolean).join(' · '),
+        titleKey: 'session_reminder_1h.title',
+        bodyKey: 'session_reminder_1h.body',
+        templateVars: {
+          student: s.student?.name ?? 'student',
+          time: formatAuDateTime(s.scheduled_at),
+          duration: s.duration_minutes,
+          subject: s.subject ?? '',
+        },
         linkUrl: `/app/sessions/${s.id}`,
         context: { session_id: s.id, student_id: s.student?.id },
         dedupeKey: `session_reminder_1h:${s.id}`,
@@ -97,12 +99,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const result = await createNotification(admin, {
           userId: uid,
           type: 'session_reminder_24h',
-          title: `Reminder: ${s.student?.name ?? 'your child'}'s session tomorrow at ${formatTime(s.scheduled_at)}`,
-          body: [
-            s.subject,
-            `${s.duration_minutes} min`,
-            tutorName ? `with ${tutorName}` : null,
-          ].filter(Boolean).join(' · '),
+          titleKey: 'session_reminder_24h.title',
+          bodyKey: 'session_reminder_24h.body',
+          templateVars: {
+            student: s.student?.name ?? 'your child',
+            time: formatTime(s.scheduled_at),
+            duration: s.duration_minutes,
+            subject_suffix: s.subject ? ` · ${s.subject}` : '',
+          },
           linkUrl: `/parent/student/${studentId}`,
           context: { session_id: s.id, student_id: studentId },
           dedupeKey: `session_reminder_24h:${s.id}:${parentId}`,

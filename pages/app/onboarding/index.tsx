@@ -1,11 +1,13 @@
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import { supabase } from '../../../lib/supabase';
 import { dollarsToCents } from '../../../lib/utils';
 
 function OnboardingInner() {
+  const { t } = useTranslation('onboarding');
   const router = useRouter();
   const [ownerName, setOwnerName] = useState('');
   const [businessName, setBusinessName] = useState('');
@@ -45,7 +47,7 @@ function OnboardingInner() {
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      setError('Session expired. Please sign in again.');
+      setError(t('setup.session_expired'));
       setLoading(false);
       return;
     }
@@ -80,17 +82,17 @@ function OnboardingInner() {
 
       <div className="flex-1 flex items-start justify-center px-6 pb-16 pt-8">
         <div className="w-full max-w-lg">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Setup</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('setup.kicker')}</div>
           <h1 className="font-display text-4xl md:text-5xl tracking-tightest mb-3">
-            Let's set up your business
+            {t('setup.heading')}
           </h1>
           <p className="text-sm text-ink-muted mb-10">
-            A couple of details, then you're in. You can change all of this later.
+            {t('setup.intro')}
           </p>
 
           <form onSubmit={onSubmit} className="space-y-5">
             <div>
-              <label className="label">Your name</label>
+              <label className="label">{t('setup.name_label')}</label>
               <input
                 type="text"
                 required
@@ -98,25 +100,25 @@ function OnboardingInner() {
                 value={ownerName}
                 onChange={(e) => setOwnerName(e.target.value)}
                 className="input"
-                placeholder="e.g. Alex Morgan"
+                placeholder={t('setup.name_placeholder')}
               />
             </div>
             <div>
-              <label className="label">Business name</label>
+              <label className="label">{t('setup.business_label')}</label>
               <input
                 type="text"
                 required
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 className="input"
-                placeholder="e.g. Morgan Tutoring"
+                placeholder={t('setup.business_placeholder')}
               />
               <div className="text-2xs text-ink-soft mt-1.5">
-                Shown on invoices and at the top of your dashboard.
+                {t('setup.business_hint')}
               </div>
             </div>
             <div>
-              <label className="label">Phone (optional)</label>
+              <label className="label">{t('setup.phone_label')}</label>
               <input
                 type="tel"
                 value={phone}
@@ -126,7 +128,7 @@ function OnboardingInner() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label">Default hourly rate</label>
+                <label className="label">{t('setup.default_rate_label')}</label>
                 <input
                   type="number"
                   min="0"
@@ -138,7 +140,7 @@ function OnboardingInner() {
                 />
               </div>
               <div>
-                <label className="label">Currency</label>
+                <label className="label">{t('setup.currency_label')}</label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
@@ -157,7 +159,7 @@ function OnboardingInner() {
             {error && <div className="text-sm text-claret">{error}</div>}
 
             <button type="submit" disabled={loading} className="btn-primary w-full py-3 mt-2">
-              {loading ? 'Saving…' : 'Continue'}
+              {loading ? t('setup.saving') : t('setup.continue')}
             </button>
           </form>
         </div>

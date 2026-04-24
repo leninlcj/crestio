@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { CalendarSession } from './types';
+import { activeLocale } from '../../lib/utils';
 
 // Week view grid: 7 day-columns × (6am-10pm = 16 rows). Sessions render
 // as absolutely-positioned blocks inside their day column.
@@ -97,7 +98,7 @@ export function WeekCalendar({
                 isToday ? 'text-forest font-medium' : 'text-ink-muted',
               ].join(' ')}
             >
-              {d.toLocaleDateString('en-AU', DAY_LABEL_FMT)}
+              {d.toLocaleDateString(activeLocale(), DAY_LABEL_FMT)}
             </div>
           );
         })}
@@ -160,14 +161,14 @@ export function WeekCalendar({
                     height: `${height}px`,
                     background: bg,
                   }}
-                  title={`${s.student_name}${s.subject ? ' · ' + s.subject : ''} · ${start.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}`}
+                  title={`${s.student_name}${s.subject ? ' · ' + s.subject : ''} · ${start.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })}`}
                 >
                   <div className="font-medium truncate">{s.student_name}</div>
                   {s.subject && height > 32 && (
                     <div className="truncate opacity-90">{s.subject}</div>
                   )}
                   <div className="opacity-80 text-[10px] tabular-nums">
-                    {start.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}
+                    {start.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })}
                   </div>
                 </button>
               );

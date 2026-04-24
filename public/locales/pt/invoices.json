@@ -1,29 +1,10 @@
 {
-  "title_not_found": "Não encontrado",
-  "batch": {
-    "period_this_week": "Esta semana",
-    "households": "Famílias",
-    "sessions": "Sessões",
-    "loading": "Carregando…",
-    "period": "Período",
-    "period_last_week": "Na semana passada",
-    "period_this_month": "Este mês",
-    "period_last_month": "No mês passado",
-    "period_custom": "Intervalo personalizado…",
-    "from": "De",
-    "to": "Para",
-    "back_to_list": "Voltar à lista de faturas",
-    "unbilled_total": "Total não faturado",
-    "nothing_title": "Nada a faturar",
-    "nothing_body": "Não há sessões concluídas e não faturadas neste período. Registre mais sessões ou selecione um intervalo de datas diferente.",
-    "save_drafts": "Salvar como rascunhos",
-    "send": "Enviar faturas"
-  },
   "subtitle": "Faturamento",
   "title_list": "Faturas",
   "title_new": "Nova fatura",
   "title_batch": "Fatura em lote",
   "title_loading": "…",
+  "title_not_found": "Não encontrado",
   "actions": {
     "new": "Nova fatura",
     "batch": "Fatura em lote",
@@ -35,15 +16,15 @@
   },
   "filters": {
     "all": "Todas",
-    "household": "Gastos domésticos",
+    "household": "Agregado familiar",
     "per_student": "Por aluno"
   },
   "columns": {
-    "number": "Número",
     "billed_to": "Cobrado a",
-    "issued": "Emitidas",
-    "due": "A pagar",
     "status": "Status",
+    "number": "Número",
+    "issued": "Emitidas",
+    "due": "Vencimento",
     "total": "Total"
   },
   "not_found": "Fatura não encontrada.",
@@ -51,6 +32,25 @@
     "no_invoices_title": "Ainda não há faturas",
     "no_invoices_body": "Agrupe as sessões concluídas em uma fatura para enviar aos pais.",
     "cta_batch": "Fatura em lote"
+  },
+  "batch": {
+    "period": "Período",
+    "period_this_week": "Esta semana",
+    "period_last_week": "Na semana passada",
+    "period_this_month": "Este mês",
+    "period_last_month": "No mês passado",
+    "period_custom": "Intervalo personalizado…",
+    "from": "De",
+    "to": "Para",
+    "households": "Famílias",
+    "sessions": "Sessões",
+    "unbilled_total": "Total não faturado",
+    "nothing_body": "Não há sessões concluídas e não faturadas neste período. Registre mais sessões ou selecione um intervalo de datas diferente.",
+    "loading": "Carregando…",
+    "back_to_list": "Voltar à lista de faturas",
+    "nothing_title": "Não há nada a faturar",
+    "save_drafts": "Salvar como rascunhos",
+    "send": "Enviar faturas"
   },
   "batch_toast_created": "Faturas em lote criadas. Elas estão listadas abaixo."
 }

@@ -100,14 +100,14 @@ function StudentsInner() {
     >
       {homeworkFilter && (
         <div className="mb-4 flex items-center justify-between gap-3 p-3 rounded bg-forest-soft border border-forest/20 text-sm">
-          <span className="text-forest-ink">Showing students with pending homework.</span>
-          <Link href="/app/students" className="text-xs text-forest underline">Clear filter</Link>
+          <span className="text-forest-ink">{t('students:filter_banner.homework_pending')}</span>
+          <Link href="/app/students" className="text-xs text-forest underline">{t('students:filter_banner.clear_filter')}</Link>
         </div>
       )}
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
         <input
           type="search"
-          placeholder="Search name, school, parent…"
+          placeholder={t('students:search_placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="input md:max-w-sm"
@@ -120,7 +120,7 @@ function StudentsInner() {
               'text-xs px-3 py-1.5'
             }
           >
-            Active
+            {t('students:filters.active')}
           </button>
           <button
             onClick={() => setShowArchived(true)}
@@ -129,35 +129,35 @@ function StudentsInner() {
               'text-xs px-3 py-1.5'
             }
           >
-            Archived
+            {t('students:filters.archived')}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
-          title={showArchived ? 'No archived students' : (isTutor ? 'No students assigned yet' : 'No students yet')}
+          title={showArchived ? t('students:empty.no_archived') : (isTutor ? t('students:empty.no_tutor_record') : t('students:empty.no_students'))}
           description={
             showArchived
-              ? 'Archived students appear here.'
+              ? t('students:empty.show_archived')
               : (isTutor
-                  ? 'Your organization owner will assign students to you.'
-                  : 'Add your first student to start tracking sessions and billing.')
+                  ? t('students:empty.description_tutor')
+                  : t('students:empty.description_owner'))
           }
-          action={!showArchived && !isTutor ? <Link href="/app/students/new" className="btn-primary">Add a student</Link> : undefined}
+          action={!showArchived && !isTutor ? <Link href="/app/students/new" className="btn-primary">{t('students:empty.add_first')}</Link> : undefined}
         />
       ) : (
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Year</th>
-                <th>Subjects</th>
-                {!isTutor && <th>Parent</th>}
-                {!isTutor && <th className="text-right">Rate</th>}
+                <th>{t('students:columns.name')}</th>
+                <th>{t('students:columns.year')}</th>
+                <th>{t('students:columns.subjects')}</th>
+                {!isTutor && <th>{t('students:columns.parent')}</th>}
+                {!isTutor && <th className="text-right">{t('students:columns.rate')}</th>}
               </tr>
             </thead>
             <tbody>
@@ -176,7 +176,7 @@ function StudentsInner() {
                         <div className="text-ink font-medium">
                           {s.name}
                           {(s as any).is_test_record && (
-                            <span className="ml-2 badge-neutral text-2xs">TEST</span>
+                            <span className="ml-2 badge-neutral text-2xs">{t('students:test_pill')}</span>
                           )}
                         </div>
                         {s.school && <div className="text-2xs text-ink-soft">{s.school}</div>}

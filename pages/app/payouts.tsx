@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { useOrganization } from '../../lib/organizationContext';
 import { Tutor } from '../../lib/types';
 import { formatCents, startOfMonth, startOfWeek, cx } from '../../lib/utils';
+import { activeLocale } from '../../lib/utils';
 
 type Preset = 'this_month' | 'last_month' | 'this_week' | 'last_week' | 'custom';
 
@@ -330,7 +331,7 @@ function PayoutsInner() {
                               <tbody>
                                 {r.sessions.map((s) => {
                                   const subtotal = sessionPayoutCents(s);
-                                  const dateLabel = new Date(s.scheduled_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+                                  const dateLabel = new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
                                   return (
                                     <tr key={s.id}>
                                       <td className="px-5 py-1.5 text-ink-muted font-mono text-xs">{dateLabel}</td>

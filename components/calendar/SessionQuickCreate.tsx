@@ -1,6 +1,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { Modal } from '../design/Modal';
 import { supabase } from '../../lib/supabase';
+import { activeLocale } from '../../lib/utils';
 
 type StudentOption = { id: string; name: string };
 
@@ -53,7 +54,7 @@ export function SessionQuickCreate({
     const step = rule === 'weekly' ? 7 : rule === 'fortnightly' ? 14 : 28;
     let count = 0;
     for (let t = from.getTime(); t <= until.getTime(); t += step * 86_400_000) count++;
-    return `This will create ${count} session${count === 1 ? '' : 's'} from ${from.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })} to ${until.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}.`;
+    return `This will create ${count} session${count === 1 ? '' : 's'} from ${from.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })} to ${until.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}.`;
   })();
 
   async function submit(e: FormEvent) {

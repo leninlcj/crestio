@@ -12,5 +12,81 @@
     "manage_notifications": "管理通知",
     "manage_notifications_text": "管理通知：{{url}}",
     "footer_sender": "来自 Crestio — 家教业务软件。"
+  },
+  "message_received": {
+    "title": "关于{{student}}的新消息",
+    "body": "{{sender}} 已向您发送消息。请打开门户网站阅读并回复。"
+  },
+  "message_urgent": {
+    "title": "来自 {{sender}} 的紧急消息，关于 {{student}}",
+    "body": "{{sender}} 已标记为紧急。请登录门户查看并回复。"
+  },
+  "session_reminder_1h": {
+    "title": "1小时后将与{{student}}进行课程",
+    "body": "{{student}} 网址：{{time}}。{{duration}}分钟，{{subject}}。"
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} 明天有辅导课",
+    "body": "明天下午{{time}}。{{duration}}分钟 {{subject_suffix}}。"
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "新时间：{{new_time}}。"
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "原定于 {{old_time}} 的课程已取消。"
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} 请求重新安排{{student}}的课程",
+    "body": "建议的新时间：{{new_time}}。请在日历中查看并确认或拒绝。"
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "新时间：{{new_time}}。"
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "本次课程按原定时间进行。"
+  },
+  "invoice_sent": {
+    "title": "您的导师已发送新发票 {{number}}",
+    "body": "{{student_or_household}} · {{session_count}} session {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "已将 {{number}} 的发票标记为已支付",
+    "body": "感谢您的付款。"
+  },
+  "invoice_overdue": {
+    "title": "发票编号 {{number}} 已逾期超过 14 天",
+    "body": "{{student}} · {{amount}} · 截止日期 {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} 发布了关于 {{student}} 的更新",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} 已标记{{student}}的作业为已完成",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\n原定于{{due_date}}提交。完成后请在门户网站上标记为已完成。"
+  },
+  "tutor_invited": {
+    "title": "您已受邀参加 Crestio 上的“{{org}}”",
+    "body": "请点击本邮件中的链接接受邀请并设置您的账户。"
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} 已加入 {{org}}",
+    "body": "他们现在已获得导师权限，并可记录课程。"
+  },
+  "payment_failed": {
+    "title": "您的 Crestio 支付失败",
+    "body": "我们无法从您的信用卡扣款。请更新支付方式以保持访问权限。"
+  },
+  "trial_ending": {
+    "title": "您的 Crestio 试用期将在 {{days}} 天后结束",
+    "body": "订阅以继续访问课程、账单和助手功能。"
+  },
+  "subscription_cancelled": {
+    "title": "您的 Crestio 订阅已被取消",
+    "body": "您将保留访问权限直至 {{ends_on}}。您可随时通过“设置”→“账单”重新订阅。"
   }
 }

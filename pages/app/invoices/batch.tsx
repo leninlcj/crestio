@@ -6,7 +6,7 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
-import { cx, formatCents, centsToDollars, dollarsToCents } from '../../../lib/utils';
+import { cx, formatCents, centsToDollars, dollarsToCents, formatDate } from '../../../lib/utils';
 import { periodPreset } from '../../../lib/billing/groupSessionsByHousehold';
 import type { HouseholdGroup } from '../../../lib/billing/groupSessionsByHousehold';
 
@@ -280,28 +280,28 @@ function BatchInvoicesInner() {
     <Layout subtitle={t('invoices:title_list')} title={t('invoices:title_batch')}>
       <div className="mb-6 flex flex-col md:flex-row md:items-end gap-3">
         <div>
-          <label className="label">Period</label>
+          <label className="label">{t('invoices:batch.period')}</label>
           <select
             className="input md:w-56"
             value={period}
             onChange={(e) => setPeriod(e.target.value as PeriodKind)}
           >
-            <option value="this_week">This week</option>
-            <option value="last_week">Last week</option>
-            <option value="this_month">This month</option>
-            <option value="last_month">Last month</option>
-            <option value="custom">Custom range…</option>
+            <option value="this_week">{t('invoices:batch.period_this_week')}</option>
+            <option value="last_week">{t('invoices:batch.period_last_week')}</option>
+            <option value="this_month">{t('invoices:batch.period_this_month')}</option>
+            <option value="last_month">{t('invoices:batch.period_last_month')}</option>
+            <option value="custom">{t('invoices:batch.period_custom')}</option>
           </select>
         </div>
         {period === 'custom' && (
           <>
             <div>
-              <label className="label">From</label>
+              <label className="label">{t('invoices:batch.from')}</label>
               <input type="date" className="input" value={customStart}
                 onChange={(e) => setCustomStart(e.target.value)} />
             </div>
             <div>
-              <label className="label">To</label>
+              <label className="label">{t('invoices:batch.to')}</label>
               <input type="date" className="input" value={customEnd}
                 onChange={(e) => setCustomEnd(e.target.value)} />
             </div>
@@ -309,22 +309,22 @@ function BatchInvoicesInner() {
         )}
         <div className="ml-auto text-sm text-ink-muted">
           <Link href="/app/invoices" className="underline underline-offset-2">
-            Back to invoice list
+            {t('invoices:batch.back_to_list')}
           </Link>
         </div>
       </div>
 
       <div className="card p-5 mb-6 flex flex-wrap gap-6 items-center">
         <div>
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Households</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoices:batch.households')}</div>
           <div className="font-display text-2xl tracking-tightest">{totals.households}</div>
         </div>
         <div>
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Sessions</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoices:batch.sessions')}</div>
           <div className="font-display text-2xl tracking-tightest">{totals.sessions}</div>
         </div>
         <div>
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Unbilled total</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoices:batch.unbilled_total')}</div>
           <div className="font-display text-2xl tracking-tightest font-mono num">
             {formatCents(totals.total_cents, currency, { showZero: true })}
           </div>
@@ -332,14 +332,14 @@ function BatchInvoicesInner() {
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('invoices:batch.loading')}</div>
       ) : error ? (
         <div className="card p-6 text-sm text-claret">{error}</div>
       ) : groupsToShow.length === 0 ? (
         <div className="card p-8 text-center">
-          <div className="font-display text-2xl mb-2 tracking-tightest">Nothing to invoice</div>
+          <div className="font-display text-2xl mb-2 tracking-tightest">{t('invoices:batch.nothing_title')}</div>
           <p className="text-sm text-ink-muted mb-5">
-            No completed unbilled sessions in this period. Log more sessions or pick a different date range.
+            {t('invoices:batch.nothing_body')}
           </p>
         </div>
       ) : (
@@ -366,8 +366,8 @@ function BatchInvoicesInner() {
         <div className="fixed bottom-0 inset-x-0 md:left-60 bg-cream border-t border-rule p-4 z-30">
           <div className="max-w-[800px] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div className="text-sm text-ink">
-              <strong>{effective.households}</strong> household{effective.households === 1 ? '' : 's'} · {' '}
-              <strong>{effective.sessions}</strong> session{effective.sessions === 1 ? '' : 's'} · {' '}
+              <strong>{effective.households}</strong>{' '}{t('invoices:batch.summary_households', { count: effective.households, defaultValue: '{{count}} households' })} · {' '}
+              <strong>{effective.sessions}</strong>{' '}{t('invoices:batch.summary_sessions', { count: effective.sessions, defaultValue: '{{count}} sessions' })} · {' '}
               <span className="font-mono num">{formatCents(effective.cents, currency, { showZero: true })}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -376,14 +376,14 @@ function BatchInvoicesInner() {
                 onClick={() => setShowConfirm('draft')}
                 className="btn-ghost text-sm"
               >
-                Save as drafts
+                {t('invoices:batch.save_drafts')}
               </button>
               <button
                 type="button"
                 onClick={() => setShowConfirm('send')}
                 className="btn-primary text-sm"
               >
-                Send invoices
+                {t('invoices:batch.send')}
               </button>
             </div>
           </div>
@@ -537,7 +537,7 @@ function HouseholdCard({
                                 />
                               </td>
                               <td className="py-1">
-                                {new Date(s.scheduled_at).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
+                                {formatDate(s.scheduled_at, { weekday: 'short', day: 'numeric', month: 'short' })}
                               </td>
                               <td className="py-1">{s.subject ?? '—'}</td>
                               <td className="py-1 text-right font-mono">{s.duration_minutes}</td>
@@ -599,22 +599,28 @@ function ConfirmModal({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  const { t } = useTranslation(['invoices', 'common']);
+  const amount = formatCents(total, currency, { showZero: true });
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
       <div className="bg-cream border border-rule rounded shadow-lift max-w-md w-full p-6">
         <h2 className="font-display text-xl tracking-tightest mb-2">
-          {mode === 'send' ? 'Send invoices' : 'Save as drafts'}
+          {mode === 'send' ? t('invoices:batch.modal_send_title', { defaultValue: 'Send invoices' }) : t('invoices:batch.modal_draft_title', { defaultValue: 'Save as drafts' })}
         </h2>
         <p className="text-sm text-ink-muted mb-4 leading-relaxed">
           {mode === 'send'
-            ? <>You're about to send <strong>{count}</strong> invoice{count === 1 ? '' : 's'} totalling <strong className="font-mono">{formatCents(total, currency, { showZero: true })}</strong>. Parents will receive an email immediately. You can still edit or void them after.</>
-            : <>Create <strong>{count}</strong> draft invoice{count === 1 ? '' : 's'} totalling <strong className="font-mono">{formatCents(total, currency, { showZero: true })}</strong>. Nothing is sent yet.</>}
+            ? t('invoices:batch.modal_send_body', { count, amount, defaultValue: 'You are about to send {{count}} invoice(s) totalling {{amount}}. Parents will receive an email immediately. You can still edit or void them after.' })
+            : t('invoices:batch.modal_draft_body', { count, amount, defaultValue: 'Create {{count}} draft invoice(s) totalling {{amount}}. Nothing is sent yet.' })}
         </p>
         {error && <div className="text-sm text-claret mb-3">{error}</div>}
         <div className="flex items-center justify-end gap-2">
-          <button type="button" onClick={onCancel} className="btn-ghost text-sm" disabled={submitting}>Cancel</button>
+          <button type="button" onClick={onCancel} className="btn-ghost text-sm" disabled={submitting}>{t('common:actions.cancel')}</button>
           <button type="button" onClick={onConfirm} className="btn-primary text-sm" disabled={submitting}>
-            {submitting ? 'Working…' : (mode === 'send' ? `Send ${count}` : `Save ${count} draft${count === 1 ? '' : 's'}`)}
+            {submitting
+              ? t('invoices:batch.modal_working', { defaultValue: 'Working…' })
+              : (mode === 'send'
+                ? t('invoices:batch.modal_send_cta', { count, defaultValue: 'Send {{count}}' })
+                : t('invoices:batch.modal_save_drafts_cta', { count, defaultValue: 'Save {{count}} draft(s)' }))}
           </button>
         </div>
       </div>

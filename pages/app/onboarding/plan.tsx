@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import { supabase } from '../../../lib/supabase';
 import { PLAN_CATALOGUE, type BillingInterval, formatPlanPrice } from '../../../lib/plans';
@@ -8,9 +9,9 @@ import type { PlanTier } from '../../../lib/billing';
 import { Badge } from '../../../components/design/Badge';
 
 function PlanPickerInner() {
+  const { t } = useTranslation('onboarding');
   const router = useRouter();
   const initialInterval = (router.query.interval === 'annual' ? 'annual' : 'monthly') as BillingInterval;
-  const initialPlan = (router.query.plan === 'team' ? 'team' : 'solo') as PlanTier;
   const [interval, setInterval] = useState<BillingInterval>(initialInterval);
   const [busyPlan, setBusyPlan] = useState<PlanTier | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +24,6 @@ function PlanPickerInner() {
     }
   }, [router.query.interval]);
 
-  // Check whether the current user has a pending referral — if so, show a
-  // discount badge near the CTAs.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -48,7 +47,7 @@ function PlanPickerInner() {
     setBusyPlan(plan);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) { setError('Not signed in.'); return; }
+      if (!session?.access_token) { setError(t('plan.not_signed_in')); return; }
       const res = await fetch('/api/billing/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
@@ -57,7 +56,7 @@ function PlanPickerInner() {
       const payload = await res.json().catch(() => ({}));
       if (payload?.repeat_customer) setRepeatNote(true);
       if (!res.ok || !payload?.url) {
-        setError(payload?.error ?? 'Could not start checkout. Please try again.');
+        setError(payload?.error ?? t('plan.checkout_error'));
         return;
       }
       window.location.href = payload.url;
@@ -78,18 +77,18 @@ function PlanPickerInner() {
           onClick={async () => { await supabase.auth.signOut(); router.push('/'); }}
           className="text-sm text-ink-muted hover:text-ink"
         >
-          Sign out
+          {t('plan.sign_out')}
         </button>
       </header>
 
       <main className="max-w-5xl mx-auto px-6 md:px-12 py-14 md:py-20">
         <div className="text-center mb-10 md:mb-14">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Choose your plan</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('plan.kicker')}</div>
           <h1 className="font-display text-4xl md:text-5xl tracking-tightest mb-4">
-            Pick what fits how you tutor.
+            {t('plan.heading')}
           </h1>
           <p className="text-sm md:text-base text-ink-muted max-w-xl mx-auto">
-            Start with a free trial. Cancel anytime. No surprises.
+            {t('plan.subheading')}
           </p>
         </div>
 
@@ -103,7 +102,7 @@ function PlanPickerInner() {
                 interval === 'monthly' ? 'bg-forest text-cream' : 'text-ink-muted hover:text-ink',
               ].join(' ')}
             >
-              Monthly
+              {t('plan.monthly')}
             </button>
             <button
               type="button"
@@ -113,8 +112,8 @@ function PlanPickerInner() {
                 interval === 'annual' ? 'bg-forest text-cream' : 'text-ink-muted hover:text-ink',
               ].join(' ')}
             >
-              Annual
-              <Badge variant="warning">Save 2 months</Badge>
+              {t('plan.annual')}
+              <Badge variant="warning">{t('plan.save_2_months')}</Badge>
             </button>
           </div>
         </div>
@@ -122,12 +121,12 @@ function PlanPickerInner() {
         {referralDiscount && (
           <div className="card p-4 mb-6 text-sm text-forest-ink bg-forest-soft/60 border-forest/40 flex items-center gap-2">
             <span aria-hidden="true" className="text-forest">✓</span>
-            <span><strong>{referralDiscount}</strong> — no code to enter. Applies automatically once your trial converts.</span>
+            <span>{t('plan.referral_discount', { discount: referralDiscount })}</span>
           </div>
         )}
         {repeatNote && (
           <div className="card p-4 mb-6 text-sm text-ink-muted bg-amber-soft/40 border-amber/40">
-            Welcome back — your card will be charged immediately on signup since you've previously had an account.
+            {t('plan.repeat_customer')}
           </div>
         )}
         {error && <div className="card p-4 mb-6 text-sm text-claret">{error}</div>}
@@ -147,11 +146,11 @@ function PlanPickerInner() {
               >
                 {highlight && (
                   <div className="mb-3">
-                    <Badge variant="success">Most popular</Badge>
+                    <Badge variant="success">{t('plan.most_popular')}</Badge>
                   </div>
                 )}
                 <h2 className={['font-display text-2xl tracking-tightest mb-1', highlight ? 'text-forest-ink' : 'text-ink'].join(' ')}>
-                  Crestio {entry.label}
+                  {t('plan.tier_name', { tier: entry.label })}
                 </h2>
                 <p className="text-sm text-ink-muted mb-5">{entry.pitch}</p>
                 <div className="mb-5">
@@ -173,7 +172,7 @@ function PlanPickerInner() {
                       onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-support'))}
                       className="btn-secondary w-full"
                     >
-                      Contact sales
+                      {t('plan.contact_sales')}
                     </button>
                   ) : (
                     <button
@@ -183,8 +182,8 @@ function PlanPickerInner() {
                       className={highlight ? 'btn-primary w-full' : 'btn-secondary w-full'}
                     >
                       {busyPlan === p
-                        ? 'Redirecting…'
-                        : `Start ${entry.trialDays}-day free trial`}
+                        ? t('plan.redirecting')
+                        : t('plan.start_trial', { days: entry.trialDays })}
                     </button>
                   )}
                 </div>
@@ -194,7 +193,7 @@ function PlanPickerInner() {
         </div>
 
         <p className="text-center text-2xs text-ink-soft mt-10">
-          Prices in AUD, inclusive of GST where applicable. You can change plan or cancel anytime from the billing portal.
+          {t('plan.footer_note')}
         </p>
       </main>
     </div>

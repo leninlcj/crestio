@@ -1,15 +1,15 @@
 {
   "subtitle": "消息",
-  "loading": "正在加载……",
-  "compose": {
-    "sending": "正在发送……",
-    "placeholder": "输入消息……",
-    "send": "发送"
-  },
   "title_list": "消息",
   "title_thread": "消息",
+  "loading": "正在加载……",
   "empty": {
     "no_threads": "目前尚无消息。",
     "no_messages": "本讨论串尚无消息。"
+  },
+  "compose": {
+    "placeholder": "输入消息……",
+    "send": "发送",
+    "sending": "正在发送……"
   }
 }

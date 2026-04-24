@@ -103,7 +103,7 @@ function SessionsInner() {
       {drafts.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-3">
-            <h2 className="font-display text-xl tracking-tightest">Drafts</h2>
+            <h2 className="font-display text-xl tracking-tightest">{t('sessions:filter.drafts')}</h2>
             <span className="text-2xs uppercase tracking-widest text-ink-muted bg-ruleSoft rounded-full px-2 py-0.5">
               {drafts.length}
             </span>
@@ -113,14 +113,14 @@ function SessionsInner() {
               <div key={d.key} className="flex items-center gap-4 px-5 py-3">
                 <div className="flex-1 min-w-0">
                   <div className="text-ink truncate text-sm">{d.label}</div>
-                  <div className="text-2xs text-ink-soft">Last edited {relativeTime(d.lastEditedAt)}</div>
+                  <div className="text-2xs text-ink-soft">{t('sessions:drafts.last_edited', { when: relativeTime(d.lastEditedAt) })}</div>
                 </div>
                 <div className="flex gap-2 shrink-0">
                   <button type="button" onClick={() => resumeDraft(d)} className="btn-secondary text-xs">
-                    Resume
+                    {t('common:actions.continue')}
                   </button>
                   <button type="button" onClick={() => discardDraft(d)} className="btn-ghost text-xs text-claret">
-                    Discard
+                    {t('common:actions.discard')}
                   </button>
                 </div>
               </div>
@@ -141,35 +141,35 @@ function SessionsInner() {
                 : 'text-ink-muted hover:text-ink hover:bg-ruleSoft'
             )}
           >
-            {f}
+            {t(`sessions:filter.${f}`, { defaultValue: f })}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : sessions.length === 0 ? (
         <EmptyState
           title={
-            filter === 'upcoming' ? 'No upcoming sessions' :
-            filter === 'unpaid' ? 'Nothing unpaid' :
-            filter === 'past' ? 'No past sessions' :
-            'No sessions yet'
+            filter === 'upcoming' ? t('sessions:empty.no_upcoming', { defaultValue: 'No upcoming sessions' }) :
+            filter === 'unpaid' ? t('sessions:empty.nothing_unpaid', { defaultValue: 'Nothing unpaid' }) :
+            filter === 'past' ? t('sessions:empty.no_past', { defaultValue: 'No past sessions' }) :
+            t('sessions:empty.no_sessions')
           }
-          description={filter === 'upcoming' ? 'Schedule one to fill your week.' : undefined}
-          action={filter === 'upcoming' ? <Link href="/app/sessions/new" className="btn-primary">Schedule a session</Link> : undefined}
+          description={filter === 'upcoming' ? t('sessions:empty.schedule_prompt', { defaultValue: 'Schedule one to fill your week.' }) : undefined}
+          action={filter === 'upcoming' ? <Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link> : undefined}
         />
       ) : (
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>When</th>
-                <th>Student</th>
-                <th>Subject · Topic</th>
-                <th>Tutor</th>
-                <th>Status</th>
-                <th className="text-right">Amount</th>
+                <th>{t('sessions:columns.when')}</th>
+                <th>{t('sessions:columns.student')}</th>
+                <th>{t('sessions:columns.subject_topic')}</th>
+                <th>{t('sessions:columns.tutor')}</th>
+                <th>{t('sessions:columns.status')}</th>
+                <th className="text-right">{t('sessions:columns.amount')}</th>
               </tr>
             </thead>
             <tbody>
@@ -179,7 +179,7 @@ function SessionsInner() {
                   <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
                   <td className="text-ink font-medium">{s.student?.name ?? '—'}</td>
                   <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}</td>
-                  <td className="text-ink-muted">{s.tutor?.name ?? <span className="text-ink-soft">You</span>}</td>
+                  <td className="text-ink-muted">{s.tutor?.name ?? <span className="text-ink-soft">{t('sessions:fields.tutor_self')}</span>}</td>
                   <td>
                     <span className={cx(
                       s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),
@@ -187,7 +187,9 @@ function SessionsInner() {
                       s.status === 'no_show' && 'badge-claret',
                       s.status === 'scheduled' && 'badge-neutral'
                     )}>
-                      {s.status === 'completed' ? (s.paid ? 'Paid' : 'Unpaid') : s.status}
+                      {s.status === 'completed'
+                        ? (s.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
+                        : t(`sessions:status.${s.status}` as any)}
                     </span>
                   </td>
                   <td className="text-right font-mono num text-sm">

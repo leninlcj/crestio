@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "取消",
+    "new": "+ 新建家庭",
+    "create": "创建",
+    "creating": "正在创建……"
+  },
+  "filters": {
+    "active": "活跃",
+    "archived": "已存档",
+    "search_placeholder": "搜索家庭、家长、学生……"
+  },
+  "common": {
+    "loading": "正在加载……",
+    "load_failed": "无法加载家庭。",
+    "create_failed": "无法创建家庭。",
+    "apply_failed": "无法应用该建议。"
+  },
+  "card": {
+    "archived_badge": "已存档",
+    "students_one": "{{count}} 学生",
+    "students_other": "{{count}} 学生",
+    "parent_label_fallback": "家长",
+    "needs_primary": "需指定主要监护人",
+    "no_students": "没有学生",
+    "parents_one": "{{count}} 家长",
+    "parents_other": "{{count}} 父母",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "关闭",
+    "fallback_parent": "共同监护人",
+    "question_existing": "{{students}} {{parent}}。将它们归为一个家庭吗？",
+    "question_new": "{{students}} {{parent}}。是否将其归为一个新家庭？",
+    "accept": "组 →"
+  },
+  "page": {
+    "subtitle": "人员",
+    "title": "家庭"
+  },
+  "form": {
+    "name_label": "家庭名称",
+    "name_placeholder": "例如：陈家"
+  },
+  "empty": {
+    "none": "目前尚无家庭",
+    "archived_none": "没有存档的家庭",
+    "description": "一个家庭将兄弟姐妹归入同一个账单联系人名下。当您将家长与学生关联时，系统会自动创建一个家庭。",
+    "create": "创建一个家庭"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "Batalkan",
+    "new": "+ Rumah tangga baru",
+    "create": "Buat",
+    "creating": "Sedang membuat…"
+  },
+  "filters": {
+    "active": "Aktif",
+    "archived": "Tersimpan",
+    "search_placeholder": "Cari rumah tangga, orang tua, siswa…"
+  },
+  "common": {
+    "loading": "Sedang dimuat…",
+    "load_failed": "Tidak dapat memuat data rumah tangga.",
+    "create_failed": "Tidak dapat membuat rumah tangga.",
+    "apply_failed": "Saran tersebut tidak dapat diterapkan."
+  },
+  "card": {
+    "archived_badge": "Tersimpan",
+    "students_one": "{{count}} siswa",
+    "students_other": "{{count}} siswa",
+    "parent_label_fallback": "Orang tua",
+    "needs_primary": "Membutuhkan orang tua utama",
+    "no_students": "Tidak ada siswa",
+    "parents_one": "{{count}} orang tua",
+    "parents_other": "{{count}} orang tua",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "Tutup",
+    "fallback_parent": "orang tua yang berbagi tanggung jawab",
+    "question_existing": "{{students}} {{parent}}. Apakah akan digabungkan menjadi satu rumah tangga?",
+    "question_new": "{{students}} {{parent}}. Apakah akan menggabungkannya menjadi rumah tangga baru?",
+    "accept": "Kelompok →"
+  },
+  "page": {
+    "subtitle": "Orang",
+    "title": "Rumah tangga"
+  },
+  "form": {
+    "name_label": "Nama rumah tangga",
+    "name_placeholder": "misalnya: Keluarga Chen"
+  },
+  "empty": {
+    "none": "Belum ada rumah tangga",
+    "archived_none": "Tidak ada rumah tangga yang diarsipkan",
+    "description": "Sebuah rumah tangga mengelompokkan saudara kandung di bawah satu kontak penagihan. Saat Anda menghubungkan orang tua dengan siswa, rumah tangga akan dibuat secara otomatis.",
+    "create": "Buat rumah tangga"
+  }
+}

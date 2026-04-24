@@ -1,0 +1,21 @@
+{
+  "common": {
+    "loading": "Sedang dimuat…"
+  },
+  "page": {
+    "subtitle": "Pengajaran",
+    "title": "Rencana pelajaran"
+  },
+  "actions": {
+    "new": "Rencana baru",
+    "generate": "Buat rencana"
+  },
+  "empty": {
+    "title": "Belum ada rencana pelajaran",
+    "description": "Buat rencana pelajaran dengan Claude dalam waktu sekitar sepuluh detik, lalu simpan, edit, atau gunakan kembali."
+  },
+  "card": {
+    "ai_badge": "AI",
+    "unassigned": "Belum ditugaskan"
+  }
+}

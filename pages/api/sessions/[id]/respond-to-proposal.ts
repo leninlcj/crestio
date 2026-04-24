@@ -220,8 +220,13 @@ async function notifyParentsOfSession(
       await createNotification(admin, {
         userId: uid,
         type: args.type,
-        title: `${studentName}: ${args.titleSuffix}`,
-        body: args.newTime ? `New time: ${formatAuDateTime(args.newTime)}` : null,
+        titleKey: args.type === 'reschedule_rejected' ? 'reschedule_rejected.title' : 'reschedule_accepted.title',
+        bodyKey: args.type === 'reschedule_rejected' ? 'reschedule_rejected.body' : 'reschedule_accepted.body',
+        templateVars: {
+          student: studentName,
+          suffix: args.titleSuffix,
+          new_time: args.newTime ? formatAuDateTime(args.newTime) : '',
+        },
         linkUrl: `/parent/student/${args.studentId}`,
         context: { session_id: args.sessionId },
         emailOverride: false, // emailParentOfTutorChange already handled it

@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "منسوخ کریں",
+    "new": "+ نیا گھرانہ",
+    "create": "تخلیق کریں",
+    "creating": "تخلیق ہو رہی ہے…"
+  },
+  "filters": {
+    "active": "فعال",
+    "archived": "آرکائیو شدہ",
+    "search_placeholder": "گھریلو تلاش کریں، والدین، طالب علم…"
+  },
+  "common": {
+    "loading": "لوڈ ہو رہا ہے…",
+    "load_failed": "گھرانے لوڈ نہیں ہو سکے۔",
+    "create_failed": "گھرانہ بنانے میں ناکام۔",
+    "apply_failed": "تجویز لاگو نہیں کی جا سکی۔"
+  },
+  "card": {
+    "archived_badge": "آرکائیو شدہ",
+    "students_one": "{{count}} طالب علم",
+    "students_other": "{{count}} طلباء",
+    "parent_label_fallback": "والد",
+    "needs_primary": "ایک بنیادی والدین کی ضرورت ہے",
+    "no_students": "کوئی طالب علم نہیں",
+    "parents_one": "{{count}} والدین",
+    "parents_other": "{{count}} والدین",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "رد کریں",
+    "fallback_parent": "ایک مشترکہ والد",
+    "question_existing": "{{students}} بِلنگ شیئر کرنے والا گروپ۔ کیا انہیں ایک ہی گھرانے میں شامل کیا جائے؟",
+    "question_new": "{{students}} بِلنگ شیئر کرتی ہے۔ انہیں ایک نئے گھرانے میں گروپ کریں؟",
+    "accept": "گروپ →"
+  },
+  "page": {
+    "subtitle": "افراد",
+    "title": "گھرانے"
+  },
+  "form": {
+    "name_label": "گھر کے نام",
+    "name_placeholder": "مثلاً چن خاندان"
+  },
+  "empty": {
+    "none": "ابھی تک کوئی گھرانے نہیں",
+    "archived_none": "کوئی محفوظ شدہ گھرانے نہیں",
+    "description": "ایک گھرانہ بہن بھائیوں کو ایک ہی بلنگ رابطے کے تحت گروپ کرتا ہے۔ جب آپ کسی والدین کو طالب علم سے منسلک کرتے ہیں تو ایک گھرانہ خود بخود بن جاتا ہے۔",
+    "create": "ایک گھرانہ بنائیں"
+  }
+}

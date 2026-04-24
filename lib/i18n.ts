@@ -56,12 +56,21 @@ export const NAMESPACES = [
   'dashboard',
   'emails',
   'errors',
+  'households',
   'invoices',
+  'legal',
+  'lesson_plans',
+  'marketing',
   'messages',
   'notifications',
+  'onboarding',
+  'owner',
   'parent',
+  'payouts',
   'sessions',
+  'settings',
   'students',
+  'tutors',
 ] as const;
 
 const FALLBACK: SupportedLocale = 'en';

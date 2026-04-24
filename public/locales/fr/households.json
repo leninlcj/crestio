@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "Annuler",
+    "new": "+ Nouveau foyer",
+    "create": "Créer",
+    "creating": "Création en cours…"
+  },
+  "filters": {
+    "active": "Actif",
+    "archived": "Archivé",
+    "search_placeholder": "Rechercher un foyer, un parent, un élève…"
+  },
+  "common": {
+    "loading": "Chargement en cours…",
+    "load_failed": "Impossible de charger les ménages.",
+    "create_failed": "Impossible de créer le ménage.",
+    "apply_failed": "Impossible d'appliquer la suggestion."
+  },
+  "card": {
+    "archived_badge": "Archivé",
+    "students_one": "{{count}} étudiant",
+    "students_other": "{{count}} étudiants",
+    "parent_label_fallback": "Parent",
+    "needs_primary": "Doit avoir un parent principal",
+    "no_students": "Aucun élève",
+    "parents_one": "{{count}} parent",
+    "parents_other": "{{count}} parents",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "Ignorer",
+    "fallback_parent": "un parent commun",
+    "question_existing": "{{students}} partager l'{{parent}}. Les regrouper en un seul foyer ?",
+    "question_new": "{{students}} partager l'{{parent}}s. Les regrouper dans un nouveau ménage ?",
+    "accept": "Groupe →"
+  },
+  "page": {
+    "subtitle": "Personnes",
+    "title": "Foyers"
+  },
+  "form": {
+    "name_label": "Nom du foyer",
+    "name_placeholder": "par exemple : la famille Chen"
+  },
+  "empty": {
+    "none": "Aucun ménage pour l'instant",
+    "archived_none": "Aucun ménage archivé",
+    "description": "Un ménage regroupe les frères et sœurs sous un seul contact de facturation. Lorsque vous associez un parent à un élève, un ménage est créé automatiquement.",
+    "create": "Créer un ménage"
+  }
+}

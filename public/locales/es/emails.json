@@ -12,5 +12,81 @@
     "manage_notifications": "Gestionar notificaciones",
     "manage_notifications_text": "Gestionar notificaciones: {{url}}",
     "footer_sender": "De Crestio — software empresarial para tutores."
+  },
+  "message_received": {
+    "title": "Nuevo mensaje sobre {{student}}",
+    "body": "{{sender}} te ha enviado un mensaje. Abre el portal para leerlo y responder."
+  },
+  "message_urgent": {
+    "title": "Mensaje urgente de {{sender}} sobre {{student}}",
+    "body": "{{sender}} Lo ha marcado como urgente. Abre el portal para leerlo y responder."
+  },
+  "session_reminder_1h": {
+    "title": "Sesión con {{student}} en 1 hora",
+    "body": "{{student}} en {{time}}. {{duration}} min, {{subject}}."
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} tiene clase particular mañana",
+    "body": "Mañana a las {{time}}. {{duration}} min {{subject_suffix}}."
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "Nueva hora: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "La sesión programada para el {{old_time}} ha sido cancelada."
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} Se ha solicitado cambiar la fecha de la sesión de{{student}}",
+    "body": "Nueva hora propuesta: {{new_time}}. Revísala y acéptala o recházala en el calendario."
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "Nueva hora: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "La sesión se mantiene según lo previsto."
+  },
+  "invoice_sent": {
+    "title": "Nueva factura {{number}} de tu tutor",
+    "body": "{{student_or_household}} · {{session_count}} session {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "Factura {{number}} marcada como pagada",
+    "body": "Gracias por el pago."
+  },
+  "invoice_overdue": {
+    "title": "La factura {{number}} lleva más de 14 días vencida",
+    "body": "{{student}} · {{amount}} · fecha límite: {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} publicó una actualización sobre {{student}}",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} Marcado como «Tarea de {{student}} completada»",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\n{{due_date}} tenía que estar listo. Marca como completado en el portal cuando lo hayas hecho."
+  },
+  "tutor_invited": {
+    "title": "Te han invitado a «{{org}}» en Crestio",
+    "body": "Haz clic en el enlace de este correo electrónico para aceptar la invitación y configurar tu cuenta."
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} se unió a {{org}}",
+    "body": "Ahora tienen acceso de tutor y pueden registrar sesiones."
+  },
+  "payment_failed": {
+    "title": "Tu pago en Crestio no se ha realizado correctamente",
+    "body": "No hemos podido realizar el cargo en tu tarjeta. Actualiza tu método de pago para mantener el acceso."
+  },
+  "trial_ending": {
+    "title": "Tu periodo de prueba de Crestio finaliza en {{days}} días",
+    "body": "Suscríbete para mantener el acceso a las sesiones, la facturación y el asistente."
+  },
+  "subscription_cancelled": {
+    "title": "Tu suscripción a Crestio ha sido cancelada",
+    "body": "Tendrás acceso hasta el {{ends_on}}. Vuelve a suscribirte en cualquier momento desde Ajustes → Facturación."
   }
 }

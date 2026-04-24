@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { activeLocale } from '../../../lib/utils';
 import AuthGuardParent from '../../../components/AuthGuardParent';
 import { supabase } from '../../../lib/supabase';
 import { WeekCalendar, mondayOfWeek } from '../../../components/calendar/WeekCalendar';
@@ -55,7 +56,7 @@ function displayYearLevel(raw: string | null): string | null {
   return `Year ${trimmed}`;
 }
 function formatAud(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat(activeLocale(), {
     style: 'currency', currency: 'AUD',
     maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
   }).format(cents / 100);
@@ -69,8 +70,8 @@ function relativeDayLabel(iso: string): string {
   if (diff === 0) return 'Today';
   if (diff === 1) return 'Tomorrow';
   if (diff === -1) return 'Yesterday';
-  if (diff > 1 && diff < 7) return d.toLocaleDateString('en-AU', { weekday: 'long' });
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (diff > 1 && diff < 7) return d.toLocaleDateString(activeLocale(), { weekday: 'long' });
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 function relativeOrAbsolute(iso: string): string {
   const now = new Date();
@@ -86,8 +87,8 @@ function relativeOrAbsolute(iso: string): string {
   }
   if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 14) return `Last ${d.toLocaleDateString('en-AU', { weekday: 'long' })}`;
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (diffDays < 14) return `Last ${d.toLocaleDateString(activeLocale(), { weekday: 'long' })}`;
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 type Tab = 'calendar' | 'sessions' | 'homework' | 'invoices' | 'updates';
@@ -225,7 +226,7 @@ function ParentStudentInner() {
               <div className="card p-6 mb-8 bg-forest-soft/40 border-forest/20">
                 <div className="text-2xs uppercase tracking-widest text-forest-ink/80 mb-1">{t('student.next_session')}</div>
                 <div className="font-display text-2xl tracking-tightest text-forest-ink mb-1">
-                  {relativeDayLabel(nextSession.scheduled_at)} at {new Date(nextSession.scheduled_at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })}
+                  {relativeDayLabel(nextSession.scheduled_at)} at {new Date(nextSession.scheduled_at).toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })}
                 </div>
                 <div className="text-sm text-forest-ink/80">
                   {nextSession.duration_minutes} min{nextSession.subject ? ` · ${nextSession.subject}` : ''}
@@ -458,10 +459,10 @@ function SessionsTab({
               >
                 <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1">
                   <div className="font-display text-xl tracking-tightest text-forest-ink">
-                    {relativeDayLabel(s.scheduled_at)} · {new Date(s.scheduled_at).toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })}
+                    {relativeDayLabel(s.scheduled_at)} · {new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
                   </div>
                   <div className="text-xs text-forest-ink/80 font-mono">
-                    {new Date(s.scheduled_at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })} · {s.duration_minutes} min
+                    {new Date(s.scheduled_at).toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })} · {s.duration_minutes} min
                   </div>
                 </div>
                 {(s.subject || s.topic) && (
@@ -486,11 +487,11 @@ function SessionsTab({
               <article key={s.id} className="card p-5 md:p-6">
                 <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-2">
                   <div className="font-display text-lg md:text-xl tracking-tightest">
-                    {relativeDayLabel(s.scheduled_at)} · {new Date(s.scheduled_at).toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' })}
+                    {relativeDayLabel(s.scheduled_at)} · {new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-xs text-ink-muted font-mono">
-                      {new Date(s.scheduled_at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })} · {s.duration_minutes} min
+                      {new Date(s.scheduled_at).toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })} · {s.duration_minutes} min
                     </div>
                     {s.status === 'cancelled' && (
                       <span className="badge-neutral">Cancelled</span>
@@ -531,8 +532,8 @@ function InvoicesTab({ invoices }: { invoices: InvoiceRow[] }) {
             <div>
               <div className="font-mono text-sm">{inv.number}</div>
               <div className="text-2xs text-ink-muted">
-                Issued {new Date(inv.issued_on).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
-                {inv.due_on ? ` · Due ${new Date(inv.due_on).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}` : ''}
+                Issued {new Date(inv.issued_on).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' })}
+                {inv.due_on ? ` · Due ${new Date(inv.due_on).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}` : ''}
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -652,7 +653,7 @@ function HomeworkCheckRow({
           {due && (
             <div className={`text-2xs mt-1 ${overdue ? 'text-rust' : 'text-ink-muted'}`}>
               {overdue ? 'Overdue — was due ' : 'Due '}
-              {new Date(due).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
+              {new Date(due).toLocaleDateString(activeLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}
             </div>
           )}
         </div>
@@ -721,11 +722,11 @@ function HomeworkHistoryRow({
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-2">
         <div>
           <div className="text-2xs uppercase tracking-widest text-ink-muted">
-            Assigned {new Date(session.scheduled_at).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
+            Assigned {new Date(session.scheduled_at).toLocaleDateString(activeLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}
           </div>
           {due && (
             <div className="text-2xs text-ink-soft mt-0.5">
-              Due {new Date(due).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+              Due {new Date(due).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
             </div>
           )}
         </div>
@@ -765,7 +766,7 @@ function HomeworkHistoryRow({
       <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap break-words">{text}</p>
       {completedAt && (
         <div className="text-2xs text-ink-soft mt-2">
-          Marked complete on {new Date(completedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+          Marked complete on {new Date(completedAt).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
         </div>
       )}
       {error && <div className="text-xs text-claret mt-2">{error}</div>}

@@ -1,0 +1,37 @@
+{
+  "setup": {
+    "saving": "Menyimpan…",
+    "kicker": "Pengaturan",
+    "heading": "Mari kita mulai bisnis Anda",
+    "intro": "Beberapa detail lagi, lalu Anda sudah bisa mulai. Anda bisa mengubah semua ini nanti.",
+    "name_label": "Nama Anda",
+    "name_placeholder": "misalnya: Alex Morgan",
+    "business_label": "Nama bisnis",
+    "business_placeholder": "misalnya: Morgan Tutoring",
+    "business_hint": "Tercantum pada faktur dan di bagian atas dasbor Anda.",
+    "phone_label": "Nomor telepon (opsional)",
+    "default_rate_label": "Tarif per jam standar",
+    "currency_label": "Mata uang",
+    "session_expired": "Sesi telah berakhir. Silakan masuk kembali.",
+    "continue": "Lanjutkan"
+  },
+  "plan": {
+    "sign_out": "Keluar",
+    "monthly": "Bulanan",
+    "annual": "Tahunan",
+    "not_signed_in": "Belum masuk.",
+    "kicker": "Pilih paket Anda",
+    "heading": "Pilih yang sesuai dengan cara Anda memberikan bimbingan belajar.",
+    "subheading": "Mulailah dengan uji coba gratis. Batalkan kapan saja. Tanpa biaya tersembunyi.",
+    "save_2_months": "Hemat 2 bulan",
+    "referral_discount": "{{discount}} — tidak perlu memasukkan kode. Berlaku secara otomatis setelah masa uji coba Anda berakhir.",
+    "repeat_customer": "Selamat datang kembali — kartu Anda akan langsung ditagih saat mendaftar karena Anda sebelumnya sudah memiliki akun.",
+    "most_popular": "Yang paling populer",
+    "tier_name": "Crestio {{tier}}",
+    "contact_sales": "Hubungi bagian penjualan",
+    "start_trial": "Mulai uji coba gratis selama {{days}} hari",
+    "redirecting": "Sedang mengalihkan…",
+    "checkout_error": "Proses pembayaran tidak dapat dimulai. Silakan coba lagi.",
+    "footer_note": "Harga dalam AUD, termasuk GST jika berlaku. Anda dapat mengubah paket atau membatalkan langganan kapan saja melalui portal penagihan."
+  }
+}

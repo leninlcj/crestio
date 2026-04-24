@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "sign_in": "Se connecter"
+  },
+  "english_notice": {
+    "title": "La version anglaise fait foi",
+    "body": "Cette page a été traduite automatiquement pour votre commodité. Seul le texte anglais de nos Conditions générales et de notre Politique de confidentialité fait foi. Si vous constatez un manque de clarté dans votre langue, veuillez consulter la version anglaise ou envoyer un e-mail à support@crestio.ai avant de vous fier à la traduction.",
+    "view_english": "Consulter la version anglaise"
+  },
+  "last_updated": "Dernière mise à jour : {{date}}",
+  "contents": "Sommaire",
+  "toc_aria": "Table des matières",
+  "footer": {
+    "copyright": "© {{year}} Crestio",
+    "privacy": "Confidentialité",
+    "terms": "Conditions générales",
+    "contact": "Contact"
+  }
+}

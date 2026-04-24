@@ -69,7 +69,7 @@ function InvoicesInner() {
     >
       {showBatchToast && (
         <div className="mb-4 card p-3 bg-forest-soft/60 border-forest/20 text-sm text-forest-ink">
-          Batch invoices created. They're listed below.
+          {t('invoices:batch_toast_created')}
         </div>
       )}
 
@@ -84,30 +84,30 @@ function InvoicesInner() {
               filter === f ? 'bg-surface border-rule text-ink' : 'border-transparent text-ink-muted hover:text-ink',
             )}
           >
-            {f === 'all' ? 'All' : f === 'household' ? 'Household' : 'Per-student'}
+            {t(`invoices:filters.${f === 'student' ? 'per_student' : f}` as any)}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
-          title="No invoices yet"
-          description="Group completed sessions into an invoice to send to a parent."
-          action={<Link href="/app/invoices/batch" className="btn-primary">Batch invoice</Link>}
+          title={t('invoices:empty.no_invoices_title')}
+          description={t('invoices:empty.no_invoices_body')}
+          action={<Link href="/app/invoices/batch" className="btn-primary">{t('invoices:empty.cta_batch')}</Link>}
         />
       ) : (
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
-                <th>Number</th>
-                <th>Billed to</th>
-                <th>Issued</th>
-                <th>Due</th>
-                <th>Status</th>
-                <th className="text-right">Total</th>
+                <th>{t('invoices:columns.number')}</th>
+                <th>{t('invoices:columns.billed_to')}</th>
+                <th>{t('invoices:columns.issued')}</th>
+                <th>{t('invoices:columns.due')}</th>
+                <th>{t('invoices:columns.status')}</th>
+                <th className="text-right">{t('invoices:columns.total')}</th>
               </tr>
             </thead>
             <tbody>
@@ -117,7 +117,7 @@ function InvoicesInner() {
                   <td className="font-mono text-sm">
                     {i.number}
                     {i.is_batch_generated && (
-                      <span className="ml-2 badge-neutral text-2xs">BATCH</span>
+                      <span className="ml-2 badge-neutral text-2xs">{t('invoices:batch_pill', { defaultValue: 'BATCH' })}</span>
                     )}
                   </td>
                   <td className="text-ink font-medium">
@@ -133,7 +133,7 @@ function InvoicesInner() {
                       i.status === 'draft' && 'badge-neutral',
                       i.status === 'void' && 'badge-neutral'
                     )}>
-                      {i.status}
+                      {t(`common:status.${i.status}` as any)}
                     </span>
                   </td>
                   <td className="text-right font-mono num text-sm">

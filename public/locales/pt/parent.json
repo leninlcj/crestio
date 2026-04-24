@@ -1,44 +1,42 @@
 {
   "dashboard": {
-    "loading_error": "Não foi possível carregar seu painel.",
-    "this_week": "Esta semana",
-    "stats": {
-      "paid": "Pago",
-      "sessions_this_month": "Sessões deste mês",
-      "sessions_this_year": "Sessões deste ano",
-      "outstanding": "Excelente"
-    },
     "kicker": "Bem-vindo",
     "greeting": "Olá, {{name}}",
     "greeting_fallback": "Seu painel",
+    "loading_error": "Não foi possível carregar seu painel.",
     "this_week_empty": "Não há sessões esta semana.",
+    "no_access": "Você não tem acesso.",
+    "this_week": "Esta semana",
     "recent_updates": "Atualizações recentes do seu tutor",
     "your_children": "Seus filhos",
     "at_a_glance": "Em resumo",
-    "no_access": "Você não tem acesso.",
+    "stats": {
+      "sessions_this_month": "Sessões deste mês",
+      "sessions_this_year": "Sessões deste ano",
+      "paid": "Pago",
+      "outstanding": "Pendentes"
+    },
     "change_requested": "Alteração solicitada"
   },
   "nav": {
+    "calendar": "Calendário",
     "messages": "Mensagens",
     "invoices": "Faturas",
-    "sign_out": "Sair",
-    "calendar": "Calendário",
     "settings": "Configurações",
-    "all_children": "← Todas as crianças"
+    "sign_out": "Sair",
+    "all_children": "← Todas as crianças",
+    "back_dashboard": "← Painel",
+    "back_messages": "← Mensagens",
+    "back_invoices": "← Faturas",
+    "back_settings": "← Configurações"
+  },
+  "common": {
+    "loading": "Carregando…"
   },
   "student": {
     "loading": "Carregando…",
-    "next_session": "Próxima sessão",
-    "homework": {
-      "heading": "Lição de casa",
-      "overdue": "Em atraso",
-      "mark_done": "Marcar como concluído",
-      "undo": "Desfazer",
-      "done": "Concluído",
-      "pending": "Pendente",
-      "no_homework": "Ainda não foi atribuída nenhuma tarefa de casa."
-    },
     "student": "Aluno",
+    "next_session": "Próxima sessão",
     "view_changes": "Visualizar / solicitar alterações →",
     "tabs": {
       "calendar": "calendário",
@@ -54,10 +52,161 @@
       "no_past": "Ainda não há sessões anteriores.",
       "no_notes": "Ainda não há notas compartilhadas para esta sessão."
     },
+    "homework": {
+      "heading": "Lição de casa",
+      "mark_done": "Marcar como concluído",
+      "undo": "Desfazer",
+      "done": "Concluído",
+      "overdue": "Em atraso",
+      "pending": "Pendente",
+      "no_homework": "Ainda não foi atribuída nenhuma tarefa de casa."
+    },
     "invoices": {
       "none": "Ainda não há faturas para este aluno.",
       "payment_instructions": "Para efetuar o pagamento, siga as instruções contidas em cada fatura enviada pelo seu tutor."
     },
     "updates_none": "Ainda não há atualizações do seu tutor."
+  },
+  "calendar": {
+    "kicker": "Calendário",
+    "heading": "Esta semana",
+    "today": "Hoje",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "Faturas",
+    "due_label": "Devido a {{date}}",
+    "status_paid": "Pago",
+    "status_overdue": "Em atraso",
+    "heading": "Suas faturas",
+    "empty": "Ainda não há faturas.",
+    "outstanding_eyebrow": "Pendentes",
+    "outstanding_note": "Para efetuar o pagamento, siga as instruções contidas em cada fatura enviada pelo seu tutor.",
+    "family_badge": "FAMÍLIA",
+    "issued_label": "Publicado em {{date}}"
+  },
+  "invoice_detail": {
+    "not_found": "Fatura não encontrada.",
+    "status_paid": "Pago",
+    "status_overdue": "Em atraso",
+    "issued": "Emitidas",
+    "due": "A pagar",
+    "sessions": "Sessões",
+    "back": "← Faturas",
+    "number_label": "{{number}} de faturas",
+    "heading_fallback": "Fatura",
+    "period": "Período",
+    "no_line_items": "Não há itens.",
+    "no_sessions": "Não há sessões nesta fatura.",
+    "minutes_suffix": "{{minutes}} min",
+    "tutoring_session": "Sessão de reforço",
+    "subtotal": "Subtotal:",
+    "notes": "Notas",
+    "download_print": "Baixar / imprimir",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "Mensagens",
+    "heading": "Suas mensagens"
+  },
+  "notifications_page": {
+    "kicker": "Notificações",
+    "heading": "Suas notificações"
+  },
+  "signin": {
+    "heading": "Entrar",
+    "email_label": "E-mail",
+    "password_label": "Senha",
+    "submit": "Entrar",
+    "submitting": "Entrando...",
+    "kicker": "Portal dos pais",
+    "forgot": "Esqueceu a senha?",
+    "error_generic": "Falha ao fazer login.",
+    "error_not_parent": "Este login é exclusivo para pais. Se você é tutor, faça login em /auth/signin.",
+    "forgot_need_email": "Digite seu e-mail primeiro e, em seguida, toque em Esqueci minha senha.",
+    "forgot_sent": "Verifique seu e-mail para obter um link de redefinição.",
+    "invitation_hint": "Ainda não recebeu um convite do seu tutor? Peça para ele enviar um."
+  },
+  "settings_page": {
+    "heading": "Configurações",
+    "loading": "Carregando…",
+    "email_label": "E-mail",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "saved": "Salvo.",
+    "new_password_label": "Nova senha",
+    "updating": "Atualizando…",
+    "sign_out_heading": "Sair",
+    "sign_out": "Sair",
+    "kicker": "Conta",
+    "details_heading": "Seus dados",
+    "email_hint": "Entre em contato com seu tutor caso precise alterar seu e-mail.",
+    "name_label": "Nome",
+    "change_password": "Alterar senha",
+    "password_min": "Pelo menos 8 caracteres.",
+    "password_too_short": "A senha deve ter pelo menos 8 caracteres.",
+    "password_updated": "Senha atualizada.",
+    "update_password": "Atualizar senha",
+    "sign_out_body": "Ao sair, esta sessão será encerrada.",
+    "msg_notifs_heading": "Notificações de mensagens",
+    "msg_notifs_body": "Escolha quando o Crestio enviará e-mails para você. As mensagens no aplicativo serão exibidas independentemente disso.",
+    "msg_when_label": "Envie-me um e-mail quando meu tutor me enviar uma mensagem",
+    "msg_when_hint": "Limitado a, no máximo, uma vez a cada 30 minutos por tópico.",
+    "msg_urgent_label": "Envie-me e-mails apenas para mensagens urgentes",
+    "msg_urgent_hint": "Ignorar e-mails para mensagens normais ou informativas."
+  },
+  "settings_notifications_page": {
+    "kicker": "Configurações",
+    "saved": "Salvo.",
+    "heading": "Notificações por e-mail",
+    "intro": "As notificações no aplicativo sempre aparecem, independentemente dessas configurações. Elas controlam apenas o envio de e-mails.",
+    "toggles": {
+      "session_reminders": {
+        "label": "Lembretes de sessão",
+        "description": "Enviar um e-mail 24 horas antes de cada sessão agendada."
+      },
+      "reschedule_events": {
+        "label": "Remarcações e cancelamentos",
+        "description": "Quando seu tutor altera ou cancela uma sessão."
+      },
+      "invoice_events": {
+        "label": "Notificações de faturas",
+        "description": "Quando uma nova fatura é enviada."
+      },
+      "parent_updates": {
+        "label": "Atualizações do seu tutor",
+        "description": "Quando seu tutor publicar uma atualização no portal sobre seu filho."
+      },
+      "messages_email": {
+        "label": "Mensagens do seu tutor",
+        "description": "Envie um e-mail quando o tutor lhe enviar uma mensagem. Limitado a uma vez a cada 30 minutos."
+      },
+      "messages_urgent_only": {
+        "label": "Apenas mensagens urgentes",
+        "description": "Se estiver ativado, ignore e-mails para mensagens normais ou informativas."
+      }
+    }
+  },
+  "accept": {
+    "email_label": "E-mail",
+    "name_label": "Seu nome",
+    "creating": "Criando conta…",
+    "kicker": "Portal dos pais",
+    "checking": "Verificando convite…",
+    "missing_token": "Este link não possui o token de convite.",
+    "verify_failed": "Não foi possível verificar o convite. Tente novamente mais tarde.",
+    "invalid_heading": "Convite indisponível",
+    "invalid_default": "Este link de convite não é mais válido.",
+    "invalid_body_suffix": " Se isso for um erro, peça ao seu tutor para enviar um novo convite.",
+    "back_home": "Voltar à página inicial",
+    "accept_heading": "Aceite seu convite",
+    "accept_body": "{{tutor}} convidou você para assistir às sessões de tutoria d{{student}}.",
+    "email_hint": "Conforme consta no seu convite. Não podem ser alteradas aqui.",
+    "name_placeholder": "Opcional",
+    "password_label": "Criar senha",
+    "password_min": "Pelo menos 8 caracteres.",
+    "password_too_short": "A senha deve ter pelo menos 8 caracteres.",
+    "create": "Criar conta de pai/mãe",
+    "create_failed": "Não foi possível criar a conta."
   }
 }

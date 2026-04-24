@@ -1,25 +1,19 @@
 {
+  "kicker": "Hoy",
+  "loading_error": "No se ha podido cargar tu panel de control.",
   "trial_banner": {
-    "dismiss": "Descartar",
     "days_left_one": "Te queda 1 día de prueba.",
     "days_left_other": "Te quedan un{{count}}es de días de prueba.",
-    "subscribe": "Suscríbete"
+    "subscribe": "Suscríbete",
+    "dismiss": "Descartar"
   },
   "sections": {
     "next_up": {
-      "open": "Abrir",
       "kicker": "Próxima sesión",
       "kicker_soon": "Próximamente",
+      "open": "Abrir",
       "reschedule": "Cambiar de fecha",
       "log_notes": "Notas del diario"
-    },
-    "reschedules": {
-      "open": "Abrir",
-      "kicker": "Necesita tu respuesta",
-      "title_one": "{{count}} solicitud de reprogramación pendiente",
-      "title_other": "{{count}} solicitudes de reprogramación pendientes",
-      "accept": "Aceptar",
-      "reject": "Rechazar"
     },
     "polish": {
       "kicker": "Necesita pulirse",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} La familia de hoy tiene sesiones sin facturar",
       "title_other": "{{count}} las familias tienen sesiones sin facturar",
       "total_uninvoiced": "Total sin facturar: {{amount}}",
-      "cta": "Facturar todo →"
+      "cta": "Facturar todo →",
+      "student_count_one": "{{count}} estudiante",
+      "student_count_other": "{{count}} estudiantes"
+    },
+    "reschedules": {
+      "kicker": "Necesita tu respuesta",
+      "title_one": "{{count}} solicitud de reprogramación pendiente",
+      "title_other": "{{count}} solicitudes de reprogramación pendientes",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "open": "Abrir",
+      "row_description": "{{parent}} propuso cambiar la fecha de la sesión de «{{student}}».",
+      "row_original": "Original:",
+      "row_proposed": "Propuesta:"
     },
     "week_ahead": {
       "kicker": "Esta semana",
@@ -59,6 +66,7 @@
       "add_student": "Añadir un alumno →"
     }
   },
-  "kicker": "Hoy",
-  "loading_error": "No se ha podido cargar tu panel de control."
+  "greeting_morning": "Buenos días, {{name}}",
+  "greeting_afternoon": "Buenas tardes, {{name}}",
+  "greeting_evening": "Buenas noches, {{name}}"
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
+import { activeLocale } from '../../../lib/utils';
 
 type QueueRow = {
   id: string;
@@ -185,7 +186,7 @@ function PolishQueueInner() {
                     <div className="text-sm text-ink truncate">
                       <strong>{r.student_name}</strong>
                       {' · '}
-                      {new Date(r.scheduled_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                      {new Date(r.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
                       {r.subject ? ` · ${r.subject}` : ''}
                     </div>
                     <div className="text-2xs text-ink-muted truncate">

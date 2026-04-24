@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import SettingsTabs from '../../../components/SettingsTabs';
@@ -15,52 +16,18 @@ type PrefKey =
 
 type Prefs = Partial<Record<PrefKey, boolean>>;
 
-const TOGGLES: Array<{ key: PrefKey; label: string; description: string; defaultOn: boolean }> = [
-  {
-    key: 'notify_session_reminders',
-    label: 'Session reminders',
-    description: 'Email you one hour before each scheduled session.',
-    defaultOn: true,
-  },
-  {
-    key: 'notify_reschedule_events',
-    label: 'Reschedules and cancellations',
-    description: 'Parent-requested changes, confirmations, and rejections.',
-    defaultOn: true,
-  },
-  {
-    key: 'notify_invoice_events',
-    label: 'Invoice events',
-    description: 'When a parent marks an invoice paid or views it.',
-    defaultOn: true,
-  },
-  {
-    key: 'notify_overdue_alerts',
-    label: 'Overdue invoice reminders',
-    description: 'Once-per-invoice reminder 14 days after the due date.',
-    defaultOn: true,
-  },
-  {
-    key: 'notify_trial_and_billing',
-    label: 'Trial and billing alerts',
-    description: 'Trial ending, payment failures, subscription changes.',
-    defaultOn: true,
-  },
-  {
-    key: 'notify_messages_email',
-    label: 'Messages from parents',
-    description: 'Emails you when a parent sends you a message, throttled to once every 30 minutes per thread.',
-    defaultOn: true,
-  },
-  {
-    key: 'notify_messages_urgent_only',
-    label: 'Urgent messages only',
-    description: 'If on, skip emails for normal or info messages. You still see them in-app.',
-    defaultOn: false,
-  },
+const TOGGLES: Array<{ key: PrefKey; i18nKey: string; defaultOn: boolean }> = [
+  { key: 'notify_session_reminders',    i18nKey: 'session_reminders',    defaultOn: true },
+  { key: 'notify_reschedule_events',    i18nKey: 'reschedule_events',    defaultOn: true },
+  { key: 'notify_invoice_events',       i18nKey: 'invoice_events',       defaultOn: true },
+  { key: 'notify_overdue_alerts',       i18nKey: 'overdue_alerts',       defaultOn: true },
+  { key: 'notify_trial_and_billing',    i18nKey: 'trial_and_billing',    defaultOn: true },
+  { key: 'notify_messages_email',       i18nKey: 'messages_email',       defaultOn: true },
+  { key: 'notify_messages_urgent_only', i18nKey: 'messages_urgent_only', defaultOn: false },
 ];
 
 function Inner() {
+  const { t } = useTranslation('settings');
   const [prefs, setPrefs] = useState<Prefs>({});
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
@@ -99,33 +66,33 @@ function Inner() {
   }
 
   return (
-    <Layout subtitle="Notifications" title="Settings">
+    <Layout subtitle={t('tabs.notifications')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl">
         <div className="card p-8 space-y-5">
           <div>
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Notifications</div>
-            <h2 className="font-display text-xl tracking-tightest">Email notifications</h2>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('notifications.eyebrow')}</div>
+            <h2 className="font-display text-xl tracking-tightest">{t('notifications.heading')}</h2>
             <p className="text-sm text-ink-muted mt-2">
-              In-app notifications always appear regardless of these settings. These toggles only control email delivery.
+              {t('notifications.intro')}
             </p>
           </div>
-          {TOGGLES.map((t) => (
-            <label key={t.key} className="flex items-start gap-4 cursor-pointer">
+          {TOGGLES.map((toggle) => (
+            <label key={toggle.key} className="flex items-start gap-4 cursor-pointer">
               <input
                 type="checkbox"
-                checked={valueOf(t.key)}
+                checked={valueOf(toggle.key)}
                 disabled={loading}
-                onChange={(e) => update(t.key, e.target.checked)}
+                onChange={(e) => update(toggle.key, e.target.checked)}
                 className="h-5 w-5 accent-forest mt-0.5"
               />
               <div className="flex-1">
-                <div className="text-sm text-ink">{t.label}</div>
-                <div className="text-2xs text-ink-muted mt-1 leading-relaxed">{t.description}</div>
+                <div className="text-sm text-ink">{t(`notifications.toggles.${toggle.i18nKey}.label`)}</div>
+                <div className="text-2xs text-ink-muted mt-1 leading-relaxed">{t(`notifications.toggles.${toggle.i18nKey}.description`)}</div>
               </div>
             </label>
           ))}
-          {saved && <div className="text-xs text-forest">Saved.</div>}
+          {saved && <div className="text-xs text-forest">{t('common.saved')}</div>}
         </div>
       </div>
     </Layout>

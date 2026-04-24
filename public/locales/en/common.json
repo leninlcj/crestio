@@ -17,7 +17,36 @@
     "open": "Open",
     "loading": "Loading…",
     "search_placeholder": "Search…",
-    "not_found": "Not found"
+    "not_found": "Not found",
+    "dismiss": "Dismiss",
+    "submit": "Submit",
+    "send": "Send",
+    "sending": "Sending…",
+    "restore": "Restore",
+    "discard": "Discard",
+    "continue": "Continue",
+    "retry": "Retry",
+    "done": "Done",
+    "more": "More",
+    "less": "Less",
+    "add": "Add",
+    "remove": "Remove"
+  },
+  "connectors": {
+    "at_time": "at",
+    "with_tutor": "with {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "Schedule",
+    "new_session": "New session",
+    "today": "Today",
+    "week": "Week",
+    "day": "Day",
+    "review": "Review →",
+    "pending_requests_one": "{{count}} parent request awaiting your response",
+    "pending_requests_other": "{{count}} parent requests awaiting your response"
   },
   "nav": {
     "overview": "Overview",
@@ -38,7 +67,83 @@
     "signed_in_as": "Signed in as",
     "owner_tools": "Owner tools",
     "test_accounts": "Test accounts",
-    "more": "More"
+    "more": "More",
+    "assistant": "Assistant",
+    "search": "Search"
+  },
+  "search_ui": {
+    "placeholder": "Search…",
+    "empty": "No results.",
+    "try_different": "Try a different search.",
+    "group_students": "Students",
+    "group_sessions": "Sessions",
+    "group_invoices": "Invoices",
+    "group_messages": "Messages"
+  },
+  "assistant": {
+    "placeholder": "Ask something…",
+    "send": "Send",
+    "sending": "Sending…",
+    "new_conversation": "New conversation",
+    "conversations": "Conversations",
+    "thinking": "Thinking…",
+    "confirm_typed_label": "Type confirm to proceed",
+    "confirm_typed_button": "Confirm",
+    "cancel": "Cancel",
+    "execute": "Execute",
+    "capability_title": "What can the assistant do?",
+    "capability_close": "Got it"
+  },
+  "notifications": {
+    "bell_label": "Notifications",
+    "empty": "No notifications.",
+    "unread": "Unread",
+    "all": "All",
+    "mark_all_read": "Mark all read",
+    "mark_read": "Mark read",
+    "dismiss": "Dismiss",
+    "see_all": "See all →"
+  },
+  "quick_log": {
+    "label": "Quick log",
+    "title": "Log something quickly",
+    "voice_note": "Voice note",
+    "log_session": "Log session",
+    "add_student": "Add student"
+  },
+  "voice_recorder": {
+    "start": "Start recording",
+    "stop": "Stop",
+    "recording": "Recording…",
+    "transcribing": "Transcribing…",
+    "error": "Couldn't transcribe that — please try again."
+  },
+  "support": {
+    "open_button": "Need a hand?",
+    "title": "Tell us what's up",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send",
+    "sent_title": "Got it, thanks.",
+    "sent_body": "We'll reply to the email on your account. Expect a response within one business day.",
+    "close": "Close",
+    "error": "Couldn't send. Try again in a moment."
+  },
+  "billing_gate": {
+    "trial_expired_title": "Your trial has ended",
+    "trial_expired_body": "Subscribe to keep using Crestio.",
+    "past_due_title": "Subscription is past due",
+    "past_due_body": "Update your payment method to continue.",
+    "canceled_title": "Subscription cancelled",
+    "canceled_body": "Reactivate to keep working.",
+    "cta_subscribe": "Subscribe",
+    "cta_manage": "Manage billing"
+  },
+  "error_boundary": {
+    "title": "Something broke.",
+    "body": "The page errored unexpectedly. Try reloading. If it keeps happening, contact support.",
+    "reload": "Reload",
+    "contact_support": "Contact support"
   },
   "status": {
     "draft": "Draft",
@@ -58,6 +163,8 @@
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
-    "not_signed_in": "Not signed in."
+    "not_signed_in": "Not signed in.",
+    "rate_limited": "Too many requests. Try again in a moment.",
+    "network": "Network problem. Check your connection."
   }
 }

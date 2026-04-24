@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
@@ -24,6 +25,7 @@ import {
   sessionAmount,
   tutorPayAmount,
   cx,
+  activeLocale,
 } from '../../../lib/utils';
 
 function splitDateTime(local: string): { date: string | null; time: string | null } {
@@ -97,6 +99,7 @@ function draftToFormPatch(draft: SessionDraft, fallback: any): any {
 function SessionDetailInner() {
   const router = useRouter();
   const { t } = useTranslation(['sessions', 'common']);
+  const fmt = useLocaleFormatters();
   const { id } = router.query;
   const { membership } = useMembership();
   const isTutor = membership?.role === 'tutor';
@@ -281,7 +284,7 @@ function SessionDetailInner() {
       }
       const student = students.find((s) => s.id === form.student_id) ?? session.student;
       const dateStr = form.scheduled_at
-        ? new Date(form.scheduled_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })
+        ? new Date(form.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })
         : '';
       const label = student ? `${student.name} — ${dateStr}` : `Session — ${dateStr}`;
       saveDraft(
@@ -473,7 +476,7 @@ function SessionDetailInner() {
 
   async function deleteSession() {
     if (!session) return;
-    if (!window.confirm('Delete this session? This cannot be undone.')) return;
+    if (!window.confirm(t('sessions:actions.delete_confirm'))) return;
     const { error: err } = await supabase.from('sessions').delete().eq('id', session.id);
     if (err) { setError(err.message); return; }
     router.push('/app/sessions');
@@ -494,15 +497,15 @@ function SessionDetailInner() {
 
   return (
     <Layout
-      subtitle="Session"
-      title={session.student?.name ?? 'Session'}
+      subtitle={t('sessions:subtitle_session')}
+      title={session.student?.name ?? t('sessions:subtitle_session')}
       actions={
         !editing ? (
           <>
-            <button onClick={() => setEditing(true)} className="btn-secondary">Edit</button>
+            <button onClick={() => setEditing(true)} className="btn-secondary">{t('sessions:actions.edit')}</button>
             {session.status === 'scheduled' && (
               <button onClick={() => setStatus('completed')} className="btn-primary">
-                Mark completed
+                {t('sessions:actions.mark_completed')}
               </button>
             )}
           </>
@@ -514,55 +517,55 @@ function SessionDetailInner() {
           {pendingRecovery && (
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 p-4 rounded bg-forest-soft border border-forest/20">
               <div className="text-sm text-forest-ink">
-                You have unsaved changes{pendingRecoveryAt ? ` from ${relativeTime(pendingRecoveryAt)}` : ''}.
+                {t('sessions:drafts.banner_unfinished', { when: pendingRecoveryAt ? relativeTime(pendingRecoveryAt) : '' })}
               </div>
               <div className="flex gap-2">
                 <button type="button" onClick={restoreDraft} className="btn-primary text-xs">
-                  Restore
+                  {t('sessions:actions.restore')}
                 </button>
                 <button type="button" onClick={discardDraft} className="btn-ghost text-xs">
-                  Discard
+                  {t('sessions:actions.discard_draft')}
                 </button>
               </div>
             </div>
           )}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Student</label>
+              <label className="label">{t('sessions:fields.student')}</label>
               <select required className="input" value={form.student_id}
                 onChange={(e) => setForm({ ...form, student_id: e.target.value })}>
                 {students.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="label">Tutor</label>
+              <label className="label">{t('sessions:fields.tutor')}</label>
               <select className="input" value={form.tutor_id}
                 onChange={(e) => setForm({ ...form, tutor_id: e.target.value })}>
-                <option value="">You</option>
-                {tutors.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                <option value="">{t('sessions:fields.tutor_self')}</option>
+                {tutors.map((tutor) => <option key={tutor.id} value={tutor.id}>{tutor.name}</option>)}
               </select>
             </div>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Subject</label>
+              <label className="label">{t('sessions:fields.subject')}</label>
               <input className="input" value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })} />
             </div>
             <div>
-              <label className="label">Topic</label>
+              <label className="label">{t('sessions:fields.topic')}</label>
               <input className="input" value={form.topic}
                 onChange={(e) => setForm({ ...form, topic: e.target.value })} />
             </div>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">When</label>
+              <label className="label">{t('sessions:fields.when')}</label>
               <input type="datetime-local" className="input" value={form.scheduled_at}
                 onChange={(e) => setForm({ ...form, scheduled_at: e.target.value })} />
             </div>
             <div>
-              <label className="label">Duration (minutes)</label>
+              <label className="label">{t('sessions:fields.duration')}</label>
               <input type="number" min="15" step="15" className="input"
                 value={form.duration_minutes}
                 onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })} />
@@ -571,34 +574,34 @@ function SessionDetailInner() {
           <div className={cx('grid gap-4', isTutor ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
             {!isTutor && (
               <div>
-                <label className="label">Charge rate</label>
+                <label className="label">{t('sessions:fields.charge_rate')}</label>
                 <input type="number" className="input" value={form.charge_rate}
                   onChange={(e) => setForm({ ...form, charge_rate: e.target.value })} />
               </div>
             )}
             <div>
-              <label className="label">Pay rate</label>
+              <label className="label">{t('sessions:fields.pay_rate')}</label>
               <input type="number" className="input" value={form.pay_rate}
                 onChange={(e) => setForm({ ...form, pay_rate: e.target.value })} />
             </div>
             <div>
-              <label className="label">Status</label>
+              <label className="label">{t('sessions:fields.status')}</label>
               <select className="input" value={form.status}
                 onChange={(e) => setForm({ ...form, status: e.target.value })}>
-                <option value="scheduled">Scheduled</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="no_show">No show</option>
+                <option value="scheduled">{t('sessions:status_values.scheduled')}</option>
+                <option value="completed">{t('sessions:status_values.completed')}</option>
+                <option value="cancelled">{t('sessions:status_values.cancelled')}</option>
+                <option value="no_show">{t('sessions:status_values.no_show')}</option>
               </select>
             </div>
           </div>
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="label mb-0">Private notes</label>
+              <label className="label mb-0">{t('sessions:fields.notes_internal')}</label>
               <span className="text-2xs text-ink-soft transition-opacity" aria-live="polite">
-                {saveStatus === 'saving' && 'Saving…'}
-                {saveStatus === 'saved_remote' && 'Saved'}
-                {saveStatus === 'saved_local' && 'Saved locally'}
+                {saveStatus === 'saving' && t('sessions:save_status.saving')}
+                {saveStatus === 'saved_remote' && t('sessions:save_status.saved')}
+                {saveStatus === 'saved_local' && t('sessions:save_status.saved_locally')}
               </span>
             </div>
             <div className="relative">
@@ -618,7 +621,7 @@ function SessionDetailInner() {
               </div>
             </div>
             <div className="text-2xs text-ink-soft mt-1.5">
-              Only you see these. Tap the mic to dictate. Click Polish with AI to publish a parent-friendly version.
+              {t('sessions:fields.notes_internal_hint')}
             </div>
             <div className="mt-3 flex items-center gap-3">
               <button
@@ -636,15 +639,15 @@ function SessionDetailInner() {
                 {polishing ? (
                   <span className="inline-flex items-center gap-2">
                     <span className="inline-block w-3 h-3 border-2 border-ink-muted border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                    Polishing…
+                    {t('sessions:actions.polishing')}
                   </span>
                 ) : (
-                  'Polish with AI'
+                  t('sessions:actions.polish_with_ai')
                 )}
               </button>
               {(!form.student_id || !Number(form.duration_minutes)) && (
                 <span className="text-2xs text-ink-soft">
-                  Select a student and duration first.
+                  {t('sessions:polish_needs_student_duration')}
                 </span>
               )}
             </div>
@@ -654,18 +657,18 @@ function SessionDetailInner() {
           </div>
 
           <div>
-            <label className="label">Shared with parent</label>
+            <label className="label">{t('sessions:fields.notes_parent_facing')}</label>
             <div className="text-2xs text-ink-soft mb-2">
-              What parents see in their portal. Auto-filled when you polish.
+              {t('sessions:fields.notes_parent_facing_hint')}
             </div>
             {editingShared ? (
               <div className="space-y-2">
                 <textarea rows={4} className="input" value={form.notes_parent_facing}
                   onChange={(e) => setForm({ ...form, notes_parent_facing: e.target.value })}
-                  placeholder="Parent-facing notes."
+                  placeholder={t('sessions:fields.notes_parent_facing_placeholder')}
                   autoFocus />
                 <button type="button" onClick={() => setEditingShared(false)} className="btn-ghost text-xs">
-                  Done editing
+                  {t('sessions:actions.done_editing')}
                 </button>
               </div>
             ) : form.notes_parent_facing ? (
@@ -676,29 +679,29 @@ function SessionDetailInner() {
                 <div className="flex items-center justify-between pt-3 border-t border-forest/20">
                   <div className="text-2xs text-forest-ink/80 inline-flex items-center gap-1.5">
                     <span aria-hidden="true">✓</span>
-                    Shared with parent
+                    {t('sessions:fields.shared_with_parent')}
                   </div>
                   <button
                     type="button"
                     onClick={() => setEditingShared(true)}
                     className="text-2xs text-forest-ink/80 underline underline-offset-2 hover:text-forest-ink"
                   >
-                    Edit shared version
+                    {t('sessions:actions.edit_shared')}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="p-4 border border-dashed border-rule rounded text-sm text-ink-soft italic">
-                Nothing shared yet. Click Polish with AI to publish notes to the parent dashboard.
+                {t('sessions:fields.nothing_shared_yet')}
               </div>
             )}
           </div>
           <div>
-            <label className="label">Homework for next session</label>
+            <label className="label">{t('sessions:fields.homework')}</label>
             <div className="relative">
               <textarea rows={4} className="input pr-16" value={form.homework_description ?? ''}
                 onChange={(e) => setForm({ ...form, homework_description: e.target.value })}
-                placeholder="e.g. Read chapter 7, complete exercises 3-9." />
+                placeholder={t('sessions:fields.homework_placeholder')} />
               <div className="absolute bottom-2 right-2">
                 <VoiceRecorder
                   context="session_note"
@@ -713,7 +716,7 @@ function SessionDetailInner() {
               </div>
             </div>
             <div className="mt-2">
-              <label className="label text-2xs">Due by</label>
+              <label className="label text-2xs">{t('sessions:fields.homework_due_by')}</label>
               <input
                 type="date"
                 className="input md:w-48"
@@ -722,16 +725,16 @@ function SessionDetailInner() {
               />
             </div>
             <div className="text-2xs text-ink-soft mt-1.5">
-              Parents will see this in the portal and can mark it complete.
+              {t('sessions:fields.homework_hint')}
             </div>
           </div>
 
           <div>
-            <label className="label">Focus for next session</label>
+            <label className="label">{t('sessions:fields.next_focus')}</label>
             <div className="relative">
               <textarea rows={3} className="input pr-16" value={form.next_session_focus ?? ''}
                 onChange={(e) => setForm({ ...form, next_session_focus: e.target.value })}
-                placeholder="e.g. Cover integration by parts. Revisit the trig identity from today." />
+                placeholder={t('sessions:fields.next_focus_placeholder')} />
               <div className="absolute bottom-2 right-2">
                 <VoiceRecorder
                   context="session_note"
@@ -746,7 +749,7 @@ function SessionDetailInner() {
               </div>
             </div>
             <div className="text-2xs text-ink-soft mt-1.5">
-              Shows up as a reminder when you open this student next time.
+              {t('sessions:fields.next_focus_hint')}
             </div>
           </div>
 
@@ -755,43 +758,43 @@ function SessionDetailInner() {
           <div className="flex items-center justify-between pt-2">
             <div className="flex gap-3">
               <button type="submit" disabled={saving} className="btn-primary">
-                {saving ? 'Saving…' : 'Save'}
+                {saving ? t('sessions:actions.saving') : t('sessions:actions.save')}
               </button>
-              <button type="button" onClick={() => setEditing(false)} className="btn-ghost">Cancel</button>
+              <button type="button" onClick={() => setEditing(false)} className="btn-ghost">{t('sessions:actions.cancel')}</button>
             </div>
-            <button type="button" onClick={deleteSession} className="btn-danger text-xs">Delete</button>
+            <button type="button" onClick={deleteSession} className="btn-danger text-xs">{t('sessions:actions.delete')}</button>
           </div>
         </form>
       ) : (
         <>
           <div className="grid lg:grid-cols-3 gap-6 mb-8">
             <div className="card p-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">When</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('sessions:detail.when')}</div>
               <div className="font-display text-2xl tracking-tightest">
-                {new Date(session.scheduled_at).toLocaleString('en-AU', {
-                  weekday: 'short', day: 'numeric', month: 'short',
-                })}
+                {fmt.formatDate(session.scheduled_at, { weekday: 'short', day: 'numeric', month: 'short' })}
               </div>
               <div className="text-sm font-mono text-ink-muted mt-1">
-                {new Date(session.scheduled_at).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })} · {session.duration_minutes} min
+                {fmt.formatTimeOfDay(session.scheduled_at)} · {session.duration_minutes} min
               </div>
             </div>
             <div className="card p-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">What</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('sessions:detail.what')}</div>
               <div className="text-sm">
                 <div className="text-ink">{session.subject ?? '—'}</div>
                 <div className="text-ink-muted">{session.topic ?? '—'}</div>
                 <div className="text-ink-muted mt-2">
-                  Tutor: {session.tutor?.name ?? 'You'}
+                  {session.tutor?.name
+                    ? t('sessions:detail.tutor_with', { name: session.tutor.name })
+                    : t('sessions:detail.tutor_you')}
                 </div>
               </div>
             </div>
             <div className="card p-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Money</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('sessions:detail.money')}</div>
               <div className="text-sm space-y-1">
-                <div className="font-mono num text-ink text-base">{formatCents(amount, currency, { showZero: true })} <span className="text-2xs text-ink-soft uppercase tracking-widest">charge</span></div>
+                <div className="font-mono num text-ink text-base">{fmt.formatMoney(amount, currency, { showZero: true })} <span className="text-2xs text-ink-soft uppercase tracking-widest">{t('sessions:detail.charge')}</span></div>
                 {session.pay_rate_cents && (
-                  <div className="font-mono num text-ink-muted">{formatCents(pay, currency, { showZero: true })} <span className="text-2xs text-ink-soft uppercase tracking-widest">tutor pay</span></div>
+                  <div className="font-mono num text-ink-muted">{fmt.formatMoney(pay, currency, { showZero: true })} <span className="text-2xs text-ink-soft uppercase tracking-widest">{t('sessions:detail.tutor_pay')}</span></div>
                 )}
                 <div className="pt-2">
                   <span className={cx(
@@ -800,7 +803,9 @@ function SessionDetailInner() {
                     session.status === 'no_show' && 'badge-claret',
                     session.status === 'scheduled' && 'badge-neutral'
                   )}>
-                    {session.status === 'completed' ? (session.paid ? 'Paid' : 'Unpaid') : session.status}
+                    {session.status === 'completed'
+                      ? (session.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
+                      : t(`sessions:status.${session.status}` as any)}
                   </span>
                 </div>
               </div>
@@ -810,23 +815,25 @@ function SessionDetailInner() {
           <div className="flex flex-wrap items-center gap-2 mb-8">
             {session.status === 'scheduled' && (
               <>
-                <button onClick={() => setStatus('completed')} className="btn-secondary text-xs">Mark completed</button>
-                <button onClick={() => setStatus('cancelled')} className="btn-ghost text-xs">Cancel session</button>
-                <button onClick={() => setStatus('no_show')} className="btn-ghost text-xs">No show</button>
+                <button onClick={() => setStatus('completed')} className="btn-secondary text-xs">{t('sessions:actions.mark_completed')}</button>
+                <button onClick={() => setStatus('cancelled')} className="btn-ghost text-xs">{t('sessions:actions.cancel_session')}</button>
+                <button onClick={() => setStatus('no_show')} className="btn-ghost text-xs">{t('sessions:actions.no_show')}</button>
               </>
             )}
             {session.status === 'completed' && (
               <button onClick={togglePaid} className="btn-secondary text-xs">
-                Mark as {session.paid ? 'unpaid' : 'paid'}
+                {t('sessions:actions.mark_paid', {
+                  status: session.paid ? t('sessions:status.unpaid').toLowerCase() : t('sessions:status.paid').toLowerCase(),
+                })}
               </button>
             )}
-            <Link href={`/app/students/${session.student_id}`} className="btn-ghost text-xs">View student</Link>
+            <Link href={`/app/students/${session.student_id}`} className="btn-ghost text-xs">{t('sessions:actions.view_student')}</Link>
           </div>
 
           {(session as any).notes_parent_facing && (
             <div className="card p-6 mb-4 bg-forest-soft border-forest/20">
               <div className="text-2xs uppercase tracking-widest text-forest-ink/70 mb-3">
-                Parent-facing notes
+                {t('sessions:detail.parent_facing_notes')}
               </div>
               <p className="text-sm text-forest-ink leading-relaxed whitespace-pre-wrap">
                 {(session as any).notes_parent_facing}
@@ -837,7 +844,7 @@ function SessionDetailInner() {
           {(session as any).notes_internal && (
             <div className="card p-6 mb-4">
               <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">
-                Private notes
+                {t('sessions:detail.private_notes')}
               </div>
               <p className="text-sm leading-relaxed whitespace-pre-wrap">
                 {(session as any).notes_internal}
@@ -847,20 +854,20 @@ function SessionDetailInner() {
 
           {(session.homework_description || session.homework) && (
             <div className="card p-6 mb-4">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Homework set</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('sessions:detail.homework_set')}</div>
               <p className="text-sm leading-relaxed whitespace-pre-wrap mb-3">
                 {session.homework_description || session.homework}
               </p>
               <div className="flex flex-wrap items-center gap-3 text-2xs">
                 {session.homework_due_date && (
                   <span className="text-ink-muted">
-                    Due {new Date(session.homework_due_date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                    {t('sessions:detail.due_prefix', { date: fmt.formatDate(session.homework_due_date, { day: 'numeric', month: 'short' }) })}
                   </span>
                 )}
                 {session.homework_completed_at ? (
-                  <span className="badge-forest">✓ Completed</span>
+                  <span className="badge-forest">{t('sessions:detail.completed_badge')}</span>
                 ) : session.homework_due_date && new Date(session.homework_due_date) < new Date() ? (
-                  <span className="badge-rust">Overdue</span>
+                  <span className="badge-rust">{t('sessions:detail.overdue_badge')}</span>
                 ) : null}
               </div>
             </div>
@@ -868,7 +875,7 @@ function SessionDetailInner() {
 
           {session.next_session_focus && (
             <div className="card p-6 bg-forest-soft border-forest/20">
-              <div className="text-2xs uppercase tracking-widest text-forest-ink/70 mb-3">Focus for next session</div>
+              <div className="text-2xs uppercase tracking-widest text-forest-ink/70 mb-3">{t('sessions:detail.next_focus')}</div>
               <p className="text-sm text-forest-ink leading-relaxed whitespace-pre-wrap">{session.next_session_focus}</p>
             </div>
           )}

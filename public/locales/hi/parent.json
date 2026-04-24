@@ -1,44 +1,42 @@
 {
   "dashboard": {
-    "loading_error": "आपका डैशबोर्ड लोड नहीं हो सका।",
-    "this_week": "इस सप्ताह",
-    "stats": {
-      "paid": "भुगतान किया गया",
-      "sessions_this_month": "इस महीने के सत्र",
-      "sessions_this_year": "इस वर्ष के सत्र",
-      "outstanding": "उत्कृष्ट"
-    },
     "kicker": "स्वागत है",
     "greeting": "हाय {{name}}",
     "greeting_fallback": "आपका डैशबोर्ड",
+    "loading_error": "आपका डैशबोर्ड लोड नहीं हो सका।",
     "this_week_empty": "इस सप्ताह कोई सत्र नहीं।",
+    "no_access": "आपकी पहुँच नहीं है।",
+    "this_week": "इस सप्ताह",
     "recent_updates": "आपके ट्यूटर से हालिया अपडेट",
     "your_children": "आपके बच्चे",
     "at_a_glance": "एक नज़र में",
-    "no_access": "आपकी पहुँच नहीं है।",
-    "change_requested": "अनुरोधित परिवर्तन"
+    "stats": {
+      "sessions_this_month": "इस महीने के सत्र",
+      "sessions_this_year": "इस वर्ष के सत्र",
+      "paid": "भुगतान किया गया",
+      "outstanding": "उत्कृष्ट"
+    },
+    "change_requested": "बदलाव का अनुरोध"
   },
   "nav": {
+    "calendar": "कैलेंडर",
     "messages": "संदेश",
     "invoices": "चालान",
-    "sign_out": "साइन आउट",
-    "calendar": "कैलेंडर",
     "settings": "सेटिंग्स",
-    "all_children": "← सभी बच्चे"
+    "sign_out": "साइन आउट",
+    "all_children": "← सभी बच्चे",
+    "back_dashboard": "← डैशबोर्ड",
+    "back_messages": "← संदेश",
+    "back_invoices": "← चालान",
+    "back_settings": "← सेटिंग्स"
+  },
+  "common": {
+    "loading": "लोड हो रहा है…"
   },
   "student": {
     "loading": "लोड हो रहा है…",
-    "next_session": "अगला सत्र",
-    "homework": {
-      "heading": "गृहकार्य",
-      "overdue": "देर से",
-      "mark_done": "पूरा हुआ के रूप में चिह्नित करें",
-      "undo": "रद्द करें",
-      "done": "किया गया",
-      "pending": "लंबित",
-      "no_homework": "अभी तक कोई गृहकार्य नहीं दिया गया है।"
-    },
     "student": "छात्र",
+    "next_session": "अगला सत्र",
     "view_changes": "देखें / परिवर्तन अनुरोध करें →",
     "tabs": {
       "calendar": "कैलेंडर",
@@ -54,10 +52,161 @@
       "no_past": "अभी तक कोई पिछली सत्र नहीं हुए हैं।",
       "no_notes": "इस सत्र के लिए अभी तक कोई नोट्स साझा नहीं किए गए हैं।"
     },
+    "homework": {
+      "heading": "गृहकार्य",
+      "mark_done": "पूरा हुआ के रूप में चिह्नित करें",
+      "undo": "रद्द करें",
+      "done": "किया गया",
+      "overdue": "देर से",
+      "pending": "लंबित",
+      "no_homework": "अभी तक कोई गृहकार्य नहीं दिया गया है।"
+    },
     "invoices": {
       "none": "इस छात्र के लिए अभी तक कोई चालान नहीं हैं।",
       "payment_instructions": "भुगतान करने के लिए, कृपया अपने ट्यूटर द्वारा भेजे गए प्रत्येक चालान पर दिए गए निर्देशों का पालन करें।"
     },
     "updates_none": "आपके ट्यूटर से अभी तक कोई अपडेट नहीं आया है।"
+  },
+  "calendar": {
+    "kicker": "कैलेंडर",
+    "heading": "इस सप्ताह",
+    "today": "आज",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "चालान",
+    "due_label": "बकाया {{date}}",
+    "status_paid": "भुगतान किया गया",
+    "status_overdue": "देर से",
+    "heading": "आपके चालान",
+    "empty": "अभी तक कोई चालान नहीं।",
+    "outstanding_eyebrow": "उत्कृष्ट",
+    "outstanding_note": "भुगतान करने के लिए, अपने ट्यूटर द्वारा भेजे गए प्रत्येक चालान पर दिए गए निर्देशों का पालन करें।",
+    "family_badge": "परिवार",
+    "issued_label": "जारी क{{date}}"
+  },
+  "invoice_detail": {
+    "not_found": "चालान नहीं मिला।",
+    "status_paid": "भुगतान किया गया",
+    "status_overdue": "देर से",
+    "issued": "जारी किया गया",
+    "due": "देय",
+    "sessions": "सत्र",
+    "back": "← चालान",
+    "number_label": "इनवॉइस {{number}}",
+    "heading_fallback": "चालान",
+    "period": "अवधि",
+    "no_line_items": "कोई लाइन आइटम नहीं।",
+    "no_sessions": "इस चालान में कोई सत्र नहीं हैं।",
+    "minutes_suffix": "{{minutes}} मिन",
+    "tutoring_session": "ट्यूटरिंग सत्र",
+    "subtotal": "उप-योग:",
+    "notes": "टिप्पणियाँ",
+    "download_print": "डाउनलोड / प्रिंट",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "संदेश",
+    "heading": "आपके संदेश"
+  },
+  "notifications_page": {
+    "kicker": "सूचनाएँ",
+    "heading": "आपकी सूचनाएँ"
+  },
+  "signin": {
+    "heading": "साइन इन",
+    "email_label": "ईमेल",
+    "password_label": "पासवर्ड",
+    "submit": "साइन इन",
+    "submitting": "साइन इन हो रहा है…",
+    "kicker": "अभिभावक पोर्टल",
+    "forgot": "पासवर्ड भूल गए?",
+    "error_generic": "साइन-इन विफल हो गया।",
+    "error_not_parent": "यह साइन-इन केवल अभिभावकों के लिए है। यदि आप ट्यूटर हैं, तो /auth/signin पर साइन इन करें।",
+    "forgot_need_email": "पहले अपना ईमेल दर्ज करें, फिर 'पासवर्ड भूल गए' पर टैप करें।",
+    "forgot_sent": "रीसेट लिंक के लिए अपना ईमेल देखें।",
+    "invitation_hint": "क्या आपको अभी तक अपने ट्यूटर से निमंत्रण नहीं मिला है? उनसे एक भेजने के लिए कहें।"
+  },
+  "settings_page": {
+    "heading": "सेटिंग्स",
+    "loading": "लोड हो रहा है…",
+    "email_label": "ईमेल",
+    "save": "सहेजें",
+    "saving": "बचाना…",
+    "saved": "सहेजा गया।",
+    "new_password_label": "नया पासवर्ड",
+    "updating": "अपडेट हो रहा है…",
+    "sign_out_heading": "साइन आउट",
+    "sign_out": "साइन आउट",
+    "kicker": "खाता",
+    "details_heading": "आपका विवरण",
+    "email_hint": "यदि आपका ईमेल बदलने की आवश्यकता हो तो अपने ट्यूटर से संपर्क करें।",
+    "name_label": "नाम",
+    "change_password": "पासवर्ड बदलें",
+    "password_min": "कम से कम 8 वर्ण।",
+    "password_too_short": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "password_updated": "पासवर्ड अपडेट किया गया।",
+    "update_password": "पासवर्ड अपडेट करें",
+    "sign_out_body": "लॉगआउट करने पर यह सत्र समाप्त हो जाएगा।",
+    "msg_notifs_heading": "संदेश सूचनाएँ",
+    "msg_notifs_body": "चुनें कि Crestio आपको कब ईमेल भेजे। इन-ऐप संदेश फिर भी दिखाई देंगे।",
+    "msg_when_label": "जब मेरा ट्यूटर मुझे संदेश भेजे तो मुझे ईमेल करें",
+    "msg_when_hint": "प्रति थ्रेड अधिकतम हर 30 मिनट में एक बार सीमित।",
+    "msg_urgent_label": "केवल आपातकालीन संदेशों के लिए मुझे ईमेल करें",
+    "msg_urgent_hint": "सामान्य या सूचना संदेशों के लिए ईमेल छोड़ें।"
+  },
+  "settings_notifications_page": {
+    "kicker": "सेटिंग्स",
+    "saved": "सहेजा गया।",
+    "heading": "ईमेल सूचनाएँ",
+    "intro": "इन-ऐप सूचनाएं इन टॉगल्स की परवाह किए बिना हमेशा दिखाई देती हैं। ये केवल ईमेल डिलीवरी को नियंत्रित करती हैं।",
+    "toggles": {
+      "session_reminders": {
+        "label": "सत्र अनुस्मारक",
+        "description": "प्रत्येक निर्धारित सत्र से 24 घंटे पहले आपको ईमेल भेजा जाएगा।"
+      },
+      "reschedule_events": {
+        "label": "पुनःनिर्धारण और रद्दीकरण",
+        "description": "जब आपका ट्यूटर किसी सत्र को बदलता या रद्द करता है।"
+      },
+      "invoice_events": {
+        "label": "चालान सूचनाएँ",
+        "description": "जब एक नया चालान भेजा जाता है।"
+      },
+      "parent_updates": {
+        "label": "आपके ट्यूटर से अपडेट",
+        "description": "जब आपका ट्यूटर आपके बच्चे के बारे में पोर्टल पर अपडेट पोस्ट करता है।"
+      },
+      "messages_email": {
+        "label": "आपके ट्यूटर से संदेश",
+        "description": "जब ट्यूटर आपको संदेश भेजता है तो आपको ईमेल भेजा जाएगा। हर 30 मिनट में एक बार तक सीमित।"
+      },
+      "messages_urgent_only": {
+        "label": "केवल तत्काल संदेश",
+        "description": "यदि चालू है, तो सामान्य या सूचना संदेशों के लिए ईमेल छोड़ें।"
+      }
+    }
+  },
+  "accept": {
+    "email_label": "ईमेल",
+    "name_label": "आपका नाम",
+    "creating": "खाता बनाते समय…",
+    "kicker": "अभिभावक पोर्टल",
+    "checking": "आमंत्रण की जाँच…",
+    "missing_token": "इस लिंक में निमंत्रण टोकन नहीं है।",
+    "verify_failed": "निमंत्रण सत्यापित नहीं हो सका। कृपया बाद में फिर से प्रयास करें।",
+    "invalid_heading": "अनुग्रह उपलब्ध नहीं है",
+    "invalid_default": "यह निमंत्रण लिंक अब मान्य नहीं है।",
+    "invalid_body_suffix": " यदि यह गलती है, तो अपने ट्यूटर से एक नया निमंत्रण भेजने के लिए कहें।",
+    "back_home": "होम पर वापस",
+    "accept_heading": "अपना निमंत्रण स्वीकार करें",
+    "accept_body": "{{tutor}} ने आपको {{student}} के ट्यूटरिंग सत्र देखने के लिए आमंत्रित किया है।",
+    "email_hint": "आपके निमंत्रण से। यहाँ बदला नहीं जा सकता।",
+    "name_placeholder": "वैकल्पिक",
+    "password_label": "पासवर्ड बनाएँ",
+    "password_min": "कम से कम 8 अक्षर।",
+    "password_too_short": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "create": "पैरेंट खाता बनाएँ",
+    "create_failed": "खाता नहीं बनाया जा सका।"
   }
 }

@@ -1,25 +1,19 @@
 {
+  "kicker": "Hoje",
+  "loading_error": "Não foi possível carregar seu painel.",
   "trial_banner": {
-    "dismiss": "Ignorar",
     "days_left_one": "Você tem mais 1 dia de avaliação.",
     "days_left_other": "Você tem {{count}} dias restantes no seu período de avaliação.",
-    "subscribe": "Inscreva-se"
+    "subscribe": "Inscreva-se",
+    "dismiss": "Ignorar"
   },
   "sections": {
     "next_up": {
-      "open": "Abrir",
       "kicker": "Próxima sessão",
       "kicker_soon": "Em breve",
+      "open": "Abrir",
       "reschedule": "Remarcar",
       "log_notes": "Notas do diário"
-    },
-    "reschedules": {
-      "open": "Abrir",
-      "kicker": "Precisa da sua resposta",
-      "title_one": "{{count}} solicitação de remarcação em espera",
-      "title_other": "{{count}} solicitações de remarcação em espera",
-      "accept": "Aceitar",
-      "reject": "Rejeitar"
     },
     "polish": {
       "kicker": "Precisa ser revisado",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} A família de hoje tem sessões não cobradas",
       "title_other": "{{count}} As famílias de hoje têm sessões não cobradas",
       "total_uninvoiced": "Total não faturado: {{amount}}",
-      "cta": "Faturar tudo →"
+      "cta": "Faturar tudo →",
+      "student_count_one": "{{count}} aluno",
+      "student_count_other": "{{count}} alunos"
+    },
+    "reschedules": {
+      "kicker": "Precisa da sua resposta",
+      "title_one": "{{count}} solicitação de remarcação em espera",
+      "title_other": "{{count}} solicitações de remarcação em espera",
+      "accept": "Aceitar",
+      "reject": "Rejeitar",
+      "open": "Abrir",
+      "row_description": "{{parent}} propôs o adiamento da sessão d{{student}}.",
+      "row_original": "Original:",
+      "row_proposed": "Proposta:"
     },
     "week_ahead": {
       "kicker": "Esta semana",
@@ -59,6 +66,7 @@
       "add_student": "Adicionar um aluno →"
     }
   },
-  "kicker": "Hoje",
-  "loading_error": "Não foi possível carregar seu painel."
+  "greeting_morning": "Bom dia, {{name}}",
+  "greeting_afternoon": "Boa tarde, {{name}}",
+  "greeting_evening": "Boa noite, {{name}}"
 }

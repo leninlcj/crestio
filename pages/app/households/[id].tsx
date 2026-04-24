@@ -6,6 +6,7 @@ import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { cx, formatCents, formatDateTime, sessionAmount } from '../../../lib/utils';
+import { activeLocale } from '../../../lib/utils';
 
 type Parent = {
   membership_id: string;
@@ -654,7 +655,7 @@ function InvoicesTab({ invoices }: { invoices: InvoiceRow[] }) {
           <div>
             <div className="font-mono text-sm">{inv.number}</div>
             <div className="text-2xs text-ink-muted">
-              {inv.student?.name ?? 'Household'} · Issued {new Date(inv.issued_on).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+              {inv.student?.name ?? 'Household'} · Issued {new Date(inv.issued_on).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' })}
             </div>
           </div>
           <div className="flex items-center gap-3">

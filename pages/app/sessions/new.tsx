@@ -440,17 +440,17 @@ function NewSessionInner() {
   }
 
   return (
-    <Layout subtitle="Sessions" title="Log session">
+    <Layout subtitle={t('sessions:subtitle')} title={t('sessions:title_new')}>
       <div className="max-w-2xl">
         {resumeBanner && (
           <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 p-4 rounded bg-forest-soft border border-forest/20">
             <div className="text-sm text-forest-ink">{resumeBanner}</div>
             <div className="flex gap-2">
               <button type="button" onClick={() => setResumeBanner(null)} className="btn-ghost text-xs">
-                Keep
+                {t('sessions:actions.keep')}
               </button>
               <button type="button" onClick={startFresh} className="btn-ghost text-xs text-claret">
-                Start fresh
+                {t('sessions:actions.start_fresh')}
               </button>
             </div>
           </div>
@@ -459,10 +459,10 @@ function NewSessionInner() {
         <form onSubmit={onSubmit} className="card p-8 space-y-5">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Student *</label>
+              <label className="label">{t('sessions:fields.student_required')}</label>
               <select required className="input" value={form.student_id}
                 onChange={(e) => selectStudent(e.target.value)}>
-                <option value="">Select a student</option>
+                <option value="">{t('sessions:select_student')}</option>
                 {students.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
@@ -470,12 +470,12 @@ function NewSessionInner() {
             </div>
             {!isTutor && (
               <div>
-                <label className="label">Tutor</label>
+                <label className="label">{t('sessions:fields.tutor')}</label>
                 <select className="input" value={form.tutor_id}
                   onChange={(e) => selectTutor(e.target.value)}>
-                  <option value="">You</option>
-                  {tutors.map((t) => (
-                    <option key={t.id} value={t.id}>{t.name}</option>
+                  <option value="">{t('sessions:fields.tutor_self')}</option>
+                  {tutors.map((tutor) => (
+                    <option key={tutor.id} value={tutor.id}>{tutor.name}</option>
                   ))}
                 </select>
               </div>
@@ -484,27 +484,27 @@ function NewSessionInner() {
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Subject</label>
+              <label className="label">{t('sessions:fields.subject')}</label>
               <input className="input" value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                placeholder="e.g. Maths Advanced" />
+                placeholder={t('sessions:fields.subject_placeholder')} />
             </div>
             <div>
-              <label className="label">Topic</label>
+              <label className="label">{t('sessions:fields.topic')}</label>
               <input className="input" value={form.topic}
                 onChange={(e) => setForm({ ...form, topic: e.target.value })}
-                placeholder="e.g. Parabolas" />
+                placeholder={t('sessions:fields.topic_placeholder')} />
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">When *</label>
+              <label className="label">{t('sessions:fields.when_required')}</label>
               <input type="datetime-local" required className="input" value={form.scheduled_at}
                 onChange={(e) => setForm({ ...form, scheduled_at: e.target.value })} />
             </div>
             <div>
-              <label className="label">Duration (minutes) *</label>
+              <label className="label">{t('sessions:fields.duration_required')}</label>
               <input type="number" required min="15" step="15" className="input"
                 value={form.duration_minutes}
                 onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })} />
@@ -514,39 +514,39 @@ function NewSessionInner() {
           <div className={isTutor ? '' : 'grid md:grid-cols-2 gap-4'}>
             {!isTutor && (
               <div>
-                <label className="label">Charge rate (per hour)</label>
+                <label className="label">{t('sessions:fields.charge_rate')}</label>
                 <input type="number" min="0" className="input" value={form.charge_rate}
                   onChange={(e) => setForm({ ...form, charge_rate: e.target.value })} />
               </div>
             )}
             <div>
-              <label className="label">Tutor pay rate (per hour)</label>
+              <label className="label">{t('sessions:fields.pay_rate')}</label>
               <input type="number" min="0" className="input" value={form.pay_rate}
                 onChange={(e) => setForm({ ...form, pay_rate: e.target.value })} />
-              <div className="text-2xs text-ink-soft mt-1.5">Leave blank if you tutored this session.</div>
+              <div className="text-2xs text-ink-soft mt-1.5">{t('sessions:fields.pay_rate_hint')}</div>
             </div>
           </div>
 
           <div>
-            <label className="label">Status</label>
+            <label className="label">{t('sessions:fields.status')}</label>
             <select className="input md:w-48" value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value as any })}>
-              <option value="scheduled">Scheduled</option>
-              <option value="completed">Completed</option>
+              <option value="scheduled">{t('sessions:status_values.scheduled')}</option>
+              <option value="completed">{t('sessions:status_values.completed')}</option>
             </select>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="label mb-0">Private notes</label>
+              <label className="label mb-0">{t('sessions:fields.notes_internal')}</label>
               <span className="text-2xs text-ink-soft" aria-live="polite">
-                {saveStatus === 'saved_local' && 'Saved locally'}
+                {saveStatus === 'saved_local' && t('sessions:save_status.saved_locally')}
               </span>
             </div>
             <div className="relative">
               <textarea rows={4} className="input pr-16" value={form.notes_internal}
                 onChange={(e) => setForm({ ...form, notes_internal: e.target.value })}
-                placeholder="What did you cover? How did it go?" />
+                placeholder={t('sessions:fields.notes_internal_placeholder')} />
               <div className="absolute bottom-2 right-2">
                 <VoiceRecorder
                   context="session_note"
@@ -561,7 +561,7 @@ function NewSessionInner() {
               </div>
             </div>
             <div className="text-2xs text-ink-soft mt-1.5">
-              Only you see these. Tap the mic to dictate — transcripts append. Click Polish with AI to publish a parent-friendly version.
+              {t('sessions:fields.notes_internal_hint')}
             </div>
             <div className="mt-3 flex items-center gap-3">
               <button
@@ -579,15 +579,15 @@ function NewSessionInner() {
                 {polishing ? (
                   <span className="inline-flex items-center gap-2">
                     <span className="inline-block w-3 h-3 border-2 border-ink-muted border-t-transparent rounded-full animate-spin" aria-hidden="true" />
-                    Polishing…
+                    {t('sessions:actions.polishing')}
                   </span>
                 ) : (
-                  'Polish with AI'
+                  t('sessions:actions.polish_with_ai')
                 )}
               </button>
               {(!form.student_id || !Number(form.duration_minutes)) && (
                 <span className="text-2xs text-ink-soft">
-                  Select a student and duration first.
+                  {t('sessions:polish_needs_student_duration')}
                 </span>
               )}
             </div>
@@ -597,18 +597,18 @@ function NewSessionInner() {
           </div>
 
           <div>
-            <label className="label">Shared with parent</label>
+            <label className="label">{t('sessions:fields.notes_parent_facing')}</label>
             <div className="text-2xs text-ink-soft mb-2">
-              What parents see in their portal. Auto-filled when you polish.
+              {t('sessions:fields.notes_parent_facing_hint')}
             </div>
             {editingShared ? (
               <div className="space-y-2">
                 <textarea rows={4} className="input" value={form.notes_parent_facing}
                   onChange={(e) => setForm({ ...form, notes_parent_facing: e.target.value })}
-                  placeholder="Parent-facing notes."
+                  placeholder={t('sessions:fields.notes_parent_facing_placeholder')}
                   autoFocus />
                 <button type="button" onClick={() => setEditingShared(false)} className="btn-ghost text-xs">
-                  Done editing
+                  {t('sessions:actions.done_editing')}
                 </button>
               </div>
             ) : form.notes_parent_facing ? (
@@ -619,30 +619,30 @@ function NewSessionInner() {
                 <div className="flex items-center justify-between pt-3 border-t border-forest/20">
                   <div className="text-2xs text-forest-ink/80 inline-flex items-center gap-1.5">
                     <span aria-hidden="true">✓</span>
-                    Shared with parent on save
+                    {t('sessions:fields.shared_with_parent_on_save')}
                   </div>
                   <button
                     type="button"
                     onClick={() => setEditingShared(true)}
                     className="text-2xs text-forest-ink/80 underline underline-offset-2 hover:text-forest-ink"
                   >
-                    Edit shared version
+                    {t('sessions:actions.edit_shared')}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="p-4 border border-dashed border-rule rounded text-sm text-ink-soft italic">
-                Nothing shared yet. Click Polish with AI to publish notes to the parent dashboard.
+                {t('sessions:fields.nothing_shared_yet')}
               </div>
             )}
           </div>
 
           <div>
-            <label className="label">Homework for next session</label>
+            <label className="label">{t('sessions:fields.homework')}</label>
             <div className="relative">
               <textarea rows={4} className="input pr-16" value={form.homework_description}
                 onChange={(e) => setForm({ ...form, homework_description: e.target.value })}
-                placeholder="e.g. Read chapter 7, complete exercises 3-9." />
+                placeholder={t('sessions:fields.homework_placeholder')} />
               <div className="absolute bottom-2 right-2">
                 <VoiceRecorder
                   context="session_note"
@@ -657,7 +657,7 @@ function NewSessionInner() {
               </div>
             </div>
             <div className="mt-2">
-              <label className="label text-2xs">Due by</label>
+              <label className="label text-2xs">{t('sessions:fields.homework_due_by')}</label>
               <input
                 type="date"
                 className="input md:w-48"
@@ -666,16 +666,16 @@ function NewSessionInner() {
               />
             </div>
             <div className="text-2xs text-ink-soft mt-1.5">
-              Parents will see this in the portal and can mark it complete.
+              {t('sessions:fields.homework_hint')}
             </div>
           </div>
 
           <div>
-            <label className="label">Focus for next session</label>
+            <label className="label">{t('sessions:fields.next_focus')}</label>
             <div className="relative">
               <textarea rows={3} className="input pr-16" value={form.next_session_focus}
                 onChange={(e) => setForm({ ...form, next_session_focus: e.target.value })}
-                placeholder="e.g. Cover integration by parts. Revisit the trig identity from today." />
+                placeholder={t('sessions:fields.next_focus_placeholder')} />
               <div className="absolute bottom-2 right-2">
                 <VoiceRecorder
                   context="session_note"
@@ -690,7 +690,7 @@ function NewSessionInner() {
               </div>
             </div>
             <div className="text-2xs text-ink-soft mt-1.5">
-              Shows up as a reminder when you open this student next time.
+              {t('sessions:fields.next_focus_hint')}
             </div>
           </div>
 
@@ -698,9 +698,9 @@ function NewSessionInner() {
 
           <div className="flex items-center gap-3 pt-2">
             <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? 'Saving…' : 'Save session'}
+              {loading ? t('sessions:actions.saving') : t('sessions:actions.save_session')}
             </button>
-            <Link href="/app/sessions" className="btn-ghost">Cancel</Link>
+            <Link href="/app/sessions" className="btn-ghost">{t('sessions:actions.cancel')}</Link>
           </div>
         </form>
       </div>

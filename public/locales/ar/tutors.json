@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "الفريق",
+    "title": "المعلمون"
+  },
+  "table": {
+    "name": "الاسم",
+    "subjects": "المواد الدراسية",
+    "students": "الطلاب",
+    "em_dash": "—",
+    "linked_login": "تسجيل الدخول المرتبط",
+    "pay_rate": "معدل الأجر",
+    "this_month": "هذا الشهر",
+    "linked_yes": "نعم",
+    "linked_no": "لا"
+  },
+  "new": {
+    "page_subtitle": "المعلمون",
+    "email_label": "البريد الإلكتروني",
+    "phone_label": "الهاتف",
+    "notes_label": "ملاحظات",
+    "saving": "جاري الحفظ…",
+    "cancel": "إلغاء",
+    "not_signed_in": "لم يتم تسجيل الدخول.",
+    "no_organization": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai.",
+    "page_title": "مدرس خصوصي جديد",
+    "name_label": "الاسم *",
+    "subjects_label": "المواد التي يدرسونها",
+    "subjects_placeholder": "الرياضيات، الكيمياء",
+    "subjects_hint": "مفصولة بفاصلة.",
+    "pay_rate_label": "معدل الأجر في الساعة",
+    "pay_rate_placeholder": "على سبيل المثال 55",
+    "submit": "إنشاء مدرس"
+  },
+  "common": {
+    "loading": "جاري التحميل..."
+  },
+  "actions": {
+    "add": "إضافة مدرس",
+    "add_one": "أضف مدرسًا"
+  },
+  "empty": {
+    "title": "لا يوجد مدرسون حتى الآن",
+    "description": "أضف مدرسين عندما توظف أشخاصًا للتدريس في شركتك. إذا كنت مدرسًا فرديًا، فيمكنك تخطي هذه الخطوة."
+  }
+}

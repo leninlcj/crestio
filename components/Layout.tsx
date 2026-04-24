@@ -153,18 +153,18 @@ export default function Layout({ children, title, subtitle, actions }: Props) {
             type="button"
             onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-search'))}
             className="w-full flex items-center justify-between px-3 py-2 rounded border border-rule bg-surface hover:bg-ruleSoft transition-colors text-left"
-            aria-label="Open search"
+            aria-label={t('nav.search')}
           >
-            <span className="text-sm text-ink-muted">Search…</span>
+            <span className="text-sm text-ink-muted">{t('actions.search_placeholder')}</span>
             <span className="text-2xs text-ink-soft font-mono">⌘K</span>
           </button>
           <button
             type="button"
             onClick={openAssistant}
             className="w-full flex items-center justify-between px-3 py-2 rounded border border-rule bg-surface hover:bg-ruleSoft transition-colors text-left"
-            aria-label="Open assistant"
+            aria-label={t('nav.assistant')}
           >
-            <span className="text-sm text-ink">Assistant</span>
+            <span className="text-sm text-ink">{t('nav.assistant')}</span>
             <span className="text-2xs text-ink-soft">AI</span>
           </button>
         </div>

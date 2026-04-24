@@ -1,25 +1,19 @@
 {
+  "kicker": "Aujourd'hui",
+  "loading_error": "Impossible de charger votre tableau de bord.",
   "trial_banner": {
-    "dismiss": "Ignorer",
     "days_left_one": "Il vous reste 1 jour d'essai.",
     "days_left_other": "Il vous reste {{count}} jours d'essai.",
-    "subscribe": "S'abonner"
+    "subscribe": "S'abonner",
+    "dismiss": "Ignorer"
   },
   "sections": {
     "next_up": {
-      "open": "Ouvrir",
       "kicker": "Prochaine session",
       "kicker_soon": "Bientôt disponible",
+      "open": "Ouvrir",
       "reschedule": "Reprogrammer",
       "log_notes": "Notes du journal"
-    },
-    "reschedules": {
-      "open": "Ouvrir",
-      "kicker": "Nécessite votre réponse",
-      "title_one": "{{count}} demande de report en attente",
-      "title_other": "{{count}} demandes de report en attente",
-      "accept": "Accepter",
-      "reject": "Refuser"
     },
     "polish": {
       "kicker": "À peaufiner",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} La famille d'aujourd'hui a des séances non facturées",
       "title_other": "{{count}} les familles bénéficient de séances gratuites",
       "total_uninvoiced": "Total non facturé : {{amount}}",
-      "cta": "Facturer tout →"
+      "cta": "Facturer tout →",
+      "student_count_one": "{{count}} étudiant",
+      "student_count_other": "{{count}} étudiants"
+    },
+    "reschedules": {
+      "kicker": "Nécessite votre réponse",
+      "title_one": "{{count}} demande de report en attente",
+      "title_other": "{{count}} demandes de report en attente",
+      "accept": "Accepter",
+      "reject": "Refuser",
+      "open": "Ouvrir",
+      "row_description": "{{parent}} a proposé de reporter la séance d'{{student}}.",
+      "row_original": "Original :",
+      "row_proposed": "Proposition :"
     },
     "week_ahead": {
       "kicker": "Cette semaine",
@@ -59,6 +66,7 @@
       "add_student": "Ajouter un élève →"
     }
   },
-  "kicker": "Aujourd'hui",
-  "loading_error": "Impossible de charger votre tableau de bord."
+  "greeting_morning": "Bonjour, {{name}}",
+  "greeting_afternoon": "Bonjour, {{name}}",
+  "greeting_evening": "Bonsoir, {{name}}"
 }

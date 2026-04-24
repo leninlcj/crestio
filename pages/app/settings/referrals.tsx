@@ -6,6 +6,7 @@ import SettingsTabs from '../../../components/SettingsTabs';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Badge } from '../../../components/design/Badge';
+import { activeLocale } from '../../../lib/utils';
 
 type MeResponse = {
   code: string;
@@ -42,7 +43,7 @@ type Credit = {
 type HistoryResponse = { conversions: Conversion[]; credits: Credit[] };
 
 function formatAud(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat(activeLocale(), {
     style: 'currency', currency: 'AUD',
     minimumFractionDigits: cents % 100 === 0 ? 0 : 2,
   }).format(cents / 100);
@@ -57,7 +58,7 @@ function relativeDate(iso: string): string {
   if (days < 7) return `${days} days ago`;
   if (days < 14) return '1 week ago';
   if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
-  return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  return new Date(iso).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function ReferralsInner() {
@@ -266,7 +267,7 @@ function ReferralsInner() {
                   const statusText = c.applied_at
                     ? `Applied ${relativeDate(c.applied_at)}`
                     : expired ? 'Expired'
-                    : `Pending · expires ${new Date(c.expires_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}`;
+                    : `Pending · expires ${new Date(c.expires_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`;
                   const sourceLabel = sourceDisplay(c.source);
                   return (
                     <li key={c.id} className="py-3 flex items-center justify-between gap-3">

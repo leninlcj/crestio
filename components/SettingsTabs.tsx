@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import { useMembership } from '../lib/membershipContext';
 import { useOrganization } from '../lib/organizationContext';
 import { planAllowsFeature } from '../lib/billing';
@@ -7,43 +8,44 @@ import { cx } from '../lib/utils';
 
 type Tab = {
   href: string;
-  label: string;
+  i18nKey: string;
   ownerOnly?: boolean;
   requires?: 'multi_tutor';
 };
 
 const TABS: Tab[] = [
-  { href: '/app/settings/account', label: 'Account' },
-  { href: '/app/settings/organisation', label: 'Organisation', ownerOnly: true },
-  { href: '/app/settings/billing', label: 'Billing', ownerOnly: true },
-  { href: '/app/settings/referrals', label: 'Referrals', ownerOnly: true },
-  { href: '/app/settings/team', label: 'Team', ownerOnly: true, requires: 'multi_tutor' },
-  { href: '/app/settings/preferences', label: 'Preferences' },
-  { href: '/app/settings/notifications', label: 'Notifications' },
+  { href: '/app/settings/account', i18nKey: 'account' },
+  { href: '/app/settings/organisation', i18nKey: 'organisation', ownerOnly: true },
+  { href: '/app/settings/billing', i18nKey: 'billing', ownerOnly: true },
+  { href: '/app/settings/referrals', i18nKey: 'referrals', ownerOnly: true },
+  { href: '/app/settings/team', i18nKey: 'team', ownerOnly: true, requires: 'multi_tutor' },
+  { href: '/app/settings/preferences', i18nKey: 'preferences' },
+  { href: '/app/settings/notifications', i18nKey: 'notifications' },
 ];
 
 export function SettingsTabs() {
+  const { t } = useTranslation('settings');
   const router = useRouter();
   const { membership } = useMembership();
   const { organization } = useOrganization();
   const isOwner = membership?.role === 'owner';
   const planTier = organization?.plan_tier ?? 'solo';
 
-  const tabs = TABS.filter((t) => {
-    if (t.ownerOnly && !isOwner) return false;
-    if (t.requires === 'multi_tutor' && !planAllowsFeature(planTier, 'multi_tutor')) return false;
+  const tabs = TABS.filter((tab) => {
+    if (tab.ownerOnly && !isOwner) return false;
+    if (tab.requires === 'multi_tutor' && !planAllowsFeature(planTier, 'multi_tutor')) return false;
     return true;
   });
 
   return (
     <div className="border-b border-rule -mx-5 md:-mx-12 px-5 md:px-12 mb-8 overflow-x-auto">
-      <nav role="tablist" aria-label="Settings sections" className="flex gap-1 min-w-max">
-        {tabs.map((t) => {
-          const active = router.pathname === t.href;
+      <nav role="tablist" aria-label={t('tabs.aria_label')} className="flex gap-1 min-w-max">
+        {tabs.map((tab) => {
+          const active = router.pathname === tab.href;
           return (
             <Link
-              key={t.href}
-              href={t.href}
+              key={tab.href}
+              href={tab.href}
               role="tab"
               aria-selected={active}
               className={cx(
@@ -53,7 +55,7 @@ export function SettingsTabs() {
                   : 'border-transparent text-ink-muted hover:text-ink'
               )}
             >
-              {t.label}
+              {t(`tabs.${tab.i18nKey}`)}
             </Link>
           );
         })}

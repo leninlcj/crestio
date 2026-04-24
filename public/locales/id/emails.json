@@ -12,5 +12,81 @@
     "manage_notifications": "Kelola pemberitahuan",
     "manage_notifications_text": "Kelola pemberitahuan: {{url}}",
     "footer_sender": "Dari Crestio — perangkat lunak bisnis untuk tutor."
+  },
+  "message_received": {
+    "title": "Pesan baru tentang {{student}}",
+    "body": "{{sender}} telah mengirimkan pesan kepada Anda. Buka portal untuk membaca dan membalas."
+  },
+  "message_urgent": {
+    "title": "Pesan mendesak dari {{sender}} mengenai {{student}}",
+    "body": "{{sender}} Tandai ini sebagai mendesak. Buka portal untuk membaca dan membalas."
+  },
+  "session_reminder_1h": {
+    "title": "Sesi dengan {{student}} dalam 1 jam",
+    "body": "{{student}} di {{time}}. {{duration}} menit, {{subject}}."
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} akan ada bimbingan besok",
+    "body": "Besok pukul {{time}}. {{duration}} menit {{subject_suffix}}."
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "Waktu baru: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "Sesi yang dijadwalkan pada {{old_time}} telah dibatalkan."
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} diminta untuk menjadwal ulang sesi{{student}}",
+    "body": "Waktu baru yang diusulkan: {{new_time}}. Silakan periksa dan setujui atau tolak di kalender."
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "Waktu baru: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "Sesi tetap sesuai jadwal."
+  },
+  "invoice_sent": {
+    "title": "Faktur baru {{number}} dari tutor Anda",
+    "body": "{{student_or_household}} · {{session_count}} session {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "Faktur {{number}} ditandai sebagai telah dibayar",
+    "body": "Terima kasih atas pembayarannya."
+  },
+  "invoice_overdue": {
+    "title": "Tagihan {{number}} telah jatuh tempo lebih dari 14 hari",
+    "body": "{{student}} · {{amount}} · batas waktu {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} memposting pembaruan tentang {{student}}",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} Tugas rumah {{student}} telah ditandai selesai",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\nTugas \"{{due_date}}\" sudah jatuh tempo. Tandai sebagai selesai di portal setelah selesai."
+  },
+  "tutor_invited": {
+    "title": "Anda telah diundang ke \"{{org}}\" di Crestio",
+    "body": "Klik tautan dalam email ini untuk menerima undangan dan membuat akun Anda."
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} bergabung dengan {{org}}",
+    "body": "Mereka kini memiliki akses ke tutor dan dapat mencatat sesi."
+  },
+  "payment_failed": {
+    "title": "Pembayaran Crestio Anda gagal",
+    "body": "Kami tidak dapat memproses pembayaran kartu Anda. Perbarui metode pembayaran Anda agar tetap dapat mengakses layanan."
+  },
+  "trial_ending": {
+    "title": "Masa uji coba Crestio Anda akan berakhir dalam {{days}} hari",
+    "body": "Berlangganan untuk tetap mengakses sesi, penagihan, dan asisten."
+  },
+  "subscription_cancelled": {
+    "title": "Langganan Crestio Anda telah dibatalkan",
+    "body": "Anda akan tetap memiliki akses hingga {{ends_on}}. Anda dapat berlangganan kembali kapan saja melalui Pengaturan → Tagihan."
   }
 }

@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { LessonPlan, Student } from '../../../lib/types';
-import { formatDate } from '../../../lib/utils';
+import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
 function LessonPlansInner() {
+  const { t } = useTranslation('lesson_plans');
+  const { formatDate } = useLocaleFormatters();
   const { membership, loading: membershipLoading } = useMembership();
   const isTutor = membership?.role === 'tutor';
   const [loading, setLoading] = useState(true);
@@ -33,17 +36,17 @@ function LessonPlansInner() {
 
   return (
     <Layout
-      subtitle="Teaching"
-      title="Lesson plans"
-      actions={<Link href="/app/lesson-plans/new" className="btn-primary">New plan</Link>}
+      subtitle={t('page.subtitle')}
+      title={t('page.title')}
+      actions={<Link href="/app/lesson-plans/new" className="btn-primary">{t('actions.new')}</Link>}
     >
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       ) : plans.length === 0 ? (
         <EmptyState
-          title="No lesson plans yet"
-          description="Generate one with Claude in about ten seconds, then save, edit, or reuse it."
-          action={<Link href="/app/lesson-plans/new" className="btn-primary">Generate a plan</Link>}
+          title={t('empty.title')}
+          description={t('empty.description')}
+          action={<Link href="/app/lesson-plans/new" className="btn-primary">{t('actions.generate')}</Link>}
         />
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
@@ -61,11 +64,11 @@ function LessonPlansInner() {
                   </div>
                 </div>
                 {p.generated_by_ai && (
-                  <span className="badge-forest">AI</span>
+                  <span className="badge-forest">{t('card.ai_badge')}</span>
                 )}
               </div>
               <div className="text-xs text-ink-muted mt-3 flex items-center justify-between">
-                <div>{p.student?.name ?? 'Unassigned'}</div>
+                <div>{p.student?.name ?? t('card.unassigned')}</div>
                 <div className="font-mono">{formatDate(p.created_at)}</div>
               </div>
             </Link>

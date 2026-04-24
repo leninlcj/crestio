@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
@@ -29,6 +30,7 @@ type Suggestion = {
 };
 
 function HouseholdsInner() {
+  const { t } = useTranslation('households');
   const { membership } = useMembership();
   const isTutor = membership?.role === 'tutor';
   const [loading, setLoading] = useState(true);
@@ -64,7 +66,7 @@ function HouseholdsInner() {
       const payload = await listRes.json();
       setHouseholds(payload.households ?? []);
     } else {
-      setError('Could not load households.');
+      setError(t('common.load_failed'));
     }
     if (sugRes.ok) {
       const payload = await sugRes.json();
@@ -90,7 +92,7 @@ function HouseholdsInner() {
     setCreating(false);
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not create household.');
+      setError(payload?.error ?? t('common.create_failed'));
       return;
     }
     setNewName('');
@@ -120,7 +122,7 @@ function HouseholdsInner() {
     });
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not apply suggestion.');
+      setError(payload?.error ?? t('common.apply_failed'));
       return;
     }
     await reload();
@@ -142,12 +144,12 @@ function HouseholdsInner() {
 
   return (
     <Layout
-      subtitle="People"
-      title="Households"
+      subtitle={t('page.subtitle')}
+      title={t('page.title')}
       actions={
         !isTutor ? (
           <button type="button" onClick={() => setNewFormOpen((v) => !v)} className="btn-primary">
-            {newFormOpen ? 'Cancel' : '+ New household'}
+            {newFormOpen ? t('actions.cancel') : t('actions.new')}
           </button>
         ) : undefined
       }
@@ -155,17 +157,17 @@ function HouseholdsInner() {
       {newFormOpen && (
         <form onSubmit={createHousehold} className="card p-5 mb-6 max-w-lg space-y-3">
           <div>
-            <label className="label">Household name</label>
+            <label className="label">{t('form.name_label')}</label>
             <input
               className="input"
-              placeholder="e.g. Chen family"
+              placeholder={t('form.name_placeholder')}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               autoFocus
             />
           </div>
           <button type="submit" disabled={creating || !newName.trim()} className="btn-primary text-sm">
-            {creating ? 'Creating…' : 'Create'}
+            {creating ? t('actions.creating') : t('actions.create')}
           </button>
         </form>
       )}
@@ -186,7 +188,7 @@ function HouseholdsInner() {
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
         <input
           type="search"
-          placeholder="Search household, parent, student…"
+          placeholder={t('filters.search_placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="input md:max-w-sm"
@@ -196,31 +198,30 @@ function HouseholdsInner() {
             onClick={() => setShowArchived(false)}
             className={(showArchived ? 'btn-ghost ' : 'btn-secondary ') + 'text-xs px-3 py-1.5'}
           >
-            Active
+            {t('filters.active')}
           </button>
           <button
             onClick={() => setShowArchived(true)}
             className={(!showArchived ? 'btn-ghost ' : 'btn-secondary ') + 'text-xs px-3 py-1.5'}
           >
-            Archived
+            {t('filters.archived')}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       ) : filtered.length === 0 ? (
         <div className="card p-8 text-center">
           <div className="font-display text-2xl mb-2 tracking-tightest">
-            {showArchived ? 'No archived households' : 'No households yet'}
+            {showArchived ? t('empty.archived_none') : t('empty.none')}
           </div>
           <p className="text-sm text-ink-muted mb-5 max-w-md mx-auto">
-            A household groups siblings under one billing contact. When you link a parent to a student,
-            a household is created automatically.
+            {t('empty.description')}
           </p>
           {!isTutor && (
             <button type="button" onClick={() => setNewFormOpen(true)} className="btn-primary">
-              Create a household
+              {t('empty.create')}
             </button>
           )}
         </div>
@@ -246,46 +247,56 @@ function SuggestionRow({
   onAccept: () => void;
   onDismiss: () => void;
 }) {
-  const parentLabel = s.parents[0]?.name || s.parents[0]?.email || 'a shared parent';
+  const { t } = useTranslation('households');
+  const parentLabel = s.parents[0]?.name || s.parents[0]?.email || t('suggestion.fallback_parent');
   const studentNames = s.students.map((x) => x.name);
+  const studentsText =
+    studentNames.length === 2
+      ? `${studentNames[0]} and ${studentNames[1]}`
+      : `${studentNames.slice(0, -1).join(', ')}, and ${studentNames[studentNames.length - 1]}`;
+  const question = s.action === 'add_to_existing'
+    ? t('suggestion.question_existing', { students: studentsText, parent: parentLabel })
+    : t('suggestion.question_new', { students: studentsText, parent: parentLabel });
   return (
     <div className="card p-4 bg-forest-soft border-forest/20 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <div className="text-sm text-forest-ink">
-        {studentNames.length === 2
-          ? <><strong>{studentNames[0]}</strong> and <strong>{studentNames[1]}</strong></>
-          : <><strong>{studentNames.slice(0, -1).join(', ')}</strong>, and <strong>{studentNames[studentNames.length - 1]}</strong></>}
-        {' '}share {parentLabel}. Group them{s.action === 'add_to_existing' ? ' into one household' : ' into a new household'}?
-      </div>
+      <div className="text-sm text-forest-ink">{question}</div>
       <div className="flex items-center gap-2 shrink-0">
-        <button type="button" onClick={onAccept} className="btn-primary text-xs">Group →</button>
-        <button type="button" onClick={onDismiss} className="btn-ghost text-xs">Dismiss</button>
+        <button type="button" onClick={onAccept} className="btn-primary text-xs">{t('suggestion.accept')}</button>
+        <button type="button" onClick={onDismiss} className="btn-ghost text-xs">{t('suggestion.dismiss')}</button>
       </div>
     </div>
   );
 }
 
 function HouseholdCard({ h }: { h: Household }) {
+  const { t } = useTranslation('households');
   const kids = h.students.map((s) => s.name);
-  const kidsLabel = kids.length === 0 ? 'No students' : kids.join(' · ');
+  const kidsLabel = kids.length === 0 ? t('card.no_students') : kids.join(' · ');
+  const studentsLabel = h.student_count === 1
+    ? t('card.students_one', { count: h.student_count })
+    : t('card.students_other', { count: h.student_count });
+  const parentsLabel = h.parent_count === 1
+    ? t('card.parents_one', { count: h.parent_count })
+    : t('card.parents_other', { count: h.parent_count });
   return (
     <Link href={`/app/households/${h.id}`} className="card p-5 hover:shadow-lift transition-shadow block">
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="font-display text-xl tracking-tightest text-ink leading-tight">
           {h.display_name}
         </div>
-        {h.archived_at && <span className="badge-neutral text-2xs">Archived</span>}
+        {h.archived_at && <span className="badge-neutral text-2xs">{t('card.archived_badge')}</span>}
       </div>
       {h.primary_parent ? (
         <div className="text-2xs text-ink-muted mb-3">
-          {h.primary_parent.name ?? 'Parent'}
+          {h.primary_parent.name ?? t('card.parent_label_fallback')}
           {h.primary_parent.email && <span className="block text-ink-soft">{h.primary_parent.email}</span>}
         </div>
       ) : (
-        <div className="text-2xs text-claret mb-3">Needs a primary parent</div>
+        <div className="text-2xs text-claret mb-3">{t('card.needs_primary')}</div>
       )}
       <div className="text-sm text-ink-muted">{kidsLabel}</div>
       <div className="text-2xs text-ink-soft mt-3">
-        {h.student_count} student{h.student_count === 1 ? '' : 's'} · {h.parent_count} parent{h.parent_count === 1 ? '' : 's'}
+        {t('card.summary', { students: studentsLabel, parents: parentsLabel })}
       </div>
     </Link>
   );

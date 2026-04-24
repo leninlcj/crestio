@@ -17,7 +17,20 @@
     "open": "فتح",
     "loading": "جاري التحميل...",
     "search_placeholder": "بحث…",
-    "not_found": "لم يتم العثور عليه"
+    "not_found": "لم يتم العثور عليه",
+    "dismiss": "تجاهل",
+    "sending": "جاري الإرسال…",
+    "done": "تم",
+    "more": "المزيد",
+    "submit": "إرسال",
+    "send": "إرسال",
+    "restore": "استعادة",
+    "discard": "تجاهل",
+    "continue": "متابعة",
+    "retry": "أعد المحاولة",
+    "less": "أقل",
+    "add": "إضافة",
+    "remove": "إزالة"
   },
   "nav": {
     "overview": "نظرة عامة",
@@ -38,7 +51,70 @@
     "signed_in_as": "تم تسجيل الدخول باسم",
     "owner_tools": "أدوات المالك",
     "test_accounts": "حسابات تجريبية",
-    "more": "المزيد"
+    "more": "المزيد",
+    "assistant": "المساعد",
+    "search": "بحث"
+  },
+  "search_ui": {
+    "placeholder": "بحث…",
+    "empty": "لا توجد نتائج.",
+    "try_different": "جرب بحثًا مختلفًا.",
+    "group_students": "الطلاب",
+    "group_sessions": "الجلسات",
+    "group_invoices": "الفواتير",
+    "group_messages": "الرسائل"
+  },
+  "assistant": {
+    "send": "إرسال",
+    "sending": "جاري الإرسال…",
+    "confirm_typed_button": "تأكيد",
+    "cancel": "إلغاء",
+    "placeholder": "اسأل عن شيء ما…",
+    "new_conversation": "محادثة جديدة",
+    "conversations": "المحادثات",
+    "thinking": "أفكر...",
+    "confirm_typed_label": "اكتب \"تأكيد\" للمتابعة",
+    "execute": "تنفيذ",
+    "capability_title": "ما الذي يمكن للمساعد القيام به؟",
+    "capability_close": "فهمت"
+  },
+  "notifications": {
+    "all": "الكل",
+    "dismiss": "تجاهل",
+    "bell_label": "الإشعارات",
+    "empty": "لا توجد إشعارات.",
+    "unread": "غير مقروء",
+    "mark_all_read": "وضع علامة \"تمت قراءتها\" على الكل",
+    "mark_read": "وضع علامة \"تم القراءة\"",
+    "see_all": "عرض الكل →"
+  },
+  "quick_log": {
+    "log_session": "تسجيل الجلسة",
+    "add_student": "إضافة طالب",
+    "label": "تسجيل سريع",
+    "title": "تسجيل شيء ما بسرعة",
+    "voice_note": "ملاحظة صوتية"
+  },
+  "support": {
+    "message": "رسالة",
+    "send": "إرسال",
+    "close": "إغلاق",
+    "open_button": "هل تحتاج إلى مساعدة؟",
+    "title": "أخبرنا بما لديك",
+    "subject": "الموضوع",
+    "sent_title": "فهمت، شكراً.",
+    "sent_body": "سنرد على البريد الإلكتروني المسجل في حسابك. ستتلقى ردًا في غضون يوم عمل واحد.",
+    "error": "تعذر الإرسال. يرجى المحاولة مرة أخرى بعد قليل."
+  },
+  "billing_gate": {
+    "cta_subscribe": "اشترك",
+    "trial_expired_title": "انتهت فترة التجربة",
+    "trial_expired_body": "اشترك لتتمكن من الاستمرار في استخدام Crestio.",
+    "past_due_title": "انتهت مدة الاشتراك",
+    "past_due_body": "يرجى تحديث طريقة الدفع للمتابعة.",
+    "canceled_title": "تم إلغاء الاشتراك",
+    "canceled_body": "أعد التنشيط لمواصلة العمل.",
+    "cta_manage": "إدارة الفواتير"
   },
   "status": {
     "draft": "مسودة",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "not_signed_in": "لم يتم تسجيل الدخول."
+    "not_signed_in": "لم يتم تسجيل الدخول.",
+    "rate_limited": "عدد الطلبات كبير جدًا. يرجى المحاولة مرة أخرى بعد قليل.",
+    "network": "مشكلة في الشبكة. تحقق من اتصالك."
+  },
+  "connectors": {
+    "at_time": "على",
+    "with_tutor": "باستخدام {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "جدولة",
+    "new_session": "جلسة جديدة",
+    "today": "اليوم",
+    "week": "الأسبوع",
+    "day": "اليوم",
+    "review": "مراجعة →",
+    "pending_requests_one": "{{count}} طلب من الوالدين في انتظار ردك",
+    "pending_requests_other": "{{count}} طلبات أولياء الأمور في انتظار ردك"
+  },
+  "voice_recorder": {
+    "start": "ابدأ التسجيل",
+    "stop": "إيقاف",
+    "recording": "التسجيل جارٍ...",
+    "transcribing": "جاري النسخ...",
+    "error": "تعذر نسخ ذلك — يرجى المحاولة مرة أخرى."
+  },
+  "error_boundary": {
+    "title": "حدث عطل ما.",
+    "body": "حدث خطأ غير متوقع في الصفحة. يرجى إعادة التحميل. إذا استمرت المشكلة، يرجى الاتصال بالدعم الفني.",
+    "reload": "إعادة التحميل",
+    "contact_support": "اتصل بالدعم الفني"
   }
 }

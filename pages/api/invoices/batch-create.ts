@@ -288,8 +288,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await createNotification(admin, {
               userId: primary.auth_user_id,
               type: 'invoice_sent',
-              title: `New invoice ${invoiceNumber} from your tutor`,
-              body: `${householdName} · ${lineItems.length} session${lineItems.length === 1 ? '' : 's'} · ${formatCents(subtotal)}`,
+              titleKey: 'invoice_sent.title',
+              bodyKey: 'invoice_sent.body',
+              templateVars: {
+                number: invoiceNumber,
+                student_or_household: householdName,
+                session_count: lineItems.length,
+                count_suffix: lineItems.length === 1 ? '' : 's',
+                amount: formatCents(subtotal),
+              },
               linkUrl: `/parent/invoices`,
               context: { invoice_id: invoice.id, household_id: h.household_id },
               dedupeKey: `invoice_sent:${invoice.id}`,

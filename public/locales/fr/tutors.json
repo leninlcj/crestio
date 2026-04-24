@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "Équipe",
+    "title": "Tuteurs"
+  },
+  "table": {
+    "name": "Nom",
+    "subjects": "Matières",
+    "students": "Étudiants",
+    "em_dash": "—",
+    "linked_login": "Connexion via un compte lié",
+    "pay_rate": "Taux de rémunération",
+    "this_month": "Ce mois-ci",
+    "linked_yes": "Oui",
+    "linked_no": "Non"
+  },
+  "new": {
+    "page_subtitle": "Tuteurs",
+    "email_label": "E-mail",
+    "phone_label": "Téléphone",
+    "notes_label": "Remarques",
+    "saving": "Enregistrement en cours…",
+    "cancel": "Annuler",
+    "not_signed_in": "Vous n'êtes pas connecté.",
+    "no_organization": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai.",
+    "page_title": "Nouveau tuteur",
+    "name_label": "Nom *",
+    "subjects_label": "Matières qu'ils enseignent",
+    "subjects_placeholder": "Mathématiques, chimie",
+    "subjects_hint": "Séparés par une virgule.",
+    "pay_rate_label": "Tarif horaire",
+    "pay_rate_placeholder": "par exemple 55",
+    "submit": "Créer un tuteur"
+  },
+  "common": {
+    "loading": "Chargement en cours…"
+  },
+  "actions": {
+    "add": "Ajouter un tuteur",
+    "add_one": "Ajouter un tuteur"
+  },
+  "empty": {
+    "title": "Pas encore de tuteurs",
+    "description": "Ajoutez des tuteurs lorsque vous recrutez des personnes pour enseigner au sein de votre entreprise. Si vous êtes tuteur indépendant, vous pouvez ignorer cette étape."
+  }
+}

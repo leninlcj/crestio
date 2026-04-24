@@ -1,3 +1,4 @@
+import { activeLocale } from '../../lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
@@ -22,8 +23,8 @@ function relativeTime(iso: string | null): string {
   if (mins < 1) return 'Just now';
   if (mins < 60) return `${mins}m ago`;
   if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return d.toLocaleDateString('en-AU', { weekday: 'short' });
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  if (days < 7) return d.toLocaleDateString(activeLocale(), { weekday: 'short' });
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' });
 }
 
 export function ThreadList({ basePath, allowArchiveToggle }: Props) {

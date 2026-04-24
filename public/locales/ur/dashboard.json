@@ -1,25 +1,19 @@
 {
+  "kicker": "آج",
+  "loading_error": "آپ کا ڈیش بورڈ لوڈ نہیں ہو سکا۔",
   "trial_banner": {
-    "dismiss": "رد کریں",
     "days_left_one": "آپ کے ٹرائل میں صرف ایک دن باقی ہے۔",
     "days_left_other": "آپ کے آزمائشی دور میں ابھی {{count}} دن باقی ہیں۔",
-    "subscribe": "سبسکرائب کریں"
+    "subscribe": "سبسکرائب کریں",
+    "dismiss": "رد کریں"
   },
   "sections": {
     "next_up": {
-      "open": "کھلا",
       "kicker": "اگلا سیشن",
       "kicker_soon": "جلد شروع ہو رہا ہے",
+      "open": "کھلا",
       "reschedule": "دوبارہ شیڈول کریں",
       "log_notes": "لاگ نوٹس"
-    },
-    "reschedules": {
-      "open": "کھلا",
-      "kicker": "آپ کے جواب کی ضرورت ہے",
-      "title_one": "{{count}} دوبارہ شیڈول کرنے کی درخواست زیر التوا",
-      "title_other": "{{count}} مُلتوی شدہ درخواستیں زیرِ التوا",
-      "accept": "قبول کریں",
-      "reject": "رد"
     },
     "polish": {
       "kicker": "سنوارنے کی ضرورت ہے",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} خاندان کے غیر بل شدہ سیشنز ہیں",
       "title_other": "{{count}} خاندانوں کے غیر بل شدہ سیشنز",
       "total_uninvoiced": "کل غیر بل شدہ: {{amount}}",
-      "cta": "سب کو انوائس کریں →"
+      "cta": "سب کو انوائس کریں →",
+      "student_count_one": "{{count}} طالب علم",
+      "student_count_other": "{{count}} طلباء"
+    },
+    "reschedules": {
+      "kicker": "آپ کے جواب کی ضرورت ہے",
+      "title_one": "{{count}} دوبارہ شیڈول کرنے کی درخواست زیر التوا",
+      "title_other": "{{count}} مُلتوی شدہ درخواستیں زیرِ التوا",
+      "accept": "قبول کریں",
+      "reject": "رد",
+      "open": "کھلا",
+      "row_description": "{{parent}} {{student}} کے اجلاس کی دوبارہ شیڈول بندی کی تجویز۔",
+      "row_original": "اصل:",
+      "row_proposed": "پیش کردہ:"
     },
     "week_ahead": {
       "kicker": "اس ہفتے",
@@ -59,6 +66,7 @@
       "add_student": "طالب علم شامل کریں →"
     }
   },
-  "kicker": "آج",
-  "loading_error": "آپ کا ڈیش بورڈ لوڈ نہیں ہو سکا۔"
+  "greeting_morning": "صبح بخیر، {{name}}",
+  "greeting_afternoon": "اچھا دوپہر، {{name}}",
+  "greeting_evening": "شام بخیر، {{name}}"
 }

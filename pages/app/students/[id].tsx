@@ -1,3 +1,4 @@
+import { activeLocale } from '../../../lib/utils';
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -842,7 +843,7 @@ function relativeFromNow(iso: string): string {
   }
   if (days === 1) return 'yesterday';
   if (days < 7) return `${days} days ago`;
-  return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  return new Date(iso).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' });
 }
 
 function truncate(s: string, n: number): string {
@@ -916,7 +917,7 @@ function FromLastSessionCard({ sessions, studentId }: { sessions: Session[]; stu
             {truncate(homework, 140)}
             {lastCompleted.homework_due_date && (
               <span className="text-forest-ink/70">
-                {' '}(due {new Date(lastCompleted.homework_due_date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })})
+                {' '}(due {new Date(lastCompleted.homework_due_date).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })})
               </span>
             )}
           </div>
@@ -960,11 +961,11 @@ function HomeworkList({
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-2">
               <div>
                 <div className="text-2xs uppercase tracking-widest text-ink-muted">
-                  {new Date(s.scheduled_at).toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' })}
+                  {new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}
                 </div>
                 {due && (
                   <div className="text-2xs text-ink-soft mt-0.5">
-                    Due {new Date(due).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                    Due {new Date(due).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
                   </div>
                 )}
               </div>
@@ -997,7 +998,7 @@ function HomeworkList({
             <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">{text}</p>
             {s.homework_completed_at && (
               <div className="text-2xs text-ink-soft mt-2">
-                Marked complete on {new Date(s.homework_completed_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}
+                Marked complete on {new Date(s.homework_completed_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
               </div>
             )}
           </div>

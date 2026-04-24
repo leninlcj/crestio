@@ -1,15 +1,15 @@
 {
   "subtitle": "संदेश",
-  "loading": "लोड हो रहा है…",
-  "compose": {
-    "sending": "भेज रहा है…",
-    "placeholder": "एक संदेश टाइप करें…",
-    "send": "भेजें"
-  },
   "title_list": "संदेश",
   "title_thread": "संदेश",
+  "loading": "लोड हो रहा है…",
   "empty": {
     "no_threads": "अभी तक कोई संदेश नहीं।",
     "no_messages": "इस थ्रेड में अभी तक कोई संदेश नहीं है।"
+  },
+  "compose": {
+    "placeholder": "एक संदेश टाइप करें…",
+    "send": "भेजें",
+    "sending": "भेज रहा है…"
   }
 }

@@ -1,29 +1,10 @@
 {
-  "title_not_found": "Introuvable",
-  "batch": {
-    "period_this_week": "Cette semaine",
-    "households": "Ménages",
-    "sessions": "Séances",
-    "loading": "Chargement en cours…",
-    "period": "Période",
-    "period_last_week": "La semaine dernière",
-    "period_this_month": "Ce mois-ci",
-    "period_last_month": "Le mois dernier",
-    "period_custom": "Gamme personnalisée…",
-    "from": "Source :",
-    "to": "À",
-    "back_to_list": "Retour à la liste des factures",
-    "unbilled_total": "Total non facturé",
-    "nothing_title": "Rien à facturer",
-    "nothing_body": "Aucune séance terminée et non facturée pour cette période. Enregistrez d'autres séances ou sélectionnez une autre période.",
-    "save_drafts": "Enregistrer comme brouillons",
-    "send": "Envoyer des factures"
-  },
   "subtitle": "Facturation",
   "title_list": "Factures",
   "title_new": "Nouvelle facture",
   "title_batch": "Facture groupée",
   "title_loading": "…",
+  "title_not_found": "Introuvable",
   "actions": {
     "new": "Nouvelle facture",
     "batch": "Facture groupée",
@@ -39,11 +20,11 @@
     "per_student": "Par élève"
   },
   "columns": {
-    "number": "Nombre",
     "billed_to": "Facturé à",
+    "status": "Statut",
+    "number": "Nombre",
     "issued": "Émises",
     "due": "À payer",
-    "status": "Statut",
     "total": "Total"
   },
   "not_found": "Facture introuvable.",
@@ -51,6 +32,25 @@
     "no_invoices_title": "Pas encore de factures",
     "no_invoices_body": "Regroupez les séances effectuées dans une facture à envoyer à un parent.",
     "cta_batch": "Facture groupée"
+  },
+  "batch": {
+    "period": "Période",
+    "period_this_week": "Cette semaine",
+    "period_last_week": "La semaine dernière",
+    "period_this_month": "Ce mois-ci",
+    "period_last_month": "Le mois dernier",
+    "period_custom": "Gamme personnalisée…",
+    "from": "Source :",
+    "to": "À",
+    "households": "Ménages",
+    "sessions": "Séances",
+    "unbilled_total": "Total non facturé",
+    "nothing_body": "Aucune séance terminée et non facturée pour cette période. Enregistrez d'autres séances ou sélectionnez une autre période.",
+    "loading": "Chargement en cours…",
+    "back_to_list": "Retour à la liste des factures",
+    "nothing_title": "Rien à facturer",
+    "save_drafts": "Enregistrer comme brouillons",
+    "send": "Envoyer les factures"
   },
   "batch_toast_created": "Factures groupées créées. Elles sont répertoriées ci-dessous."
 }

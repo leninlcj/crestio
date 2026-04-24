@@ -1,10 +1,12 @@
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../components/AuthGuardParent';
 import { supabase } from '../../lib/supabase';
 
 function ParentSettingsInner() {
+  const { t } = useTranslation('parent');
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -58,7 +60,7 @@ function ParentSettingsInner() {
     setPasswordError(null);
     setPasswordMsg(null);
     if (newPassword.length < 8) {
-      setPasswordError('Password must be at least 8 characters.');
+      setPasswordError(t('settings_page.password_too_short'));
       return;
     }
     setChangingPassword(true);
@@ -66,7 +68,7 @@ function ParentSettingsInner() {
     setChangingPassword(false);
     if (err) { setPasswordError(err.message); return; }
     setNewPassword('');
-    setPasswordMsg('Password updated.');
+    setPasswordMsg(t('settings_page.password_updated'));
     setTimeout(() => setPasswordMsg(null), 3000);
   }
 
@@ -82,64 +84,64 @@ function ParentSettingsInner() {
           crest<span className="italic text-forest">io</span>
         </Link>
         <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-ink">
-          ← Dashboard
+          {t('nav.back_dashboard')}
         </Link>
       </nav>
 
       <main className="px-6 md:px-12 py-12 md:py-16 max-w-xl mx-auto space-y-6">
         <div>
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Account</div>
-          <h1 className="font-display text-4xl md:text-5xl tracking-tightest mb-6">Settings</h1>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('settings_page.kicker')}</div>
+          <h1 className="font-display text-4xl md:text-5xl tracking-tightest mb-6">{t('settings_page.heading')}</h1>
         </div>
 
         {loading ? (
-          <div className="text-sm text-ink-muted">Loading…</div>
+          <div className="text-sm text-ink-muted">{t('settings_page.loading')}</div>
         ) : (
           <>
             <form onSubmit={saveName} className="card p-8 space-y-5">
-              <h2 className="font-display text-xl tracking-tightest">Your details</h2>
+              <h2 className="font-display text-xl tracking-tightest">{t('settings_page.details_heading')}</h2>
               <div>
-                <label className="label">Email</label>
+                <label className="label">{t('settings_page.email_label')}</label>
                 <input type="email" disabled value={email} className="input bg-ink-soft/10" />
                 <div className="text-2xs text-ink-soft mt-1.5">
-                  Contact your tutor if your email needs to change.
+                  {t('settings_page.email_hint')}
                 </div>
               </div>
               <div>
-                <label className="label">Name</label>
+                <label className="label">{t('settings_page.name_label')}</label>
                 <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input" />
               </div>
               {nameError && <div className="text-sm text-claret">{nameError}</div>}
-              {nameSaved && <div className="text-sm text-forest">Saved.</div>}
+              {nameSaved && <div className="text-sm text-forest">{t('settings_page.saved')}</div>}
               <button type="submit" disabled={savingName} className="btn-primary">
-                {savingName ? 'Saving…' : 'Save'}
+                {savingName ? t('settings_page.saving') : t('settings_page.save')}
               </button>
             </form>
 
             <form onSubmit={changePassword} className="card p-8 space-y-5">
-              <h2 className="font-display text-xl tracking-tightest">Change password</h2>
+              <h2 className="font-display text-xl tracking-tightest">{t('settings_page.change_password')}</h2>
               <div>
-                <label className="label">New password</label>
+                <label className="label">{t('settings_page.new_password_label')}</label>
                 <input type="password" minLength={8} required value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)} className="input" />
-                <div className="text-2xs text-ink-soft mt-1.5">At least 8 characters.</div>
+                <div className="text-2xs text-ink-soft mt-1.5">{t('settings_page.password_min')}</div>
               </div>
               {passwordError && <div className="text-sm text-claret">{passwordError}</div>}
               {passwordMsg && <div className="text-sm text-forest">{passwordMsg}</div>}
               <button type="submit" disabled={changingPassword || newPassword.length < 8}
                 className="btn-primary">
-                {changingPassword ? 'Updating…' : 'Update password'}
+                {changingPassword ? t('settings_page.updating') : t('settings_page.update_password')}
               </button>
             </form>
 
             {parentId && <ParentNotifPrefs parentId={parentId} />}
 
             <div className="card p-8">
-              <h2 className="font-display text-xl tracking-tightest mb-4">Sign out</h2>
+              <h2 className="font-display text-xl tracking-tightest mb-4">{t('settings_page.sign_out_heading')}</h2>
               <p className="text-sm text-ink-muted mb-4">
-                Signing out ends this session.
+                {t('settings_page.sign_out_body')}
               </p>
-              <button onClick={signOut} className="btn-secondary">Sign out</button>
+              <button onClick={signOut} className="btn-secondary">{t('settings_page.sign_out')}</button>
             </div>
           </>
         )}
@@ -149,6 +151,7 @@ function ParentSettingsInner() {
 }
 
 function ParentNotifPrefs({ parentId }: { parentId: string }) {
+  const { t } = useTranslation('parent');
   const [emailEnabled, setEmailEnabled] = useState(true);
   const [urgentOnly, setUrgentOnly] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -175,9 +178,9 @@ function ParentNotifPrefs({ parentId }: { parentId: string }) {
   return (
     <div className="card p-8 space-y-5">
       <div>
-        <h2 className="font-display text-xl tracking-tightest">Message notifications</h2>
+        <h2 className="font-display text-xl tracking-tightest">{t('settings_page.msg_notifs_heading')}</h2>
         <p className="text-sm text-ink-muted mt-2">
-          Choose when Crestio emails you. In-app messages appear regardless.
+          {t('settings_page.msg_notifs_body')}
         </p>
       </div>
       <label className="flex items-start gap-4 cursor-pointer">
@@ -189,8 +192,8 @@ function ParentNotifPrefs({ parentId }: { parentId: string }) {
           className="h-5 w-5 accent-forest mt-0.5"
         />
         <div className="flex-1">
-          <div className="text-sm text-ink">Email me when my tutor messages me</div>
-          <div className="text-2xs text-ink-muted mt-1">Throttled to at most once every 30 minutes per thread.</div>
+          <div className="text-sm text-ink">{t('settings_page.msg_when_label')}</div>
+          <div className="text-2xs text-ink-muted mt-1">{t('settings_page.msg_when_hint')}</div>
         </div>
       </label>
       <label className="flex items-start gap-4 cursor-pointer">
@@ -202,8 +205,8 @@ function ParentNotifPrefs({ parentId }: { parentId: string }) {
           className="h-5 w-5 accent-forest mt-0.5"
         />
         <div className="flex-1">
-          <div className="text-sm text-ink">Email me only for urgent messages</div>
-          <div className="text-2xs text-ink-muted mt-1">Skip emails for normal or info messages.</div>
+          <div className="text-sm text-ink">{t('settings_page.msg_urgent_label')}</div>
+          <div className="text-2xs text-ink-muted mt-1">{t('settings_page.msg_urgent_hint')}</div>
         </div>
       </label>
     </div>

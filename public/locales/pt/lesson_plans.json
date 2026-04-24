@@ -1,0 +1,21 @@
+{
+  "common": {
+    "loading": "Carregando…"
+  },
+  "page": {
+    "subtitle": "Ensino",
+    "title": "Planos de aula"
+  },
+  "actions": {
+    "new": "Novo plano",
+    "generate": "Gerar um plano"
+  },
+  "empty": {
+    "title": "Ainda não há planos de aula",
+    "description": "Crie um com o Claude em cerca de dez segundos e, em seguida, salve, edite ou reutilize-o."
+  },
+  "card": {
+    "ai_badge": "IA",
+    "unassigned": "Não atribuído"
+  }
+}

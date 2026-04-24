@@ -1,3 +1,4 @@
+import { activeLocale } from '../../lib/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
@@ -309,7 +310,7 @@ function MessageBubble({
   const now = Date.now();
   const age = now - new Date(message.created_at).getTime();
   const editable = isMine && age < 5 * 60 * 1000 && !message.deleted;
-  const time = new Date(message.created_at).toLocaleTimeString('en-AU', {
+  const time = new Date(message.created_at).toLocaleTimeString(activeLocale(), {
     hour: 'numeric', minute: '2-digit',
   });
 

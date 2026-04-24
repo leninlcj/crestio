@@ -1,0 +1,157 @@
+{
+  "nav": {
+    "sign_in": "Masuk",
+    "pricing": "Harga",
+    "start_trial": "Mulai uji coba gratis",
+    "open_menu": "Buka menu",
+    "close_menu": "Tutup menu"
+  },
+  "footer": {
+    "sign_in": "Masuk",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "made_in": "Dibuat di Australia · 2026",
+    "support": "Dukungan"
+  },
+  "contact": {
+    "email_label": "Email",
+    "eyebrow": "Hubungi kami",
+    "heading": "Sapa",
+    "intro": "Pertanyaan, laporan bug, masukan, pujian, keluhan — semuanya diterima. Ada seseorang yang membaca pesan-pesan ini dan membalasnya, biasanya dalam waktu satu hari.",
+    "copy": "Salin",
+    "copied": "Disalin",
+    "or_send_via_mail": "Atau kirim melalui aplikasi email Anda",
+    "name_label": "Nama Anda (opsional)",
+    "email_field_label": "Alamat email Anda (opsional)",
+    "email_hint": "Sertakan ini jika Anda ingin mendapatkan balasan.",
+    "message_label": "Pesan *",
+    "message_placeholder": "Apa yang ada di pikiran Anda?",
+    "submit": "Buka di Mail",
+    "submit_note": "Ini akan membuka aplikasi email bawaan Anda dengan pesan yang sudah dibuat. Pesan tersebut tidak akan terkirim sampai Anda mengirimkannya sendiri.",
+    "footer_location": "crestio · Sydney · 2026",
+    "subject_named": "Pesan dari {{name}}",
+    "subject_anonymous": "Pesan dari situs web Crestio",
+    "body_from": "Dari: {{name}}",
+    "body_reply_to": "Balas ke: {{email}}"
+  },
+  "meta": {
+    "home_title": "Crestio — perangkat lunak untuk tutor di Australia",
+    "home_description": "Kelola siswa, catat sesi, sempurnakan catatan dengan AI, dan bagikan kemajuan kepada orang tua — semuanya dari satu dasbor. Mulai dari $24/bulan. Uji coba gratis selama 7 hari.",
+    "contact_title": "Kontak · Crestio"
+  },
+  "deleted_banner": "Akun Anda telah dihapus. Sayang sekali Anda pergi.",
+  "hero": {
+    "eyebrow": "Untuk tutor independen dan tim kecil",
+    "heading": "Alat serba guna untuk tutor yang serius dalam pekerjaannya.",
+    "subheading": "Kelola siswa, catat sesi, sempurnakan catatan dengan AI, dan bagikan kemajuan kepada orang tua — semuanya dari satu dasbor. Untuk tutor independen dan tim kecil.",
+    "cta": "Mulai uji coba gratis",
+    "price_note": "Mulai dari {{price}} per bulan. Uji coba gratis selama 7 hari. Batalkan kapan saja.",
+    "see_plans": "Lihat semua paket →"
+  },
+  "pain": {
+    "heading": "Menjalankan bisnis les seharusnya tidak terasa seperti ini.",
+    "line_1": "Anda telah mengajar enam sesi minggu ini dan belum membuat faktur untuk dua di antaranya.",
+    "line_2": "Anda menulis catatan di kertas, mengetiknya ke dalam Google Docs, dan pada akhirnya akan merangkumnya untuk orang tua.",
+    "line_3": "Tiga orang tua mengirim pesan kepada Anda malam ini dengan pertanyaan yang sama.",
+    "line_4": "Anda menghabiskan dua jam untuk urusan administrasi untuk setiap lima jam bimbingan belajar yang sebenarnya."
+  },
+  "how": {
+    "heading": "Cara kerja Crestio"
+  },
+  "features": {
+    "session_log": {
+      "title": "Mencatat sesi dalam hitungan detik",
+      "body": "Pilih siswa, tentukan waktu, catat catatan. Formulir yang sama mencakup sesi hari ini dan sesi yang lupa dicatat pada Selasa lalu. Tidak perlu membuka aplikasi kalender.",
+      "alt": "Formulir pencatatan sesi Crestio dengan kolom siswa, mata pelajaran, topik, pekerjaan rumah, dan catatan.",
+      "caption": "Formulir catatan sesi."
+    },
+    "polish": {
+      "title": "Catatan bahasa Polandia dengan AI",
+      "body": "Tulis versi kasarnya dengan cepat. Satu klik akan mengubahnya menjadi teks yang bisa dibaca orang tua — singkat, hangat, dan spesifik. Catatan Anda tetap milik Anda; versi yang sudah disempurnakan disimpan terpisah.",
+      "alt": "Tampilan berdampingan antara catatan sesi kasar dan catatan yang telah disempurnakan oleh AI untuk orang tua.",
+      "caption": "Catatan kasar di sebelah kiri, yang sudah disempurnakan di sebelah kanan."
+    },
+    "invoices": {
+      "title": "Faktur tanpa tagihan",
+      "body": "Sesi yang telah selesai akan menjadi item tagihan. Buat faktur, tandai sebagai telah dibayar saat transfer bank masuk. Tidak perlu spreadsheet terpisah untuk mencatat siapa yang berhutang apa.",
+      "alt": "Daftar faktur Crestio yang menampilkan faktur yang telah dibayar dan belum dibayar beserta jumlah dan tanggal jatuh tempo.",
+      "caption": "Daftar faktur, yang sudah dibayar vs yang belum dibayar."
+    },
+    "parent_portal": {
+      "title": "Berikan orang tua portal khusus mereka sendiri",
+      "body": "Undang orang tua dan mereka akan mendapatkan gambaran sederhana mengenai sesi belajar, pekerjaan rumah, dan catatan yang telah disusun rapi milik anak mereka. Mereka tidak akan lagi mengirim pesan kepada Anda pada pukul 9 malam karena mereka sudah tahu bagaimana perkembangannya.",
+      "alt": "Portal orang tua yang menampilkan sesi terbaru anak beserta tugas rumah dan catatan tutor.",
+      "caption": "Portal orang tua."
+    }
+  },
+  "pricing": {
+    "heading": "Satu alat. Tiga paket. Pilih yang sesuai.",
+    "subheading": "Sebagian besar tutor di Australia memulai karier mereka di Solo. Ingin mengembangkan tim? Pilih Go Team.",
+    "monthly": "Bulanan",
+    "annual": "Tahunan",
+    "annual_save_note": "(hemat 2 bulan)",
+    "period_monthly": "AUD per bulan",
+    "period_annual": "per tahun — sekitar {{monthly_equivalent}} per bulan, ditagih secara tahunan",
+    "recommended_banner": "Direkomendasikan untuk sebagian besar tutor",
+    "tier_name": "Crestio {{tier}}",
+    "footer_note": "Harga dalam AUD. Termasuk GST jika berlaku. Dapat dibatalkan kapan saja."
+  },
+  "tiers": {
+    "solo": {
+      "label": "Solo",
+      "subhead": "Satu daftar tutor, satu daftar siswa.",
+      "features": {
+        "unlimited": "Jumlah siswa dan sesi tidak terbatas",
+        "polish": "Catatan yang disempurnakan oleh AI untuk orang tua",
+        "parent_portal": "Portal orang tua dan penagihan",
+        "trial": "Uji coba gratis selama 7 hari"
+      },
+      "cta": "Mulai uji coba gratis selama 7 hari"
+    },
+    "team": {
+      "label": "Tim",
+      "subhead": "Ditujukan untuk pemilik usaha bimbingan belajar dengan tim tutor yang kecil.",
+      "features": {
+        "inherits": "Semua yang ada di Solo, ditambah:",
+        "up_to_5": "Hingga 5 tutor dengan akses berdasarkan peran",
+        "payouts": "Pembayaran per tutor dan pelaporan",
+        "trial": "Uji coba gratis selama 14 hari"
+      },
+      "cta": "Mulai uji coba gratis 14 hari"
+    },
+    "growth": {
+      "label": "Pertumbuhan",
+      "subhead": "Untuk bisnis bimbingan belajar yang sedang berkembang.",
+      "features": {
+        "inherits": "Semua fitur di Team, ditambah:",
+        "up_to_15": "Hingga 15 tutor",
+        "priority": "Dukungan prioritas",
+        "onboarding": "Onboarding khusus"
+      },
+      "cta": "Hubungi kami"
+    }
+  },
+  "faq": {
+    "heading": "Hal-hal yang ditanyakan oleh para tutor",
+    "q1": "Apakah data siswa saya aman?",
+    "a1_part1": "Ya. Data disimpan di infrastruktur Supabase dan pembayaran diproses melalui Stripe, sehingga Crestio tidak pernah melihat detail kartu Anda. Data setiap organisasi diisolasi — tidak ada tutor yang dapat melihat siswa dari praktik lain. Detail lengkapnya ada di ",
+    "a1_privacy_link": "kebijakan privasi",
+    "a1_part2": ".",
+    "q2": "Apa sebenarnya yang dilakukan AI ini, dan apakah AI ini dilatih menggunakan data saya?",
+    "a2": "AI ini menyempurnakan catatan sesi kasar Anda menjadi sesuatu yang dapat dibaca dengan jelas oleh orang tua. AI ini hanya melihat apa yang Anda kirimkan dalam permintaan spesifik tersebut, tidak menyimpan apa pun di antara sesi, dan tidak dilatih menggunakan data Anda. Anda selalu menyimpan catatan asli Anda — penyempurnaan AI bersifat opsional per sesi. Penyedia layanan ini bersertifikat SOC 2 Tipe II.",
+    "q3": "Apa yang terjadi setelah masa uji coba gratis?",
+    "a3": "Kartu Anda akan dikenakan biaya sesuai dengan paket yang Anda pilih. Batalkan sebelum masa uji coba berakhir dan tidak akan ada tagihan. Batalkan setelah penagihan dimulai dan Anda tetap dapat mengakses layanan hingga akhir periode yang telah Anda bayar, kemudian layanan akan berhenti.",
+    "q4": "Apakah orang tua dapat melihat semuanya?",
+    "a4": "Hanya yang Anda bagikan. Catatan sesi dibagi menjadi catatan internal (milik Anda) dan catatan yang ditujukan untuk orang tua (dibagikan). Orang tua hanya dapat melihat sesi yang telah Anda bagikan kepada mereka, dan hanya untuk anak mereka sendiri.",
+    "q5": "Apakah ini untuk perusahaan bimbingan belajar atau tutor individu?",
+    "a5": "Keduanya. Paket Solo ditujukan untuk tutor independen. Paket Team cocok untuk bisnis bimbingan belajar kecil dengan maksimal 5 tutor. Paket Growth mendukung hingga 15 tutor. Jika Anda mengelola bisnis yang lebih besar, kirim email ke support@crestio.ai dan kami akan membantu Anda menemukan solusi yang tepat.",
+    "q6": "Siapa yang mengelola Crestio?",
+    "a6": "Tim Crestio. Kami adalah tim kecil yang berbasis di Australia, mengembangkan perangkat lunak untuk tutor yang menghargai waktu mereka. Ada pertanyaan atau masukan? Kirim email ke support@crestio.ai dan setiap pesan akan dibaca oleh salah satu anggota tim."
+  },
+  "final_cta": {
+    "headline": "Coba Crestio selama seminggu. Lihat apakah cocok untuk Anda.",
+    "button": "Mulai uji coba gratis",
+    "questions_part1": "Ada pertanyaan? Kirim email ",
+    "questions_part2": "."
+  }
+}

@@ -17,7 +17,20 @@
     "open": "Buka",
     "loading": "Sedang dimuat…",
     "search_placeholder": "Cari…",
-    "not_found": "Tidak ditemukan"
+    "not_found": "Tidak ditemukan",
+    "dismiss": "Tutup",
+    "sending": "Mengirim…",
+    "done": "Selesai",
+    "more": "Selengkapnya",
+    "submit": "Kirim",
+    "send": "Kirim",
+    "restore": "Pulihkan",
+    "discard": "Hapus",
+    "continue": "Lanjutkan",
+    "retry": "Coba lagi",
+    "less": "Kurang",
+    "add": "Tambahkan",
+    "remove": "Hapus"
   },
   "nav": {
     "overview": "Gambaran umum",
@@ -38,7 +51,70 @@
     "signed_in_as": "Masuk sebagai",
     "owner_tools": "Alat untuk pemilik",
     "test_accounts": "Akun uji coba",
-    "more": "Selengkapnya"
+    "more": "Selengkapnya",
+    "assistant": "Asisten",
+    "search": "Cari"
+  },
+  "search_ui": {
+    "placeholder": "Cari…",
+    "empty": "Tidak ada hasil.",
+    "try_different": "Coba pencarian yang berbeda.",
+    "group_students": "Siswa",
+    "group_sessions": "Sesi",
+    "group_invoices": "Faktur",
+    "group_messages": "Pesan"
+  },
+  "assistant": {
+    "send": "Kirim",
+    "sending": "Mengirim…",
+    "confirm_typed_button": "Konfirmasi",
+    "cancel": "Batalkan",
+    "placeholder": "Tanyakan sesuatu…",
+    "new_conversation": "Percakapan baru",
+    "conversations": "Percakapan",
+    "thinking": "Sedang memikirkan…",
+    "confirm_typed_label": "Ketik \"confirm\" untuk melanjutkan",
+    "execute": "Lakukan",
+    "capability_title": "Apa saja yang bisa dilakukan asisten ini?",
+    "capability_close": "Sudah"
+  },
+  "notifications": {
+    "all": "Semua",
+    "dismiss": "Tutup",
+    "bell_label": "Pemberitahuan",
+    "empty": "Tidak ada pemberitahuan.",
+    "unread": "Belum dibaca",
+    "mark_all_read": "Tandai semua sebagai sudah dibaca",
+    "mark_read": "Tandai sebagai sudah dibaca",
+    "see_all": "Lihat semua →"
+  },
+  "quick_log": {
+    "log_session": "Catatan sesi",
+    "add_student": "Tambahkan siswa",
+    "label": "Catatan cepat",
+    "title": "Catat sesuatu dengan cepat",
+    "voice_note": "Catatan suara"
+  },
+  "support": {
+    "message": "Pesan",
+    "send": "Kirim",
+    "close": "Tutup",
+    "open_button": "Butuh bantuan?",
+    "title": "Ceritakan apa yang terjadi",
+    "subject": "Subjek",
+    "sent_title": "Baik, terima kasih.",
+    "sent_body": "Kami akan membalas email tersebut melalui akun Anda. Tanggapan akan dikirimkan dalam waktu satu hari kerja.",
+    "error": "Tidak dapat dikirim. Silakan coba lagi sebentar lagi."
+  },
+  "billing_gate": {
+    "cta_subscribe": "Berlangganan",
+    "trial_expired_title": "Masa uji coba Anda telah berakhir",
+    "trial_expired_body": "Berlangganan agar dapat terus menggunakan Crestio.",
+    "past_due_title": "Langganan sudah jatuh tempo",
+    "past_due_body": "Perbarui metode pembayaran Anda untuk melanjutkan.",
+    "canceled_title": "Langganan dibatalkan",
+    "canceled_body": "Aktifkan kembali agar tetap berfungsi.",
+    "cta_manage": "Kelola penagihan"
   },
   "status": {
     "draft": "Draf",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "Terjadi kesalahan. Silakan coba lagi.",
-    "not_signed_in": "Belum masuk."
+    "not_signed_in": "Belum masuk.",
+    "rate_limited": "Terlalu banyak permintaan. Silakan coba lagi sebentar lagi.",
+    "network": "Masalah jaringan. Periksa koneksi Anda."
+  },
+  "connectors": {
+    "at_time": "di",
+    "with_tutor": "dengan {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "Jadwal",
+    "new_session": "Sesi baru",
+    "today": "Hari ini",
+    "week": "Minggu",
+    "day": "Hari",
+    "review": "Tinjau →",
+    "pending_requests_one": "{{count}} Permohonan orang tua sedang menunggu tanggapan Anda",
+    "pending_requests_other": "{{count}} Permohonan orang tua yang menunggu tanggapan Anda"
+  },
+  "voice_recorder": {
+    "start": "Mulai merekam",
+    "stop": "Berhenti",
+    "recording": "Merekam…",
+    "transcribing": "Sedang mentranskrip…",
+    "error": "Tidak dapat menerjemahkan teks tersebut — silakan coba lagi."
+  },
+  "error_boundary": {
+    "title": "Ada yang rusak.",
+    "body": "Halaman ini mengalami kesalahan yang tidak terduga. Silakan muat ulang halaman. Jika masalah ini terus berlanjut, hubungi bagian dukungan.",
+    "reload": "Muat ulang",
+    "contact_support": "Hubungi layanan dukungan"
   }
 }

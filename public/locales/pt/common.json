@@ -17,7 +17,20 @@
     "open": "Abrir",
     "loading": "Carregando…",
     "search_placeholder": "Pesquisar…",
-    "not_found": "Não encontrado"
+    "not_found": "Não encontrado",
+    "dismiss": "Ignorar",
+    "sending": "Enviando…",
+    "done": "Concluído",
+    "more": "Mais",
+    "submit": "Enviar",
+    "send": "Enviar",
+    "restore": "Restaurar",
+    "discard": "Ignorar",
+    "continue": "Continuar",
+    "retry": "Tentar novamente",
+    "less": "Menos",
+    "add": "Adicionar",
+    "remove": "Remover"
   },
   "nav": {
     "overview": "Visão geral",
@@ -38,7 +51,70 @@
     "signed_in_as": "Conectado como",
     "owner_tools": "Ferramentas do proprietário",
     "test_accounts": "Contas de teste",
-    "more": "Mais"
+    "more": "Mais",
+    "assistant": "Assistente",
+    "search": "Pesquisar"
+  },
+  "search_ui": {
+    "placeholder": "Pesquisar…",
+    "empty": "Nenhum resultado.",
+    "try_different": "Tente uma pesquisa diferente.",
+    "group_students": "Alunos",
+    "group_sessions": "Sessões",
+    "group_invoices": "Faturas",
+    "group_messages": "Mensagens"
+  },
+  "assistant": {
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "confirm_typed_button": "Confirmar",
+    "cancel": "Cancelar",
+    "placeholder": "Pergunte algo…",
+    "new_conversation": "Nova conversa",
+    "conversations": "Conversas",
+    "thinking": "Pensando…",
+    "confirm_typed_label": "Digite “confirmar” para continuar",
+    "execute": "Executar",
+    "capability_title": "O que o assistente pode fazer?",
+    "capability_close": "Entendi"
+  },
+  "notifications": {
+    "all": "Todas",
+    "dismiss": "Ignorar",
+    "bell_label": "Notificações",
+    "empty": "Sem notificações.",
+    "unread": "Não lida",
+    "mark_all_read": "Marcar tudo como lido",
+    "mark_read": "Marcar como lida",
+    "see_all": "Ver tudo →"
+  },
+  "quick_log": {
+    "log_session": "Registro da sessão",
+    "add_student": "Adicionar aluno",
+    "label": "Log rápido",
+    "title": "Registre algo rapidamente",
+    "voice_note": "Nota de voz"
+  },
+  "support": {
+    "message": "Mensagem",
+    "send": "Enviar",
+    "close": "Fechar",
+    "open_button": "Precisa de ajuda?",
+    "title": "Conte-nos o que está acontecendo",
+    "subject": "Assunto",
+    "sent_title": "Entendi, obrigado.",
+    "sent_body": "Responderemos ao e-mail enviado para sua conta. Você receberá uma resposta em até um dia útil.",
+    "error": "Não foi possível enviar. Tente novamente daqui a pouco."
+  },
+  "billing_gate": {
+    "cta_subscribe": "Inscreva-se",
+    "trial_expired_title": "Seu período de avaliação terminou",
+    "trial_expired_body": "Inscreva-se para continuar usando o Crestio.",
+    "past_due_title": "A assinatura está vencida",
+    "past_due_body": "Atualize sua forma de pagamento para continuar.",
+    "canceled_title": "Assinatura cancelada",
+    "canceled_body": "Reative para continuar trabalhando.",
+    "cta_manage": "Gerenciar cobranças"
   },
   "status": {
     "draft": "Rascunho",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "Ocorreu um erro. Tente novamente.",
-    "not_signed_in": "Não está conectado."
+    "not_signed_in": "Não está conectado.",
+    "rate_limited": "Excesso de solicitações. Tente novamente daqui a pouco.",
+    "network": "Problema de rede. Verifique sua conexão."
+  },
+  "connectors": {
+    "at_time": "para",
+    "with_tutor": "com o {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "Agendar",
+    "new_session": "Nova sessão",
+    "today": "Hoje",
+    "week": "Semana",
+    "day": "Dia",
+    "review": "Revisar →",
+    "pending_requests_one": "{{count}} Solicitação dos pais aguardando sua resposta",
+    "pending_requests_other": "{{count}} solicitações dos pais aguardando sua resposta"
+  },
+  "voice_recorder": {
+    "start": "Comece a gravar",
+    "stop": "Cancelar",
+    "recording": "Gravando…",
+    "transcribing": "Transcrevendo…",
+    "error": "Não foi possível transcrever isso — tente novamente."
+  },
+  "error_boundary": {
+    "title": "Algo quebrou.",
+    "body": "A página apresentou um erro inesperado. Tente recarregá-la. Se o problema persistir, entre em contato com o suporte.",
+    "reload": "Atualizar",
+    "contact_support": "Entre em contato com o suporte"
   }
 }

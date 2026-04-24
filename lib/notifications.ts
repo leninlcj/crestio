@@ -151,8 +151,15 @@ export async function createNotification(
   params: {
     userId: string;
     type: NotificationType;
-    title: string;
+    // Either pass title + optional body directly (legacy path, English-only)…
+    title?: string;
     body?: string | null;
+    // …or pass localisation keys. When given, the recipient's stored locale
+    // is resolved and the keys are looked up against the `emails` namespace
+    // via getServerT. Variables are interpolated into the result.
+    titleKey?: string;
+    bodyKey?: string;
+    templateVars?: Record<string, unknown>;
     linkUrl?: string | null;
     context?: Record<string, any> | null;
     dedupeKey?: string | null;
@@ -162,9 +169,12 @@ export async function createNotification(
   },
 ): Promise<CreateNotificationResult> {
   const {
-    userId, type, title, body = null, linkUrl = null, context = null,
+    userId, type, linkUrl = null, context = null,
     dedupeKey = null, emailOverride, emailPayload,
+    titleKey, bodyKey, templateVars,
   } = params;
+  let title = params.title ?? '';
+  let body = params.body ?? null;
 
   // Dedupe check up-front. Using INSERT with ON-CONFLICT-DO-NOTHING would be
   // cleaner but PostgREST doesn't expose that cleanly; a two-step is fine.
@@ -180,6 +190,19 @@ export async function createNotification(
   // Resolve recipient + email-eligibility before we insert, so we can stamp
   // email_sent_at / email_skipped_reason correctly.
   const recipient = await resolveRecipient(admin, userId);
+
+  // If the caller supplied localisation keys, render title + body in the
+  // recipient's locale and use that for both the in-app row and the email.
+  if (titleKey || bodyKey) {
+    try {
+      const { getServerT } = await import('./i18nServer');
+      const t = await getServerT(recipient.locale ?? 'en', 'emails');
+      if (titleKey) title = t(titleKey, templateVars);
+      if (bodyKey) body = t(bodyKey, templateVars);
+    } catch {
+      // Leave fallback title/body as-is on error.
+    }
+  }
   let emailSent = false;
   let skippedReason: string | null = null;
   let emailSentAt: string | null = null;

@@ -1,39 +1,162 @@
 {
+  "subtitle": "الأشخاص",
+  "subtitle_student": "الطالب",
+  "title_list": "الطلاب",
+  "title_new": "الطالب الجديد",
   "title_loading": "…",
   "title_not_available": "غير متاح",
   "title_not_found": "لم يتم العثور عليه",
   "actions": {
     "add": "إضافة طالب",
+    "new_cta": "الطالب الجديد",
     "edit": "تحرير",
+    "log_session": "تسجيل الجلسة",
     "archive": "الأرشيف",
     "unarchive": "إلغاء الأرشفة",
-    "delete": "حذف",
-    "new_cta": "الطالب الجديد",
-    "log_session": "تسجيل الجلسة"
-  },
-  "loading": "جاري التحميل...",
-  "tabs": {
-    "sessions": "الجلسات",
-    "homework": "الواجبات المنزلية",
-    "record": "سجل",
-    "track": "المسار"
-  },
-  "subtitle": "الأشخاص",
-  "title_list": "الطلاب",
-  "title_new": "الطالب الجديد",
-  "filters": {
-    "active": "نشط",
-    "archived": "المحفوظات"
+    "delete": "حذف"
   },
   "empty": {
     "no_students": "لا يوجد طلاب حتى الآن",
     "no_archived": "لا يوجد طلاب مسجلون",
     "description_owner": "أضف أول طالب لديك لبدء تتبع الجلسات والفوترة.",
     "description_tutor": "سيقوم مالك مؤسستك بتعيين الطلاب لك.",
-    "no_tutor_record": "لم يتم تعيين أي طلاب بعد",
     "show_archived": "يظهر هنا الطلاب المسجلون في الأرشيف.",
-    "add_first": "إضافة طالب"
+    "add_first": "إضافة طالب",
+    "no_tutor_record": "لم يتم تعيين أي طلاب بعد"
   },
+  "loading": "جاري التحميل...",
   "denied": "لا يمكنك الوصول إلى هذا الطالب. اطلب من مالك المؤسسة تعيينه لك.",
-  "not_found": "هذا الطالب غير موجود، أو لا يمكنك الوصول إليه."
+  "not_found": "هذا الطالب غير موجود، أو لا يمكنك الوصول إليه.",
+  "tabs": {
+    "sessions": "الجلسات",
+    "homework": "الواجبات المنزلية",
+    "record": "سجل",
+    "track": "المسار"
+  },
+  "columns": {
+    "name": "الاسم",
+    "year": "السنة",
+    "subjects": "المواد الدراسية",
+    "parent": "الوالدان",
+    "rate": "السعر"
+  },
+  "cards": {
+    "contact": "اتصل بنا",
+    "billing": "الفواتير",
+    "notes_heading": "ملاحظات",
+    "assigned_saved": "تم الحفظ.",
+    "contact_parent": "الوالد: ",
+    "contact_email": "البريد الإلكتروني: ",
+    "contact_phone": "الهاتف: ",
+    "no_contact": "لم يتم الاتصال بالوالدين بعد.",
+    "academic": "أكاديمي",
+    "year": "السنة: ",
+    "school": "المدرسة: ",
+    "subjects": "المواد الدراسية: ",
+    "rate": "السعر: ",
+    "rate_per_hour": " / ساعة",
+    "lifetime": "مدى الحياة: ",
+    "sessions": "الدورات: ",
+    "assigned_tutor": "المعلم المخصص",
+    "unassigned_option": "غير مخصص (يتولى المالك الأمر مباشرة)",
+    "assigned_tutor_hint": "لا يظهر هنا سوى الموجهين الذين قبلوا الدعوة."
+  },
+  "new_form": {
+    "notes": "ملاحظات",
+    "save": "إضافة طالب",
+    "cancel": "إلغاء",
+    "name_required": "الاسم *",
+    "name_placeholder": "مثل: سام تشين",
+    "year_level": "السنة الدراسية",
+    "year_level_placeholder": "على سبيل المثال: الصف العاشر",
+    "school": "المدرسة",
+    "school_placeholder": "مثل مدرسة سيدني بويز هاي",
+    "subjects": "المواد الدراسية (مفصولة بفاصلة)",
+    "subjects_placeholder": "مثل الرياضيات والفيزياء",
+    "parent_name": "اسم الوالد",
+    "parent_phone": "رقم هاتف ولي الأمر",
+    "parent_email": "البريد الإلكتروني للوالدين",
+    "hourly_rate": "السعر بالساعة",
+    "saving": "إضافة..."
+  },
+  "parent_access": {
+    "pending_heading": "قيد الانتظار",
+    "inviting": "جاري الإرسال…",
+    "kicker": "وصول أولياء الأمور",
+    "heading": "من يمكنه الاطلاع على ملاحظات هذا الطالب",
+    "none_yet": "لم يتم ربط أو دعوة أي من الوالدين بعد.",
+    "linked_heading": "مرتبط",
+    "invited_when": "المدعوون {{when}}",
+    "revoke": "إلغاء الوصول",
+    "revoke_confirm": "هل تريد إلغاء وصول هذا الوالد؟ لن يتمكن بعد ذلك من رؤية أي جلسات.",
+    "cancel_invitation": "إلغاء الدعوة",
+    "parent_email": "البريد الإلكتروني للوالدين",
+    "parent_email_placeholder": "parent@example.com",
+    "invite": "دعوة الوالدين",
+    "invitation_sent": "تم إرسال الدعوة إلى {{email}}.",
+    "invitation_created": "تم إنشاء الدعوة.",
+    "invitation_share_hint": "شارك هذا الرابط مع الوالدين إذا لم يتلقوا البريد الإلكتروني:"
+  },
+  "sessions_heading": {
+    "kicker": "سجل",
+    "heading": "الجلسات",
+    "new": "جلسة جديدة"
+  },
+  "homework_heading": {
+    "heading": "الواجبات المنزلية",
+    "mark_as_done": "وضع علامة \"تم\"",
+    "completed": "تم الانتهاء",
+    "overdue": "متأخر",
+    "due_label": "بفضل {{date}}",
+    "kicker": "تتبع",
+    "none": "لم يتم تعيين واجبات منزلية بعد. أضف الواجبات المنزلية عند تسجيل الجلسة.",
+    "marking": "تحديد...",
+    "due_today": "مستحق اليوم",
+    "due_tomorrow": "يستحق الدفع غدًا",
+    "due_in_days_one": "مستحقة الدفع خلال يوم واحد من تاريخ \"{{count}}\"",
+    "due_in_days_other": "المستحق خلال {{count}} يومًا",
+    "marked_complete_on": "تم وضع علامة \"مكتمل\" على {{date}}"
+  },
+  "from_last_session": {
+    "hours_ago_one": "قبل ساعة",
+    "hours_ago_other": "{{count}} قبل ساعات",
+    "days_ago_one": "قبل يوم واحد",
+    "days_ago_other": "{{count}} قبل أيام",
+    "kicker": "من الجلسة السابقة",
+    "covered_prefix": "ما تمت تغطيته في المرة السابقة: ",
+    "homework_done": "✓ تم إنجاز الواجب المنزلي: {{description}}",
+    "homework_overdue": "⚠ واجب منزلي متأخر: {{description}}",
+    "homework_assigned": "الواجبات المنزلية الموكلة: ",
+    "homework_due_parens": " ({{date}})",
+    "planned_for_today": "المخطط له اليوم: ",
+    "open_last_session": "فتح الجلسة الأخيرة →",
+    "log_new_session": "تسجيل جلسة جديدة بهذا السياق →",
+    "yesterday": "بالأمس",
+    "earlier_today": "في وقت سابق اليوم"
+  },
+  "household": {
+    "kicker": "الأسرة",
+    "remove": "إزالة",
+    "loading": "جاري التحميل...",
+    "not_in_household": "ليس ضمن أسرة.",
+    "billing_note": " · يتم تجميع الأشقاء معًا في الفواتير",
+    "assign": "تعيين الأسرة",
+    "change": "تغيير",
+    "remove_confirm": "هل تريد إزالة هذا الطالب من الأسرة؟ سيبقى في المنظمة.",
+    "pick_placeholder": "اختر أسرة..."
+  },
+  "subtitle_archived": "الطلاب المسجلون سابقًا",
+  "filters": {
+    "active": "نشط",
+    "archived": "المحفوظة"
+  },
+  "filter_banner": {
+    "homework_pending": "عرض الطلاب الذين لديهم واجبات منزلية معلقة.",
+    "clear_filter": "إلغاء التصفية"
+  },
+  "search_placeholder": "البحث عن الاسم، المدرسة، الوالد...",
+  "test_pill": "اختبار",
+  "delete_confirm": "هل تريد حذف {{name}} نهائيًا؟ سيؤدي ذلك أيضًا إلى حذف جميع جلساته. لا يمكن التراجع عن هذه العملية.",
+  "archive_confirm_archive": "أرشفة {{name}}؟ يمكنك إزالة الأرشفة لاحقًا.",
+  "archive_confirm_restore": "استعادة {{name}}؟"
 }

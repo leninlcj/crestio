@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabase';
+import { activeLocale } from '../lib/utils';
 
 type Results = {
   students: Array<{ id: string; name: string; year_level: string | null; subject: string | null }>;
@@ -133,7 +134,7 @@ export function GlobalSearch() {
                     <ResultLink
                       key={s.id}
                       href={`/app/sessions/${s.id}`}
-                      primary={`${s.student_name} · ${new Date(s.scheduled_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}`}
+                      primary={`${s.student_name} · ${new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`}
                       secondary={[s.subject, s.topic].filter(Boolean).join(' · ') || s.status}
                     />
                   ))}
@@ -205,7 +206,7 @@ function ResultLink({ href, primary, secondary }: { href: string; primary: strin
 }
 
 function formatCents(c: number): string {
-  return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD',
+  return new Intl.NumberFormat(activeLocale(), { style: 'currency', currency: 'AUD',
     maximumFractionDigits: c % 100 === 0 ? 0 : 2 }).format(c / 100);
 }
 

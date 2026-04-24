@@ -92,8 +92,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await createNotification(admin, {
         userId: uid,
         type: 'session_cancelled',
-        title: `${studentName}'s session cancelled`,
-        body: `Was scheduled for ${formatAuDateTime(session.scheduled_at)}`,
+        titleKey: 'session_cancelled.title',
+        bodyKey: 'session_cancelled.body',
+        templateVars: { student: studentName, old_time: formatAuDateTime(session.scheduled_at) },
         linkUrl: `/parent/student/${session.student_id}`,
         context: { session_id: sessionId },
         emailOverride: false,

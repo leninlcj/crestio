@@ -1,25 +1,19 @@
 {
+  "kicker": "今天",
+  "loading_error": "无法加载您的仪表板。",
   "trial_banner": {
-    "dismiss": "关闭",
     "days_left_one": "您的试用期还剩1天。",
     "days_left_other": "您的试用期还剩{{count}}天。",
-    "subscribe": "订阅"
+    "subscribe": "订阅",
+    "dismiss": "关闭"
   },
   "sections": {
     "next_up": {
-      "open": "打开",
       "kicker": "下次会议",
       "kicker_soon": "即将开始",
+      "open": "打开",
       "reschedule": "改期",
       "log_notes": "日志记录"
-    },
-    "reschedules": {
-      "open": "打开",
-      "kicker": "需要您的回复",
-      "title_one": "{{count}} 待处理的改期请求",
-      "title_other": "{{count}} 待处理的改期请求",
-      "accept": "接受",
-      "reject": "拒绝"
     },
     "polish": {
       "kicker": "需要润色",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} 该家庭有未结算的疗程",
       "title_other": "{{count}} 如今的家庭有未计费的咨询时段",
       "total_uninvoiced": "未开票总额：{{amount}}",
-      "cta": "开具所有发票 →"
+      "cta": "开具所有发票 →",
+      "student_count_one": "{{count}} 学生",
+      "student_count_other": "{{count}} 学生"
+    },
+    "reschedules": {
+      "kicker": "需要您的回复",
+      "title_one": "{{count}} 待处理的改期请求",
+      "title_other": "{{count}} 待处理的改期请求",
+      "accept": "接受",
+      "reject": "拒绝",
+      "open": "打开",
+      "row_description": "{{parent}} 提议将{{student}}的会议改期。",
+      "row_original": "原文：",
+      "row_proposed": "建议："
     },
     "week_ahead": {
       "kicker": "本周",
@@ -59,6 +66,7 @@
       "add_student": "添加学生 →"
     }
   },
-  "kicker": "今天",
-  "loading_error": "无法加载您的仪表板。"
+  "greeting_morning": "早上好，{{name}}",
+  "greeting_afternoon": "下午好，{{name}}",
+  "greeting_evening": "晚上好，{{name}}"
 }

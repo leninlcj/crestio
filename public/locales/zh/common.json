@@ -17,7 +17,20 @@
     "open": "打开",
     "loading": "正在加载……",
     "search_placeholder": "搜索…",
-    "not_found": "未找到"
+    "not_found": "未找到",
+    "dismiss": "关闭",
+    "sending": "正在发送……",
+    "done": "已完成",
+    "more": "更多",
+    "submit": "提交",
+    "send": "发送",
+    "restore": "恢复",
+    "discard": "取消",
+    "continue": "继续",
+    "retry": "重试",
+    "less": "收起",
+    "add": "添加",
+    "remove": "删除"
   },
   "nav": {
     "overview": "概述",
@@ -38,7 +51,70 @@
     "signed_in_as": "已登录为",
     "owner_tools": "管理员工具",
     "test_accounts": "测试账户",
-    "more": "更多"
+    "more": "更多",
+    "assistant": "助手",
+    "search": "搜索"
+  },
+  "search_ui": {
+    "placeholder": "搜索…",
+    "empty": "没有结果。",
+    "try_different": "请尝试其他搜索。",
+    "group_students": "学生",
+    "group_sessions": "课程",
+    "group_invoices": "发票",
+    "group_messages": "消息"
+  },
+  "assistant": {
+    "send": "发送",
+    "sending": "正在发送……",
+    "confirm_typed_button": "确认",
+    "cancel": "取消",
+    "placeholder": "咨询一下……",
+    "new_conversation": "新建对话",
+    "conversations": "对话",
+    "thinking": "正在思考……",
+    "confirm_typed_label": "输入“确认”继续",
+    "execute": "执行",
+    "capability_title": "助手能做什么？",
+    "capability_close": "收到"
+  },
+  "notifications": {
+    "all": "全部",
+    "dismiss": "关闭",
+    "bell_label": "通知",
+    "empty": "不发送通知。",
+    "unread": "未读",
+    "mark_all_read": "将所有消息标记为已读",
+    "mark_read": "标记为已读",
+    "see_all": "查看全部 →"
+  },
+  "quick_log": {
+    "log_session": "记录会话",
+    "add_student": "添加学生",
+    "label": "快速登录",
+    "title": "快速记录内容",
+    "voice_note": "语音留言"
+  },
+  "support": {
+    "message": "消息",
+    "send": "发送",
+    "close": "关闭",
+    "open_button": "需要帮助吗？",
+    "title": "告诉我们发生了什么",
+    "subject": "主题",
+    "sent_title": "明白了，谢谢。",
+    "sent_body": "我们将通过您账户中的邮箱回复。预计将在一个工作日内收到回复。",
+    "error": "发送失败。请稍后再试。"
+  },
+  "billing_gate": {
+    "cta_subscribe": "订阅",
+    "trial_expired_title": "您的试用期已结束",
+    "trial_expired_body": "订阅以继续使用 Crestio。",
+    "past_due_title": "订阅已过期",
+    "past_due_body": "请更新您的支付方式以继续。",
+    "canceled_title": "订阅已取消",
+    "canceled_body": "重新激活以继续使用。",
+    "cta_manage": "管理账单"
   },
   "status": {
     "draft": "草稿",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "出现错误。请重试。",
-    "not_signed_in": "尚未登录。"
+    "not_signed_in": "尚未登录。",
+    "rate_limited": "请求过多。请稍后再试。",
+    "network": "网络问题。请检查您的网络连接。"
+  },
+  "connectors": {
+    "at_time": "在",
+    "with_tutor": "使用 {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "日程安排",
+    "new_session": "新建会话",
+    "today": "今天",
+    "week": "周",
+    "day": "日期",
+    "review": "查看 →",
+    "pending_requests_one": "{{count}} 家长的请求正在等待您的回复",
+    "pending_requests_other": "{{count}} 家长的请求正在等待您的回复"
+  },
+  "voice_recorder": {
+    "start": "开始录音",
+    "stop": "停止",
+    "recording": "正在录制……",
+    "transcribing": "正在转录……",
+    "error": "无法识别该内容——请重试。"
+  },
+  "error_boundary": {
+    "title": "有东西坏了。",
+    "body": "该页面意外出现错误。请尝试刷新。如果问题仍然存在，请联系客服。",
+    "reload": "重新加载",
+    "contact_support": "联系客服"
   }
 }

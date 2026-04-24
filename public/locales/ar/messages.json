@@ -1,15 +1,15 @@
 {
   "subtitle": "الرسائل",
-  "loading": "جاري التحميل...",
-  "compose": {
-    "sending": "جاري الإرسال…",
-    "placeholder": "اكتب رسالة…",
-    "send": "إرسال"
-  },
   "title_list": "الرسائل",
   "title_thread": "رسالة",
+  "loading": "جاري التحميل...",
   "empty": {
     "no_threads": "لا توجد رسائل حتى الآن.",
     "no_messages": "لا توجد رسائل في هذا الموضوع حتى الآن."
+  },
+  "compose": {
+    "placeholder": "اكتب رسالة…",
+    "send": "إرسال",
+    "sending": "جاري الإرسال…"
   }
 }

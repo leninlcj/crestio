@@ -1,25 +1,19 @@
 {
+  "kicker": "আজ",
+  "loading_error": "আপনার ড্যাশবোর্ড লোড করা যায়নি।",
   "trial_banner": {
-    "dismiss": "বাতিল করুন",
     "days_left_one": "আপনার ট্রায়ালে ১ দিন বাকি আছে।",
     "days_left_other": "আপনার ট্রায়ালে {{count}} দিন বাকি আছে।",
-    "subscribe": "সাবস্ক্রাইব করুন"
+    "subscribe": "সাবস্ক্রাইব করুন",
+    "dismiss": "বাতিল করুন"
   },
   "sections": {
     "next_up": {
-      "open": "খোলা",
       "kicker": "পরবর্তী সেশন",
       "kicker_soon": "শীঘ্রই শুরু হবে",
+      "open": "খোলা",
       "reschedule": "পুনঃনির্ধারণ করুন",
       "log_notes": "লগ নোট"
-    },
-    "reschedules": {
-      "open": "খোলা",
-      "kicker": "আপনার প্রতিক্রিয়া প্রয়োজন",
-      "title_one": "{{count}} সময়সূচি পুনঃনির্ধারণের অনুরোধ অপেক্ষমাণ",
-      "title_other": "{{count}} পুনঃনির্ধারণের অনুরোধ অপেক্ষমাণ",
-      "accept": "গ্রহণ করুন",
-      "reject": " প্রত্যাখ্যান"
     },
     "polish": {
       "kicker": "পরিমার্জিত করার প্রয়োজন",
@@ -35,7 +29,20 @@
       "title_one": "{{count}} পরিবারের বিলবিহীন সেশন রয়েছে",
       "title_other": "{{count}} পরিবারগুলোর বিল করা হয়নি এমন সেশন রয়েছে",
       "total_uninvoiced": "মোট বিল ইস্যু হয়নি: {{amount}}",
-      "cta": "সব ইনভয়েস →"
+      "cta": "সব ইনভয়েস →",
+      "student_count_one": "{{count}} ছাত্র/ছাত্রী",
+      "student_count_other": "{{count}} শিক্ষার্থীরা"
+    },
+    "reschedules": {
+      "kicker": "আপনার প্রতিক্রিয়া প্রয়োজন",
+      "title_one": "{{count}} সময়সূচি পুনঃনির্ধারণের অনুরোধ অপেক্ষমাণ",
+      "title_other": "{{count}} পুনঃনির্ধারণের অনুরোধ অপেক্ষমাণ",
+      "accept": "গ্রহণ করুন",
+      "reject": " প্রত্যাখ্যান",
+      "open": "খোলা",
+      "row_description": "{{parent}} {{student}}-এর সেশন পুনঃনির্ধারণের প্রস্তাব।",
+      "row_original": "মূল:",
+      "row_proposed": "প্রস্তাবিত:"
     },
     "week_ahead": {
       "kicker": "এই সপ্তাহে",
@@ -59,6 +66,7 @@
       "add_student": "একজন শিক্ষার্থী যোগ করুন →"
     }
   },
-  "kicker": "আজ",
-  "loading_error": "আপনার ড্যাশবোর্ড লোড করা যায়নি।"
+  "greeting_morning": "শুভ সকাল, {{name}}",
+  "greeting_afternoon": "শুভ দুপুর, {{name}}",
+  "greeting_evening": "শুভ সন্ধ্যা, {{name}}"
 }

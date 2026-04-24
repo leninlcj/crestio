@@ -1,3 +1,4 @@
+import { activeLocale } from '../../lib/utils';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -44,7 +45,7 @@ type Overview = {
 };
 
 function formatAud(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat(activeLocale(), {
     style: 'currency', currency: 'AUD',
     maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
   }).format(cents / 100);
@@ -58,11 +59,11 @@ function relativeDay(iso: string): string {
   if (diff === 0) return 'Today';
   if (diff === 1) return 'Tomorrow';
   if (diff === -1) return 'Yesterday';
-  if (diff > 1 && diff < 7) return d.toLocaleDateString('en-AU', { weekday: 'long' });
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  if (diff > 1 && diff < 7) return d.toLocaleDateString(activeLocale(), { weekday: 'long' });
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' });
 }
 function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+  return new Date(iso).toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' });
 }
 function displayYearLevel(raw: string | null): string | null {
   if (!raw) return null;
@@ -132,10 +133,10 @@ function DashboardInner() {
           <div className="card p-6 text-sm text-claret">{error}</div>
         ) : overview ? (
           <div className="space-y-10">
-            <ThisWeek sessions={overview.this_week_sessions} />
-            <RecentUpdates updates={overview.recent_updates} />
-            <ChildrenGrid students={overview.students} />
-            <QuickStats stats={overview.stats} />
+            <ThisWeek sessions={overview.this_week_sessions} t={t as any} />
+            <RecentUpdates updates={overview.recent_updates} t={t as any} />
+            <ChildrenGrid students={overview.students} t={t as any} />
+            <QuickStats stats={overview.stats} t={t as any} />
           </div>
         ) : null}
       </main>
@@ -168,18 +169,18 @@ function DashboardSkeleton() {
   );
 }
 
-function ThisWeek({ sessions }: { sessions: Overview['this_week_sessions'] }) {
+function ThisWeek({ sessions, t }: { sessions: Overview['this_week_sessions']; t: (k: string, v?: any) => string }) {
   if (sessions.length === 0) {
     return (
       <section>
-        <h2 className="font-display text-xl tracking-tightest mb-3">This week</h2>
-        <div className="card p-6 text-sm text-ink-muted">No sessions this week.</div>
+        <h2 className="font-display text-xl tracking-tightest mb-3">{t('parent:dashboard.this_week')}</h2>
+        <div className="card p-6 text-sm text-ink-muted">{t('parent:dashboard.this_week_empty')}</div>
       </section>
     );
   }
   return (
     <section>
-      <h2 className="font-display text-xl tracking-tightest mb-3">This week</h2>
+      <h2 className="font-display text-xl tracking-tightest mb-3">{t('parent:dashboard.this_week')}</h2>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-6 px-6 md:mx-0 md:px-0">
         {sessions.map((s) => (
           <Link
@@ -197,10 +198,10 @@ function ThisWeek({ sessions }: { sessions: Overview['this_week_sessions'] }) {
               {s.duration_minutes} min{s.subject ? ` · ${s.subject}` : ''}
             </div>
             {s.tutor_name && (
-              <div className="text-2xs text-ink-soft mt-2">with {s.tutor_name}</div>
+              <div className="text-2xs text-ink-soft mt-2">{t('common:connectors.with_tutor', { name: s.tutor_name })}</div>
             )}
             {s.status === 'pending_change' && (
-              <div className="text-2xs text-amber-ink mt-2">Change requested</div>
+              <div className="text-2xs text-amber-ink mt-2">{t('parent:dashboard.change_requested')}</div>
             )}
           </Link>
         ))}
@@ -209,19 +210,19 @@ function ThisWeek({ sessions }: { sessions: Overview['this_week_sessions'] }) {
   );
 }
 
-function RecentUpdates({ updates }: { updates: Overview['recent_updates'] }) {
+function RecentUpdates({ updates, t }: { updates: Overview['recent_updates']; t: (k: string, v?: any) => string }) {
   if (updates.length === 0) return null;
   return (
     <section>
-      <h2 className="font-display text-xl tracking-tightest mb-3">Recent updates from your tutor</h2>
+      <h2 className="font-display text-xl tracking-tightest mb-3">{t('parent:dashboard.recent_updates')}</h2>
       <div className="space-y-3">
         {updates.map((u) => (
           <article key={u.id} className="card p-5">
             <div className="flex items-center justify-between mb-2">
               <div className="text-2xs uppercase tracking-widest text-ink-muted">
-                {relativeDay(u.created_at)}{u.student_name ? ` · About ${u.student_name}` : ''}
+                {relativeDay(u.created_at)}{u.student_name ? ` · ${t('parent:dashboard.about_student', { name: u.student_name, defaultValue: 'About {{name}}' })}` : ''}
               </div>
-              <div className="text-2xs text-ink-soft">From {u.created_by_name}</div>
+              <div className="text-2xs text-ink-soft">{t('parent:dashboard.from_sender', { name: u.created_by_name, defaultValue: 'From {{name}}' })}</div>
             </div>
             <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">{u.content}</p>
           </article>
@@ -231,7 +232,7 @@ function RecentUpdates({ updates }: { updates: Overview['recent_updates'] }) {
   );
 }
 
-function ChildrenGrid({ students }: { students: Overview['students'] }) {
+function ChildrenGrid({ students, t }: { students: Overview['students']; t: (k: string, v?: any) => string }) {
   if (students.length === 0) return null;
 
   // Group by household. Students without a household (or with a unique
@@ -248,7 +249,7 @@ function ChildrenGrid({ students }: { students: Overview['students'] }) {
 
   return (
     <section>
-      <h2 className="font-display text-xl tracking-tightest mb-3">Your children</h2>
+      <h2 className="font-display text-xl tracking-tightest mb-3">{t('parent:dashboard.your_children')}</h2>
       <div className="space-y-6">
         {entries.map((group, idx) => (
           <div key={idx}>
@@ -284,15 +285,15 @@ function ChildrenGrid({ students }: { students: Overview['students'] }) {
   );
 }
 
-function QuickStats({ stats }: { stats: Overview['stats'] }) {
+function QuickStats({ stats, t }: { stats: Overview['stats']; t: (k: string, v?: any) => string }) {
   return (
     <section>
-      <h2 className="font-display text-xl tracking-tightest mb-3">At a glance</h2>
+      <h2 className="font-display text-xl tracking-tightest mb-3">{t('parent:dashboard.at_a_glance')}</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatTile label="Sessions this month" value={String(stats.sessions_this_month)} />
-        <StatTile label="Sessions this year" value={String(stats.sessions_this_year)} />
-        <StatTile label="Paid" value={formatAud(stats.paid_cents)} />
-        <StatTile label="Outstanding" value={formatAud(stats.outstanding_cents)}
+        <StatTile label={t('parent:dashboard.stats.sessions_this_month')} value={String(stats.sessions_this_month)} />
+        <StatTile label={t('parent:dashboard.stats.sessions_this_year')} value={String(stats.sessions_this_year)} />
+        <StatTile label={t('parent:dashboard.stats.paid')} value={formatAud(stats.paid_cents)} />
+        <StatTile label={t('parent:dashboard.stats.outstanding')} value={formatAud(stats.outstanding_cents)}
           tone={stats.outstanding_cents > 0 ? 'claret' : 'default'} />
       </div>
     </section>

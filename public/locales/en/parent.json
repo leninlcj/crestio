@@ -24,7 +24,14 @@
     "invoices": "Invoices",
     "settings": "Settings",
     "sign_out": "Sign out",
-    "all_children": "← All children"
+    "all_children": "← All children",
+    "back_dashboard": "← Dashboard",
+    "back_messages": "← Messages",
+    "back_invoices": "← Invoices",
+    "back_settings": "← Settings"
+  },
+  "common": {
+    "loading": "Loading…"
   },
   "student": {
     "loading": "Loading…",
@@ -59,5 +66,147 @@
       "payment_instructions": "To pay, please follow the instructions on each invoice from your tutor."
     },
     "updates_none": "No updates from your tutor yet."
+  },
+  "calendar": {
+    "kicker": "Calendar",
+    "heading": "This week",
+    "today": "Today",
+    "week_range": "{{start}} – {{end}}"
+  },
+  "invoices_page": {
+    "kicker": "Invoices",
+    "heading": "Your invoices",
+    "empty": "No invoices yet.",
+    "outstanding_eyebrow": "Outstanding",
+    "outstanding_note": "To pay, follow the instructions on each invoice from your tutor.",
+    "family_badge": "FAMILY",
+    "issued_label": "Issued {{date}}",
+    "due_label": "Due {{date}}",
+    "status_paid": "Paid",
+    "status_overdue": "Overdue"
+  },
+  "invoice_detail": {
+    "back": "← Invoices",
+    "not_found": "Invoice not found.",
+    "number_label": "Invoice {{number}}",
+    "heading_fallback": "Invoice",
+    "status_paid": "Paid",
+    "status_overdue": "Overdue",
+    "issued": "Issued",
+    "due": "Due",
+    "period": "Period",
+    "sessions": "Sessions",
+    "no_line_items": "No line items.",
+    "no_sessions": "No sessions on this invoice.",
+    "minutes_suffix": "{{minutes}} min",
+    "tutoring_session": "Tutoring session",
+    "subtotal": "Subtotal:",
+    "notes": "Notes",
+    "download_print": "Download / print",
+    "em_dash": "—"
+  },
+  "messages_page": {
+    "kicker": "Messages",
+    "heading": "Your messages"
+  },
+  "notifications_page": {
+    "kicker": "Notifications",
+    "heading": "Your notifications"
+  },
+  "signin": {
+    "kicker": "Parent portal",
+    "heading": "Sign in",
+    "email_label": "Email",
+    "password_label": "Password",
+    "forgot": "Forgot password?",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "error_generic": "Sign-in failed.",
+    "error_not_parent": "This sign-in is for parents only. If you're a tutor, sign in at /auth/signin.",
+    "forgot_need_email": "Enter your email first, then tap Forgot password.",
+    "forgot_sent": "Check your email for a reset link.",
+    "invitation_hint": "Haven't received an invitation from your tutor yet? Ask them to send one."
+  },
+  "settings_page": {
+    "kicker": "Account",
+    "heading": "Settings",
+    "loading": "Loading…",
+    "details_heading": "Your details",
+    "email_label": "Email",
+    "email_hint": "Contact your tutor if your email needs to change.",
+    "name_label": "Name",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "change_password": "Change password",
+    "new_password_label": "New password",
+    "password_min": "At least 8 characters.",
+    "password_too_short": "Password must be at least 8 characters.",
+    "password_updated": "Password updated.",
+    "update_password": "Update password",
+    "updating": "Updating…",
+    "sign_out_heading": "Sign out",
+    "sign_out_body": "Signing out ends this session.",
+    "sign_out": "Sign out",
+    "msg_notifs_heading": "Message notifications",
+    "msg_notifs_body": "Choose when Crestio emails you. In-app messages appear regardless.",
+    "msg_when_label": "Email me when my tutor messages me",
+    "msg_when_hint": "Throttled to at most once every 30 minutes per thread.",
+    "msg_urgent_label": "Email me only for urgent messages",
+    "msg_urgent_hint": "Skip emails for normal or info messages."
+  },
+  "settings_notifications_page": {
+    "kicker": "Settings",
+    "heading": "Email notifications",
+    "intro": "In-app notifications always appear regardless of these toggles. These only control email delivery.",
+    "toggles": {
+      "session_reminders": {
+        "label": "Session reminders",
+        "description": "Email you 24 hours before each scheduled session."
+      },
+      "reschedule_events": {
+        "label": "Reschedules and cancellations",
+        "description": "When your tutor changes or cancels a session."
+      },
+      "invoice_events": {
+        "label": "Invoice notifications",
+        "description": "When a new invoice is sent."
+      },
+      "parent_updates": {
+        "label": "Updates from your tutor",
+        "description": "When your tutor posts a portal update about your child."
+      },
+      "messages_email": {
+        "label": "Messages from your tutor",
+        "description": "Email you when the tutor sends you a message. Throttled to once every 30 minutes."
+      },
+      "messages_urgent_only": {
+        "label": "Urgent messages only",
+        "description": "If on, skip emails for normal or info messages."
+      }
+    },
+    "saved": "Saved."
+  },
+  "accept": {
+    "kicker": "Parent portal",
+    "checking": "Checking invitation…",
+    "missing_token": "This link is missing its invitation token.",
+    "verify_failed": "Could not verify invitation. Please try again later.",
+    "invalid_heading": "Invitation unavailable",
+    "invalid_default": "This invitation link is no longer valid.",
+    "invalid_body_suffix": " If this is a mistake, ask your tutor to send a new invitation.",
+    "back_home": "Back to home",
+    "accept_heading": "Accept your invitation",
+    "accept_body": "{{tutor}} has invited you to view {{student}}'s tutoring sessions.",
+    "email_label": "Email",
+    "email_hint": "From your invitation. Can't be changed here.",
+    "name_label": "Your name",
+    "name_placeholder": "Optional",
+    "password_label": "Create password",
+    "password_min": "At least 8 characters.",
+    "password_too_short": "Password must be at least 8 characters.",
+    "create": "Create parent account",
+    "creating": "Creating account…",
+    "create_failed": "Could not create account."
   }
 }

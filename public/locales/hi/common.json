@@ -17,7 +17,20 @@
     "open": "खुला",
     "loading": "लोड हो रहा है…",
     "search_placeholder": "खोजें…",
-    "not_found": "नहीं मिला"
+    "not_found": "नहीं मिला",
+    "dismiss": "रद्द करें",
+    "sending": "भेज रहा है…",
+    "done": "किया गया",
+    "more": "और",
+    "submit": "सबमिट करें",
+    "send": "भेजें",
+    "restore": "पुनर्स्थापित करें",
+    "discard": "अस्वीकार करें",
+    "continue": "जारी रखें",
+    "retry": "फिर से प्रयास करें",
+    "less": "कम",
+    "add": "जोड़ें",
+    "remove": "हटाएँ"
   },
   "nav": {
     "overview": "अवलोकन",
@@ -38,7 +51,70 @@
     "signed_in_as": "के रूप में साइन इन",
     "owner_tools": "मालिक उपकरण",
     "test_accounts": "परीक्षण खाते",
-    "more": "और"
+    "more": "और",
+    "assistant": "सहायक",
+    "search": "खोजें"
+  },
+  "search_ui": {
+    "placeholder": "खोजें…",
+    "empty": "कोई परिणाम नहीं।",
+    "try_different": "एक अलग खोज आज़माएँ।",
+    "group_students": "छात्र",
+    "group_sessions": "सत्र",
+    "group_invoices": "चालान",
+    "group_messages": "संदेश"
+  },
+  "assistant": {
+    "send": "भेजें",
+    "sending": "भेज रहा है…",
+    "confirm_typed_button": "पुष्टि करें",
+    "cancel": "रद्द करें",
+    "placeholder": "कुछ पूछें…",
+    "new_conversation": "नई बातचीत",
+    "conversations": "संवाद",
+    "thinking": "सोच रहा हूँ…",
+    "confirm_typed_label": "आगे बढ़ने के लिए confirm टाइप करें",
+    "execute": "अमल करें",
+    "capability_title": "सहायक क्या कर सकता है?",
+    "capability_close": "समझ गया"
+  },
+  "notifications": {
+    "all": "सभी",
+    "dismiss": "रद्द करें",
+    "bell_label": "सूचनाएँ",
+    "empty": "कोई सूचना नहीं।",
+    "unread": "अनपढ़",
+    "mark_all_read": "सभी को पढ़ा हुआ चिह्नित करें",
+    "mark_read": "मार्क पढ़ें",
+    "see_all": "सभी देखें →"
+  },
+  "quick_log": {
+    "log_session": "सत्र लॉग करें",
+    "add_student": "छात्र जोड़ें",
+    "label": "त्वरित लॉग",
+    "title": "कुछ जल्दी लॉग करें",
+    "voice_note": "वॉयस नोट"
+  },
+  "support": {
+    "message": "संदेश",
+    "send": "भेजें",
+    "close": "बंद करें",
+    "open_button": "मदद चाहिए?",
+    "title": "हमें बताएं कि क्या चल रहा है",
+    "subject": "विषय",
+    "sent_title": "समझ गया, धन्यवाद।",
+    "sent_body": "हम आपके खाते पर ईमेल का जवाब देंगे। एक कार्यदिवस के भीतर उत्तर की अपेक्षा करें।",
+    "error": "भेज नहीं सका। थोड़ी देर में फिर से कोशिश करें।"
+  },
+  "billing_gate": {
+    "cta_subscribe": "सब्सक्राइब करें",
+    "trial_expired_title": "आपका परीक्षण समाप्त हो गया है",
+    "trial_expired_body": "Crestio का उपयोग जारी रखने के लिए सदस्यता लें।",
+    "past_due_title": "सदस्यता की अवधि समाप्त हो चुकी है",
+    "past_due_body": "जारी रखने के लिए अपना भुगतान तरीका अपडेट करें।",
+    "canceled_title": "सदस्यता रद्द",
+    "canceled_body": "काम करते रहने के लिए पुनः सक्रिय करें।",
+    "cta_manage": "बिलिंग प्रबंधित करें"
   },
   "status": {
     "draft": "मसौदा",
@@ -58,6 +134,37 @@
   },
   "errors": {
     "generic": "कुछ गलत हो गया। कृपया फिर से प्रयास करें।",
-    "not_signed_in": "साइन इन नहीं किया गया।"
+    "not_signed_in": "साइन इन नहीं किया गया।",
+    "rate_limited": "बहुत अधिक अनुरोध। थोड़ी देर में फिर से प्रयास करें।",
+    "network": "नेटवर्क समस्या। अपना कनेक्शन जांचें।"
+  },
+  "connectors": {
+    "at_time": "पर",
+    "with_tutor": "{{name}} के साथ",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "अनुसूची करें",
+    "new_session": "नया सत्र",
+    "today": "आज",
+    "week": "सप्ताह",
+    "day": "दिन",
+    "review": "समीक्षा →",
+    "pending_requests_one": "{{count}} माता-पिता अनुरोध आपके उत्तर की प्रतीक्षा कर रहा है",
+    "pending_requests_other": "{{count}} माता-पिता आपके उत्तर का इंतज़ार कर रहे हैं"
+  },
+  "voice_recorder": {
+    "start": "रिकॉर्डिंग शुरू करें",
+    "stop": "रुकें",
+    "recording": "रिकॉर्डिंग…",
+    "transcribing": "प्रतिलिपि बना रहे हैं…",
+    "error": "उसका ट्रांसक्रिप्ट नहीं बनाया जा सका — कृपया फिर से प्रयास करें।"
+  },
+  "error_boundary": {
+    "title": "कुछ टूट गया।",
+    "body": "पृष्ठ में अप्रत्याशित रूप से त्रुटि आ गई। कृपया पेज पुनः लोड करें। यदि यह समस्या बनी रहती है, तो सहायता टीम से संपर्क करें।",
+    "reload": "पुनः लोड करें",
+    "contact_support": "सहायता से संपर्क करें"
   }
 }

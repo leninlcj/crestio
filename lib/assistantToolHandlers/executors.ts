@@ -427,8 +427,9 @@ export async function executeSendParentUpdate(
         await createNotification(admin, {
           userId: uid,
           type: 'parent_update_posted',
-          title: `${tutorName} posted an update about ${preview.student_name}`,
-          body: bodySnippet,
+          titleKey: 'parent_update_posted.title',
+          bodyKey: 'parent_update_posted.body',
+          templateVars: { tutor: tutorName, student: preview.student_name, body_snippet: bodySnippet },
           linkUrl: `/parent/student/${preview.student_id}`,
           context: { parent_update_id: inserted.id },
         });
@@ -892,13 +893,23 @@ export async function executeCreateBatchInvoices(
           .eq('is_primary', true)
           .maybeSingle();
         const primary = (hpRow as any)?.parent;
+        const { data: householdRow } = await admin
+          .from('households').select('display_name').eq('id', h.household_id).maybeSingle();
+        const householdName = (householdRow?.display_name as string | null) ?? '';
         if (primary?.auth_user_id) {
           try {
             await createNotification(admin, {
               userId: primary.auth_user_id,
               type: 'invoice_sent',
-              title: `New invoice ${number} from your tutor`,
-              body: `${lines.length} session${lines.length === 1 ? '' : 's'} · ${formatCentsAud(subtotal)}`,
+              titleKey: 'invoice_sent.title',
+              bodyKey: 'invoice_sent.body',
+              templateVars: {
+                number,
+                student_or_household: householdName,
+                session_count: lines.length,
+                count_suffix: lines.length === 1 ? '' : 's',
+                amount: formatCentsAud(subtotal),
+              },
               linkUrl: `/parent/invoices/${inv.id}`,
               context: { invoice_id: inv.id, household_id: h.household_id },
               dedupeKey: `invoice_sent:${inv.id}`,

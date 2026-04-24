@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "Equipe",
+    "title": "Tutores"
+  },
+  "table": {
+    "name": "Nome",
+    "subjects": "Disciplinas",
+    "students": "Alunos",
+    "em_dash": "—",
+    "linked_login": "Login vinculado",
+    "pay_rate": "Valor da remuneração",
+    "this_month": "Este mês",
+    "linked_yes": "Sim",
+    "linked_no": "Não"
+  },
+  "new": {
+    "page_subtitle": "Tutores",
+    "email_label": "E-mail",
+    "phone_label": "Telefone",
+    "notes_label": "Notas",
+    "saving": "Salvando…",
+    "cancel": "Cancelar",
+    "not_signed_in": "Não está conectado.",
+    "no_organization": "Nenhuma organização está vinculada à sua conta. Entre em contato com support@crestio.ai.",
+    "page_title": "Novo tutor",
+    "name_label": "Nome *",
+    "subjects_label": "Matérias que ensinam",
+    "subjects_placeholder": "Matemática, Química",
+    "subjects_hint": "Separados por vírgula.",
+    "pay_rate_label": "Remuneração por hora",
+    "pay_rate_placeholder": "por exemplo, 55",
+    "submit": "Criar tutor"
+  },
+  "common": {
+    "loading": "Carregando…"
+  },
+  "actions": {
+    "add": "Adicionar tutor",
+    "add_one": "Adicionar um tutor"
+  },
+  "empty": {
+    "title": "Ainda não há tutores",
+    "description": "Adicione tutores quando contratar pessoas para dar aulas na sua empresa. Se você for um tutor autônomo, pode pular esta etapa."
+  }
+}

@@ -12,5 +12,81 @@
     "manage_notifications": "Manage notifications",
     "manage_notifications_text": "Manage notifications: {{url}}",
     "footer_sender": "From Crestio — tutor business software."
+  },
+  "message_received": {
+    "title": "New message about {{student}}",
+    "body": "{{sender}} sent you a message. Open the portal to read and reply."
+  },
+  "message_urgent": {
+    "title": "Urgent message from {{sender}} about {{student}}",
+    "body": "{{sender}} marked this as urgent. Open the portal to read and reply."
+  },
+  "session_reminder_1h": {
+    "title": "Session with {{student}} in 1 hour",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} has tutoring tomorrow",
+    "body": "Tomorrow at {{time}}. {{duration}} min{{subject_suffix}}."
+  },
+  "session_rescheduled": {
+    "title": "{{student}}'s session has been rescheduled",
+    "body": "New time: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}'s session has been cancelled",
+    "body": "The session scheduled for {{old_time}} has been cancelled."
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} asked to reschedule {{student}}'s session",
+    "body": "Proposed new time: {{new_time}}. Review and accept or reject in the calendar."
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "New time: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "The session stays as scheduled."
+  },
+  "invoice_sent": {
+    "title": "New invoice {{number}} from your tutor",
+    "body": "{{student_or_household}} · {{session_count}} session{{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "Invoice {{number}} marked paid",
+    "body": "Thanks for the payment."
+  },
+  "invoice_overdue": {
+    "title": "Invoice {{number}} is more than 14 days overdue",
+    "body": "{{student}} · {{amount}} · due {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} posted an update about {{student}}",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} marked {{student}}'s homework complete",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}'s homework is overdue",
+    "homework_overdue_body": "{{snippet}}\n\nWas due {{due_date}}. Mark it complete in the portal when done."
+  },
+  "tutor_invited": {
+    "title": "You've been invited to {{org}} on Crestio",
+    "body": "Click the link in this email to accept the invitation and set up your account."
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} joined {{org}}",
+    "body": "They now have tutor access and can log sessions."
+  },
+  "payment_failed": {
+    "title": "Your Crestio payment failed",
+    "body": "We couldn't charge your card. Update your payment method to keep access."
+  },
+  "trial_ending": {
+    "title": "Your Crestio trial ends in {{days}} days",
+    "body": "Subscribe to keep access to sessions, invoicing and the assistant."
+  },
+  "subscription_cancelled": {
+    "title": "Your Crestio subscription has been cancelled",
+    "body": "You'll keep access until {{ends_on}}. Re-subscribe any time from Settings → Billing."
   }
 }

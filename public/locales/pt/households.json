@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "Cancelar",
+    "new": "+ Novo agregado familiar",
+    "create": "Criar",
+    "creating": "Criando…"
+  },
+  "filters": {
+    "active": "Ativo",
+    "archived": "Arquivado",
+    "search_placeholder": "Pesquisar família, pai/mãe, aluno…"
+  },
+  "common": {
+    "loading": "Carregando…",
+    "load_failed": "Não foi possível carregar os agregados familiares.",
+    "create_failed": "Não foi possível criar o agregado familiar.",
+    "apply_failed": "Não foi possível aplicar a sugestão."
+  },
+  "card": {
+    "archived_badge": "Arquivado",
+    "students_one": "{{count}} aluno",
+    "students_other": "{{count}} alunos",
+    "parent_label_fallback": "Pai/mãe",
+    "needs_primary": "Precisa de um responsável principal",
+    "no_students": "Nenhum aluno",
+    "parents_one": "{{count}} pai/mãe",
+    "parents_other": "{{count}} pais",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "Ignorar",
+    "fallback_parent": "um dos pais",
+    "question_existing": "{{students}} {{parent}}. Agrupá-los em um único agregado familiar?",
+    "question_new": "{{students}} {{parent}}. Agrupá-los em um novo agregado familiar?",
+    "accept": "Grupo →"
+  },
+  "page": {
+    "subtitle": "Pessoas",
+    "title": "Famílias"
+  },
+  "form": {
+    "name_label": "Nome do agregado familiar",
+    "name_placeholder": "por exemplo, família Chen"
+  },
+  "empty": {
+    "none": "Ainda não há famílias",
+    "archived_none": "Não há famílias arquivadas",
+    "description": "Um agregado familiar agrupa irmãos sob um único contato de cobrança. Quando você vincula um pai ou mãe a um aluno, um agregado familiar é criado automaticamente.",
+    "create": "Criar um agregado familiar"
+  }
+}

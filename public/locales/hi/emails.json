@@ -12,5 +12,81 @@
     "manage_notifications": "सूचनाओं का प्रबंधन करें",
     "manage_notifications_text": "सूचनाएँ प्रबंधित करें: {{url}}",
     "footer_sender": "Crestio से — ट्यूटर व्यवसाय सॉफ़्टवेयर।"
+  },
+  "message_received": {
+    "title": "{{student}} के बारे में नया संदेश",
+    "body": "{{sender}} आपको एक संदेश भेजा गया है। पोर्टल खोलें और पढ़ें तथा उत्तर दें।"
+  },
+  "message_urgent": {
+    "title": "{{sender}} की ओर से {{student}} के बारे में तत्काल संदेश",
+    "body": "{{sender}} इसे तत्काल के रूप में चिह्नित किया गया है। पढ़ने और जवाब देने के लिए पोर्टल खोलें।"
+  },
+  "session_reminder_1h": {
+    "title": "{{student}} के साथ सत्र 1 घंटे में",
+    "body": "{{student}} {{time}} पर। {{duration}} मिनट, {{subject}}।"
+  },
+  "session_reminder_24h": {
+    "title": "{{student}} कल ट्यूटरिंग है",
+    "body": "कल सुबह {{time}} बजे। {{duration}} मिनट {{subject_suffix}}।"
+  },
+  "session_rescheduled": {
+    "title": "{{student}}",
+    "body": "नया समय: {{new_time}}."
+  },
+  "session_cancelled": {
+    "title": "{{student}}",
+    "body": "{{old_time}} के लिए निर्धारित सत्र रद्द कर दिया गया है।"
+  },
+  "reschedule_requested": {
+    "title": "{{parent}} {{student}} के सत्र को पुनर्निर्धारित करने के लिए कहा गया",
+    "body": "प्रस्तावित नया समय: {{new_time}}। कैलेंडर में समीक्षा करें और स्वीकार या अस्वीकार करें।"
+  },
+  "reschedule_accepted": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "नया समय: {{new_time}}."
+  },
+  "reschedule_rejected": {
+    "title": "{{student}}: {{suffix}}",
+    "body": "सत्र निर्धारित समय पर ही रहेगा।"
+  },
+  "invoice_sent": {
+    "title": "नया चालान {{number}} आपके ट्यूटर से",
+    "body": "{{student_or_household}} · {{session_count}} सत्र {{count_suffix}} · {{amount}}"
+  },
+  "invoice_paid": {
+    "title": "{{number}} का चालान भुगतानित के रूप में चिह्नित करें",
+    "body": "भुगतान के लिए धन्यवाद।"
+  },
+  "invoice_overdue": {
+    "title": "इनवॉइस {{number}} 14 दिनों से अधिक समय से बकाया है",
+    "body": "{{student}} · {{amount}} · देय {{due_date}}"
+  },
+  "parent_update_posted": {
+    "title": "{{tutor}} {{student}} के बारे में एक अपडेट पोस्ट किया",
+    "body": "{{body_snippet}}",
+    "homework_marked_title": "{{parent}} {{student}} का होमवर्क पूरा के रूप में चिह्नित किया गया",
+    "homework_marked_body": "{{snippet}}",
+    "homework_overdue_title": "{{student}}",
+    "homework_overdue_body": "{{snippet}}\n\n{{due_date}} की देय तिथि थी। पूरा होने पर पोर्टल में इसे पूरा के रूप में चिह्नित करें।"
+  },
+  "tutor_invited": {
+    "title": "आपको Crestio पर {{org}} में आमंत्रित किया गया है",
+    "body": "इस ईमेल में दिए गए लिंक पर क्लिक करके निमंत्रण स्वीकार करें और अपना खाता सेट अप करें।"
+  },
+  "tutor_joined": {
+    "title": "{{tutor}} {{org}} में शामिल हुए",
+    "body": "अब उनके पास ट्यूटर एक्सेस है और वे सत्र लॉग कर सकते हैं।"
+  },
+  "payment_failed": {
+    "title": "आपका Crestio भुगतान असफल हो गया",
+    "body": "हम आपके कार्ड से शुल्क नहीं ले सके। एक्सेस बनाए रखने के लिए अपना भुगतान तरीका अपडेट करें।"
+  },
+  "trial_ending": {
+    "title": "आपका Crestio परीक्षण {{days}} दिनों में समाप्त हो जाएगा",
+    "body": "सत्रों, चालान और सहायक तक पहुंच बनाए रखने के लिए सदस्यता लें।"
+  },
+  "subscription_cancelled": {
+    "title": "आपकी Crestio सदस्यता रद्द कर दी गई है",
+    "body": "आपके पास {{ends_on}} तक पहुँच बनी रहेगी। सेटिंग्स → बिलिंग से कभी भी फिर से सदस्यता लें।"
   }
 }

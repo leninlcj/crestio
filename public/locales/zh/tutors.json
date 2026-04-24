@@ -1,0 +1,46 @@
+{
+  "page": {
+    "subtitle": "团队",
+    "title": "家教"
+  },
+  "table": {
+    "name": "名称",
+    "subjects": "科目",
+    "students": "学生",
+    "em_dash": "—",
+    "linked_login": "关联登录",
+    "pay_rate": "报酬标准",
+    "this_month": "本月",
+    "linked_yes": "是",
+    "linked_no": "否"
+  },
+  "new": {
+    "page_subtitle": "辅导老师",
+    "email_label": "电子邮件",
+    "phone_label": "手机",
+    "notes_label": "备注",
+    "saving": "正在保存……",
+    "cancel": "取消",
+    "not_signed_in": "尚未登录。",
+    "no_organization": "您的账户未关联任何组织。请联系 support@crestio.ai。",
+    "page_title": "新导师",
+    "name_label": "姓名 *",
+    "subjects_label": "他们教授的科目",
+    "subjects_placeholder": "数学、化学",
+    "subjects_hint": "用逗号分隔。",
+    "pay_rate_label": "每小时薪资",
+    "pay_rate_placeholder": "例如 55",
+    "submit": "创建家教"
+  },
+  "common": {
+    "loading": "正在加载……"
+  },
+  "actions": {
+    "add": "添加家教",
+    "add_one": "添加一位家教"
+  },
+  "empty": {
+    "title": "目前尚无辅导老师",
+    "description": "当您招募人员为您的机构授课时，请添加这些导师。如果您是独立导师，可以跳过此步骤。"
+  }
+}

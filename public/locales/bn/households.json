@@ -1,0 +1,51 @@
+{
+  "actions": {
+    "cancel": "বাতিল করুন",
+    "new": "+ নতুন গৃহপরিবার",
+    "create": "তৈরি করুন",
+    "creating": "তৈরি হচ্ছে…"
+  },
+  "filters": {
+    "active": "সক্রিয়",
+    "archived": "আর্কাইভ করা",
+    "search_placeholder": "পরিবার, অভিভাবক, শিক্ষার্থী অনুসন্ধান করুন…"
+  },
+  "common": {
+    "loading": "লোড হচ্ছে…",
+    "load_failed": "পরিবারসমূহ লোড করা যায়নি।",
+    "create_failed": "হাউসহোল্ড তৈরি করা যায়নি।",
+    "apply_failed": "পরামর্শ প্রয়োগ করা যায়নি।"
+  },
+  "card": {
+    "archived_badge": "আর্কাইভ করা",
+    "students_one": "{{count}} ছাত্র/ছাত্রী",
+    "students_other": "{{count}} শিক্ষার্থীরা",
+    "parent_label_fallback": "অভিভাবক",
+    "needs_primary": "একজন প্রধান অভিভাবক প্রয়োজন",
+    "no_students": "কোনও শিক্ষার্থী নেই",
+    "parents_one": "{{count}} অভিভাবক",
+    "parents_other": "{{count}} অভিভাবক",
+    "summary": "{{students}} · {{parents}}"
+  },
+  "suggestion": {
+    "dismiss": "বাতিল করুন",
+    "fallback_parent": "একজন ভাগ করা অভিভাবক",
+    "question_existing": "{{students}} {{parent}} ভাগাভাগি করে। তাদের একক গৃহস্থালিতে একত্রিত করা?",
+    "question_new": "{{students}} {{parent}} ভাগ করে। তাদের একটি নতুন হাউসহোল্ডে গ্রুপ করা?",
+    "accept": "গ্রুপ →"
+  },
+  "page": {
+    "subtitle": "মানুষ",
+    "title": "পরিবারসমূহ"
+  },
+  "form": {
+    "name_label": "পরিবারের নাম",
+    "name_placeholder": "যেমন: চেন পরিবার"
+  },
+  "empty": {
+    "none": "এখনো কোনো পরিবার নেই",
+    "archived_none": "কোনও সংরক্ষিত হাউসহোল্ড নেই",
+    "description": "একটি হাউসহোল্ড ভাইবোনদের একটি বিলিং যোগাযোগের অধীনে একত্রিত করে। যখন আপনি একজন অভিভাবককে একজন শিক্ষার্থীর সাথে সংযুক্ত করেন, তখন স্বয়ংক্রিয়ভাবে একটি হাউসহোল্ড তৈরি হয়।",
+    "create": "একটি হাউসহোল্ড তৈরি করুন"
+  }
+}
