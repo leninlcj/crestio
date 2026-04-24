@@ -1,0 +1,28 @@
+{
+  "subtitle": "课程",
+  "title_list": "课程",
+  "title_loading": "…",
+  "title_not_found": "未找到",
+  "actions": {
+    "edit": "编辑",
+    "no_show": "缺席",
+    "delete": "删除",
+    "saving": "正在保存……",
+    "new": "记录辅导课",
+    "new_short": "新建课程",
+    "mark_completed": "标记为已完成",
+    "cancel_session": "取消课程",
+    "save": "保存课程"
+  },
+  "loading": "正在加载……",
+  "title_new": "记录辅导课",
+  "title_not_available": "不可用",
+  "not_found": "未找到该辅导课。",
+  "denied": "您无权访问此辅导课程。",
+  "empty": {
+    "add_student_first_title": "请先添加学生",
+    "add_student_first_body": "辅导课程需要学生。请先创建学生，然后再回来。",
+    "add_student_cta": "添加学生",
+    "no_sessions": "目前尚无辅导课程。"
+  }
+}

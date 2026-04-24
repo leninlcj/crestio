@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "保存",
+    "saving": "正在保存……",
+    "saved": "已保存。",
+    "cancel": "取消",
+    "delete": "删除",
+    "deleting": "正在删除……",
+    "edit": "编辑",
+    "archive": "存档",
+    "unarchive": "取消归档",
+    "confirm": "确认",
+    "close": "关闭",
+    "back": "返回",
+    "next": "下一页",
+    "new": "新",
+    "open": "打开",
+    "loading": "正在加载……",
+    "search_placeholder": "搜索…",
+    "not_found": "未找到"
+  },
+  "nav": {
+    "overview": "概述",
+    "calendar": "日历",
+    "sessions": "课程",
+    "students": "学生",
+    "households": "家庭",
+    "messages": "消息",
+    "lesson_plans": "课程计划",
+    "invoices": "发票",
+    "tutors": "辅导老师",
+    "payouts": "分红",
+    "settings": "设置",
+    "help_support": "帮助与支持",
+    "language": "语言",
+    "billing": "账单",
+    "sign_out": "注销",
+    "signed_in_as": "已登录为",
+    "owner_tools": "管理员工具",
+    "test_accounts": "测试账户",
+    "more": "更多"
+  },
+  "status": {
+    "draft": "草稿",
+    "sent": "已发送",
+    "paid": "付费",
+    "unpaid": "无薪",
+    "overdue": "逾期",
+    "void": "无效",
+    "scheduled": "已安排",
+    "completed": "已完成",
+    "cancelled": "已取消",
+    "no_show": "缺席"
+  },
+  "empty": {
+    "no_results": "没有结果。",
+    "try_different_search": "请尝试其他搜索。"
+  },
+  "errors": {
+    "generic": "出现错误。请重试。",
+    "not_signed_in": "尚未登录。"
+  }
+}

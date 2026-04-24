@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "loading_error": "无法加载您的仪表板。",
+    "this_week": "本周",
+    "stats": {
+      "paid": "付费",
+      "sessions_this_month": "本月会议",
+      "sessions_this_year": "今年的会议",
+      "outstanding": "杰出"
+    },
+    "kicker": "欢迎",
+    "greeting": "你好，{{name}}",
+    "greeting_fallback": "您的仪表盘",
+    "this_week_empty": "本周没有会议。",
+    "recent_updates": "导师的最新动态",
+    "your_children": "您的孩子",
+    "at_a_glance": "一览",
+    "no_access": "您没有访问权限。",
+    "change_requested": "请求修改"
+  },
+  "nav": {
+    "messages": "消息",
+    "invoices": "发票",
+    "sign_out": "注销",
+    "calendar": "日历",
+    "settings": "设置",
+    "all_children": "← 所有子项"
+  },
+  "student": {
+    "loading": "正在加载……",
+    "next_session": "下次会议",
+    "homework": {
+      "heading": "家庭作业",
+      "overdue": "逾期",
+      "mark_done": "标记为已完成",
+      "undo": "撤销",
+      "done": "已完成",
+      "pending": "待定",
+      "no_homework": "尚未布置作业。"
+    },
+    "student": "学生",
+    "view_changes": "查看/请求更改 →",
+    "tabs": {
+      "calendar": "日历",
+      "sessions": "会议",
+      "homework": "作业",
+      "invoices": "发票",
+      "updates": "更新"
+    },
+    "sessions": {
+      "upcoming": "即将举行的会议",
+      "past": "往期会议",
+      "no_upcoming": "暂无即将举行的会议。",
+      "no_past": "目前尚无往期会议。",
+      "no_notes": "本次会议尚未分享任何笔记。"
+    },
+    "invoices": {
+      "none": "该学生目前尚无发票。",
+      "payment_instructions": "付款时，请按照导师开具的每张发票上的说明操作。"
+    },
+    "updates_none": "您的导师尚未发布更新。"
+  }
+}

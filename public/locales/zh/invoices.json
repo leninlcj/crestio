@@ -1,0 +1,56 @@
+{
+  "title_not_found": "未找到",
+  "batch": {
+    "period_this_week": "本周",
+    "households": "家庭",
+    "sessions": "课程",
+    "loading": "正在加载……",
+    "period": "学期",
+    "period_last_week": "上周",
+    "period_this_month": "本月",
+    "period_last_month": "上个月",
+    "period_custom": "自定义范围……",
+    "from": "来源",
+    "to": "致",
+    "back_to_list": "返回发票列表",
+    "unbilled_total": "未开具的总金额",
+    "nothing_title": "无需开具发票",
+    "nothing_body": "本期间无已完成的未开票课程。请记录更多课程或选择其他日期范围。",
+    "save_drafts": "另存为草稿",
+    "send": "发送账单"
+  },
+  "subtitle": "账单",
+  "title_list": "发票",
+  "title_new": "新发票",
+  "title_batch": "批量发票",
+  "title_loading": "…",
+  "actions": {
+    "new": "新发票",
+    "batch": "批量发票",
+    "mark_sent": "马克发送",
+    "mark_paid": "马克已付款",
+    "email_to_parent": "发给家长的电子邮件",
+    "download_pdf": "下载 PDF",
+    "delete": "删除发票"
+  },
+  "filters": {
+    "all": "全部",
+    "household": "家庭",
+    "per_student": "按学生人数计算"
+  },
+  "columns": {
+    "number": "数量",
+    "billed_to": "开具给",
+    "issued": "已开具",
+    "due": "应付",
+    "status": "状态",
+    "total": "总计"
+  },
+  "not_found": "未找到该发票。",
+  "empty": {
+    "no_invoices_title": "尚未开具发票",
+    "no_invoices_body": "将已完成的课程汇总成一张发票发送给家长。",
+    "cta_batch": "批量发票"
+  },
+  "batch_toast_created": "已生成一批发票。具体列表如下。"
+}

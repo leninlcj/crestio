@@ -1,0 +1,28 @@
+{
+  "subtitle": "সেশনসমূহ",
+  "title_list": "সেশনসমূহ",
+  "title_loading": "…",
+  "title_not_found": "মিলেনি",
+  "actions": {
+    "edit": "সম্পাদনা",
+    "no_show": "উপস্থিতি নেই",
+    "delete": "মুছুন",
+    "saving": "সংরক্ষণ হচ্ছে…",
+    "new": "সেশন লগ করুন",
+    "new_short": "নতুন সেশন",
+    "mark_completed": "সম্পন্ন চিহ্নিত করুন",
+    "cancel_session": "সেশন বাতিল করুন",
+    "save": "সেশন সংরক্ষণ করুন"
+  },
+  "loading": "লোড হচ্ছে…",
+  "title_new": "সেশন লগ করুন",
+  "title_not_available": "উপলব্ধ নয়",
+  "not_found": "সেশন পাওয়া যায়নি।",
+  "denied": "আপনার এই সেশনে অ্যাক্সেস নেই।",
+  "empty": {
+    "add_student_first_title": "প্রথমে একজন শিক্ষার্থী যোগ করুন",
+    "add_student_first_body": "সেশনগুলির জন্য একজন শিক্ষার্থী প্রয়োজন। একটি তৈরি করুন, তারপর ফিরে আসুন।",
+    "add_student_cta": "ছাত্র যোগ করুন",
+    "no_sessions": "এখনো কোনো সেশন নেই।"
+  }
+}

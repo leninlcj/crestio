@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "জরুরি: ",
+    "action_required": "কার্যকর পদক্ষেপ: ",
+    "reminder": "স্মরণার্থ: ",
+    "heads_up": "সতর্কবার্তা: ",
+    "subscription_cancelled": "সাবস্ক্রিপশন বাতিল: "
+  },
+  "wrapper": {
+    "open_in_crestio": "Crestio-তে খুলুন",
+    "open_in_crestio_text": "Crestio-তে খুলুন: {{url}}",
+    "manage_notifications": "অ্যালার্ট পরিচালনা করুন",
+    "manage_notifications_text": "নোটিফিকেশন পরিচালনা করুন: {{url}}",
+    "footer_sender": "Crestio থেকে — টিউটর ব্যবসা সফটওয়্যার।"
+  }
+}

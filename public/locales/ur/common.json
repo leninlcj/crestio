@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "محفوظ کریں",
+    "saving": "محفوظ کر رہے ہیں…",
+    "saved": "محفوظ ہو گیا۔",
+    "cancel": "منسوخ کریں",
+    "delete": "مٹائیں",
+    "deleting": "مٹانا…",
+    "edit": "ترمیم",
+    "archive": "آرکائیو",
+    "unarchive": "واپس بحال کریں",
+    "confirm": "تصدیق کریں",
+    "close": "بند کریں",
+    "back": "واپس",
+    "next": "اگلا",
+    "new": "نیا",
+    "open": "کھلا",
+    "loading": "لوڈ ہو رہا ہے…",
+    "search_placeholder": "تلاش…",
+    "not_found": "ملو نہ سکا"
+  },
+  "nav": {
+    "overview": "جائزہ",
+    "calendar": "کیلنڈر",
+    "sessions": "سیشنز",
+    "students": "طلباء",
+    "households": "گھرانے",
+    "messages": "پیغامات",
+    "lesson_plans": "سبق کے منصوبے",
+    "invoices": "انوائسز",
+    "tutors": "اساتذہ",
+    "payouts": "ادائیگیاں",
+    "settings": "سیٹنگز",
+    "help_support": "مدد اور معاونت",
+    "language": "زبان",
+    "billing": "بلنگ",
+    "sign_out": "سائن آؤٹ",
+    "signed_in_as": "کے طور پر سائن ان",
+    "owner_tools": "مالک کے اوزار",
+    "test_accounts": "ٹیسٹ اکاؤنٹس",
+    "more": "مزید"
+  },
+  "status": {
+    "draft": "مسودہ",
+    "sent": " بھیجا گیا",
+    "paid": "ادائیگی شدہ",
+    "unpaid": "بغیر معاوضہ",
+    "overdue": "باقی ماندہ",
+    "void": "منسوخ",
+    "scheduled": "شیڈول شدہ",
+    "completed": "مکمل شدہ",
+    "cancelled": "منسوخ",
+    "no_show": "حاضری نہ ہونے"
+  },
+  "empty": {
+    "no_results": "کوئی نتائج نہیں۔",
+    "try_different_search": "ایک مختلف تلاش آزمائیں۔"
+  },
+  "errors": {
+    "generic": "کچھ غلط ہو گیا۔ براہِ کرم دوبارہ کوشش کریں۔",
+    "not_signed_in": "سائن ان نہیں ہوا۔"
+  }
+}

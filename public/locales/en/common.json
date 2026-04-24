@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "new": "New",
+    "open": "Open",
+    "loading": "Loading…",
+    "search_placeholder": "Search…",
+    "not_found": "Not found"
+  },
+  "nav": {
+    "overview": "Overview",
+    "calendar": "Calendar",
+    "sessions": "Sessions",
+    "students": "Students",
+    "households": "Households",
+    "messages": "Messages",
+    "lesson_plans": "Lesson plans",
+    "invoices": "Invoices",
+    "tutors": "Tutors",
+    "payouts": "Payouts",
+    "settings": "Settings",
+    "help_support": "Help and support",
+    "language": "Language",
+    "billing": "Billing",
+    "sign_out": "Sign out",
+    "signed_in_as": "Signed in as",
+    "owner_tools": "Owner tools",
+    "test_accounts": "Test accounts",
+    "more": "More"
+  },
+  "status": {
+    "draft": "Draft",
+    "sent": "Sent",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "void": "Void",
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "no_show": "No show"
+  },
+  "empty": {
+    "no_results": "No results.",
+    "try_different_search": "Try a different search."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "not_signed_in": "Not signed in."
+  }
+}

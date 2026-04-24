@@ -1,0 +1,28 @@
+{
+  "subtitle": "Sessions",
+  "title_list": "Sessions",
+  "title_new": "Log session",
+  "title_loading": "…",
+  "title_not_available": "Not available",
+  "title_not_found": "Not found",
+  "actions": {
+    "new": "Log session",
+    "new_short": "New session",
+    "edit": "Edit",
+    "mark_completed": "Mark completed",
+    "cancel_session": "Cancel session",
+    "no_show": "No show",
+    "delete": "Delete",
+    "save": "Save session",
+    "saving": "Saving…"
+  },
+  "loading": "Loading…",
+  "not_found": "Session not found.",
+  "denied": "You don't have access to this session.",
+  "empty": {
+    "add_student_first_title": "Add a student first",
+    "add_student_first_body": "Sessions need a student. Create one, then come back.",
+    "add_student_cta": "Add student",
+    "no_sessions": "No sessions yet."
+  }
+}

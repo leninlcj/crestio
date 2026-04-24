@@ -1,0 +1,15 @@
+{
+  "subtitle": "Messages",
+  "title_list": "Messages",
+  "title_thread": "Message",
+  "loading": "Loading…",
+  "empty": {
+    "no_threads": "No messages yet.",
+    "no_messages": "No messages in this thread yet."
+  },
+  "compose": {
+    "placeholder": "Type a message…",
+    "send": "Send",
+    "sending": "Sending…"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "subtitle": "सत्र",
+  "title_list": "सत्र",
+  "title_loading": "…",
+  "title_not_found": "नहीं मिला",
+  "actions": {
+    "edit": "संपादित करें",
+    "no_show": "नहीं आया",
+    "delete": "मिटायें",
+    "saving": "बचाना…",
+    "new": "सत्र दर्ज करें",
+    "new_short": "नया सत्र",
+    "mark_completed": "पूरा हुआ",
+    "cancel_session": "सत्र रद्द करें",
+    "save": "सत्र सहेजें"
+  },
+  "loading": "लोड हो रहा है…",
+  "title_new": "सत्र दर्ज करें",
+  "title_not_available": "उपलब्ध नहीं",
+  "not_found": "सत्र नहीं मिला।",
+  "denied": "आपके पास इस सत्र तक पहुंच नहीं है।",
+  "empty": {
+    "add_student_first_title": "सबसे पहले एक छात्र जोड़ें",
+    "add_student_first_body": "सत्रों के लिए एक छात्र आवश्यक है। एक छात्र बनाएँ, फिर वापस आएँ।",
+    "add_student_cta": "छात्र जोड़ें",
+    "no_sessions": "अभी तक कोई सत्र नहीं हुआ है।"
+  }
+}

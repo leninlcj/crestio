@@ -1,0 +1,28 @@
+{
+  "subtitle": "الجلسات",
+  "title_list": "الجلسات",
+  "title_loading": "…",
+  "title_not_found": "لم يتم العثور عليه",
+  "actions": {
+    "edit": "تحرير",
+    "no_show": "عدم الحضور",
+    "delete": "حذف",
+    "saving": "جاري الحفظ…",
+    "new": "تسجيل الجلسة",
+    "new_short": "جلسة جديدة",
+    "mark_completed": "ضع علامة \"مكتمل\"",
+    "cancel_session": "إلغاء الجلسة",
+    "save": "حفظ الجلسة"
+  },
+  "loading": "جاري التحميل...",
+  "title_new": "تسجيل الجلسة",
+  "title_not_available": "غير متاح",
+  "not_found": "لم يتم العثور على الجلسة.",
+  "denied": "ليس لديك حق الوصول إلى هذه الجلسة.",
+  "empty": {
+    "add_student_first_title": "أضف طالبًا أولاً",
+    "add_student_first_body": "تحتاج الجلسات إلى طالب. قم بإنشاء واحد، ثم عد إلى هنا.",
+    "add_student_cta": "إضافة طالب",
+    "no_sessions": "لا توجد جلسات حتى الآن."
+  }
+}

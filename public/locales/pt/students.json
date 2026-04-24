@@ -1,0 +1,39 @@
+{
+  "title_loading": "…",
+  "title_not_available": "Não disponível",
+  "title_not_found": "Não encontrado",
+  "actions": {
+    "add": "Adicionar aluno",
+    "edit": "Editar",
+    "archive": "Arquivo",
+    "unarchive": "Desarquivar",
+    "delete": "Excluir",
+    "new_cta": "Novo aluno",
+    "log_session": "Registro da sessão"
+  },
+  "loading": "Carregando…",
+  "tabs": {
+    "sessions": "Sessões",
+    "homework": "Lição de casa",
+    "record": "Registro",
+    "track": "Acompanhar"
+  },
+  "subtitle": "Pessoas",
+  "title_list": "Alunos",
+  "title_new": "Novo aluno",
+  "filters": {
+    "active": "Ativo",
+    "archived": "Arquivado"
+  },
+  "empty": {
+    "no_students": "Ainda não há alunos",
+    "no_archived": "Não há alunos arquivados",
+    "description_owner": "Adicione seu primeiro aluno para começar a acompanhar as sessões e o faturamento.",
+    "description_tutor": "O responsável pela sua organização designará alunos para você.",
+    "no_tutor_record": "Ainda não há alunos designados",
+    "show_archived": "Os alunos arquivados aparecem aqui.",
+    "add_first": "Adicionar um aluno"
+  },
+  "denied": "Você não tem acesso a este aluno. Peça ao responsável pela sua organização para atribuí-lo a você.",
+  "not_found": "Esse aluno não existe, ou você não tem acesso."
+}

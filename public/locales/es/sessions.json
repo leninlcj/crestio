@@ -1,0 +1,28 @@
+{
+  "subtitle": "Sesiones",
+  "title_list": "Sesiones",
+  "title_loading": "…",
+  "title_not_found": "No encontrado",
+  "actions": {
+    "edit": "Editar",
+    "no_show": "No se presenta",
+    "delete": "Eliminar",
+    "saving": "Guardando…",
+    "new": "Registrar sesión",
+    "new_short": "Nueva sesión",
+    "mark_completed": "Marcar como completada",
+    "cancel_session": "Cancelar sesión",
+    "save": "Guardar sesión"
+  },
+  "loading": "Cargando…",
+  "title_new": "Registrar sesión",
+  "title_not_available": "No disponible",
+  "not_found": "No se ha encontrado la sesión.",
+  "denied": "No tienes acceso a esta sesión.",
+  "empty": {
+    "add_student_first_title": "Añade primero un alumno",
+    "add_student_first_body": "Las sesiones necesitan un alumno. Crea uno y luego vuelve aquí.",
+    "add_student_cta": "Añadir alumno",
+    "no_sessions": "Aún no hay sesiones."
+  }
+}

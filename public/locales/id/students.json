@@ -1,0 +1,39 @@
+{
+  "title_loading": "…",
+  "title_not_available": "Tidak tersedia",
+  "title_not_found": "Tidak ditemukan",
+  "actions": {
+    "add": "Tambahkan siswa",
+    "edit": "Edit",
+    "archive": "Arsip",
+    "unarchive": "Kembalikan ke arsip",
+    "delete": "Hapus",
+    "new_cta": "Siswa baru",
+    "log_session": "Catatan sesi"
+  },
+  "loading": "Sedang dimuat…",
+  "tabs": {
+    "sessions": "Sesi",
+    "homework": "Pekerjaan rumah",
+    "record": "Catatan",
+    "track": "Lacak"
+  },
+  "subtitle": "Orang-orang",
+  "title_list": "Siswa",
+  "title_new": "Siswa baru",
+  "filters": {
+    "active": "Aktif",
+    "archived": "Tersimpan"
+  },
+  "empty": {
+    "no_students": "Belum ada siswa",
+    "no_archived": "Tidak ada siswa yang telah lulus",
+    "description_owner": "Tambahkan siswa pertama Anda untuk mulai melacak sesi dan penagihan.",
+    "description_tutor": "Pemilik organisasi Anda akan menugaskan siswa kepada Anda.",
+    "no_tutor_record": "Belum ada siswa yang ditugaskan",
+    "show_archived": "Siswa yang telah lulus tercantum di sini.",
+    "add_first": "Tambahkan siswa"
+  },
+  "denied": "Anda tidak memiliki akses ke siswa ini. Minta pemilik organisasi Anda untuk menugaskan siswa tersebut kepada Anda.",
+  "not_found": "Siswa tersebut tidak ada, atau Anda tidak memiliki akses."
+}

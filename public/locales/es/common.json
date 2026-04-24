@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "saved": "Guardado.",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "deleting": "Eliminando…",
+    "edit": "Editar",
+    "archive": "Archivo",
+    "unarchive": "Desarchivar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "new": "Nuevo",
+    "open": "Abrir",
+    "loading": "Cargando…",
+    "search_placeholder": "Buscar…",
+    "not_found": "No encontrado"
+  },
+  "nav": {
+    "overview": "Resumen",
+    "calendar": "Calendario",
+    "sessions": "Sesiones",
+    "students": "Estudiantes",
+    "households": "Hogares",
+    "messages": "Mensajes",
+    "lesson_plans": "Planes de clase",
+    "invoices": "Facturas",
+    "tutors": "Tutores",
+    "payouts": "Pagos",
+    "settings": "Configuración",
+    "help_support": "Ayuda y asistencia",
+    "language": "Idioma",
+    "billing": "Facturación",
+    "sign_out": "Cerrar sesión",
+    "signed_in_as": "Iniciado sesión como",
+    "owner_tools": "Herramientas para propietarios",
+    "test_accounts": "Cuentas de prueba",
+    "more": "Más"
+  },
+  "status": {
+    "draft": "Borrador",
+    "sent": "Enviado",
+    "paid": "De pago",
+    "unpaid": "Sin remunerar",
+    "overdue": "Vencido",
+    "void": "Nulo",
+    "scheduled": "Programado",
+    "completed": "Completado",
+    "cancelled": "Cancelado",
+    "no_show": "No se presenta"
+  },
+  "empty": {
+    "no_results": "No hay resultados.",
+    "try_different_search": "Prueba con otra búsqueda."
+  },
+  "errors": {
+    "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
+    "not_signed_in": "No has iniciado sesión."
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "loading_error": "Impossible de charger votre tableau de bord.",
+    "this_week": "Cette semaine",
+    "stats": {
+      "paid": "Payant",
+      "sessions_this_month": "Séances de ce mois-ci",
+      "sessions_this_year": "Sessions de cette année",
+      "outstanding": "Remarquable"
+    },
+    "kicker": "Bienvenue",
+    "greeting": "Bonjour {{name}}",
+    "greeting_fallback": "Votre tableau de bord",
+    "this_week_empty": "Pas de session cette semaine.",
+    "recent_updates": "Dernières mises à jour de votre tuteur",
+    "your_children": "Vos enfants",
+    "at_a_glance": "En bref",
+    "no_access": "Vous n'y avez pas accès.",
+    "change_requested": "Modification demandée"
+  },
+  "nav": {
+    "messages": "Messages",
+    "invoices": "Factures",
+    "sign_out": "Se déconnecter",
+    "calendar": "Calendrier",
+    "settings": "Paramètres",
+    "all_children": "← Tous les enfants"
+  },
+  "student": {
+    "loading": "Chargement en cours…",
+    "next_session": "Prochaine session",
+    "homework": {
+      "heading": "Devoirs",
+      "overdue": "En retard",
+      "mark_done": "Marquer comme terminé",
+      "undo": "Annuler",
+      "done": "Terminé",
+      "pending": "En attente",
+      "no_homework": "Aucun devoir n'a encore été donné."
+    },
+    "student": "Étudiant",
+    "view_changes": "Afficher / demander des modifications →",
+    "tabs": {
+      "calendar": "calendrier",
+      "sessions": "sessions",
+      "homework": "devoirs",
+      "invoices": "factures",
+      "updates": "Mises à jour"
+    },
+    "sessions": {
+      "upcoming": "Prochaines sessions",
+      "past": "Sessions précédentes",
+      "no_upcoming": "Aucune session prévue prochainement.",
+      "no_past": "Aucune session passée pour l'instant.",
+      "no_notes": "Aucune note n'a encore été partagée pour cette session."
+    },
+    "invoices": {
+      "none": "Aucune facture n'a encore été émise pour cet étudiant.",
+      "payment_instructions": "Pour effectuer le paiement, veuillez suivre les instructions figurant sur chaque facture envoyée par votre tuteur."
+    },
+    "updates_none": "Aucune mise à jour de la part de votre tuteur pour l'instant."
+  }
+}

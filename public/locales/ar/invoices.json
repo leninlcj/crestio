@@ -1,0 +1,56 @@
+{
+  "title_not_found": "لم يتم العثور عليه",
+  "batch": {
+    "period_this_week": "هذا الأسبوع",
+    "households": "الأسر",
+    "sessions": "الجلسات",
+    "loading": "جاري التحميل...",
+    "period": "الفترة",
+    "period_last_week": "الأسبوع الماضي",
+    "period_this_month": "هذا الشهر",
+    "period_last_month": "الشهر الماضي",
+    "period_custom": "نطاق مخصص…",
+    "from": "من",
+    "to": "إلى",
+    "back_to_list": "العودة إلى قائمة الفواتير",
+    "unbilled_total": "المجموع غير المفوتر",
+    "nothing_title": "لا يوجد ما يُفوتر",
+    "nothing_body": "لا توجد جلسات مكتملة لم يتم إصدار فواتير لها في هذه الفترة. قم بتسجيل المزيد من الجلسات أو اختر نطاقًا زمنيًا مختلفًا.",
+    "save_drafts": "حفظ كمسودات",
+    "send": "إرسال الفواتير"
+  },
+  "subtitle": "الفواتير",
+  "title_list": "الفواتير",
+  "title_new": "فاتورة جديدة",
+  "title_batch": "فاتورة جماعية",
+  "title_loading": "…",
+  "actions": {
+    "new": "فاتورة جديدة",
+    "batch": "فاتورة جماعية",
+    "mark_sent": "أرسل مارك",
+    "mark_paid": "دفع مارك",
+    "email_to_parent": "رسالة بريد إلكتروني إلى ولي الأمر",
+    "download_pdf": "تنزيل ملف PDF",
+    "delete": "حذف الفاتورة"
+  },
+  "filters": {
+    "all": "الكل",
+    "household": "الأسرة",
+    "per_student": "لكل طالب"
+  },
+  "columns": {
+    "number": "الرقم",
+    "billed_to": "تم إصدار الفاتورة إلى",
+    "issued": "صادرة",
+    "due": "مستحق",
+    "status": "الحالة",
+    "total": "المجموع"
+  },
+  "not_found": "لم يتم العثور على الفاتورة.",
+  "empty": {
+    "no_invoices_title": "لا توجد فواتير حتى الآن",
+    "no_invoices_body": "قم بتجميع الجلسات المنجزة في فاتورة لإرسالها إلى أحد الوالدين.",
+    "cta_batch": "فاتورة جماعية"
+  },
+  "batch_toast_created": "تم إنشاء مجموعة من الفواتير. وهي مدرجة أدناه."
+}

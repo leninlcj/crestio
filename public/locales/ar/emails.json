@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "عاجل: ",
+    "action_required": "الإجراء المطلوب: ",
+    "reminder": "تذكير: ",
+    "heads_up": "تنبيه: ",
+    "subscription_cancelled": "تم إلغاء الاشتراك: "
+  },
+  "wrapper": {
+    "open_in_crestio": "فتح في Crestio",
+    "open_in_crestio_text": "فتح في Crestio: {{url}}",
+    "manage_notifications": "إدارة الإشعارات",
+    "manage_notifications_text": "إدارة الإشعارات: {{url}}",
+    "footer_sender": "من Crestio — برنامج إدارة أعمال المعلمين."
+  }
+}

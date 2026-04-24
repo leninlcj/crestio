@@ -1,0 +1,56 @@
+{
+  "title_not_found": "Introuvable",
+  "batch": {
+    "period_this_week": "Cette semaine",
+    "households": "Ménages",
+    "sessions": "Séances",
+    "loading": "Chargement en cours…",
+    "period": "Période",
+    "period_last_week": "La semaine dernière",
+    "period_this_month": "Ce mois-ci",
+    "period_last_month": "Le mois dernier",
+    "period_custom": "Gamme personnalisée…",
+    "from": "Source :",
+    "to": "À",
+    "back_to_list": "Retour à la liste des factures",
+    "unbilled_total": "Total non facturé",
+    "nothing_title": "Rien à facturer",
+    "nothing_body": "Aucune séance terminée et non facturée pour cette période. Enregistrez d'autres séances ou sélectionnez une autre période.",
+    "save_drafts": "Enregistrer comme brouillons",
+    "send": "Envoyer des factures"
+  },
+  "subtitle": "Facturation",
+  "title_list": "Factures",
+  "title_new": "Nouvelle facture",
+  "title_batch": "Facture groupée",
+  "title_loading": "…",
+  "actions": {
+    "new": "Nouvelle facture",
+    "batch": "Facture groupée",
+    "mark_sent": "Mark a envoyé",
+    "mark_paid": "Facture payée",
+    "email_to_parent": "Courriel aux parents",
+    "download_pdf": "Télécharger le PDF",
+    "delete": "Supprimer la facture"
+  },
+  "filters": {
+    "all": "Tout",
+    "household": "Ménage",
+    "per_student": "Par élève"
+  },
+  "columns": {
+    "number": "Nombre",
+    "billed_to": "Facturé à",
+    "issued": "Émises",
+    "due": "À payer",
+    "status": "Statut",
+    "total": "Total"
+  },
+  "not_found": "Facture introuvable.",
+  "empty": {
+    "no_invoices_title": "Pas encore de factures",
+    "no_invoices_body": "Regroupez les séances effectuées dans une facture à envoyer à un parent.",
+    "cta_batch": "Facture groupée"
+  },
+  "batch_toast_created": "Factures groupées créées. Elles sont répertoriées ci-dessous."
+}

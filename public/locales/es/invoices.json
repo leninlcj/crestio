@@ -1,0 +1,56 @@
+{
+  "title_not_found": "No encontrado",
+  "batch": {
+    "period_this_week": "Esta semana",
+    "households": "Hogares",
+    "sessions": "Sesiones",
+    "loading": "Cargando…",
+    "period": "Periodo",
+    "period_last_week": "La semana pasada",
+    "period_this_month": "Este mes",
+    "period_last_month": "El mes pasado",
+    "period_custom": "Rango personalizado…",
+    "from": "De",
+    "to": "A",
+    "back_to_list": "Volver a la lista de facturas",
+    "unbilled_total": "Total sin facturar",
+    "nothing_title": "No hay nada que facturar",
+    "nothing_body": "No hay sesiones completadas sin facturar en este periodo. Registra más sesiones o selecciona otro intervalo de fechas.",
+    "save_drafts": "Guardar como borradores",
+    "send": "Enviar facturas"
+  },
+  "subtitle": "Facturación",
+  "title_list": "Facturas",
+  "title_new": "Nueva factura",
+  "title_batch": "Factura por lotes",
+  "title_loading": "…",
+  "actions": {
+    "new": "Nueva factura",
+    "batch": "Factura por lotes",
+    "mark_sent": "Mark envió",
+    "mark_paid": "Mark pagó",
+    "email_to_parent": "Correo electrónico a los padres",
+    "download_pdf": "Descargar PDF",
+    "delete": "Eliminar factura"
+  },
+  "filters": {
+    "all": "Todas",
+    "household": "Hogar",
+    "per_student": "Por alumno"
+  },
+  "columns": {
+    "number": "Número",
+    "billed_to": "Facturado a",
+    "issued": "Emitidas",
+    "due": "A pagar",
+    "status": "Estado",
+    "total": "Total"
+  },
+  "not_found": "No se ha encontrado la factura.",
+  "empty": {
+    "no_invoices_title": "Aún no hay facturas",
+    "no_invoices_body": "Agrupa las sesiones completadas en una factura para enviarla a los padres.",
+    "cta_batch": "Factura por lotes"
+  },
+  "batch_toast_created": "Facturas creadas en lote. Se enumeran a continuación."
+}

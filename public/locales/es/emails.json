@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "URGENTE: ",
+    "action_required": "Acción requerida: ",
+    "reminder": "Recordatorio: ",
+    "heads_up": "Atención: ",
+    "subscription_cancelled": "Suscripción cancelada: "
+  },
+  "wrapper": {
+    "open_in_crestio": "Abrir en Crestio",
+    "open_in_crestio_text": "Abrir en Crestio: {{url}}",
+    "manage_notifications": "Gestionar notificaciones",
+    "manage_notifications_text": "Gestionar notificaciones: {{url}}",
+    "footer_sender": "De Crestio — software empresarial para tutores."
+  }
+}

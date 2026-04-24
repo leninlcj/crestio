@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "Enregistrer",
+    "saving": "Enregistrement en cours…",
+    "saved": "Enregistré.",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "deleting": "Suppression…",
+    "edit": "Modifier",
+    "archive": "Archives",
+    "unarchive": "Réactiver",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "new": "Nouveau",
+    "open": "Ouvrir",
+    "loading": "Chargement en cours…",
+    "search_placeholder": "Rechercher…",
+    "not_found": "Introuvable"
+  },
+  "nav": {
+    "overview": "Aperçu",
+    "calendar": "Calendrier",
+    "sessions": "Séances",
+    "students": "Étudiants",
+    "households": "Ménages",
+    "messages": "Messages",
+    "lesson_plans": "Plans de cours",
+    "invoices": "Factures",
+    "tutors": "Tuteurs",
+    "payouts": "Paiements",
+    "settings": "Paramètres",
+    "help_support": "Aide et assistance",
+    "language": "Langue",
+    "billing": "Facturation",
+    "sign_out": "Se déconnecter",
+    "signed_in_as": "Connecté en tant que",
+    "owner_tools": "Outils pour les propriétaires",
+    "test_accounts": "Comptes d'essai",
+    "more": "Plus"
+  },
+  "status": {
+    "draft": "Brouillon",
+    "sent": "Envoyé",
+    "paid": "Payant",
+    "unpaid": "Non rémunéré",
+    "overdue": "En retard",
+    "void": "Annulé",
+    "scheduled": "Prévu",
+    "completed": "Terminé",
+    "cancelled": "Annulé",
+    "no_show": "Absence"
+  },
+  "empty": {
+    "no_results": "Aucun résultat.",
+    "try_different_search": "Essayez une autre recherche."
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "not_signed_in": "Vous n'êtes pas connecté."
+  }
+}

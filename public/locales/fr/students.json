@@ -1,0 +1,39 @@
+{
+  "title_loading": "…",
+  "title_not_available": "Non disponible",
+  "title_not_found": "Introuvable",
+  "actions": {
+    "add": "Ajouter un élève",
+    "edit": "Modifier",
+    "archive": "Archives",
+    "unarchive": "Réactiver",
+    "delete": "Supprimer",
+    "new_cta": "Nouvel élève",
+    "log_session": "Journal de session"
+  },
+  "loading": "Chargement en cours…",
+  "tabs": {
+    "sessions": "Séances",
+    "homework": "Devoirs",
+    "record": "Dossier",
+    "track": "Suivi"
+  },
+  "subtitle": "Personnes",
+  "title_list": "Les élèves",
+  "title_new": "Nouvel élève",
+  "filters": {
+    "active": "Actif",
+    "archived": "Archivé"
+  },
+  "empty": {
+    "no_students": "Pas encore d'élèves",
+    "no_archived": "Aucun élève archivé",
+    "description_owner": "Ajoutez votre premier élève pour commencer à suivre les séances et à établir la facturation.",
+    "description_tutor": "Le responsable de votre organisation vous attribuera des élèves.",
+    "no_tutor_record": "Aucun élève n'a encore été affecté",
+    "show_archived": "Les anciens élèves apparaissent ici.",
+    "add_first": "Ajouter un élève"
+  },
+  "denied": "Vous n'avez pas accès à cet élève. Demandez au responsable de votre organisation de vous l'attribuer.",
+  "not_found": "Cet élève n'existe pas, ou vous n'y avez pas accès."
+}

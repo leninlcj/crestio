@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "Simpan",
+    "saving": "Menyimpan…",
+    "saved": "Tersimpan.",
+    "cancel": "Batalkan",
+    "delete": "Hapus",
+    "deleting": "Menghapus…",
+    "edit": "Edit",
+    "archive": "Arsip",
+    "unarchive": "Kembalikan ke arsip",
+    "confirm": "Konfirmasi",
+    "close": "Tutup",
+    "back": "Kembali",
+    "next": "Selanjutnya",
+    "new": "Baru",
+    "open": "Buka",
+    "loading": "Sedang dimuat…",
+    "search_placeholder": "Cari…",
+    "not_found": "Tidak ditemukan"
+  },
+  "nav": {
+    "overview": "Gambaran umum",
+    "calendar": "Kalender",
+    "sessions": "Sesi",
+    "students": "Siswa",
+    "households": "Rumah tangga",
+    "messages": "Pesan",
+    "lesson_plans": "Rencana pelajaran",
+    "invoices": "Faktur",
+    "tutors": "Pengajar",
+    "payouts": "Pembayaran",
+    "settings": "Pengaturan",
+    "help_support": "Bantuan dan dukungan",
+    "language": "Bahasa",
+    "billing": "Penagihan",
+    "sign_out": "Keluar",
+    "signed_in_as": "Masuk sebagai",
+    "owner_tools": "Alat untuk pemilik",
+    "test_accounts": "Akun uji coba",
+    "more": "Selengkapnya"
+  },
+  "status": {
+    "draft": "Draf",
+    "sent": "Dikirim",
+    "paid": "Berbayar",
+    "unpaid": "Tidak dibayar",
+    "overdue": "Tunggakan",
+    "void": "Kosong",
+    "scheduled": "Telah dijadwalkan",
+    "completed": "Selesai",
+    "cancelled": "Dibatalkan",
+    "no_show": "Tidak hadir"
+  },
+  "empty": {
+    "no_results": "Tidak ada hasil.",
+    "try_different_search": "Coba pencarian yang berbeda."
+  },
+  "errors": {
+    "generic": "Terjadi kesalahan. Silakan coba lagi.",
+    "not_signed_in": "Belum masuk."
+  }
+}

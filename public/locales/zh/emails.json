@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "紧急： ",
+    "action_required": "需要执行的操作： ",
+    "reminder": "提醒： ",
+    "heads_up": "请注意： ",
+    "subscription_cancelled": "订阅已取消： "
+  },
+  "wrapper": {
+    "open_in_crestio": "在 Crestio 中打开",
+    "open_in_crestio_text": "在 Crestio 中打开：{{url}}",
+    "manage_notifications": "管理通知",
+    "manage_notifications_text": "管理通知：{{url}}",
+    "footer_sender": "来自 Crestio — 家教业务软件。"
+  }
+}

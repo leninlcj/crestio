@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "अत्यावश्यक: ",
+    "action_required": "कार्रवाई आवश्यक: ",
+    "reminder": "स्मरण: ",
+    "heads_up": "ध्यान दें: ",
+    "subscription_cancelled": "सदस्यता रद्द: "
+  },
+  "wrapper": {
+    "open_in_crestio": "Crestio में खोलें",
+    "open_in_crestio_text": "Crestio में खोलें: {{url}}",
+    "manage_notifications": "सूचनाओं का प्रबंधन करें",
+    "manage_notifications_text": "सूचनाएँ प्रबंधित करें: {{url}}",
+    "footer_sender": "Crestio से — ट्यूटर व्यवसाय सॉफ़्टवेयर।"
+  }
+}

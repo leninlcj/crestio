@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "kicker": "Welcome",
+    "greeting": "Hi {{name}}",
+    "greeting_fallback": "Your dashboard",
+    "loading_error": "Could not load your dashboard.",
+    "this_week": "This week",
+    "this_week_empty": "No sessions this week.",
+    "recent_updates": "Recent updates from your tutor",
+    "your_children": "Your children",
+    "at_a_glance": "At a glance",
+    "stats": {
+      "sessions_this_month": "Sessions this month",
+      "sessions_this_year": "Sessions this year",
+      "paid": "Paid",
+      "outstanding": "Outstanding"
+    },
+    "no_access": "You don't have access.",
+    "change_requested": "Change requested"
+  },
+  "nav": {
+    "calendar": "Calendar",
+    "messages": "Messages",
+    "invoices": "Invoices",
+    "settings": "Settings",
+    "sign_out": "Sign out",
+    "all_children": "← All children"
+  },
+  "student": {
+    "loading": "Loading…",
+    "student": "Student",
+    "next_session": "Next session",
+    "view_changes": "View / request changes →",
+    "tabs": {
+      "calendar": "calendar",
+      "sessions": "sessions",
+      "homework": "homework",
+      "invoices": "invoices",
+      "updates": "updates"
+    },
+    "sessions": {
+      "upcoming": "Upcoming sessions",
+      "past": "Past sessions",
+      "no_upcoming": "No upcoming sessions scheduled.",
+      "no_past": "No past sessions yet.",
+      "no_notes": "No notes shared for this session yet."
+    },
+    "homework": {
+      "heading": "Homework",
+      "mark_done": "Mark as done",
+      "undo": "Undo",
+      "done": "Done",
+      "overdue": "Overdue",
+      "pending": "Pending",
+      "no_homework": "No homework assigned yet."
+    },
+    "invoices": {
+      "none": "No invoices yet for this student.",
+      "payment_instructions": "To pay, please follow the instructions on each invoice from your tutor."
+    },
+    "updates_none": "No updates from your tutor yet."
+  }
+}

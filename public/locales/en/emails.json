@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "URGENT: ",
+    "action_required": "Action required: ",
+    "reminder": "Reminder: ",
+    "heads_up": "Heads up: ",
+    "subscription_cancelled": "Subscription cancelled: "
+  },
+  "wrapper": {
+    "open_in_crestio": "Open in Crestio",
+    "open_in_crestio_text": "Open in Crestio: {{url}}",
+    "manage_notifications": "Manage notifications",
+    "manage_notifications_text": "Manage notifications: {{url}}",
+    "footer_sender": "From Crestio — tutor business software."
+  }
+}

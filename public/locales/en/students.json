@@ -1,0 +1,39 @@
+{
+  "subtitle": "People",
+  "title_list": "Students",
+  "title_new": "New student",
+  "title_loading": "…",
+  "title_not_available": "Not available",
+  "title_not_found": "Not found",
+  "actions": {
+    "add": "Add student",
+    "new_cta": "New student",
+    "edit": "Edit",
+    "log_session": "Log session",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "delete": "Delete"
+  },
+  "filters": {
+    "active": "Active",
+    "archived": "Archived"
+  },
+  "empty": {
+    "no_students": "No students yet",
+    "no_archived": "No archived students",
+    "description_owner": "Add your first student to start tracking sessions and billing.",
+    "description_tutor": "Your organization owner will assign students to you.",
+    "no_tutor_record": "No students assigned yet",
+    "show_archived": "Archived students appear here.",
+    "add_first": "Add a student"
+  },
+  "loading": "Loading…",
+  "denied": "You don't have access to this student. Ask your organization owner to assign them to you.",
+  "not_found": "That student doesn't exist, or you don't have access.",
+  "tabs": {
+    "sessions": "Sessions",
+    "homework": "Homework",
+    "record": "Record",
+    "track": "Track"
+  }
+}

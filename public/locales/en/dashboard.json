@@ -1,0 +1,72 @@
+{
+  "kicker": "Today",
+  "greeting_morning": "Good morning, {{name}}",
+  "greeting_afternoon": "Good afternoon, {{name}}",
+  "greeting_evening": "Good evening, {{name}}",
+  "loading_error": "Could not load your dashboard.",
+  "trial_banner": {
+    "days_left_one": "You have 1 day left in your trial.",
+    "days_left_other": "You have {{count}} days left in your trial.",
+    "subscribe": "Subscribe",
+    "dismiss": "Dismiss"
+  },
+  "sections": {
+    "next_up": {
+      "kicker": "Next session",
+      "kicker_soon": "Starting soon",
+      "open": "Open",
+      "reschedule": "Reschedule",
+      "log_notes": "Log notes"
+    },
+    "polish": {
+      "kicker": "Needs polishing",
+      "title_one": "{{count}} session waiting for parent updates",
+      "title_other": "{{count}} sessions waiting for parent updates",
+      "body": "Polished notes go to parents in the portal.",
+      "cta_some": "Polish these →",
+      "cta_many": "Polish all in one view →",
+      "row_cta": "Polish →"
+    },
+    "invoicing": {
+      "kicker": "Unbilled",
+      "title_one": "{{count}} family has unbilled sessions",
+      "title_other": "{{count}} families have unbilled sessions",
+      "student_count_one": "{{count}} student",
+      "student_count_other": "{{count}} students",
+      "total_uninvoiced": "Total uninvoiced: {{amount}}",
+      "cta": "Invoice all →"
+    },
+    "reschedules": {
+      "kicker": "Needs your response",
+      "title_one": "{{count}} reschedule request waiting",
+      "title_other": "{{count}} reschedule requests waiting",
+      "row_description": "{{parent}} proposed rescheduling {{student}}'s session.",
+      "row_original": "Original:",
+      "row_proposed": "Proposed:",
+      "accept": "Accept",
+      "reject": "Reject",
+      "open": "Open"
+    },
+    "week_ahead": {
+      "kicker": "This week",
+      "title_one": "{{count}} session scheduled",
+      "title_other": "{{count}} sessions scheduled",
+      "open_calendar": "Open calendar →"
+    },
+    "homework": {
+      "kicker": "Homework",
+      "title_one": "{{count}} student has pending homework",
+      "title_other": "{{count}} students have pending homework",
+      "body": "Waiting on parents (or students) to complete what you set.",
+      "see_all": "See all homework →",
+      "overdue": "Overdue",
+      "due_date": "Due {{date}}"
+    },
+    "empty": {
+      "title": "You're all caught up.",
+      "body": "No sessions to prep, nothing to polish, no invoices waiting.",
+      "schedule": "Schedule a session →",
+      "add_student": "Add a student →"
+    }
+  }
+}

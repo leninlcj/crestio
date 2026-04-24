@@ -1,0 +1,64 @@
+{
+  "trial_banner": {
+    "dismiss": "Descartar",
+    "days_left_one": "Te queda 1 día de prueba.",
+    "days_left_other": "Te quedan un{{count}}es de días de prueba.",
+    "subscribe": "Suscríbete"
+  },
+  "sections": {
+    "next_up": {
+      "open": "Abrir",
+      "kicker": "Próxima sesión",
+      "kicker_soon": "Próximamente",
+      "reschedule": "Cambiar de fecha",
+      "log_notes": "Notas del diario"
+    },
+    "reschedules": {
+      "open": "Abrir",
+      "kicker": "Necesita tu respuesta",
+      "title_one": "{{count}} solicitud de reprogramación pendiente",
+      "title_other": "{{count}} solicitudes de reprogramación pendientes",
+      "accept": "Aceptar",
+      "reject": "Rechazar"
+    },
+    "polish": {
+      "kicker": "Necesita pulirse",
+      "title_one": "{{count}} sesión en espera de actualizaciones de los padres",
+      "title_other": "{{count}} sesiones que esperan actualizaciones de los padres",
+      "body": "Las notas revisadas se envían a los padres a través del portal.",
+      "cta_some": "Pulir estos →",
+      "cta_many": "Polonia en una sola vista →",
+      "row_cta": "Polaco →"
+    },
+    "invoicing": {
+      "kicker": "Sin facturar",
+      "title_one": "{{count}} La familia de hoy tiene sesiones sin facturar",
+      "title_other": "{{count}} las familias tienen sesiones sin facturar",
+      "total_uninvoiced": "Total sin facturar: {{amount}}",
+      "cta": "Facturar todo →"
+    },
+    "week_ahead": {
+      "kicker": "Esta semana",
+      "title_one": "{{count}} sesión programada",
+      "title_other": "{{count}} sesiones programadas",
+      "open_calendar": "Abrir calendario →"
+    },
+    "homework": {
+      "kicker": "Deberes",
+      "title_one": "{{count}} El estudiante de hoy tiene deberes pendientes",
+      "title_other": "{{count}} los alumnos de hoy tienen deberes pendientes",
+      "body": "Esperando a que los padres (o los alumnos) terminen lo que les has encargado.",
+      "see_all": "Ver todos los deberes →",
+      "overdue": "Vencido",
+      "due_date": "{{date}}"
+    },
+    "empty": {
+      "title": "Ya estás al día.",
+      "body": "No hay sesiones que preparar, nada que pulir, ni facturas pendientes.",
+      "schedule": "Reserva una sesión →",
+      "add_student": "Añadir un alumno →"
+    }
+  },
+  "kicker": "Hoy",
+  "loading_error": "No se ha podido cargar tu panel de control."
+}

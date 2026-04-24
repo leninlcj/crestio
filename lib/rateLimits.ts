@@ -1,0 +1,2 @@
+export const LESSON_PLAN_DAILY_LIMIT = 20;
+export const LESSON_NOTES_POLISH_DAILY_LIMIT = 30;

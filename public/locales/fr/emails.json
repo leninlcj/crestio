@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "URGENT : ",
+    "action_required": "Action requise : ",
+    "reminder": "Rappel : ",
+    "heads_up": "Attention : ",
+    "subscription_cancelled": "Abonnement annulé : "
+  },
+  "wrapper": {
+    "open_in_crestio": "Ouvrir dans Crestio",
+    "open_in_crestio_text": "Ouvrir dans Crestio : {{url}}",
+    "manage_notifications": "Gérer les notifications",
+    "manage_notifications_text": "Gérer les notifications : {{url}}",
+    "footer_sender": "De Crestio — logiciel de gestion pour tuteurs."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(vercel --prod --yes)",
+      "Bash(npm ls *)",
+      "Bash(grep -n \"^import { createNotification\\\\|^import.*from '../notifications'\\\\|import { createNotification\" /Users/leninjoaquin/Projects/crestio/lib/assistantToolHandlers/executors.ts)",
+      "Bash(npm install *)",
+      "Bash(grep -n \"item.label\\\\|{ href: '/app/sessions', label:\\\\|moreNav\" /Users/leninjoaquin/Projects/crestio/components/Layout.tsx)",
+      "Bash(python3 *)",
+      "Bash(npx tsc *)",
+      "Bash(npx tsx *)"
+    ]
+  }
+}

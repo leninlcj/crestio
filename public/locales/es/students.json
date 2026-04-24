@@ -1,0 +1,39 @@
+{
+  "title_loading": "…",
+  "title_not_available": "No disponible",
+  "title_not_found": "No encontrado",
+  "actions": {
+    "add": "Añadir alumno",
+    "edit": "Editar",
+    "archive": "Archivo",
+    "unarchive": "Desarchivar",
+    "delete": "Eliminar",
+    "new_cta": "Nuevo alumno",
+    "log_session": "Registro de sesión"
+  },
+  "loading": "Cargando…",
+  "tabs": {
+    "sessions": "Sesiones",
+    "homework": "Deberes",
+    "record": "Registro",
+    "track": "Seguimiento"
+  },
+  "subtitle": "Personas",
+  "title_list": "Estudiantes",
+  "title_new": "Nuevo alumno",
+  "filters": {
+    "active": "Activo",
+    "archived": "Archivado"
+  },
+  "empty": {
+    "no_students": "Aún no hay alumnos",
+    "no_archived": "No hay alumnos archivados",
+    "description_owner": "Añade a tu primer alumno para empezar a llevar un registro de las sesiones y la facturación.",
+    "description_tutor": "El responsable de tu organización te asignará alumnos.",
+    "no_tutor_record": "Aún no hay alumnos asignados",
+    "show_archived": "Aquí aparecen los alumnos que ya han finalizado sus estudios.",
+    "add_first": "Añadir un alumno"
+  },
+  "denied": "No tienes acceso a este estudiante. Pide al propietario de tu organización que te lo asigne.",
+  "not_found": "Ese estudiante no existe, o no tienes acceso a él."
+}

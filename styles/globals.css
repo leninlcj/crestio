@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans;
+    font-feature-settings: 'ss01', 'cv11';
+    overscroll-behavior-y: none;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tightest;
+    font-weight: 500;
+  }
+
+  input, select, textarea, button {
+    font-family: inherit;
+  }
+
+  /* Prevent iOS auto-zoom on input focus — inputs must be 16px+ on mobile */
+  @media (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px #FFFFFF inset !important;
+    -webkit-text-fill-color: #1A1815 !important;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed;
+    border-radius: 4px;
+    min-height: 40px;
+  }
+  .btn-primary {
+    @apply btn bg-forest text-cream hover:bg-forest-ink active:bg-forest-ink;
+  }
+  .btn-secondary {
+    @apply btn bg-surface text-ink border border-rule hover:bg-ruleSoft active:bg-ruleSoft;
+  }
+  .btn-ghost {
+    @apply btn text-ink-muted hover:text-ink hover:bg-ruleSoft active:bg-ruleSoft;
+  }
+  .btn-danger {
+    @apply btn text-claret hover:bg-claret/5 active:bg-claret/10;
+  }
+
+  .input {
+    @apply w-full bg-surface border border-rule px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-soft transition-colors;
+    border-radius: 4px;
+    min-height: 42px;
+  }
+  .input:focus {
+    @apply border-forest;
+    box-shadow: 0 0 0 3px rgba(31, 58, 46, 0.08);
+  }
+
+  .label {
+    @apply block text-2xs uppercase tracking-widest text-ink-muted font-medium mb-1.5;
+  }
+
+  .card {
+    @apply bg-surface border border-rule;
+    border-radius: 6px;
+  }
+
+  .table-wrap {
+    @apply card overflow-x-auto;
+  }
+  .table {
+    @apply w-full;
+  }
+  .table th {
+    @apply text-left text-2xs uppercase tracking-widest text-ink-muted font-medium px-5 py-3.5 border-b border-rule bg-ruleSoft/40 whitespace-nowrap;
+  }
+  .table td {
+    @apply px-5 py-4 text-sm border-b border-ruleSoft;
+  }
+  .table tr:last-child td {
+    @apply border-b-0;
+  }
+  .table tr.row-link {
+    @apply cursor-pointer transition-colors hover:bg-ruleSoft/60 active:bg-ruleSoft/80;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-2xs font-medium uppercase tracking-wider whitespace-nowrap;
+    border-radius: 3px;
+  }
+  .badge-neutral { @apply badge bg-ruleSoft text-ink-muted; }
+  .badge-forest  { @apply badge bg-forest-soft text-forest-ink; }
+  .badge-rust    { @apply badge bg-rust/10 text-rust; }
+  .badge-claret  { @apply badge bg-claret/10 text-claret; }
+  .badge-amber   { @apply badge bg-amber-soft text-amber-ink; }
+
+  .prose-plan {
+    @apply text-sm leading-relaxed text-ink;
+  }
+  .prose-plan h1 {
+    @apply font-display text-2xl tracking-tightest mt-6 mb-2;
+  }
+  .prose-plan h2 {
+    @apply font-display text-xl tracking-tightest mt-6 mb-2;
+  }
+  .prose-plan h3 {
+    @apply font-sans text-base font-semibold mt-5 mb-1.5 uppercase text-xs tracking-widest text-ink-muted;
+  }
+  .prose-plan p { @apply mb-3; }
+  .prose-plan ul { @apply list-disc pl-5 mb-3 space-y-1; }
+  .prose-plan ol { @apply list-decimal pl-5 mb-3 space-y-1; }
+  .prose-plan strong { @apply font-semibold text-ink; }
+  .prose-plan em { @apply italic; }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .num {
+    font-feature-settings: 'tnum', 'lnum';
+  }
+  /* Safe area padding for iPhone notch / home indicator */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Stat-card row collapses to 2 columns when the assistant push sidebar
+   is open on lg viewports (1024-1279px). On xl+ there's room for 4. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  [data-assistant-open='true'] .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@keyframes assistant-dot-pulse {
+  0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-1px); }
+}
+
+.assistant-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: currentColor;
+  margin: 0 2px;
+  animation: assistant-dot-pulse 1.4s ease-in-out infinite both;
+}
+.assistant-dot:nth-child(2) { animation-delay: 0.2s; }
+.assistant-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Print styles — used when saving an invoice to PDF via the browser's
+   native Save as PDF. Hides app chrome so only the invoice renders. */
+@media print {
+  /* Hide the app scaffolding */
+  aside, nav, header, footer,
+  [data-print-hide],
+  .print-hide {
+    display: none !important;
+  }
+  /* Hide fixed-position overlays like the support widget */
+  .fixed { display: none !important; }
+  /* Restore the printable card */
+  .print-show { display: block !important; }
+  /* Reset body for a clean A4 canvas */
+  html, body, #__next, main {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  @page {
+    margin: 14mm;
+    size: A4 portrait;
+  }
+  /* Soften tailwind card styles for print */
+  .card {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  /* Make the printed invoice full-width */
+  .print-invoice {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

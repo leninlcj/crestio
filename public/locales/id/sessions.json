@@ -1,0 +1,28 @@
+{
+  "subtitle": "Sesi",
+  "title_list": "Sesi",
+  "title_loading": "…",
+  "title_not_found": "Tidak ditemukan",
+  "actions": {
+    "edit": "Edit",
+    "no_show": "Tidak hadir",
+    "delete": "Hapus",
+    "saving": "Menyimpan…",
+    "new": "Catat sesi",
+    "new_short": "Sesi baru",
+    "mark_completed": "Tandai sebagai selesai",
+    "cancel_session": "Batalkan sesi",
+    "save": "Simpan sesi"
+  },
+  "loading": "Sedang dimuat…",
+  "title_new": "Catat sesi",
+  "title_not_available": "Tidak tersedia",
+  "not_found": "Sesi tidak ditemukan.",
+  "denied": "Anda tidak memiliki akses ke sesi ini.",
+  "empty": {
+    "add_student_first_title": "Tambahkan siswa terlebih dahulu",
+    "add_student_first_body": "Sesi memerlukan siswa. Buatlah siswa terlebih dahulu, lalu kembali ke sini.",
+    "add_student_cta": "Tambahkan siswa",
+    "no_sessions": "Belum ada sesi."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "subtitle": "Séances",
+  "title_list": "Séances",
+  "title_loading": "…",
+  "title_not_found": "Introuvable",
+  "actions": {
+    "edit": "Modifier",
+    "no_show": "Absence",
+    "delete": "Supprimer",
+    "saving": "Enregistrement en cours…",
+    "new": "Enregistrer la session",
+    "new_short": "Nouvelle session",
+    "mark_completed": "Marquer comme terminé",
+    "cancel_session": "Annuler la séance",
+    "save": "Enregistrer la session"
+  },
+  "loading": "Chargement en cours…",
+  "title_new": "Enregistrer la session",
+  "title_not_available": "Non disponible",
+  "not_found": "Session introuvable.",
+  "denied": "Vous n'avez pas accès à cette session.",
+  "empty": {
+    "add_student_first_title": "Ajoutez d'abord un élève",
+    "add_student_first_body": "Les sessions nécessitent un élève. Créez-en un, puis revenez ici.",
+    "add_student_cta": "Ajouter un élève",
+    "no_sessions": "Aucune session pour l'instant."
+  }
+}

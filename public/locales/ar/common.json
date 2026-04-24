@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "حفظ",
+    "saving": "جاري الحفظ…",
+    "saved": "تم الحفظ.",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "deleting": "حذف...",
+    "edit": "تحرير",
+    "archive": "الأرشيف",
+    "unarchive": "إلغاء الأرشفة",
+    "confirm": "تأكيد",
+    "close": "إغلاق",
+    "back": "العودة",
+    "next": "التالي",
+    "new": "جديد",
+    "open": "فتح",
+    "loading": "جاري التحميل...",
+    "search_placeholder": "بحث…",
+    "not_found": "لم يتم العثور عليه"
+  },
+  "nav": {
+    "overview": "نظرة عامة",
+    "calendar": "التقويم",
+    "sessions": "الجلسات",
+    "students": "الطلاب",
+    "households": "الأسر",
+    "messages": "الرسائل",
+    "lesson_plans": "خطط الدروس",
+    "invoices": "الفواتير",
+    "tutors": "المعلمون",
+    "payouts": "المدفوعات",
+    "settings": "الإعدادات",
+    "help_support": "المساعدة والدعم",
+    "language": "اللغة",
+    "billing": "الفوترة",
+    "sign_out": "تسجيل الخروج",
+    "signed_in_as": "تم تسجيل الدخول باسم",
+    "owner_tools": "أدوات المالك",
+    "test_accounts": "حسابات تجريبية",
+    "more": "المزيد"
+  },
+  "status": {
+    "draft": "مسودة",
+    "sent": "تم الإرسال",
+    "paid": "مدفوع",
+    "unpaid": "غير مدفوع الأجر",
+    "overdue": "متأخر",
+    "void": "باطل",
+    "scheduled": "مجدول",
+    "completed": "تم الانتهاء",
+    "cancelled": "تم إلغاؤها",
+    "no_show": "عدم الحضور"
+  },
+  "empty": {
+    "no_results": "لا توجد نتائج.",
+    "try_different_search": "جرب بحثًا مختلفًا."
+  },
+  "errors": {
+    "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "not_signed_in": "لم يتم تسجيل الدخول."
+  }
+}

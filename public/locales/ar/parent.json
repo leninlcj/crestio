@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "loading_error": "تعذر تحميل لوحة التحكم الخاصة بك.",
+    "this_week": "هذا الأسبوع",
+    "stats": {
+      "paid": "مدفوع",
+      "sessions_this_month": "الجلسات في هذا الشهر",
+      "sessions_this_year": "الجلسات لهذا العام",
+      "outstanding": "ممتاز"
+    },
+    "kicker": "مرحبًا بكم",
+    "greeting": "مرحباً {{name}}",
+    "greeting_fallback": "لوحة التحكم الخاصة بك",
+    "this_week_empty": "لا توجد جلسات هذا الأسبوع.",
+    "recent_updates": "آخر المستجدات من مدرسك",
+    "your_children": "أطفالك",
+    "at_a_glance": "لمحة عامة",
+    "no_access": "لا تملك حق الوصول.",
+    "change_requested": "التغيير المطلوب"
+  },
+  "nav": {
+    "messages": "الرسائل",
+    "invoices": "الفواتير",
+    "sign_out": "تسجيل الخروج",
+    "calendar": "التقويم",
+    "settings": "الإعدادات",
+    "all_children": "← جميع الأطفال"
+  },
+  "student": {
+    "loading": "جاري التحميل...",
+    "next_session": "الجلسة التالية",
+    "homework": {
+      "heading": "الواجبات المنزلية",
+      "overdue": "متأخر",
+      "mark_done": "وضع علامة \"تم\"",
+      "undo": "تراجع",
+      "done": "تم",
+      "pending": "قيد الانتظار",
+      "no_homework": "لم يتم تعيين أي واجبات منزلية حتى الآن."
+    },
+    "student": "الطالب",
+    "view_changes": "عرض / طلب التغييرات →",
+    "tabs": {
+      "calendar": "التقويم",
+      "sessions": "الجلسات",
+      "homework": "الواجبات المنزلية",
+      "invoices": "الفواتير",
+      "updates": "التحديثات"
+    },
+    "sessions": {
+      "upcoming": "الجلسات القادمة",
+      "past": "الدورات السابقة",
+      "no_upcoming": "لا توجد جلسات مقررة قريبًا.",
+      "no_past": "لا توجد جلسات سابقة حتى الآن.",
+      "no_notes": "لم يتم مشاركة أي ملاحظات لهذه الجلسة حتى الآن."
+    },
+    "invoices": {
+      "none": "لا توجد فواتير حتى الآن لهذا الطالب.",
+      "payment_instructions": "للدفع، يرجى اتباع التعليمات الواردة في كل فاتورة من مدرسك."
+    },
+    "updates_none": "لا توجد تحديثات من مدرسك حتى الآن."
+  }
+}

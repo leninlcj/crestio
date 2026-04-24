@@ -1,0 +1,56 @@
+{
+  "title_not_found": "ملو نہ سکا",
+  "batch": {
+    "period_this_week": "اس ہفتے",
+    "households": "گھرانے",
+    "sessions": "سیشنز",
+    "loading": "لوڈ ہو رہا ہے…",
+    "period": "پوائنٹ",
+    "period_last_week": "گزشتہ ہفتہ",
+    "period_this_month": "اس ماہ",
+    "period_last_month": "گزشتہ ماہ",
+    "period_custom": "حسبِ ضرورت حد…",
+    "from": "کی طرف سے",
+    "to": "کے لیے",
+    "back_to_list": "انوائس کی فہرست پر واپس",
+    "unbilled_total": "بغیر بل کا کل",
+    "nothing_title": "انوائس کرنے کے لیے کچھ نہیں",
+    "nothing_body": "اس مدت میں کوئی مکمل کیے گئے مگر بل نہ کیے گئے سیشنز نہیں ہیں۔ مزید سیشنز لاگ کریں یا تاریخوں کا مختلف دائرہ منتخب کریں۔",
+    "save_drafts": "ڈرافٹ کے طور پر محفوظ کریں",
+    "send": "انوائس بھیجیں"
+  },
+  "subtitle": "بلنگ",
+  "title_list": "انوائسز",
+  "title_new": "نیا انوائس",
+  "title_batch": "بیچ انوائس",
+  "title_loading": "…",
+  "actions": {
+    "new": "نیا انوائس",
+    "batch": "بیچ انوائس",
+    "mark_sent": "مارک نے بھیجا",
+    "mark_paid": "مارک نے ادا کیا",
+    "email_to_parent": "والدین کو ای میل",
+    "download_pdf": "پی ڈی ایف ڈاؤن لوڈ کریں",
+    "delete": "انوائس حذف کریں"
+  },
+  "filters": {
+    "all": "تمام",
+    "household": "گھریلو",
+    "per_student": "فی طالب علم"
+  },
+  "columns": {
+    "number": "نمبر",
+    "billed_to": "بل بھیجا گیا",
+    "issued": "جاری کردہ",
+    "due": " واجب الادا",
+    "status": "حالت",
+    "total": "کل"
+  },
+  "not_found": "انوائس نہیں ملا۔",
+  "empty": {
+    "no_invoices_title": "ابھی تک کوئی انوائس نہیں",
+    "no_invoices_body": "گروپ نے مکمل کیے گئے سیشنز کو ایک انوائس میں مرتب کیا تاکہ اسے والدین کو بھیجا جا سکے۔",
+    "cta_batch": "بیچ انوائس"
+  },
+  "batch_toast_created": "بیچ انوائسز تیار کی گئیں۔ وہ ذیل میں درج ہیں۔"
+}

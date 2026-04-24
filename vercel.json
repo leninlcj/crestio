@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/prune-voice-transcripts",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/session-reminders",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/overdue-invoices",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/homework-overdue",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

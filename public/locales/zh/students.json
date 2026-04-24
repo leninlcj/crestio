@@ -1,0 +1,39 @@
+{
+  "title_loading": "…",
+  "title_not_available": "不可用",
+  "title_not_found": "未找到",
+  "actions": {
+    "add": "添加学生",
+    "edit": "编辑",
+    "archive": "存档",
+    "unarchive": "取消归档",
+    "delete": "删除",
+    "new_cta": "新生",
+    "log_session": "记录会话"
+  },
+  "loading": "正在加载……",
+  "tabs": {
+    "sessions": "课程",
+    "homework": "家庭作业",
+    "record": "记录",
+    "track": "追踪"
+  },
+  "subtitle": "对象",
+  "title_list": "学生",
+  "title_new": "新生",
+  "filters": {
+    "active": "活跃",
+    "archived": "已存档"
+  },
+  "empty": {
+    "no_students": "目前尚无学生",
+    "no_archived": "没有存档的学生",
+    "description_owner": "添加您的第一位学生，开始记录课程和计费。",
+    "description_tutor": "您的组织管理员会将学生分配给您。",
+    "no_tutor_record": "尚未分配学生",
+    "show_archived": "此处显示已结业的学生。",
+    "add_first": "添加学生"
+  },
+  "denied": "您目前无法访问该学生。请联系您的组织管理员，将其分配给您。",
+  "not_found": "该学生不存在，或者您没有访问权限。"
+}

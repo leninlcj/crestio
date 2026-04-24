@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "URGENT: ",
+    "action_required": "Tindakan yang diperlukan: ",
+    "reminder": "Pengingat: ",
+    "heads_up": "Perhatian: ",
+    "subscription_cancelled": "Langganan dibatalkan: "
+  },
+  "wrapper": {
+    "open_in_crestio": "Buka di Crestio",
+    "open_in_crestio_text": "Buka di Crestio: {{url}}",
+    "manage_notifications": "Kelola pemberitahuan",
+    "manage_notifications_text": "Kelola pemberitahuan: {{url}}",
+    "footer_sender": "Dari Crestio — perangkat lunak bisnis untuk tutor."
+  }
+}

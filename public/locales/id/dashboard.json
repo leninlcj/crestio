@@ -1,0 +1,64 @@
+{
+  "trial_banner": {
+    "dismiss": "Tutup",
+    "days_left_one": "Anda memiliki sisa 1 hari masa uji coba.",
+    "days_left_other": "Anda masih memiliki {{count}} hari tersisa dalam masa uji coba Anda.",
+    "subscribe": "Berlangganan"
+  },
+  "sections": {
+    "next_up": {
+      "open": "Buka",
+      "kicker": "Sesi berikutnya",
+      "kicker_soon": "Segera dimulai",
+      "reschedule": "Jadwalkan ulang",
+      "log_notes": "Catatan harian"
+    },
+    "reschedules": {
+      "open": "Buka",
+      "kicker": "Butuh tanggapan Anda",
+      "title_one": "{{count}} Permintaan penjadwalan ulang sedang menunggu",
+      "title_other": "{{count}} permintaan penjadwalan ulang yang sedang menunggu",
+      "accept": "Setuju",
+      "reject": "Tolak"
+    },
+    "polish": {
+      "kicker": "Perlu diperbaiki",
+      "title_one": "{{count}} Sesi hari ini sedang menunggu pembaruan dari orang tua",
+      "title_other": "{{count}} sesi yang sedang menunggu pembaruan dari orang tua",
+      "body": "Catatan yang telah diperbarui dikirimkan kepada orang tua melalui portal.",
+      "cta_some": "Perbaiki ini →",
+      "cta_many": "Tampilan lengkap Polandia →",
+      "row_cta": "Polandia →"
+    },
+    "invoicing": {
+      "kicker": "Belum ditagih",
+      "title_one": "{{count}} keluarga saat ini memiliki sesi yang belum ditagih",
+      "title_other": "{{count}} keluarga-keluarga saat ini memiliki sesi yang belum ditagih",
+      "total_uninvoiced": "Total yang belum ditagih: {{amount}}",
+      "cta": "Tagih semuanya →"
+    },
+    "week_ahead": {
+      "kicker": "Minggu ini",
+      "title_one": "{{count}} sesi hari ini dijadwalkan",
+      "title_other": "{{count}} sesi yang dijadwalkan",
+      "open_calendar": "Buka kalender →"
+    },
+    "homework": {
+      "kicker": "Pekerjaan rumah",
+      "title_one": "{{count}} siswa saat ini memiliki pekerjaan rumah yang belum diselesaikan",
+      "title_other": "{{count}} para siswa saat ini memiliki pekerjaan rumah yang belum diselesaikan",
+      "body": "Menunggu orang tua (atau siswa) untuk menyelesaikan apa yang telah Anda tetapkan.",
+      "see_all": "Lihat semua tugas →",
+      "overdue": "Tunggakan",
+      "due_date": "{{date}}"
+    },
+    "empty": {
+      "title": "Kalian sudah mengikuti perkembangannya.",
+      "body": "Tidak ada sesi yang harus dipersiapkan, tidak ada yang perlu disempurnakan, tidak ada tagihan yang menanti.",
+      "schedule": "Jadwalkan sesi →",
+      "add_student": "Tambahkan siswa →"
+    }
+  },
+  "kicker": "Hari ini",
+  "loading_error": "Tidak dapat memuat dasbor Anda."
+}

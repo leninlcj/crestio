@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "loading_error": "Tidak dapat memuat dasbor Anda.",
+    "this_week": "Minggu ini",
+    "stats": {
+      "paid": "Berbayar",
+      "sessions_this_month": "Sesi bulan ini",
+      "sessions_this_year": "Sesi tahun ini",
+      "outstanding": "Luar Biasa"
+    },
+    "kicker": "Selamat datang",
+    "greeting": "Halo {{name}}",
+    "greeting_fallback": "Dasbor Anda",
+    "this_week_empty": "Tidak ada sesi minggu ini.",
+    "recent_updates": "Pembaruan terbaru dari tutor Anda",
+    "your_children": "Anak-anak Anda",
+    "at_a_glance": "Sekilas",
+    "no_access": "Anda tidak memiliki akses.",
+    "change_requested": "Perubahan yang diminta"
+  },
+  "nav": {
+    "messages": "Pesan",
+    "invoices": "Faktur",
+    "sign_out": "Keluar",
+    "calendar": "Kalender",
+    "settings": "Pengaturan",
+    "all_children": "← Semua anak"
+  },
+  "student": {
+    "loading": "Sedang dimuat…",
+    "next_session": "Sesi berikutnya",
+    "homework": {
+      "heading": "Pekerjaan rumah",
+      "overdue": "Tunggakan",
+      "mark_done": "Tandai sebagai selesai",
+      "undo": "Batal",
+      "done": "Selesai",
+      "pending": "Menunggu",
+      "no_homework": "Belum ada tugas yang diberikan."
+    },
+    "student": "Mahasiswa",
+    "view_changes": "Lihat / ajukan perubahan →",
+    "tabs": {
+      "calendar": "kalender",
+      "sessions": "sesi",
+      "homework": "pekerjaan rumah",
+      "invoices": "faktur",
+      "updates": "pembaruan"
+    },
+    "sessions": {
+      "upcoming": "Sesi mendatang",
+      "past": "Sesi sebelumnya",
+      "no_upcoming": "Tidak ada sesi yang dijadwalkan.",
+      "no_past": "Belum ada sesi sebelumnya.",
+      "no_notes": "Belum ada catatan yang dibagikan untuk sesi ini."
+    },
+    "invoices": {
+      "none": "Belum ada faktur untuk siswa ini.",
+      "payment_instructions": "Untuk melakukan pembayaran, silakan ikuti petunjuk yang tertera pada setiap faktur dari tutor Anda."
+    },
+    "updates_none": "Belum ada pembaruan dari tutor Anda."
+  }
+}

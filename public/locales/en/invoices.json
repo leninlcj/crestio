@@ -1,0 +1,56 @@
+{
+  "subtitle": "Billing",
+  "title_list": "Invoices",
+  "title_new": "New invoice",
+  "title_batch": "Batch invoice",
+  "title_loading": "…",
+  "title_not_found": "Not found",
+  "actions": {
+    "new": "New invoice",
+    "batch": "Batch invoice",
+    "mark_sent": "Mark sent",
+    "mark_paid": "Mark paid",
+    "email_to_parent": "Email to parent",
+    "download_pdf": "Download PDF",
+    "delete": "Delete invoice"
+  },
+  "filters": {
+    "all": "All",
+    "household": "Household",
+    "per_student": "Per-student"
+  },
+  "columns": {
+    "number": "Number",
+    "billed_to": "Billed to",
+    "issued": "Issued",
+    "due": "Due",
+    "status": "Status",
+    "total": "Total"
+  },
+  "not_found": "Invoice not found.",
+  "empty": {
+    "no_invoices_title": "No invoices yet",
+    "no_invoices_body": "Group completed sessions into an invoice to send to a parent.",
+    "cta_batch": "Batch invoice"
+  },
+  "batch": {
+    "period": "Period",
+    "period_this_week": "This week",
+    "period_last_week": "Last week",
+    "period_this_month": "This month",
+    "period_last_month": "Last month",
+    "period_custom": "Custom range…",
+    "from": "From",
+    "to": "To",
+    "back_to_list": "Back to invoice list",
+    "households": "Households",
+    "sessions": "Sessions",
+    "unbilled_total": "Unbilled total",
+    "nothing_title": "Nothing to invoice",
+    "nothing_body": "No completed unbilled sessions in this period. Log more sessions or pick a different date range.",
+    "loading": "Loading…",
+    "save_drafts": "Save as drafts",
+    "send": "Send invoices"
+  },
+  "batch_toast_created": "Batch invoices created. They're listed below."
+}

@@ -1,0 +1,64 @@
+{
+  "trial_banner": {
+    "dismiss": "Ignorar",
+    "days_left_one": "Você tem mais 1 dia de avaliação.",
+    "days_left_other": "Você tem {{count}} dias restantes no seu período de avaliação.",
+    "subscribe": "Inscreva-se"
+  },
+  "sections": {
+    "next_up": {
+      "open": "Abrir",
+      "kicker": "Próxima sessão",
+      "kicker_soon": "Em breve",
+      "reschedule": "Remarcar",
+      "log_notes": "Notas do diário"
+    },
+    "reschedules": {
+      "open": "Abrir",
+      "kicker": "Precisa da sua resposta",
+      "title_one": "{{count}} solicitação de remarcação em espera",
+      "title_other": "{{count}} solicitações de remarcação em espera",
+      "accept": "Aceitar",
+      "reject": "Rejeitar"
+    },
+    "polish": {
+      "kicker": "Precisa ser revisado",
+      "title_one": "{{count}} sessão em espera por atualizações do pai",
+      "title_other": "{{count}} sessões aguardando atualizações dos pais",
+      "body": "As notas atualizadas são enviadas aos pais pelo portal.",
+      "cta_some": "Revisar estes →",
+      "cta_many": "Polônia em uma única visualização →",
+      "row_cta": "Polonês →"
+    },
+    "invoicing": {
+      "kicker": "Não faturado",
+      "title_one": "{{count}} A família de hoje tem sessões não cobradas",
+      "title_other": "{{count}} As famílias de hoje têm sessões não cobradas",
+      "total_uninvoiced": "Total não faturado: {{amount}}",
+      "cta": "Faturar tudo →"
+    },
+    "week_ahead": {
+      "kicker": "Esta semana",
+      "title_one": "{{count}} sessão agendada para hoje",
+      "title_other": "{{count}} sessões programadas",
+      "open_calendar": "Abrir calendário →"
+    },
+    "homework": {
+      "kicker": "Lição de casa",
+      "title_one": "{{count}} O aluno de hoje tem lição de casa pendente",
+      "title_other": "{{count}} Os alunos de hoje têm trabalhos de casa pendentes",
+      "body": "Esperando que os pais (ou alunos) concluam o que você determinou.",
+      "see_all": "Ver todos os deveres de casa →",
+      "overdue": "Em atraso",
+      "due_date": "Devido a {{date}}"
+    },
+    "empty": {
+      "title": "Você está em dia.",
+      "body": "Sem aulas para preparar, nada para revisar, nenhuma fatura pendente.",
+      "schedule": "Agende uma sessão →",
+      "add_student": "Adicionar um aluno →"
+    }
+  },
+  "kicker": "Hoje",
+  "loading_error": "Não foi possível carregar seu painel."
+}

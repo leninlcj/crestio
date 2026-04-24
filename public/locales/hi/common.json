@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "सहेजें",
+    "saving": "बचाना…",
+    "saved": "सहेजा गया।",
+    "cancel": "रद्द करें",
+    "delete": "मिटायें",
+    "deleting": "मिटान…",
+    "edit": "संपादित करें",
+    "archive": "संग्रह",
+    "unarchive": "अनआर्काइव",
+    "confirm": "पुष्टि करें",
+    "close": "बंद करें",
+    "back": "वापस",
+    "next": "अगला",
+    "new": "नया",
+    "open": "खुला",
+    "loading": "लोड हो रहा है…",
+    "search_placeholder": "खोजें…",
+    "not_found": "नहीं मिला"
+  },
+  "nav": {
+    "overview": "अवलोकन",
+    "calendar": "कैलेंडर",
+    "sessions": "सत्र",
+    "students": "छात्र",
+    "households": "घरेलू परिवार",
+    "messages": "संदेश",
+    "lesson_plans": "पाठ योजनाएँ",
+    "invoices": "चालान",
+    "tutors": "ट्यूटर्स",
+    "payouts": "भुगतान",
+    "settings": "सेटिंग्स",
+    "help_support": "सहायता और समर्थन",
+    "language": "भाषा",
+    "billing": "बिलिंग",
+    "sign_out": "साइन आउट",
+    "signed_in_as": "के रूप में साइन इन",
+    "owner_tools": "मालिक उपकरण",
+    "test_accounts": "परीक्षण खाते",
+    "more": "और"
+  },
+  "status": {
+    "draft": "मसौदा",
+    "sent": "भेजा गया",
+    "paid": "भुगतान किया गया",
+    "unpaid": "अभुगतानहीन",
+    "overdue": "देर से",
+    "void": "अमान्य",
+    "scheduled": "निर्धारित",
+    "completed": "पूरा हुआ",
+    "cancelled": "रद्द",
+    "no_show": "नहीं आया"
+  },
+  "empty": {
+    "no_results": "कोई परिणाम नहीं।",
+    "try_different_search": "एक अलग खोज आज़माएँ।"
+  },
+  "errors": {
+    "generic": "कुछ गलत हो गया। कृपया फिर से प्रयास करें।",
+    "not_signed_in": "साइन इन नहीं किया गया।"
+  }
+}

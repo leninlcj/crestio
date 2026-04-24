@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "loading_error": "Não foi possível carregar seu painel.",
+    "this_week": "Esta semana",
+    "stats": {
+      "paid": "Pago",
+      "sessions_this_month": "Sessões deste mês",
+      "sessions_this_year": "Sessões deste ano",
+      "outstanding": "Excelente"
+    },
+    "kicker": "Bem-vindo",
+    "greeting": "Olá, {{name}}",
+    "greeting_fallback": "Seu painel",
+    "this_week_empty": "Não há sessões esta semana.",
+    "recent_updates": "Atualizações recentes do seu tutor",
+    "your_children": "Seus filhos",
+    "at_a_glance": "Em resumo",
+    "no_access": "Você não tem acesso.",
+    "change_requested": "Alteração solicitada"
+  },
+  "nav": {
+    "messages": "Mensagens",
+    "invoices": "Faturas",
+    "sign_out": "Sair",
+    "calendar": "Calendário",
+    "settings": "Configurações",
+    "all_children": "← Todas as crianças"
+  },
+  "student": {
+    "loading": "Carregando…",
+    "next_session": "Próxima sessão",
+    "homework": {
+      "heading": "Lição de casa",
+      "overdue": "Em atraso",
+      "mark_done": "Marcar como concluído",
+      "undo": "Desfazer",
+      "done": "Concluído",
+      "pending": "Pendente",
+      "no_homework": "Ainda não foi atribuída nenhuma tarefa de casa."
+    },
+    "student": "Aluno",
+    "view_changes": "Visualizar / solicitar alterações →",
+    "tabs": {
+      "calendar": "calendário",
+      "sessions": "sessões",
+      "homework": "trabalho de casa",
+      "invoices": "faturas",
+      "updates": "atualizações"
+    },
+    "sessions": {
+      "upcoming": "Próximas sessões",
+      "past": "Sessões anteriores",
+      "no_upcoming": "Não há sessões agendadas.",
+      "no_past": "Ainda não há sessões anteriores.",
+      "no_notes": "Ainda não há notas compartilhadas para esta sessão."
+    },
+    "invoices": {
+      "none": "Ainda não há faturas para este aluno.",
+      "payment_instructions": "Para efetuar o pagamento, siga as instruções contidas em cada fatura enviada pelo seu tutor."
+    },
+    "updates_none": "Ainda não há atualizações do seu tutor."
+  }
+}

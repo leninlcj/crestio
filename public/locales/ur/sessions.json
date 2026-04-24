@@ -1,0 +1,28 @@
+{
+  "subtitle": "سیشنز",
+  "title_list": "سیشنز",
+  "title_loading": "…",
+  "title_not_found": "ملو نہ سکا",
+  "actions": {
+    "edit": "ترمیم",
+    "no_show": "حاضری نہ ہونے",
+    "delete": "مٹائیں",
+    "saving": "محفوظ کر رہے ہیں…",
+    "new": "سیشن لاگ کریں",
+    "new_short": "نیا سیشن",
+    "mark_completed": "پورا ہوا",
+    "cancel_session": "سیشن منسوخ کریں",
+    "save": "سیشن محفوظ کریں"
+  },
+  "loading": "لوڈ ہو رہا ہے…",
+  "title_new": "سیشن لاگ کریں",
+  "title_not_available": "دستیاب نہیں",
+  "not_found": "سیشن نہیں ملا۔",
+  "denied": "آپ کے پاس اس سیشن تک رسائی نہیں ہے۔",
+  "empty": {
+    "add_student_first_title": "سب سے پہلے ایک طالب علم شامل کریں",
+    "add_student_first_body": "سیشنز کے لیے ایک طالب علم ضروری ہے۔ ایک نیا بنائیں، پھر واپس آئیں۔",
+    "add_student_cta": "طالب علم شامل کریں",
+    "no_sessions": "ابھی تک کوئی سیشن نہیں۔"
+  }
+}

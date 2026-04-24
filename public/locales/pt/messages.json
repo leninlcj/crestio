@@ -1,0 +1,15 @@
+{
+  "subtitle": "Mensagens",
+  "loading": "Carregando…",
+  "compose": {
+    "sending": "Enviando…",
+    "placeholder": "Digite uma mensagem…",
+    "send": "Enviar"
+  },
+  "title_list": "Mensagens",
+  "title_thread": "Mensagem",
+  "empty": {
+    "no_threads": "Ainda não há mensagens.",
+    "no_messages": "Ainda não há mensagens nesta conversa."
+  }
+}

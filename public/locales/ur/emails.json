@@ -1,0 +1,16 @@
+{
+  "subject_prefix": {
+    "urgent": "فوری: ",
+    "action_required": "کارروائی ضروری ہے: ",
+    "reminder": "یاد دہانی: ",
+    "heads_up": "خبردار: ",
+    "subscription_cancelled": "سبسکرپشن منسوخ: "
+  },
+  "wrapper": {
+    "open_in_crestio": "کریسٹِیو میں کھولیں",
+    "open_in_crestio_text": "Crestio میں کھولیں: {{url}}",
+    "manage_notifications": "اطلاعات کا انتظام کریں",
+    "manage_notifications_text": "اطلاعات کا انتظام کریں: {{url}}",
+    "footer_sender": "کریسٹِیو کی جانب سے — ٹیوٹر بزنس سافٹ ویئر۔"
+  }
+}

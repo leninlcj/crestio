@@ -1,0 +1,56 @@
+{
+  "title_not_found": "नहीं मिला",
+  "batch": {
+    "period_this_week": "इस सप्ताह",
+    "households": "घरेलू परिवार",
+    "sessions": "सत्र",
+    "loading": "लोड हो रहा है…",
+    "period": "अवधि",
+    "period_last_week": "पिछले सप्ताह",
+    "period_this_month": "इस महीने",
+    "period_last_month": "पिछले महीने",
+    "period_custom": "कस्टम रेंज…",
+    "from": "से",
+    "to": "के लिए",
+    "back_to_list": "चालान सूची पर वापस",
+    "unbilled_total": "अनबिलित कुल",
+    "nothing_title": "इनवॉइस करने के लिए कुछ नहीं",
+    "nothing_body": "इस अवधि में कोई पूरा किया गया बिना बिल किया गया सत्र नहीं है। अधिक सत्र लॉग करें या कोई अन्य दिनांक सीमा चुनें।",
+    "save_drafts": "ड्राफ्ट के रूप में सहेजें",
+    "send": "चालान भेजें"
+  },
+  "subtitle": "बिलिंग",
+  "title_list": "चालान",
+  "title_new": "नई चालान",
+  "title_batch": "बैच चालान",
+  "title_loading": "…",
+  "actions": {
+    "new": "नई चालान",
+    "batch": "बैच चालान",
+    "mark_sent": "मार्क ने भेजा",
+    "mark_paid": "मार्क ने भुगतान किया",
+    "email_to_parent": "अभिभावक को ईमेल",
+    "download_pdf": "पीडीएफ डाउनलोड करें",
+    "delete": "चालान हटाएँ"
+  },
+  "filters": {
+    "all": "सभी",
+    "household": "गृहस्थी",
+    "per_student": "प्रति छात्र"
+  },
+  "columns": {
+    "number": "संख्या",
+    "billed_to": "को बिलित",
+    "issued": "जारी किया गया",
+    "due": "देय",
+    "status": "स्थिति",
+    "total": "कुल"
+  },
+  "not_found": "चालान नहीं मिला।",
+  "empty": {
+    "no_invoices_title": "अभी तक कोई चालान नहीं",
+    "no_invoices_body": "समूह ने सत्रों को पूरा करके अभिभावक को भेजने के लिए एक चालान तैयार किया।",
+    "cta_batch": "बैच चालान"
+  },
+  "batch_toast_created": "बैच चालान बनाए गए। वे नीचे सूचीबद्ध हैं।"
+}

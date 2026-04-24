@@ -1,0 +1,64 @@
+{
+  "trial_banner": {
+    "dismiss": "Ignorer",
+    "days_left_one": "Il vous reste 1 jour d'essai.",
+    "days_left_other": "Il vous reste {{count}} jours d'essai.",
+    "subscribe": "S'abonner"
+  },
+  "sections": {
+    "next_up": {
+      "open": "Ouvrir",
+      "kicker": "Prochaine session",
+      "kicker_soon": "Bientôt disponible",
+      "reschedule": "Reprogrammer",
+      "log_notes": "Notes du journal"
+    },
+    "reschedules": {
+      "open": "Ouvrir",
+      "kicker": "Nécessite votre réponse",
+      "title_one": "{{count}} demande de report en attente",
+      "title_other": "{{count}} demandes de report en attente",
+      "accept": "Accepter",
+      "reject": "Refuser"
+    },
+    "polish": {
+      "kicker": "À peaufiner",
+      "title_one": "{{count}} session en attente des mises à jour du parent",
+      "title_other": "{{count}} sessions en attente de mises à jour par le parent",
+      "body": "Les notes révisées sont envoyées aux parents via le portail.",
+      "cta_some": "Corrigez ceci →",
+      "cta_many": "Tout sur la Pologne en un coup d'œil →",
+      "row_cta": "Polonais →"
+    },
+    "invoicing": {
+      "kicker": "Non facturé",
+      "title_one": "{{count}} La famille d'aujourd'hui a des séances non facturées",
+      "title_other": "{{count}} les familles bénéficient de séances gratuites",
+      "total_uninvoiced": "Total non facturé : {{amount}}",
+      "cta": "Facturer tout →"
+    },
+    "week_ahead": {
+      "kicker": "Cette semaine",
+      "title_one": "{{count}} séance prévue",
+      "title_other": "{{count}} sessions prévues",
+      "open_calendar": "Ouvrir le calendrier →"
+    },
+    "homework": {
+      "kicker": "Devoirs",
+      "title_one": "{{count}} L'élève d'aujourd'hui a des devoirs en attente",
+      "title_other": "{{count}} Les élèves d'aujourd'hui ont des devoirs en attente",
+      "body": "Attendre que les parents (ou les élèves) terminent ce que vous avez demandé.",
+      "see_all": "Voir tous les devoirs →",
+      "overdue": "En retard",
+      "due_date": "{{date}}"
+    },
+    "empty": {
+      "title": "Vous êtes à jour.",
+      "body": "Pas de cours à préparer, rien à peaufiner, aucune facture en attente.",
+      "schedule": "Prendre rendez-vous →",
+      "add_student": "Ajouter un élève →"
+    }
+  },
+  "kicker": "Aujourd'hui",
+  "loading_error": "Impossible de charger votre tableau de bord."
+}

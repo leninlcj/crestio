@@ -1,0 +1,63 @@
+{
+  "actions": {
+    "save": "সংরক্ষণ করুন",
+    "saving": "সংরক্ষণ হচ্ছে…",
+    "saved": "সংরক্ষিত।",
+    "cancel": "বাতিল করুন",
+    "delete": "মুছুন",
+    "deleting": "মুছে ফেলা হচ্ছে…",
+    "edit": "সম্পাদনা",
+    "archive": "আর্কাইভ",
+    "unarchive": "আনআর্কাইভ",
+    "confirm": "নিশ্চিত করুন",
+    "close": "বন্ধ করুন",
+    "back": "পিছনে",
+    "next": "পরবর্তী",
+    "new": "নতুন",
+    "open": "খোলা",
+    "loading": "লোড হচ্ছে…",
+    "search_placeholder": "অনুসন্ধান…",
+    "not_found": "মিলেনি"
+  },
+  "nav": {
+    "overview": "অवलোকন",
+    "calendar": "ক্যালেন্ডার",
+    "sessions": "সেশনসমূহ",
+    "students": "শিক্ষার্থীরা",
+    "households": "পরিবারসমূহ",
+    "messages": "বার্তা",
+    "lesson_plans": "পাঠ পরিকল্পনা",
+    "invoices": "ইনভয়েসসমূহ",
+    "tutors": "শিক্ষকবৃন্দ",
+    "payouts": "পেমআউট",
+    "settings": "সেটিংস",
+    "help_support": "সহায়তা ও সমর্থন",
+    "language": "ভাষা",
+    "billing": "বিলিং",
+    "sign_out": "সাইন আউট",
+    "signed_in_as": "হিসেবে সাইন ইন করেছেন",
+    "owner_tools": "মালিকের সরঞ্জাম",
+    "test_accounts": "পরীক্ষামূলক অ্যাকাউন্ট",
+    "more": "আরও"
+  },
+  "status": {
+    "draft": "খসড়া",
+    "sent": "প্রেরিত",
+    "paid": "পেইড",
+    "unpaid": "বেতনবিহীন",
+    "overdue": "বকেয়া",
+    "void": "শূন্য",
+    "scheduled": "নির্ধারিত",
+    "completed": "সম্পন্ন",
+    "cancelled": "বাতিল",
+    "no_show": "উপস্থিতি নেই"
+  },
+  "empty": {
+    "no_results": "কোনও ফলাফল নেই।",
+    "try_different_search": "অন্য কোনো অনুসন্ধান চেষ্টা করুন।"
+  },
+  "errors": {
+    "generic": "কিছু একটা ভুল হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "not_signed_in": "সাইন ইন করা নেই।"
+  }
+}

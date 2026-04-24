@@ -1,0 +1,64 @@
+{
+  "trial_banner": {
+    "dismiss": "关闭",
+    "days_left_one": "您的试用期还剩1天。",
+    "days_left_other": "您的试用期还剩{{count}}天。",
+    "subscribe": "订阅"
+  },
+  "sections": {
+    "next_up": {
+      "open": "打开",
+      "kicker": "下次会议",
+      "kicker_soon": "即将开始",
+      "reschedule": "改期",
+      "log_notes": "日志记录"
+    },
+    "reschedules": {
+      "open": "打开",
+      "kicker": "需要您的回复",
+      "title_one": "{{count}} 待处理的改期请求",
+      "title_other": "{{count}} 待处理的改期请求",
+      "accept": "接受",
+      "reject": "拒绝"
+    },
+    "polish": {
+      "kicker": "需要润色",
+      "title_one": "{{count}} 当前会话正在等待父级更新",
+      "title_other": "{{count}} 正在等待父级更新的会话",
+      "body": "经过整理的笔记已通过门户网站发送给家长。",
+      "cta_some": "润色这些 →",
+      "cta_many": "波兰全景视图 →",
+      "row_cta": "波兰 →"
+    },
+    "invoicing": {
+      "kicker": "未开票",
+      "title_one": "{{count}} 该家庭有未结算的疗程",
+      "title_other": "{{count}} 如今的家庭有未计费的咨询时段",
+      "total_uninvoiced": "未开票总额：{{amount}}",
+      "cta": "开具所有发票 →"
+    },
+    "week_ahead": {
+      "kicker": "本周",
+      "title_one": "{{count}} 今日会议安排",
+      "title_other": "{{count}} 今日安排的会议",
+      "open_calendar": "打开日历 →"
+    },
+    "homework": {
+      "kicker": "家庭作业",
+      "title_one": "{{count}} 现在的学生还有未完成的作业",
+      "title_other": "{{count}} 现在的学生还有未完成的作业",
+      "body": "等待家长（或学生）完成你布置的任务。",
+      "see_all": "查看所有作业 →",
+      "overdue": "逾期",
+      "due_date": "来源：{{date}}"
+    },
+    "empty": {
+      "title": "你已经全部补完了。",
+      "body": "无需准备课程，无需润色内容，也没有待处理的发票。",
+      "schedule": "预约课程 →",
+      "add_student": "添加学生 →"
+    }
+  },
+  "kicker": "今天",
+  "loading_error": "无法加载您的仪表板。"
+}
