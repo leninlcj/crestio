@@ -24,7 +24,7 @@ interface Props {
   actions?: ReactNode;
 }
 
-type NavItem = { href: string; labelKey: string; match: (p: string) => boolean; requires?: 'multi_tutor' | 'households' };
+type NavItem = { href: string; labelKey: string; match: (p: string) => boolean; requires?: 'multi_tutor' | 'households' | 'files_library' };
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/app', labelKey: 'nav.overview', match: (p) => p === '/app' },
@@ -34,6 +34,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/app/households', labelKey: 'nav.households', match: (p) => p.startsWith('/app/households'), requires: 'households' },
   { href: '/app/messages', labelKey: 'nav.messages', match: (p) => p.startsWith('/app/messages') },
   { href: '/app/lesson-plans', labelKey: 'nav.lesson_plans', match: (p) => p.startsWith('/app/lesson-plans') },
+  { href: '/app/files', labelKey: 'nav.files', match: (p) => p.startsWith('/app/files'), requires: 'files_library' },
   { href: '/app/invoices', labelKey: 'nav.invoices', match: (p) => p.startsWith('/app/invoices') },
   { href: '/app/tutors', labelKey: 'nav.tutors', match: (p) => p.startsWith('/app/tutors'), requires: 'multi_tutor' },
   { href: '/app/payouts', labelKey: 'nav.payouts', match: (p) => p.startsWith('/app/payouts'), requires: 'multi_tutor' },
@@ -56,6 +57,11 @@ export default function Layout({ children, title, subtitle, actions }: Props) {
     }
     // Households nav entry: hidden on Solo plan.
     if (item.requires === 'households') {
+      return planTier !== 'solo';
+    }
+    // /app/files nav entry: Team-only (Solo gets the inline Files tab on
+    // student detail; the org-wide page is a Team feature).
+    if (item.requires === 'files_library') {
       return planTier !== 'solo';
     }
     return true;
