@@ -214,5 +214,67 @@
     "downgrade_solo_note": "Applies at the end of your current billing cycle.",
     "manage_in_portal": "Manage in portal",
     "gst_note": "Payments handled by Stripe. All prices in Australian Dollars, inclusive of GST where applicable."
+  },
+  "referrals_page": {
+    "page": {
+      "subtitle": "Referrals",
+      "title": "Settings"
+    },
+    "loading": "Loading…",
+    "copy_prompt": "Copy this:",
+    "message_template": "Hey — I've been using Crestio to manage my tutoring. It's actually good. Here's 25% off your first month if you want to try: {{link}}",
+    "share": {
+      "eyebrow": "Referrals",
+      "heading": "Share Crestio. Get 25% off each month you refer a friend.",
+      "body": "When a friend signs up using your code and their trial converts, you both get 25% off your next month.",
+      "code_label": "Your referral code",
+      "link_label": "Your share link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copy_message": "Copy message template",
+      "message_copied": "Message copied",
+      "share_email": "Share by email",
+      "email_subject": "Try Crestio"
+    },
+    "history": {
+      "eyebrow": "Your referrals",
+      "heading": "Conversion history",
+      "usage_line": "You've used <bold>{{used}}</bold> of <bold>{{max}}</bold> referrals this year.",
+      "stat_sent": "Sent",
+      "stat_converted": "Converted",
+      "stat_pending": "Pending",
+      "at_cap": "You've hit this year's referral cap. New referrals still get their 25% discount, but you won't earn more credits until the cap resets in January.",
+      "row_title": "A tutor you referred",
+      "signed_up_prefix": "Signed up {{when}}",
+      "converted_suffix": " · converted {{when}}",
+      "earned_suffix": "{{amount}} earned",
+      "empty": "No referrals yet. Share your link above to get started.",
+      "status_converted": "Converted",
+      "status_pending": "Pending"
+    },
+    "credits": {
+      "eyebrow": "Your credits",
+      "heading": "Credit balance",
+      "available_suffix": "available",
+      "footnote": "Applies automatically to your next invoice. Credits expire 90 days after issue.",
+      "history_eyebrow": "History",
+      "applied_prefix": "Applied {{when}}",
+      "expired": "Expired",
+      "pending_expires": "Pending · expires {{date}}",
+      "earned_prefix": "Earned {{when}}",
+      "row_summary": "{{amount}} · {{source}}",
+      "empty": "No credits yet.",
+      "source_referral_bonus": "Referral bonus",
+      "source_referral_welcome": "Welcome credit",
+      "source_manual_adjustment": "Manual adjustment"
+    },
+    "relative": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "days_ago_one": "{{count}} day ago",
+      "days_ago_other": "{{count}} days ago",
+      "weeks_ago_one": "{{count}} week ago",
+      "weeks_ago_other": "{{count}} weeks ago"
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
@@ -25,6 +26,7 @@ type SessionRow = {
 };
 
 function OwnerTestAccountsInner() {
+  const { t } = useTranslation('owner');
   const router = useRouter();
   const [authChecked, setAuthChecked] = useState(false);
   const [allowed, setAllowed] = useState(false);
@@ -63,7 +65,7 @@ function OwnerTestAccountsInner() {
       headers: { Authorization: `Bearer ${session.access_token}` },
     });
     if (!res.ok) {
-      setError('Could not load test accounts.');
+      setError(t('test_accounts.errors.load_failed'));
       setLoading(false);
       return;
     }
@@ -89,7 +91,7 @@ function OwnerTestAccountsInner() {
     setCreating(false);
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not create test account.');
+      setError(payload?.error ?? t('test_accounts.errors.create_failed'));
       return;
     }
     const payload = await res.json();
@@ -111,7 +113,7 @@ function OwnerTestAccountsInner() {
     setBusyId(null);
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not generate login link.');
+      setError(payload?.error ?? t('test_accounts.errors.login_link_failed'));
       return;
     }
     const { login_url } = await res.json();
@@ -120,7 +122,7 @@ function OwnerTestAccountsInner() {
   }
 
   async function deleteAccount(userId: string, email: string) {
-    if (!window.confirm(`Delete test account ${email}? This deletes the auth user and cannot be undone.`)) return;
+    if (!window.confirm(t('test_accounts.list.confirm_delete', { email }))) return;
     setBusyId(userId);
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) { setBusyId(null); return; }
@@ -131,7 +133,7 @@ function OwnerTestAccountsInner() {
     setBusyId(null);
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not delete.');
+      setError(payload?.error ?? t('test_accounts.errors.delete_failed'));
       return;
     }
     await reload();
@@ -141,32 +143,30 @@ function OwnerTestAccountsInner() {
   if (!allowed) return null;
 
   return (
-    <Layout subtitle="Owner tools" title="Test accounts">
+    <Layout subtitle={t('test_accounts.page.subtitle')} title={t('test_accounts.page.title')}>
       <div className="card p-5 mb-6 bg-amber-soft/60 border-amber/40">
         <div className="text-sm text-amber-ink leading-relaxed">
-          <span className="font-medium">Test accounts.</span>{' '}
-          These are pre-created test accounts you own. Logging in as one opens a new session
-          bounded by the same security rules as any real user. You never see other users' data
-          through this flow.
+          <span className="font-medium">{t('test_accounts.intro.label')}</span>{' '}
+          {t('test_accounts.intro.body')}
         </div>
       </div>
 
       <section className="mb-10">
-        <h2 className="font-display text-xl tracking-tightest mb-3">Your test accounts</h2>
+        <h2 className="font-display text-xl tracking-tightest mb-3">{t('test_accounts.list.heading')}</h2>
         {loading ? (
-          <div className="card p-5 text-sm text-ink-muted">Loading…</div>
+          <div className="card p-5 text-sm text-ink-muted">{t('test_accounts.list.loading')}</div>
         ) : accounts.length === 0 ? (
-          <div className="card p-5 text-sm text-ink-muted">No test accounts yet.</div>
+          <div className="card p-5 text-sm text-ink-muted">{t('test_accounts.list.empty')}</div>
         ) : (
           <div className="table-wrap">
             <table className="table">
               <thead>
                 <tr>
-                  <th>Role</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Created</th>
-                  <th>Last login</th>
+                  <th>{t('test_accounts.list.col_role')}</th>
+                  <th>{t('test_accounts.list.col_name')}</th>
+                  <th>{t('test_accounts.list.col_email')}</th>
+                  <th>{t('test_accounts.list.col_created')}</th>
+                  <th>{t('test_accounts.list.col_last_login')}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -174,7 +174,7 @@ function OwnerTestAccountsInner() {
                 {accounts.map((a) => (
                   <tr key={a.user_id}>
                     <td><span className="badge-neutral text-2xs">{a.role}</span></td>
-                    <td className="text-ink">{a.name ?? '—'}</td>
+                    <td className="text-ink">{a.name ?? t('test_accounts.list.name_dash')}</td>
                     <td className="font-mono text-2xs text-ink-muted">{a.email}</td>
                     <td className="text-2xs text-ink-soft">
                       {new Date(a.created_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
@@ -182,7 +182,7 @@ function OwnerTestAccountsInner() {
                     <td className="text-2xs text-ink-soft">
                       {a.last_login
                         ? new Date(a.last_login).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })
-                        : '—'}
+                        : t('test_accounts.list.last_login_dash')}
                     </td>
                     <td className="text-right">
                       <div className="flex items-center gap-2 justify-end">
@@ -191,14 +191,14 @@ function OwnerTestAccountsInner() {
                           disabled={busyId === a.user_id}
                           className="btn-primary text-xs"
                         >
-                          {busyId === a.user_id ? '…' : 'Log in as test'}
+                          {busyId === a.user_id ? t('test_accounts.list.login_busy') : t('test_accounts.list.login_button')}
                         </button>
                         <button
                           onClick={() => deleteAccount(a.user_id, a.email)}
                           disabled={busyId === a.user_id}
                           className="btn-ghost text-xs text-claret"
                         >
-                          Delete
+                          {t('test_accounts.list.delete_button')}
                         </button>
                       </div>
                     </td>
@@ -211,52 +211,51 @@ function OwnerTestAccountsInner() {
       </section>
 
       <section className="mb-10">
-        <h2 className="font-display text-xl tracking-tightest mb-3">Create test account</h2>
+        <h2 className="font-display text-xl tracking-tightest mb-3">{t('test_accounts.create.heading')}</h2>
         <form onSubmit={createAccount} className="card p-5 space-y-3 max-w-xl">
           <div className="grid md:grid-cols-2 gap-3">
             <div>
-              <label className="label">Role</label>
+              <label className="label">{t('test_accounts.create.role_label')}</label>
               <select className="input" value={role} onChange={(e) => setRole(e.target.value as any)}>
-                <option value="tutor">Tutor (inside your org)</option>
-                <option value="parent">Parent (portal)</option>
+                <option value="tutor">{t('test_accounts.create.role_tutor')}</option>
+                <option value="parent">{t('test_accounts.create.role_parent')}</option>
               </select>
             </div>
             <div>
-              <label className="label">Name</label>
+              <label className="label">{t('test_accounts.create.name_label')}</label>
               <input
                 className="input"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Test Tutor Mai"
+                placeholder={t('test_accounts.create.name_placeholder')}
               />
             </div>
           </div>
           <div>
-            <label className="label">Email (optional — auto-generated if blank)</label>
+            <label className="label">{t('test_accounts.create.email_label')}</label>
             <input
               className="input"
               type="email"
               value={customEmail}
               onChange={(e) => setCustomEmail(e.target.value)}
-              placeholder="test-tutor-abc123@crestio.test"
+              placeholder={t('test_accounts.create.email_placeholder')}
             />
           </div>
           <button type="submit" disabled={creating || !fullName.trim()} className="btn-primary text-sm">
-            {creating ? 'Creating…' : 'Create test account'}
+            {creating ? t('test_accounts.create.creating') : t('test_accounts.create.submit')}
           </button>
           {justCreated && (
             <div className="card p-4 bg-forest-soft/60 border-forest/30">
-              <div className="text-sm text-forest-ink mb-1 font-medium">Test account created.</div>
+              <div className="text-sm text-forest-ink mb-1 font-medium">{t('test_accounts.create.success_title')}</div>
               <div className="text-2xs text-forest-ink/80 mb-1">
-                Email: <span className="font-mono">{justCreated.email}</span>
+                {t('test_accounts.create.success_email_label')} <span className="font-mono">{justCreated.email}</span>
               </div>
               <div className="text-2xs text-forest-ink/80 mb-1">
-                Initial password:{' '}
+                {t('test_accounts.create.success_password_label')}{' '}
                 <span className="font-mono break-all select-all">{justCreated.password}</span>
               </div>
               <div className="text-2xs text-forest-ink/70">
-                Save this password now — it's shown once. Or click "Log in as test" in the table above to get
-                a magic-link login.
+                {t('test_accounts.create.success_hint')}
               </div>
             </div>
           )}
@@ -265,9 +264,9 @@ function OwnerTestAccountsInner() {
       </section>
 
       <section>
-        <h2 className="font-display text-xl tracking-tightest mb-3">Recent test sessions</h2>
+        <h2 className="font-display text-xl tracking-tightest mb-3">{t('test_accounts.recent.heading')}</h2>
         {recentSessions.length === 0 ? (
-          <div className="card p-5 text-sm text-ink-muted">No test-account logins yet.</div>
+          <div className="card p-5 text-sm text-ink-muted">{t('test_accounts.recent.empty')}</div>
         ) : (
           <ul className="space-y-2">
             {recentSessions.map((s) => {
@@ -276,13 +275,13 @@ function OwnerTestAccountsInner() {
                 <li key={s.id} className="card p-3 flex items-center justify-between text-xs">
                   <div>
                     <span className="text-ink">{acct?.email ?? s.test_account_user_id}</span>
-                    <span className="text-ink-soft"> · {acct?.role ?? 'unknown'}</span>
+                    <span className="text-ink-soft"> · {acct?.role ?? t('test_accounts.recent.role_unknown')}</span>
                   </div>
                   <div className="text-ink-soft text-2xs">
                     {new Date(s.started_at).toLocaleString(activeLocale(), {
                       day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit',
                     })}
-                    {s.ended_at && ' · ended'}
+                    {s.ended_at && t('test_accounts.recent.ended_suffix')}
                     {s.ip_address && ` · ${s.ip_address}`}
                   </div>
                 </li>

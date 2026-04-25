@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation, Trans } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import SettingsTabs from '../../../components/SettingsTabs';
@@ -49,22 +50,27 @@ function formatAud(cents: number): string {
   }).format(cents / 100);
 }
 
-function relativeDate(iso: string): string {
-  const now = Date.now();
-  const t = new Date(iso).getTime();
-  const days = Math.floor((now - t) / 86_400_000);
-  if (days === 0) return 'Today';
-  if (days === 1) return 'Yesterday';
-  if (days < 7) return `${days} days ago`;
-  if (days < 14) return '1 week ago';
-  if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
-  return new Date(iso).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
+function useRelativeDate() {
+  const { t } = useTranslation('settings');
+  return (iso: string): string => {
+    const now = Date.now();
+    const ts = new Date(iso).getTime();
+    const days = Math.floor((now - ts) / 86_400_000);
+    if (days === 0) return t('referrals_page.relative.today');
+    if (days === 1) return t('referrals_page.relative.yesterday');
+    if (days < 7) return t('referrals_page.relative.days_ago', { count: days });
+    if (days < 14) return t('referrals_page.relative.weeks_ago', { count: 1 });
+    if (days < 30) return t('referrals_page.relative.weeks_ago', { count: Math.floor(days / 7) });
+    return new Date(iso).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
+  };
 }
 
 function ReferralsInner() {
+  const { t } = useTranslation('settings');
   const router = useRouter();
   const { membership } = useMembership();
   const isOwner = membership?.role === 'owner';
+  const relativeDate = useRelativeDate();
 
   const [me, setMe] = useState<MeResponse | null>(null);
   const [history, setHistory] = useState<HistoryResponse | null>(null);
@@ -97,42 +103,41 @@ function ReferralsInner() {
       setCopied(kind);
       setTimeout(() => setCopied((c) => (c === kind ? null : c)), 2000);
     } catch {
-      window.prompt('Copy this:', value);
+      window.prompt(t('referrals_page.copy_prompt'), value);
     }
   }
 
   if (loading || !me) {
     return (
-      <Layout subtitle="Referrals" title="Settings">
+      <Layout subtitle={t('referrals_page.page.subtitle')} title={t('referrals_page.page.title')}>
         <SettingsTabs />
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <div className="card p-6 text-sm text-ink-muted">{t('referrals_page.loading')}</div>
       </Layout>
     );
   }
 
-  const messageTemplate =
-    `Hey — I've been using Crestio to manage my tutoring. It's actually good. Here's 25% off your first month if you want to try: ${me.share_link}`;
+  const messageTemplate = t('referrals_page.message_template', { link: me.share_link });
   const atCap = me.referrals_remaining_this_year <= 0;
 
   return (
-    <Layout subtitle="Referrals" title="Settings">
+    <Layout subtitle={t('referrals_page.page.subtitle')} title={t('referrals_page.page.title')}>
       <SettingsTabs />
 
       <div className="max-w-3xl space-y-6">
         {/* Top: share card */}
         <div className="card p-8 space-y-5">
           <div>
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Referrals</div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('referrals_page.share.eyebrow')}</div>
             <h2 className="font-display text-2xl md:text-3xl tracking-tightest text-ink mb-2">
-              Share Crestio. Get 25% off each month you refer a friend.
+              {t('referrals_page.share.heading')}
             </h2>
             <p className="text-sm text-ink-muted leading-relaxed">
-              When a friend signs up using your code and their trial converts, you both get 25% off your next month.
+              {t('referrals_page.share.body')}
             </p>
           </div>
 
           <div>
-            <label className="label">Your referral code</label>
+            <label className="label">{t('referrals_page.share.code_label')}</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -146,13 +151,13 @@ function ReferralsInner() {
                 onClick={() => copy('code', me.code)}
                 className="btn-secondary text-xs px-4"
               >
-                {copied === 'code' ? 'Copied' : 'Copy'}
+                {copied === 'code' ? t('referrals_page.share.copied') : t('referrals_page.share.copy')}
               </button>
             </div>
           </div>
 
           <div>
-            <label className="label">Your share link</label>
+            <label className="label">{t('referrals_page.share.link_label')}</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -166,7 +171,7 @@ function ReferralsInner() {
                 onClick={() => copy('link', me.share_link)}
                 className="btn-secondary text-xs px-4"
               >
-                {copied === 'link' ? 'Copied' : 'Copy'}
+                {copied === 'link' ? t('referrals_page.share.copied') : t('referrals_page.share.copy')}
               </button>
             </div>
           </div>
@@ -177,13 +182,13 @@ function ReferralsInner() {
               onClick={() => copy('message', messageTemplate)}
               className="btn-ghost text-xs"
             >
-              {copied === 'message' ? 'Message copied' : 'Copy message template'}
+              {copied === 'message' ? t('referrals_page.share.message_copied') : t('referrals_page.share.copy_message')}
             </button>
             <a
-              href={`mailto:?subject=${encodeURIComponent('Try Crestio')}&body=${encodeURIComponent(messageTemplate)}`}
+              href={`mailto:?subject=${encodeURIComponent(t('referrals_page.share.email_subject'))}&body=${encodeURIComponent(messageTemplate)}`}
               className="btn-ghost text-xs"
             >
-              Share by email
+              {t('referrals_page.share.share_email')}
             </a>
           </div>
         </div>
@@ -192,23 +197,28 @@ function ReferralsInner() {
         <div className="card p-8 space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Your referrals</div>
-              <h2 className="font-display text-xl tracking-tightest">Conversion history</h2>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('referrals_page.history.eyebrow')}</div>
+              <h2 className="font-display text-xl tracking-tightest">{t('referrals_page.history.heading')}</h2>
             </div>
             <div className="text-2xs text-ink-soft">
-              You've used <strong>{me.referrals_this_year}</strong> of <strong>{me.max_referrals_per_year}</strong> referrals this year.
+              <Trans
+                ns="settings"
+                i18nKey="referrals_page.history.usage_line"
+                values={{ used: me.referrals_this_year, max: me.max_referrals_per_year }}
+                components={{ bold: <strong /> }}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3 text-center py-2">
-            <Stat label="Sent" value={me.stats.total_sent} />
-            <Stat label="Converted" value={me.stats.converted} tone="success" />
-            <Stat label="Pending" value={me.stats.pending} tone="warning" />
+            <Stat label={t('referrals_page.history.stat_sent')} value={me.stats.total_sent} />
+            <Stat label={t('referrals_page.history.stat_converted')} value={me.stats.converted} tone="success" />
+            <Stat label={t('referrals_page.history.stat_pending')} value={me.stats.pending} tone="warning" />
           </div>
 
           {atCap && (
             <div className="text-xs text-amber-ink bg-amber-soft/50 border border-amber/40 rounded p-3">
-              You've hit this year's referral cap. New referrals still get their 25% discount, but you won't earn more credits until the cap resets in January.
+              {t('referrals_page.history.at_cap')}
             </div>
           )}
 
@@ -217,16 +227,18 @@ function ReferralsInner() {
               {history.conversions.map((c) => (
                 <li key={c.id} className="py-3 flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <div className="text-sm text-ink">A tutor you referred</div>
+                    <div className="text-sm text-ink">{t('referrals_page.history.row_title')}</div>
                     <div className="text-2xs text-ink-soft">
-                      Signed up {relativeDate(c.signed_up_at)}
-                      {c.status === 'converted' && c.converted_at ? ` · converted ${relativeDate(c.converted_at)}` : ''}
+                      {t('referrals_page.history.signed_up_prefix', { when: relativeDate(c.signed_up_at) })}
+                      {c.status === 'converted' && c.converted_at
+                        ? t('referrals_page.history.converted_suffix', { when: relativeDate(c.converted_at) })
+                        : ''}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     {c.credit_earned_cents != null && c.credit_earned_cents > 0 && (
                       <span className="text-xs text-forest-ink font-medium">
-                        {formatAud(c.credit_earned_cents)} earned
+                        {t('referrals_page.history.earned_suffix', { amount: formatAud(c.credit_earned_cents) })}
                       </span>
                     )}
                     <ConversionBadge status={c.status} />
@@ -236,7 +248,7 @@ function ReferralsInner() {
             </ul>
           ) : (
             <div className="text-sm text-ink-muted text-center py-6">
-              No referrals yet. Share your link above to get started.
+              {t('referrals_page.history.empty')}
             </div>
           )}
         </div>
@@ -244,37 +256,41 @@ function ReferralsInner() {
         {/* Bottom: credits */}
         <div className="card p-8 space-y-5">
           <div>
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Your credits</div>
-            <h2 className="font-display text-xl tracking-tightest">Credit balance</h2>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('referrals_page.credits.eyebrow')}</div>
+            <h2 className="font-display text-xl tracking-tightest">{t('referrals_page.credits.heading')}</h2>
           </div>
 
           <div className="flex items-baseline gap-2">
             <span className="font-display text-4xl tracking-tightest text-ink">
               {formatAud(me.credits_available_cents)}
             </span>
-            <span className="text-sm text-ink-muted">available</span>
+            <span className="text-sm text-ink-muted">{t('referrals_page.credits.available_suffix')}</span>
           </div>
           <div className="text-xs text-ink-muted -mt-3">
-            Applies automatically to your next invoice. Credits expire 90 days after issue.
+            {t('referrals_page.credits.footnote')}
           </div>
 
           {history?.credits && history.credits.length > 0 ? (
             <div className="pt-3 border-t border-rule">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">History</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('referrals_page.credits.history_eyebrow')}</div>
               <ul className="divide-y divide-ruleSoft text-sm">
                 {history.credits.map((c) => {
                   const expired = !c.applied_at && new Date(c.expires_at).getTime() < Date.now();
                   const statusText = c.applied_at
-                    ? `Applied ${relativeDate(c.applied_at)}`
-                    : expired ? 'Expired'
-                    : `Pending · expires ${new Date(c.expires_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`;
-                  const sourceLabel = sourceDisplay(c.source);
+                    ? t('referrals_page.credits.applied_prefix', { when: relativeDate(c.applied_at) })
+                    : expired ? t('referrals_page.credits.expired')
+                    : t('referrals_page.credits.pending_expires', {
+                        date: new Date(c.expires_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' }),
+                      });
+                  const sourceLabel = sourceDisplay(c.source, t);
                   return (
                     <li key={c.id} className="py-3 flex items-center justify-between gap-3">
                       <div>
-                        <div className="text-ink">{formatAud(c.amount_cents)} · {sourceLabel}</div>
+                        <div className="text-ink">
+                          {t('referrals_page.credits.row_summary', { amount: formatAud(c.amount_cents), source: sourceLabel })}
+                        </div>
                         <div className="text-2xs text-ink-soft">
-                          Earned {relativeDate(c.issued_at)}
+                          {t('referrals_page.credits.earned_prefix', { when: relativeDate(c.issued_at) })}
                         </div>
                       </div>
                       <div className={[
@@ -290,7 +306,7 @@ function ReferralsInner() {
             </div>
           ) : (
             <div className="text-sm text-ink-muted text-center pt-4 border-t border-rule">
-              No credits yet.
+              {t('referrals_page.credits.empty')}
             </div>
           )}
         </div>
@@ -313,16 +329,17 @@ function Stat({ label, value, tone }: { label: string; value: number; tone?: 'su
 }
 
 function ConversionBadge({ status }: { status: string }) {
-  if (status === 'converted') return <Badge variant="success">Converted</Badge>;
-  if (status === 'pending') return <Badge variant="warning">Pending</Badge>;
+  const { t } = useTranslation('settings');
+  if (status === 'converted') return <Badge variant="success">{t('referrals_page.history.status_converted')}</Badge>;
+  if (status === 'pending') return <Badge variant="warning">{t('referrals_page.history.status_pending')}</Badge>;
   return <Badge variant="neutral">{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>;
 }
 
-function sourceDisplay(source: string): string {
+function sourceDisplay(source: string, t: (k: string) => string): string {
   switch (source) {
-    case 'referral_bonus': return 'Referral bonus';
-    case 'referral_welcome': return 'Welcome credit';
-    case 'manual_adjustment': return 'Manual adjustment';
+    case 'referral_bonus': return t('referrals_page.credits.source_referral_bonus');
+    case 'referral_welcome': return t('referrals_page.credits.source_referral_welcome');
+    case 'manual_adjustment': return t('referrals_page.credits.source_manual_adjustment');
     default: return source;
   }
 }

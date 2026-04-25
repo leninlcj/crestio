@@ -42,5 +42,47 @@
   },
   "common": {
     "loading": "Loading…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "Loading…",
+    "not_found_title": "Not found",
+    "not_found_body": "Tutor not found.",
+    "subtitle": "Tutor",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "confirm_delete": "Delete {{name}}? Their past sessions stay, but lose the tutor link. This cannot be undone.",
+    "form": {
+      "name_label": "Name",
+      "email_label": "Email",
+      "phone_label": "Phone",
+      "subjects_label": "Subjects",
+      "pay_rate_label": "Pay rate",
+      "notes_label": "Notes"
+    },
+    "contact_eyebrow": "Contact",
+    "no_contact": "No contact.",
+    "teaches_eyebrow": "Teaches",
+    "no_subjects": "—",
+    "pay_eyebrow": "Pay",
+    "rate_label": "Rate: ",
+    "rate_per_hour": " / hr",
+    "total_label": "Total paid/owed: ",
+    "notes_eyebrow": "Notes",
+    "record_eyebrow": "Record",
+    "recent_heading": "Recent sessions",
+    "no_sessions": "No sessions assigned yet.",
+    "table": {
+      "when": "When",
+      "subject": "Subject",
+      "duration": "Duration",
+      "status": "Status",
+      "pay": "Pay",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} min"
+    }
   }
 }

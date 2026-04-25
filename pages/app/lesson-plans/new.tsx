@@ -1,6 +1,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
@@ -53,6 +54,7 @@ function renderMarkdown(md: string): string {
 }
 
 function NewPlanInner() {
+  const { t } = useTranslation('lesson_plans');
   const router = useRouter();
   const existingId = typeof router.query.id === 'string' ? router.query.id : null;
 
@@ -117,7 +119,7 @@ function NewPlanInner() {
 
   async function generate() {
     if (!form.subject || !form.topic) {
-      setError('Subject and topic are required to generate.');
+      setError(t('new.errors.subject_topic_required'));
       return;
     }
     setError(null);
@@ -125,7 +127,7 @@ function NewPlanInner() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) {
-        throw new Error('Not signed in.');
+        throw new Error(t('new.errors.not_signed_in'));
       }
       const res = await fetch('/api/generate-lesson-plan', {
         method: 'POST',
@@ -145,13 +147,16 @@ function NewPlanInner() {
         payload = await res.json();
       } catch {
         const text = await res.text().catch(() => '');
-        throw new Error(`Server returned ${res.status}${text ? `: ${text.slice(0, 300)}` : ''}`);
+        throw new Error(text
+          ? t('new.errors.server_returned_with_text', { status: res.status, text: text.slice(0, 300) })
+          : t('new.errors.server_returned', { status: res.status }));
       }
       if (res.status === 429) {
         const hours = typeof payload?.hoursUntilReset === 'number' ? payload.hoursUntilReset : null;
-        const msg =
-          payload?.message ||
-          `You've generated ${LESSON_PLAN_DAILY_LIMIT} lesson plans in the last 24 hours. You can generate more${hours ? ` in ${hours} hour${hours === 1 ? '' : 's'}` : ' soon'}.`;
+        const fallback = hours == null
+          ? t('new.errors.rate_limited_soon', { limit: LESSON_PLAN_DAILY_LIMIT })
+          : t('new.errors.rate_limited', { count: hours, limit: LESSON_PLAN_DAILY_LIMIT, hours });
+        const msg = payload?.message || fallback;
         setError(msg);
         setUsage({
           used: LESSON_PLAN_DAILY_LIMIT,
@@ -161,16 +166,16 @@ function NewPlanInner() {
         return;
       }
       if (!res.ok) {
-        throw new Error(payload?.error || `Server returned ${res.status}`);
+        throw new Error(payload?.error || t('new.errors.server_returned', { status: res.status }));
       }
       const plan = typeof payload?.plan === 'string' ? payload.plan : '';
       if (!plan) {
-        throw new Error('Server returned no plan.');
+        throw new Error(t('new.errors.no_plan'));
       }
       setForm({ ...form, content: plan, generated_by_ai: true });
       setPreview(true);
     } catch (e: any) {
-      setError(e?.message ?? 'Something went wrong.');
+      setError(e?.message ?? t('new.errors.generic'));
     } finally {
       setGenerating(false);
     }
@@ -181,7 +186,7 @@ function NewPlanInner() {
     setError(null);
     setSaving(true);
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { setError('Not signed in.'); setSaving(false); return; }
+    if (!session) { setError(t('new.errors.not_signed_in')); setSaving(false); return; }
 
     if (existingId) {
       const { error: err } = await supabase.from('lesson_plans').update({
@@ -197,7 +202,7 @@ function NewPlanInner() {
       router.push('/app/lesson-plans');
     } else {
       const organizationId = await getCurrentOrganizationId();
-      if (!organizationId) { setError('No organisation is linked to your account. Contact support@crestio.ai.'); setSaving(false); return; }
+      if (!organizationId) { setError(t('new.errors.no_organisation')); setSaving(false); return; }
       const { data, error: err } = await supabase.from('lesson_plans').insert({
         owner_id: session.user.id,
         organization_id: organizationId,
@@ -217,50 +222,50 @@ function NewPlanInner() {
 
   async function deletePlan() {
     if (!existingId) return;
-    if (!window.confirm('Delete this lesson plan?')) return;
+    if (!window.confirm(t('new.confirm_delete'))) return;
     await supabase.from('lesson_plans').delete().eq('id', existingId);
     router.push('/app/lesson-plans');
   }
 
   return (
     <Layout
-      subtitle={existingId ? 'Edit plan' : 'Generate plan'}
-      title={existingId ? (form.topic || 'Lesson plan') : 'New lesson plan'}
-      actions={existingId ? <button onClick={deletePlan} className="btn-danger text-xs">Delete</button> : undefined}
+      subtitle={existingId ? t('new.subtitle_edit') : t('new.subtitle_generate')}
+      title={existingId ? (form.topic || t('new.title_default_edit')) : t('new.title_new')}
+      actions={existingId ? <button onClick={deletePlan} className="btn-danger text-xs">{t('new.delete')}</button> : undefined}
     >
       <form onSubmit={save} className="grid lg:grid-cols-2 gap-6">
         <div className="card p-8 space-y-5">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Subject *</label>
+              <label className="label">{t('new.form.subject_label')}</label>
               <input required className="input" value={form.subject}
                 onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                placeholder="e.g. Maths Advanced" />
+                placeholder={t('new.form.subject_placeholder')} />
             </div>
             <div>
-              <label className="label">Year level</label>
+              <label className="label">{t('new.form.year_level_label')}</label>
               <input className="input" value={form.year_level}
                 onChange={(e) => setForm({ ...form, year_level: e.target.value })}
-                placeholder="e.g. Year 11" />
+                placeholder={t('new.form.year_level_placeholder')} />
             </div>
           </div>
           <div>
-            <label className="label">Topic *</label>
+            <label className="label">{t('new.form.topic_label')}</label>
             <input required className="input" value={form.topic}
               onChange={(e) => setForm({ ...form, topic: e.target.value })}
-              placeholder="e.g. Introduction to integration by parts" />
+              placeholder={t('new.form.topic_placeholder')} />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Duration (minutes)</label>
+              <label className="label">{t('new.form.duration_label')}</label>
               <input type="number" min="15" step="15" className="input" value={form.duration_minutes}
                 onChange={(e) => setForm({ ...form, duration_minutes: Number(e.target.value) })} />
             </div>
             <div>
-              <label className="label">Link to student (optional)</label>
+              <label className="label">{t('new.form.student_link_label')}</label>
               <select className="input" value={form.student_id}
                 onChange={(e) => setForm({ ...form, student_id: e.target.value })}>
-                <option value="">—</option>
+                <option value="">{t('new.form.student_none')}</option>
                 {students.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
@@ -269,30 +274,30 @@ function NewPlanInner() {
           <div className="pt-2 border-t border-ruleSoft">
             <button type="button" onClick={generate} disabled={generating}
               className="btn-primary w-full py-3">
-              {generating ? 'Generating plan…' : (form.content ? 'Regenerate plan' : 'Generate plan')}
+              {generating ? t('new.actions.generating') : (form.content ? t('new.actions.regenerate') : t('new.actions.generate'))}
             </button>
             {usage && usage.used >= 15 && (
               <div className="text-2xs text-ink-soft mt-2 text-center">
-                {usage.used} of {usage.limit} daily generations used.
+                {t('new.usage_line', { used: usage.used, limit: usage.limit })}
               </div>
             )}
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="label mb-0">Plan (markdown)</label>
+              <label className="label mb-0">{t('new.form.plan_label')}</label>
               <button type="button" onClick={() => setPreview(!preview)}
                 className="text-2xs uppercase tracking-widest text-ink-muted hover:text-ink">
-                {preview ? 'Edit' : 'Preview'}
+                {preview ? t('new.form.preview_toggle_edit') : t('new.form.preview_toggle_preview')}
               </button>
             </div>
             {preview ? (
               <div className="border border-rule rounded p-5 bg-cream min-h-[16rem] prose-plan"
-                dangerouslySetInnerHTML={{ __html: renderMarkdown(form.content || '_Nothing yet. Generate one or paste your own._') }} />
+                dangerouslySetInnerHTML={{ __html: renderMarkdown(form.content || t('new.form.preview_empty')) }} />
             ) : (
               <textarea rows={14} className="input font-mono text-xs" value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
-                placeholder="# Lesson plan&#10;&#10;## Objectives&#10;- …" />
+                placeholder={t('new.form.plan_placeholder')} />
             )}
           </div>
 
@@ -300,17 +305,17 @@ function NewPlanInner() {
 
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={saving || !form.content} className="btn-primary">
-              {saving ? 'Saving…' : (existingId ? 'Save changes' : 'Save plan')}
+              {saving ? t('new.actions.saving') : (existingId ? t('new.actions.save_changes') : t('new.actions.save_new'))}
             </button>
-            <Link href="/app/lesson-plans" className="btn-ghost">Cancel</Link>
+            <Link href="/app/lesson-plans" className="btn-ghost">{t('new.actions.cancel')}</Link>
           </div>
         </div>
 
         <div className="hidden lg:block">
           <div className="card p-8 sticky top-6">
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Preview</div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('new.form.preview_eyebrow')}</div>
             <div className="prose-plan"
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(form.content || '_Your plan will preview here._') }} />
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(form.content || t('new.form.preview_placeholder')) }} />
           </div>
         </div>
       </form>

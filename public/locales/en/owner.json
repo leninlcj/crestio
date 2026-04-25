@@ -1,1 +1,56 @@
-{}
+{
+  "test_accounts": {
+    "page": {
+      "subtitle": "Owner tools",
+      "title": "Test accounts"
+    },
+    "intro": {
+      "label": "Test accounts.",
+      "body": "These are pre-created test accounts you own. Logging in as one opens a new session bounded by the same security rules as any real user. You never see other users' data through this flow."
+    },
+    "list": {
+      "heading": "Your test accounts",
+      "loading": "Loading…",
+      "empty": "No test accounts yet.",
+      "col_role": "Role",
+      "col_name": "Name",
+      "col_email": "Email",
+      "col_created": "Created",
+      "col_last_login": "Last login",
+      "name_dash": "—",
+      "last_login_dash": "—",
+      "login_busy": "…",
+      "login_button": "Log in as test",
+      "delete_button": "Delete",
+      "confirm_delete": "Delete test account {{email}}? This deletes the auth user and cannot be undone."
+    },
+    "create": {
+      "heading": "Create test account",
+      "role_label": "Role",
+      "role_tutor": "Tutor (inside your org)",
+      "role_parent": "Parent (portal)",
+      "name_label": "Name",
+      "name_placeholder": "e.g. Test Tutor Mai",
+      "email_label": "Email (optional — auto-generated if blank)",
+      "email_placeholder": "test-tutor-abc123@crestio.test",
+      "submit": "Create test account",
+      "creating": "Creating…",
+      "success_title": "Test account created.",
+      "success_email_label": "Email:",
+      "success_password_label": "Initial password:",
+      "success_hint": "Save this password now — it's shown once. Or click \"Log in as test\" in the table above to get a magic-link login."
+    },
+    "recent": {
+      "heading": "Recent test sessions",
+      "empty": "No test-account logins yet.",
+      "role_unknown": "unknown",
+      "ended_suffix": " · ended"
+    },
+    "errors": {
+      "load_failed": "Could not load test accounts.",
+      "create_failed": "Could not create test account.",
+      "login_link_failed": "Could not generate login link.",
+      "delete_failed": "Could not delete."
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
@@ -16,6 +17,8 @@ import {
 } from '../../../lib/utils';
 
 function TutorDetailInner() {
+  const { t } = useTranslation('tutors');
+  const { t: tCommon } = useTranslation('common');
   const router = useRouter();
   const { id } = router.query;
   const [loading, setLoading] = useState(true);
@@ -36,20 +39,20 @@ function TutorDetailInner() {
         const { data: p } = await supabase.from('profiles').select('currency').eq('id', auth.user.id).single();
         if (p?.currency) setCurrency(p.currency);
       }
-      const [{ data: t }, { data: ss }] = await Promise.all([
+      const [{ data: tu }, { data: ss }] = await Promise.all([
         supabase.from('tutors').select('*').eq('id', id).single(),
         supabase.from('sessions').select('*').eq('tutor_id', id).order('scheduled_at', { ascending: false }).limit(20),
       ]);
-      setTutor(t);
+      setTutor(tu);
       setSessions(ss ?? []);
-      if (t) {
+      if (tu) {
         setForm({
-          name: t.name,
-          email: t.email ?? '',
-          phone: t.phone ?? '',
-          subjects: (t.subjects ?? []).join(', '),
-          pay_rate: t.pay_rate_cents ? centsToDollars(t.pay_rate_cents) : '',
-          notes: t.notes ?? '',
+          name: tu.name,
+          email: tu.email ?? '',
+          phone: tu.phone ?? '',
+          subjects: (tu.subjects ?? []).join(', '),
+          pay_rate: tu.pay_rate_cents ? centsToDollars(tu.pay_rate_cents) : '',
+          notes: tu.notes ?? '',
         });
       }
       setLoading(false);
@@ -79,15 +82,15 @@ function TutorDetailInner() {
 
   async function deleteTutor() {
     if (!tutor) return;
-    const ok = window.confirm(`Delete ${tutor.name}? Their past sessions stay, but lose the tutor link. This cannot be undone.`);
+    const ok = window.confirm(t('detail.confirm_delete', { name: tutor.name }));
     if (!ok) return;
     const { error: err } = await supabase.from('tutors').delete().eq('id', tutor.id);
     if (err) { setError(err.message); return; }
     router.push('/app/tutors');
   }
 
-  if (loading) return <Layout title="…"><div className="card p-6 text-sm text-ink-muted">Loading…</div></Layout>;
-  if (!tutor) return <Layout title="Not found"><div className="card p-6 text-sm text-ink-muted">Tutor not found.</div></Layout>;
+  if (loading) return <Layout title={t('detail.loading_title')}><div className="card p-6 text-sm text-ink-muted">{t('detail.loading')}</div></Layout>;
+  if (!tutor) return <Layout title={t('detail.not_found_title')}><div className="card p-6 text-sm text-ink-muted">{t('detail.not_found_body')}</div></Layout>;
 
   const totalOwed = sessions
     .filter((s) => s.status === 'completed')
@@ -95,41 +98,41 @@ function TutorDetailInner() {
 
   return (
     <Layout
-      subtitle="Tutor"
+      subtitle={t('detail.subtitle')}
       title={tutor.name}
-      actions={!editing ? <button onClick={() => setEditing(true)} className="btn-secondary">Edit</button> : undefined}
+      actions={!editing ? <button onClick={() => setEditing(true)} className="btn-secondary">{t('detail.edit')}</button> : undefined}
     >
       {editing && form ? (
         <form onSubmit={save} className="card p-8 space-y-5 max-w-2xl">
           <div>
-            <label className="label">Name</label>
+            <label className="label">{t('detail.form.name_label')}</label>
             <input required className="input" value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="label">Email</label>
+              <label className="label">{t('detail.form.email_label')}</label>
               <input type="email" className="input" value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })} />
             </div>
             <div>
-              <label className="label">Phone</label>
+              <label className="label">{t('detail.form.phone_label')}</label>
               <input className="input" value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             </div>
           </div>
           <div>
-            <label className="label">Subjects</label>
+            <label className="label">{t('detail.form.subjects_label')}</label>
             <input className="input" value={form.subjects}
               onChange={(e) => setForm({ ...form, subjects: e.target.value })} />
           </div>
           <div>
-            <label className="label">Pay rate</label>
+            <label className="label">{t('detail.form.pay_rate_label')}</label>
             <input type="number" min="0" className="input" value={form.pay_rate}
               onChange={(e) => setForm({ ...form, pay_rate: e.target.value })} />
           </div>
           <div>
-            <label className="label">Notes</label>
+            <label className="label">{t('detail.form.notes_label')}</label>
             <textarea rows={3} className="input" value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           </div>
@@ -137,38 +140,38 @@ function TutorDetailInner() {
           <div className="flex items-center justify-between pt-2">
             <div className="flex gap-3">
               <button type="submit" disabled={saving} className="btn-primary">
-                {saving ? 'Saving…' : 'Save'}
+                {saving ? t('detail.saving') : t('detail.save')}
               </button>
-              <button type="button" onClick={() => setEditing(false)} className="btn-ghost">Cancel</button>
+              <button type="button" onClick={() => setEditing(false)} className="btn-ghost">{t('detail.cancel')}</button>
             </div>
-            <button type="button" onClick={deleteTutor} className="btn-danger text-xs">Delete</button>
+            <button type="button" onClick={deleteTutor} className="btn-danger text-xs">{t('detail.delete')}</button>
           </div>
         </form>
       ) : (
         <>
           <div className="grid lg:grid-cols-3 gap-6 mb-8">
             <div className="card p-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Contact</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('detail.contact_eyebrow')}</div>
               <div className="space-y-2 text-sm">
                 {tutor.email && <div>{tutor.email}</div>}
                 {tutor.phone && <div>{tutor.phone}</div>}
-                {!tutor.email && !tutor.phone && <div className="text-ink-soft">No contact.</div>}
+                {!tutor.email && !tutor.phone && <div className="text-ink-soft">{t('detail.no_contact')}</div>}
               </div>
             </div>
             <div className="card p-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Teaches</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('detail.teaches_eyebrow')}</div>
               <div className="text-sm text-ink-muted">
-                {tutor.subjects && tutor.subjects.length > 0 ? tutor.subjects.join(', ') : '—'}
+                {tutor.subjects && tutor.subjects.length > 0 ? tutor.subjects.join(', ') : t('detail.no_subjects')}
               </div>
             </div>
             <div className="card p-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Pay</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('detail.pay_eyebrow')}</div>
               <div className="space-y-2 text-sm">
-                <div><span className="text-ink-muted">Rate: </span>
+                <div><span className="text-ink-muted">{t('detail.rate_label')}</span>
                   <span className="font-mono num">{formatCents(tutor.pay_rate_cents, currency)}</span>
-                  <span className="text-ink-soft text-xs"> / hr</span>
+                  <span className="text-ink-soft text-xs">{t('detail.rate_per_hour')}</span>
                 </div>
-                <div><span className="text-ink-muted">Total paid/owed: </span>
+                <div><span className="text-ink-muted">{t('detail.total_label')}</span>
                   <span className="font-mono num">{formatCents(totalOwed, currency, { showZero: true })}</span>
                 </div>
               </div>
@@ -177,28 +180,28 @@ function TutorDetailInner() {
 
           {tutor.notes && (
             <div className="card p-6 mb-8">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Notes</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('detail.notes_eyebrow')}</div>
               <p className="text-sm leading-relaxed whitespace-pre-wrap">{tutor.notes}</p>
             </div>
           )}
 
           <div className="mb-4">
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Record</div>
-            <h2 className="font-display text-2xl tracking-tightest">Recent sessions</h2>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('detail.record_eyebrow')}</div>
+            <h2 className="font-display text-2xl tracking-tightest">{t('detail.recent_heading')}</h2>
           </div>
 
           {sessions.length === 0 ? (
-            <div className="card p-6 text-sm text-ink-muted">No sessions assigned yet.</div>
+            <div className="card p-6 text-sm text-ink-muted">{t('detail.no_sessions')}</div>
           ) : (
             <div className="table-wrap">
               <table className="table">
                 <thead>
                   <tr>
-                    <th>When</th>
-                    <th>Subject</th>
-                    <th>Duration</th>
-                    <th>Status</th>
-                    <th className="text-right">Pay</th>
+                    <th>{t('detail.table.when')}</th>
+                    <th>{t('detail.table.subject')}</th>
+                    <th>{t('detail.table.duration')}</th>
+                    <th>{t('detail.table.status')}</th>
+                    <th className="text-right">{t('detail.table.pay')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -206,8 +209,8 @@ function TutorDetailInner() {
                     <tr key={s.id} className="row-link"
                       onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
                       <td>{formatDateTime(s.scheduled_at)}</td>
-                      <td className="text-ink-muted">{s.subject ?? '—'}</td>
-                      <td className="text-ink-muted font-mono text-xs">{s.duration_minutes} min</td>
+                      <td className="text-ink-muted">{s.subject ?? t('detail.table.subject_dash')}</td>
+                      <td className="text-ink-muted font-mono text-xs">{t('detail.table.duration_minutes', { count: s.duration_minutes })}</td>
                       <td>
                         <span className={cx(
                           s.status === 'completed' && 'badge-forest',
@@ -215,7 +218,7 @@ function TutorDetailInner() {
                           s.status === 'cancelled' && 'badge-neutral',
                           s.status === 'no_show' && 'badge-claret'
                         )}>
-                          {s.status}
+                          {tCommon(`status.${s.status}`)}
                         </span>
                       </td>
                       <td className="text-right font-mono num text-sm">

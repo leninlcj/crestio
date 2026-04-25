@@ -17,5 +17,53 @@
   },
   "common": {
     "loading": "Loading…"
+  },
+  "new": {
+    "subtitle_edit": "Edit plan",
+    "subtitle_generate": "Generate plan",
+    "title_default_edit": "Lesson plan",
+    "title_new": "New lesson plan",
+    "delete": "Delete",
+    "confirm_delete": "Delete this lesson plan?",
+    "form": {
+      "subject_label": "Subject *",
+      "subject_placeholder": "e.g. Maths Advanced",
+      "year_level_label": "Year level",
+      "year_level_placeholder": "e.g. Year 11",
+      "topic_label": "Topic *",
+      "topic_placeholder": "e.g. Introduction to integration by parts",
+      "duration_label": "Duration (minutes)",
+      "student_link_label": "Link to student (optional)",
+      "student_none": "—",
+      "plan_label": "Plan (markdown)",
+      "plan_placeholder": "# Lesson plan\n\n## Objectives\n- …",
+      "preview_toggle_edit": "Edit",
+      "preview_toggle_preview": "Preview",
+      "preview_empty": "_Nothing yet. Generate one or paste your own._",
+      "preview_placeholder": "_Your plan will preview here._",
+      "preview_eyebrow": "Preview"
+    },
+    "actions": {
+      "generate": "Generate plan",
+      "regenerate": "Regenerate plan",
+      "generating": "Generating plan…",
+      "save_new": "Save plan",
+      "save_changes": "Save changes",
+      "saving": "Saving…",
+      "cancel": "Cancel"
+    },
+    "usage_line": "{{used}} of {{limit}} daily generations used.",
+    "errors": {
+      "subject_topic_required": "Subject and topic are required to generate.",
+      "not_signed_in": "Not signed in.",
+      "no_organisation": "No organisation is linked to your account. Contact support@crestio.ai.",
+      "server_returned": "Server returned {{status}}",
+      "server_returned_with_text": "Server returned {{status}}: {{text}}",
+      "no_plan": "Server returned no plan.",
+      "generic": "Something went wrong.",
+      "rate_limited_one": "You've generated {{limit}} lesson plans in the last 24 hours. You can generate more in {{hours}} hour.",
+      "rate_limited_other": "You've generated {{limit}} lesson plans in the last 24 hours. You can generate more in {{hours}} hours.",
+      "rate_limited_soon": "You've generated {{limit}} lesson plans in the last 24 hours. You can generate more soon."
+    }
   }
 }

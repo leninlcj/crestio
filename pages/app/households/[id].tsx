@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
@@ -58,6 +59,7 @@ type Household = {
 type Tab = 'members' | 'sessions' | 'invoices' | 'notes';
 
 function HouseholdDetailInner() {
+  const { t } = useTranslation('households');
   const router = useRouter();
   const { id } = router.query;
   const { membership } = useMembership();
@@ -88,7 +90,7 @@ function HouseholdDetailInner() {
       headers: { Authorization: `Bearer ${session.access_token}` },
     });
     if (res.status === 404) { router.replace('/app/households'); return; }
-    if (!res.ok) { setError('Could not load household.'); setLoading(false); return; }
+    if (!res.ok) { setError(t('detail.load_failed')); setLoading(false); return; }
     const payload = await res.json();
     setHousehold(payload.household);
     setParents(payload.parents ?? []);
@@ -143,7 +145,7 @@ function HouseholdDetailInner() {
 
   async function archiveHousehold() {
     if (!household) return;
-    if (!window.confirm('Archive this household? Students and parents stay put; the household is hidden from lists.')) return;
+    if (!window.confirm(t('detail.confirm_archive'))) return;
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return;
     const res = await fetch(`/api/households/${household.id}`, {
@@ -167,7 +169,7 @@ function HouseholdDetailInner() {
 
   async function removeStudent(studentId: string) {
     if (!household) return;
-    if (!window.confirm('Remove this student from the household? Sessions and invoices remain intact.')) return;
+    if (!window.confirm(t('detail.members.confirm_remove_student'))) return;
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return;
     await fetch(`/api/households/${household.id}/students`, {
@@ -192,7 +194,7 @@ function HouseholdDetailInner() {
 
   async function removeParent(parentId: string) {
     if (!household) return;
-    if (!window.confirm('Remove this parent from the household? They keep access to their linked students.')) return;
+    if (!window.confirm(t('detail.members.confirm_remove_parent'))) return;
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return;
     await fetch(`/api/households/${household.id}/parents`, {
@@ -206,23 +208,23 @@ function HouseholdDetailInner() {
   const hasPrimary = useMemo(() => parents.some((p) => p.is_primary), [parents]);
 
   if (loading) {
-    return <Layout title="…"><div className="card p-6 text-sm text-ink-muted">Loading…</div></Layout>;
+    return <Layout title={t('detail.loading_title')}><div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div></Layout>;
   }
   if (!household) {
-    return <Layout title="Not found"><div className="card p-6 text-sm text-ink-muted">Household not found.</div></Layout>;
+    return <Layout title={t('detail.not_found_title')}><div className="card p-6 text-sm text-ink-muted">{t('detail.not_found_body')}</div></Layout>;
   }
 
   return (
     <Layout
-      subtitle={household.archived_at ? 'Archived household' : 'Household'}
+      subtitle={household.archived_at ? t('detail.subtitle_archived') : t('detail.subtitle_active')}
       title={household.display_name}
       actions={
         !isTutor ? (
           <>
             {household.archived_at ? (
-              <button onClick={unarchiveHousehold} className="btn-secondary">Unarchive</button>
+              <button onClick={unarchiveHousehold} className="btn-secondary">{t('detail.unarchive')}</button>
             ) : (
-              <button onClick={archiveHousehold} className="btn-ghost text-claret">Archive</button>
+              <button onClick={archiveHousehold} className="btn-ghost text-claret">{t('detail.archive')}</button>
             )}
           </>
         ) : undefined
@@ -242,47 +244,47 @@ function HouseholdDetailInner() {
               autoFocus
             />
             <button onClick={saveName} disabled={savingName} className="btn-primary text-xs">
-              {savingName ? 'Saving…' : 'Save'}
+              {savingName ? t('detail.saving') : t('detail.save')}
             </button>
             <button onClick={() => { setNameDraft(household.display_name); setEditingName(false); }} className="btn-ghost text-xs">
-              Cancel
+              {t('detail.cancel')}
             </button>
           </div>
         ) : (
           !isTutor && (
             <button onClick={() => setEditingName(true)} className="text-2xs text-forest underline underline-offset-2">
-              Edit name
+              {t('detail.edit_name')}
             </button>
           )
         )}
         {parents.length > 0 && parents.find((p) => p.is_primary) && (
           <div className="text-sm text-ink-muted">
-            Billed to <span className="text-ink font-medium">{parents.find((p) => p.is_primary)?.name ?? 'Parent'}</span>
+            {t('detail.billed_to_prefix')} <span className="text-ink font-medium">{parents.find((p) => p.is_primary)?.name ?? t('detail.parent_fallback')}</span>
             {parents.find((p) => p.is_primary)?.email && (
               <span className="text-ink-soft"> · {parents.find((p) => p.is_primary)?.email}</span>
             )}
           </div>
         )}
         {!hasPrimary && (
-          <div className="text-sm text-claret">Needs a primary parent</div>
+          <div className="text-sm text-claret">{t('detail.needs_primary')}</div>
         )}
       </div>
 
       <div className="border-b border-rule mb-6 overflow-x-auto">
         <nav className="flex gap-1 min-w-max" role="tablist">
-          {(['members', 'sessions', 'invoices', 'notes'] as Tab[]).map((t) => (
+          {(['members', 'sessions', 'invoices', 'notes'] as Tab[]).map((tabKey) => (
             <button
-              key={t}
+              key={tabKey}
               type="button"
               role="tab"
-              aria-selected={tab === t}
-              onClick={() => setTab(t)}
+              aria-selected={tab === tabKey}
+              onClick={() => setTab(tabKey)}
               className={cx(
                 'px-4 py-3 text-sm -mb-px border-b-2 transition-colors capitalize',
-                tab === t ? 'border-forest text-ink font-medium' : 'border-transparent text-ink-muted hover:text-ink',
+                tab === tabKey ? 'border-forest text-ink font-medium' : 'border-transparent text-ink-muted hover:text-ink',
               )}
             >
-              {t}
+              {t(`detail.tabs.${tabKey}`)}
             </button>
           ))}
         </nav>
@@ -341,14 +343,15 @@ function MembersTab({
   showAddStudent: boolean;
   setShowAddStudent: (v: boolean) => void;
 }) {
+  const { t } = useTranslation('households');
   return (
     <div className="space-y-8">
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display text-xl tracking-tightest">Parents</h2>
+          <h2 className="font-display text-xl tracking-tightest">{t('detail.members.parents_heading')}</h2>
           {!isTutor && (
             <button onClick={() => setShowAddParent(!showAddParent)} className="btn-ghost text-xs">
-              {showAddParent ? 'Cancel' : '+ Add co-parent'}
+              {showAddParent ? t('detail.members.cancel') : t('detail.members.add_co_parent')}
             </button>
           )}
         </div>
@@ -356,15 +359,15 @@ function MembersTab({
           <AddParentForm householdId={householdId} onDone={() => { setShowAddParent(false); onRefresh(); }} />
         )}
         {parents.length === 0 ? (
-          <div className="card p-5 text-sm text-ink-muted">No parents linked yet.</div>
+          <div className="card p-5 text-sm text-ink-muted">{t('detail.members.no_parents')}</div>
         ) : (
           <ul className="space-y-2">
             {parents.map((p) => (
               <li key={p.parent_id} className="card p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                 <div>
                   <div className="text-sm text-ink">
-                    {p.name ?? '(no name)'}
-                    {p.is_primary && <span className="ml-2 badge-forest text-2xs">Primary</span>}
+                    {p.name ?? t('detail.members.no_name')}
+                    {p.is_primary && <span className="ml-2 badge-forest text-2xs">{t('detail.members.primary_badge')}</span>}
                   </div>
                   {p.email && <div className="text-2xs text-ink-soft">{p.email}</div>}
                 </div>
@@ -372,11 +375,11 @@ function MembersTab({
                   <div className="flex items-center gap-2">
                     {!p.is_primary && (
                       <button onClick={() => onSetPrimary(p.parent_id)} className="btn-ghost text-xs">
-                        Make primary
+                        {t('detail.members.make_primary')}
                       </button>
                     )}
                     <button onClick={() => onRemoveParent(p.parent_id)} className="btn-ghost text-xs text-claret">
-                      Remove
+                      {t('detail.members.remove')}
                     </button>
                   </div>
                 )}
@@ -388,10 +391,10 @@ function MembersTab({
 
       <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display text-xl tracking-tightest">Students</h2>
+          <h2 className="font-display text-xl tracking-tightest">{t('detail.members.students_heading')}</h2>
           {!isTutor && (
             <button onClick={() => setShowAddStudent(!showAddStudent)} className="btn-ghost text-xs">
-              {showAddStudent ? 'Cancel' : '+ Add sibling'}
+              {showAddStudent ? t('detail.members.cancel') : t('detail.members.add_sibling')}
             </button>
           )}
         </div>
@@ -403,7 +406,7 @@ function MembersTab({
           />
         )}
         {students.length === 0 ? (
-          <div className="card p-5 text-sm text-ink-muted">No students in this household yet.</div>
+          <div className="card p-5 text-sm text-ink-muted">{t('detail.members.no_students')}</div>
         ) : (
           <ul className="space-y-2">
             {students.map((s) => (
@@ -419,7 +422,7 @@ function MembersTab({
                 </div>
                 {!isTutor && (
                   <button onClick={() => onRemoveStudent(s.id)} className="btn-ghost text-xs text-claret">
-                    Remove from household
+                    {t('detail.members.remove_from_household')}
                   </button>
                 )}
               </li>
@@ -432,6 +435,7 @@ function MembersTab({
 }
 
 function AddParentForm({ householdId, onDone }: { householdId: string; onDone: () => void }) {
+  const { t } = useTranslation('households');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [parents, setParents] = useState<Array<{ id: string; name: string | null; email: string }>>([]);
@@ -465,7 +469,7 @@ function AddParentForm({ householdId, onDone }: { householdId: string; onDone: (
     setSubmitting(false);
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not add parent.');
+      setError(payload?.error ?? t('detail.add_parent.error_default'));
       return;
     }
     onDone();
@@ -474,23 +478,23 @@ function AddParentForm({ householdId, onDone }: { householdId: string; onDone: (
   return (
     <form onSubmit={submit} className="card p-4 mb-3 space-y-3 bg-forest-soft/30">
       {loading ? (
-        <div className="text-sm text-ink-muted">Loading parents…</div>
+        <div className="text-sm text-ink-muted">{t('detail.add_parent.loading')}</div>
       ) : (
         <>
           <select className="input" value={selected} onChange={(e) => setSelected(e.target.value)}>
-            <option value="">Pick an existing parent…</option>
+            <option value="">{t('detail.add_parent.select_placeholder')}</option>
             {parents.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.name ?? '(no name)'} · {p.email}
+                {p.name ?? t('detail.add_parent.no_name')} · {p.email}
               </option>
             ))}
           </select>
           <div className="text-2xs text-ink-soft">
-            To add a brand-new parent, invite them from the student's page — they'll be created when they accept.
+            {t('detail.add_parent.invite_hint')}
           </div>
           <div className="flex gap-2">
             <button type="submit" disabled={!selected || submitting} className="btn-primary text-xs">
-              {submitting ? 'Adding…' : 'Add parent'}
+              {submitting ? t('detail.add_parent.submitting') : t('detail.add_parent.submit')}
             </button>
           </div>
           {error && <div className="text-xs text-claret">{error}</div>}
@@ -509,6 +513,7 @@ function AddStudentForm({
   existingStudentIds: Set<string>;
   onDone: () => void;
 }) {
+  const { t } = useTranslation('households');
   const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState<Array<{ id: string; name: string; household_id: string | null }>>([]);
   const [selected, setSelected] = useState('');
@@ -535,7 +540,7 @@ function AddStudentForm({
     setError(null);
     const selectedStudent = students.find((s) => s.id === selected);
     const otherHousehold = !!(selectedStudent?.household_id && selectedStudent.household_id !== householdId);
-    if (otherHousehold && !window.confirm('This student is in another household. Move them to this household?')) {
+    if (otherHousehold && !window.confirm(t('detail.add_student.confirm_move'))) {
       setSubmitting(false);
       return;
     }
@@ -549,7 +554,7 @@ function AddStudentForm({
     setSubmitting(false);
     if (!res.ok) {
       const payload = await res.json().catch(() => ({}));
-      setError(payload?.error ?? 'Could not add student.');
+      setError(payload?.error ?? t('detail.add_student.error_default'));
       return;
     }
     onDone();
@@ -560,15 +565,15 @@ function AddStudentForm({
   return (
     <form onSubmit={submit} className="card p-4 mb-3 space-y-3 bg-forest-soft/30">
       {loading ? (
-        <div className="text-sm text-ink-muted">Loading students…</div>
+        <div className="text-sm text-ink-muted">{t('detail.add_student.loading')}</div>
       ) : (
         <>
           <select className="input" value={selected} onChange={(e) => setSelected(e.target.value)}>
-            <option value="">Pick a student…</option>
+            <option value="">{t('detail.add_student.select_placeholder')}</option>
             {selectable.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.name}
-                {s.household_id ? ' (in another household)' : ''}
+                {s.household_id ? t('detail.add_student.in_other_household') : ''}
               </option>
             ))}
           </select>
@@ -579,11 +584,11 @@ function AddStudentForm({
               onChange={(e) => setLinkParents(e.target.checked)}
               className="accent-forest"
             />
-            Also link this student to the household's parent(s)
+            {t('detail.add_student.link_parents')}
           </label>
           <div className="flex gap-2">
             <button type="submit" disabled={!selected || submitting} className="btn-primary text-xs">
-              {submitting ? 'Adding…' : 'Add to household'}
+              {submitting ? t('detail.add_student.submitting') : t('detail.add_student.submit')}
             </button>
           </div>
           {error && <div className="text-xs text-claret">{error}</div>}
@@ -594,19 +599,21 @@ function AddStudentForm({
 }
 
 function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
+  const { t } = useTranslation('households');
+  const { t: tCommon } = useTranslation('common');
   if (sessions.length === 0) {
-    return <div className="card p-5 text-sm text-ink-muted">No sessions yet for this household.</div>;
+    return <div className="card p-5 text-sm text-ink-muted">{t('detail.sessions_tab.empty')}</div>;
   }
   return (
     <div className="table-wrap">
       <table className="table">
         <thead>
           <tr>
-            <th>When</th>
-            <th>Student</th>
-            <th>Subject · Topic</th>
-            <th>Status</th>
-            <th className="text-right">Amount</th>
+            <th>{t('detail.sessions_tab.col_when')}</th>
+            <th>{t('detail.sessions_tab.col_student')}</th>
+            <th>{t('detail.sessions_tab.col_subject_topic')}</th>
+            <th>{t('detail.sessions_tab.col_status')}</th>
+            <th className="text-right">{t('detail.sessions_tab.col_amount')}</th>
           </tr>
         </thead>
         <tbody>
@@ -622,7 +629,9 @@ function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
                   s.status === 'no_show' && 'badge-claret',
                   s.status === 'scheduled' && 'badge-neutral'
                 )}>
-                  {s.status === 'completed' ? (s.paid ? 'Paid' : 'Unpaid') : s.status}
+                  {s.status === 'completed'
+                    ? (s.paid ? tCommon('status.paid') : tCommon('status.unpaid'))
+                    : tCommon(`status.${s.status}`)}
                 </span>
               </td>
               <td className="text-right font-mono num text-sm">
@@ -637,41 +646,46 @@ function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
 }
 
 function InvoicesTab({ invoices }: { invoices: InvoiceRow[] }) {
+  const { t } = useTranslation('households');
+  const { t: tCommon } = useTranslation('common');
   if (invoices.length === 0) {
     return (
       <div className="card p-5 text-sm text-ink-muted">
-        No invoices for this household yet. Batch invoicing is coming soon — you can invoice individual students from the Invoices page.
+        {t('detail.invoices_tab.empty')}
       </div>
     );
   }
   return (
     <div className="space-y-3">
-      {invoices.map((inv) => (
-        <Link
-          key={inv.id}
-          href={`/app/invoices/${inv.id}`}
-          className="card p-4 flex flex-wrap items-center justify-between gap-3 hover:shadow-lift transition-shadow"
-        >
-          <div>
-            <div className="font-mono text-sm">{inv.number}</div>
-            <div className="text-2xs text-ink-muted">
-              {inv.student?.name ?? 'Household'} · Issued {new Date(inv.issued_on).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' })}
+      {invoices.map((inv) => {
+        const issuedDate = new Date(inv.issued_on).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
+        return (
+          <Link
+            key={inv.id}
+            href={`/app/invoices/${inv.id}`}
+            className="card p-4 flex flex-wrap items-center justify-between gap-3 hover:shadow-lift transition-shadow"
+          >
+            <div>
+              <div className="font-mono text-sm">{inv.number}</div>
+              <div className="text-2xs text-ink-muted">
+                {inv.student?.name ?? t('detail.invoices_tab.household_fallback')} · {t('detail.invoices_tab.issued_prefix', { date: issuedDate })}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-sm">{formatCents(inv.total_cents, 'AUD')}</span>
-            <span className={cx(
-              inv.status === 'paid' && 'badge-forest',
-              inv.status === 'sent' && 'badge-rust',
-              inv.status === 'draft' && 'badge-neutral',
-              inv.status === 'overdue' && 'badge-claret',
-              inv.status === 'void' && 'badge-neutral',
-            )}>
-              {inv.status}
-            </span>
-          </div>
-        </Link>
-      ))}
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-sm">{formatCents(inv.total_cents, 'AUD')}</span>
+              <span className={cx(
+                inv.status === 'paid' && 'badge-forest',
+                inv.status === 'sent' && 'badge-rust',
+                inv.status === 'draft' && 'badge-neutral',
+                inv.status === 'overdue' && 'badge-claret',
+                inv.status === 'void' && 'badge-neutral',
+              )}>
+                {tCommon(`status.${inv.status}`)}
+              </span>
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
@@ -688,6 +702,7 @@ function NotesTab({
   saving: boolean;
   isTutor: boolean;
 }) {
+  const { t } = useTranslation('households');
   if (editing) {
     return (
       <div className="space-y-3">
@@ -696,14 +711,14 @@ function NotesTab({
           className="input"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Allergies, schedule constraints, billing preferences…"
+          placeholder={t('detail.notes_tab.placeholder')}
           autoFocus
         />
         <div className="flex gap-2">
           <button onClick={save} disabled={saving} className="btn-primary text-xs">
-            {saving ? 'Saving…' : 'Save notes'}
+            {saving ? t('detail.notes_tab.saving') : t('detail.notes_tab.save')}
           </button>
-          <button onClick={() => setEditing(false)} className="btn-ghost text-xs">Cancel</button>
+          <button onClick={() => setEditing(false)} className="btn-ghost text-xs">{t('detail.notes_tab.cancel')}</button>
         </div>
       </div>
     );
@@ -713,11 +728,11 @@ function NotesTab({
       {notes ? (
         <div className="card p-5 whitespace-pre-wrap text-sm text-ink">{notes}</div>
       ) : (
-        <div className="card p-5 text-sm text-ink-muted italic">No household notes yet.</div>
+        <div className="card p-5 text-sm text-ink-muted italic">{t('detail.notes_tab.empty')}</div>
       )}
       {!isTutor && (
         <button onClick={() => setEditing(true)} className="mt-3 btn-ghost text-xs">
-          {notes ? 'Edit notes' : 'Add notes'}
+          {notes ? t('detail.notes_tab.edit') : t('detail.notes_tab.add')}
         </button>
       )}
     </div>

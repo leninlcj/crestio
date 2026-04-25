@@ -47,5 +47,86 @@
     "question_new": "{{students}} share {{parent}}. Group them into a new household?",
     "accept": "Group →",
     "dismiss": "Dismiss"
+  },
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "Could not load household.",
+    "not_found_title": "Not found",
+    "not_found_body": "Household not found.",
+    "subtitle_archived": "Archived household",
+    "subtitle_active": "Household",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "confirm_archive": "Archive this household? Students and parents stay put; the household is hidden from lists.",
+    "edit_name": "Edit name",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "billed_to_prefix": "Billed to",
+    "parent_fallback": "Parent",
+    "needs_primary": "Needs a primary parent",
+    "tabs": {
+      "members": "Members",
+      "sessions": "Sessions",
+      "invoices": "Invoices",
+      "notes": "Notes"
+    },
+    "members": {
+      "parents_heading": "Parents",
+      "add_co_parent": "+ Add co-parent",
+      "cancel": "Cancel",
+      "no_parents": "No parents linked yet.",
+      "no_name": "(no name)",
+      "primary_badge": "Primary",
+      "make_primary": "Make primary",
+      "remove": "Remove",
+      "confirm_remove_parent": "Remove this parent from the household? They keep access to their linked students.",
+      "students_heading": "Students",
+      "add_sibling": "+ Add sibling",
+      "no_students": "No students in this household yet.",
+      "remove_from_household": "Remove from household",
+      "confirm_remove_student": "Remove this student from the household? Sessions and invoices remain intact."
+    },
+    "add_parent": {
+      "loading": "Loading parents…",
+      "select_placeholder": "Pick an existing parent…",
+      "no_name": "(no name)",
+      "invite_hint": "To add a brand-new parent, invite them from the student's page — they'll be created when they accept.",
+      "submit": "Add parent",
+      "submitting": "Adding…",
+      "error_default": "Could not add parent."
+    },
+    "add_student": {
+      "loading": "Loading students…",
+      "select_placeholder": "Pick a student…",
+      "in_other_household": " (in another household)",
+      "confirm_move": "This student is in another household. Move them to this household?",
+      "link_parents": "Also link this student to the household's parent(s)",
+      "submit": "Add to household",
+      "submitting": "Adding…",
+      "error_default": "Could not add student."
+    },
+    "sessions_tab": {
+      "empty": "No sessions yet for this household.",
+      "col_when": "When",
+      "col_student": "Student",
+      "col_subject_topic": "Subject · Topic",
+      "col_status": "Status",
+      "col_amount": "Amount"
+    },
+    "invoices_tab": {
+      "empty": "No invoices for this household yet. Batch invoicing is coming soon — you can invoice individual students from the Invoices page.",
+      "household_fallback": "Household",
+      "issued_prefix": "Issued {{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "Allergies, schedule constraints, billing preferences…",
+      "save": "Save notes",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "empty": "No household notes yet.",
+      "edit": "Edit notes",
+      "add": "Add notes"
+    }
   }
 }
