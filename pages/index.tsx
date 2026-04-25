@@ -7,6 +7,7 @@ import Screenshot from '../components/marketing/Screenshot';
 import FaqItem from '../components/marketing/FaqItem';
 import { PLAN_CATALOGUE, type BillingInterval } from '../lib/plans';
 import { useLocaleFormatters } from '../lib/useLocaleFormatters';
+import { paymentLinkUrl, isPayablePlan } from '../lib/stripe/payment-links';
 
 export default function Home() {
   const router = useRouter();
@@ -248,6 +249,8 @@ export default function Home() {
           </section>
         </main>
 
+        <StickyMobileCTA />
+
         <footer className="px-6 md:px-12 py-12 border-t border-rule text-sm text-ink-muted">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
@@ -458,18 +461,78 @@ function TierCard({
             {t(`tiers.${tier.tier}.cta`)} →
           </a>
         ) : (
-          <Link
-            href={`/auth/signup?plan=${tier.tier}&interval=${interval}`}
-            className={[
-              'w-full block text-center min-h-[44px] flex items-center justify-center',
-              highlight ? 'btn-primary text-base' : 'btn-secondary text-sm',
-            ].join(' ')}
-          >
-            {t(`tiers.${tier.tier}.cta`)}
-          </Link>
+          <>
+            <Link
+              href={`/auth/signup?plan=${tier.tier}&interval=${interval}`}
+              className={[
+                'w-full block text-center min-h-[44px] flex items-center justify-center',
+                highlight ? 'btn-primary text-base' : 'btn-secondary text-sm',
+              ].join(' ')}
+            >
+              {t(`tiers.${tier.tier}.cta`)}
+            </Link>
+            {isPayablePlan(tier.tier) && (() => {
+              const url = paymentLinkUrl(tier.tier, interval);
+              if (!url) return null;
+              return (
+                <a
+                  href={url}
+                  className="block text-center text-xs text-ink-soft hover:text-ink mt-3 underline underline-offset-4 decoration-ink-soft/30 hover:decoration-ink"
+                >
+                  {t('pricing.pay_now_secondary')}
+                </a>
+              );
+            })()}
+          </>
         )}
       </div>
     </article>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Mobile sticky CTA — pinned to viewport bottom on small screens. Shows after
+// the user scrolls past the hero and hides once they reach #pricing (so it
+// doesn't fight the in-section CTAs).
+// ---------------------------------------------------------------------------
+
+function StickyMobileCTA() {
+  const { t } = useTranslation('marketing');
+  const [visible, setVisible] = useState(false);
+  const teamPaymentUrl = paymentLinkUrl('team', 'monthly');
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const pricingEl = document.getElementById('pricing');
+      const pricingTop = pricingEl ? pricingEl.getBoundingClientRect().top + window.scrollY : Infinity;
+      const showAfter = window.innerHeight * 0.8;
+      setVisible(y > showAfter && y + window.innerHeight < pricingTop + 200);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-cream/95 backdrop-blur border-t border-rule px-4 py-3 flex items-center gap-2">
+      <Link
+        href="/auth/signup?plan=team&interval=monthly"
+        className="btn-primary flex-1 text-sm py-2 min-h-[40px]"
+      >
+        {t('pricing.sticky_mobile_cta')}
+      </Link>
+      {teamPaymentUrl && (
+        <a
+          href={teamPaymentUrl}
+          className="text-sm text-ink-muted underline underline-offset-4 px-3 py-2"
+        >
+          {t('pricing.sticky_mobile_pay_now')}
+        </a>
+      )}
+    </div>
   );
 }
 

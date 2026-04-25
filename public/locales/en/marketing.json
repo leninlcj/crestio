@@ -66,7 +66,10 @@
     "period_annual": "per year — about {{monthly_equivalent}}/month billed annually",
     "recommended_banner": "Recommended for most tutors",
     "tier_name": "Crestio {{tier}}",
-    "footer_note": "Prices in AUD. Inclusive of GST where applicable. Cancel anytime."
+    "footer_note": "Prices in AUD. Inclusive of GST where applicable. Cancel anytime.",
+    "pay_now_secondary": "Skip the trial — pay now →",
+    "sticky_mobile_cta": "Start free trial",
+    "sticky_mobile_pay_now": "Pay now"
   },
   "tiers": {
     "solo": {
