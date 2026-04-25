@@ -9,6 +9,7 @@ import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Session, Student, Tutor } from '../../../lib/types';
 import VoiceRecorder from '../../../components/voice/VoiceRecorder';
+import { FilesPanel } from '../../../components/files/FilesPanel';
 import {
   saveDraft,
   loadDraft,
@@ -828,6 +829,16 @@ function SessionDetailInner() {
               </button>
             )}
             <Link href={`/app/students/${session.student_id}`} className="btn-ghost text-xs">{t('sessions:actions.view_student')}</Link>
+          </div>
+
+          <div className="card p-6 mb-4">
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-4">
+              {t('sessions:detail.files')}
+            </div>
+            <FilesPanel
+              scope={{ kind: 'session', session_id: session.id, student_id: session.student_id }}
+              students={[]}
+            />
           </div>
 
           {(session as any).notes_parent_facing && (

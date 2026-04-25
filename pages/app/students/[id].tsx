@@ -8,6 +8,7 @@ import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Student, Session, Tutor } from '../../../lib/types';
+import { FilesPanel } from '../../../components/files/FilesPanel';
 import {
   formatCents,
   formatDateTime,
@@ -50,7 +51,7 @@ function StudentDetailInner() {
   const [assignSaved, setAssignSaved] = useState(false);
 
   const [form, setForm] = useState<any>(null);
-  const [tab, setTab] = useState<'sessions' | 'homework'>('sessions');
+  const [tab, setTab] = useState<'sessions' | 'homework' | 'files'>('sessions');
   const [markingHomework, setMarkingHomework] = useState<string | null>(null);
   const [household, setHousehold] = useState<{ id: string; display_name: string } | null>(null);
   const [showHouseholdPicker, setShowHouseholdPicker] = useState(false);
@@ -773,6 +774,22 @@ function StudentDetailInner() {
                   Homework
                 </h2>
               </button>
+              <button
+                type="button"
+                onClick={() => setTab('files')}
+                className={cx(
+                  'text-left',
+                  tab === 'files' ? '' : 'opacity-60 hover:opacity-100'
+                )}
+              >
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Share</div>
+                <h2 className={cx(
+                  'font-display text-2xl tracking-tightest',
+                  tab === 'files' ? 'text-ink' : 'text-ink-muted'
+                )}>
+                  Files
+                </h2>
+              </button>
             </div>
             <Link href={`/app/sessions/new?student=${student.id}`} className="btn-secondary text-xs">
               New session
@@ -821,11 +838,16 @@ function StudentDetailInner() {
                 </table>
               </div>
             )
-          ) : (
+          ) : tab === 'homework' ? (
             <HomeworkList
               sessions={sessions}
               onMarkComplete={markHomeworkComplete}
               marking={markingHomework}
+            />
+          ) : (
+            <FilesPanel
+              scope={{ kind: 'student', student_id: student.id }}
+              students={[]}
             />
           )}
         </>
