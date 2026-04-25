@@ -1,0 +1,8 @@
+{
+  "paid": {
+    "resend_pending": "Enviando…"
+  },
+  "error": {
+    "heading": "Ocorreu um erro."
+  }
+}

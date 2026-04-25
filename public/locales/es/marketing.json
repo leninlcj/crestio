@@ -66,7 +66,10 @@
     "period_annual": "al año — unos {{monthly_equivalent}} al mes, facturados anualmente",
     "recommended_banner": "Recomendado para la mayoría de los tutores",
     "tier_name": "Crestio {{tier}}",
-    "footer_note": "Precios en AUD. Incluyen el IVA cuando sea aplicable. Cancela en cualquier momento."
+    "footer_note": "Precios en AUD. Incluyen el IVA cuando sea aplicable. Cancela en cualquier momento.",
+    "sticky_mobile_cta": "Empieza la prueba gratuita",
+    "pay_now_secondary": "No te quedes con la versión de prueba: paga ahora →",
+    "sticky_mobile_pay_now": "Pagar ahora"
   },
   "tiers": {
     "solo": {

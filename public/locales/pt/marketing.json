@@ -66,7 +66,10 @@
     "period_annual": "por ano — cerca de {{monthly_equivalent}} por mês, cobrado anualmente",
     "recommended_banner": "Recomendado para a maioria dos tutores",
     "tier_name": "Crestio {{tier}}",
-    "footer_note": "Preços em AUD. Incluindo GST, quando aplicável. Cancele a qualquer momento."
+    "footer_note": "Preços em AUD. Incluindo GST, quando aplicável. Cancele a qualquer momento.",
+    "sticky_mobile_cta": "Comece o teste gratuito",
+    "pay_now_secondary": "Pule a versão de avaliação — pague agora →",
+    "sticky_mobile_pay_now": "Pagar agora"
   },
   "tiers": {
     "solo": {

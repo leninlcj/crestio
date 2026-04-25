@@ -66,7 +66,10 @@
     "period_annual": "每年 — 约{{monthly_equivalent}}/月（按年计费）",
     "recommended_banner": "推荐给大多数家教",
     "tier_name": "Crestio {{tier}}",
-    "footer_note": "价格以澳元计。如适用，已包含商品及服务税（GST）。可随时取消。"
+    "footer_note": "价格以澳元计。如适用，已包含商品及服务税（GST）。可随时取消。",
+    "sticky_mobile_cta": "开始免费试用",
+    "pay_now_secondary": "跳过试用期 — 立即付款 →",
+    "sticky_mobile_pay_now": "立即支付"
   },
   "tiers": {
     "solo": {

@@ -66,7 +66,10 @@
     "period_annual": "per tahun — sekitar {{monthly_equivalent}} per bulan, ditagih secara tahunan",
     "recommended_banner": "Direkomendasikan untuk sebagian besar tutor",
     "tier_name": "Crestio {{tier}}",
-    "footer_note": "Harga dalam AUD. Termasuk GST jika berlaku. Dapat dibatalkan kapan saja."
+    "footer_note": "Harga dalam AUD. Termasuk GST jika berlaku. Dapat dibatalkan kapan saja.",
+    "sticky_mobile_cta": "Mulai uji coba gratis",
+    "pay_now_secondary": "Lewati masa uji coba — bayar sekarang →",
+    "sticky_mobile_pay_now": "Bayar sekarang"
   },
   "tiers": {
     "solo": {
