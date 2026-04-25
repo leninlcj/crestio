@@ -1,1 +1,56 @@
-{}
+{
+  "test_accounts": {
+    "page": {
+      "subtitle": "Outils pour les propriétaires",
+      "title": "Comptes d'essai"
+    },
+    "intro": {
+      "label": "Comptes de test.",
+      "body": "Il s'agit de comptes de test pré-créés dont vous êtes le propriétaire. En vous connectant à l'un d'entre eux, vous ouvrez une nouvelle session soumise aux mêmes règles de sécurité que n'importe quel utilisateur réel. Vous n'avez jamais accès aux données des autres utilisateurs via ce processus."
+    },
+    "list": {
+      "heading": "Vos comptes de test",
+      "loading": "Chargement en cours…",
+      "empty": "Il n'y a pas encore de comptes de test.",
+      "col_role": "Rôle",
+      "col_name": "Nom",
+      "col_email": "E-mail",
+      "col_created": "Créé",
+      "col_last_login": "Dernière connexion",
+      "name_dash": "—",
+      "last_login_dash": "—",
+      "login_busy": "…",
+      "login_button": "Se connecter en tant que test",
+      "delete_button": "Supprimer",
+      "confirm_delete": "Supprimer le compte de test {{email}}? Cette opération supprime l'utilisateur d'authentification et ne peut pas être annulée."
+    },
+    "create": {
+      "heading": "Créer un compte test",
+      "role_label": "Rôle",
+      "role_tutor": "Formateur (au sein de votre organisation)",
+      "role_parent": "Parent (portail)",
+      "name_label": "Nom",
+      "name_placeholder": "Par exemple : Tutor de test Mai",
+      "email_label": "E-mail (facultatif — généré automatiquement si laissé vide)",
+      "email_placeholder": "test-tutor-abc123@crestio.test",
+      "submit": "Créer un compte test",
+      "creating": "Création en cours…",
+      "success_title": "Compte de test créé.",
+      "success_email_label": "E-mail :",
+      "success_password_label": "Mot de passe initial :",
+      "success_hint": "Enregistrez ce mot de passe dès maintenant — il n'est affiché qu'une seule fois. Ou cliquez sur « Se connecter en tant que test » dans le tableau ci-dessus pour obtenir un lien de connexion unique."
+    },
+    "recent": {
+      "heading": "Sessions de test récentes",
+      "empty": "Aucune connexion aux comptes de test pour le moment.",
+      "role_unknown": "inconnu",
+      "ended_suffix": " · terminé"
+    },
+    "errors": {
+      "load_failed": "Impossible de charger les comptes de test.",
+      "create_failed": "Impossible de créer un compte test.",
+      "login_link_failed": "Impossible de générer le lien de connexion.",
+      "delete_failed": "Impossible de supprimer."
+    }
+  }
+}

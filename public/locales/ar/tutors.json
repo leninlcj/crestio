@@ -3,38 +3,6 @@
     "subtitle": "الفريق",
     "title": "المعلمون"
   },
-  "table": {
-    "name": "الاسم",
-    "subjects": "المواد الدراسية",
-    "students": "الطلاب",
-    "em_dash": "—",
-    "linked_login": "تسجيل الدخول المرتبط",
-    "pay_rate": "معدل الأجر",
-    "this_month": "هذا الشهر",
-    "linked_yes": "نعم",
-    "linked_no": "لا"
-  },
-  "new": {
-    "page_subtitle": "المعلمون",
-    "email_label": "البريد الإلكتروني",
-    "phone_label": "الهاتف",
-    "notes_label": "ملاحظات",
-    "saving": "جاري الحفظ…",
-    "cancel": "إلغاء",
-    "not_signed_in": "لم يتم تسجيل الدخول.",
-    "no_organization": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai.",
-    "page_title": "مدرس خصوصي جديد",
-    "name_label": "الاسم *",
-    "subjects_label": "المواد التي يدرسونها",
-    "subjects_placeholder": "الرياضيات، الكيمياء",
-    "subjects_hint": "مفصولة بفاصلة.",
-    "pay_rate_label": "معدل الأجر في الساعة",
-    "pay_rate_placeholder": "على سبيل المثال 55",
-    "submit": "إنشاء مدرس"
-  },
-  "common": {
-    "loading": "جاري التحميل..."
-  },
   "actions": {
     "add": "إضافة مدرس",
     "add_one": "أضف مدرسًا"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "لا يوجد مدرسون حتى الآن",
     "description": "أضف مدرسين عندما توظف أشخاصًا للتدريس في شركتك. إذا كنت مدرسًا فرديًا، فيمكنك تخطي هذه الخطوة."
+  },
+  "table": {
+    "name": "الاسم",
+    "subjects": "المواد الدراسية",
+    "linked_login": "تسجيل الدخول المرتبط",
+    "students": "الطلاب",
+    "pay_rate": "معدل الأجر",
+    "this_month": "هذا الشهر",
+    "linked_yes": "نعم",
+    "linked_no": "لا",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "المعلمون",
+    "page_title": "مدرس خصوصي جديد",
+    "name_label": "الاسم *",
+    "email_label": "البريد الإلكتروني",
+    "phone_label": "الهاتف",
+    "subjects_label": "المواد التي يدرسونها",
+    "subjects_placeholder": "الرياضيات، الكيمياء",
+    "subjects_hint": "مفصولة بفاصلة.",
+    "pay_rate_label": "معدل الأجر في الساعة",
+    "pay_rate_placeholder": "على سبيل المثال 55",
+    "notes_label": "ملاحظات",
+    "submit": "إنشاء مدرس",
+    "saving": "جاري الحفظ…",
+    "cancel": "إلغاء",
+    "not_signed_in": "لم يتم تسجيل الدخول.",
+    "no_organization": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai."
+  },
+  "common": {
+    "loading": "جاري التحميل..."
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "جاري التحميل...",
+    "not_found_title": "لم يتم العثور عليه",
+    "not_found_body": "لم يتم العثور على المعلم.",
+    "subtitle": "المعلم",
+    "edit": "تحرير",
+    "delete": "حذف",
+    "save": "حفظ",
+    "saving": "جاري الحفظ…",
+    "cancel": "إلغاء",
+    "confirm_delete": "هل تريد حذف {{name}}؟ ستبقى الجلسات السابقة، ولكن سيتم حذف رابط المعلم. لا يمكن التراجع عن هذه الخطوة.",
+    "form": {
+      "name_label": "الاسم",
+      "email_label": "البريد الإلكتروني",
+      "phone_label": "الهاتف",
+      "subjects_label": "المواد الدراسية",
+      "pay_rate_label": "معدل الأجر",
+      "notes_label": "ملاحظات"
+    },
+    "contact_eyebrow": "الاتصال",
+    "no_contact": "لا يوجد اتصال.",
+    "teaches_eyebrow": "يُدرّس",
+    "no_subjects": "—",
+    "pay_eyebrow": "الدفع",
+    "rate_label": "السعر: ",
+    "rate_per_hour": " / ساعة",
+    "total_label": "المبلغ المدفوع/المستحق: ",
+    "notes_eyebrow": "ملاحظات",
+    "record_eyebrow": "السجل",
+    "recent_heading": "الجلسات الأخيرة",
+    "no_sessions": "لم يتم تخصيص أي جلسات بعد.",
+    "table": {
+      "when": "متى",
+      "subject": "الموضوع",
+      "duration": "المدة",
+      "status": "الحالة",
+      "pay": "الدفع",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} دقيقة"
+    }
   }
 }

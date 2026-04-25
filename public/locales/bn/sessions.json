@@ -1,42 +1,42 @@
 {
   "subtitle": "সেশনসমূহ",
+  "subtitle_session": "সেশন",
   "title_list": "সেশনসমূহ",
   "title_new": "সেশন লগ করুন",
   "title_loading": "…",
   "title_not_available": "উপলব্ধ নয়",
   "title_not_found": "মিলেনি",
   "filter": {
-    "completed": "সম্পন্ন",
-    "needs_polishing": "পরিমার্জিত করার প্রয়োজন",
     "all": "সব",
     "drafts": "খসড়া",
     "drafts_count": "খসড়া ({{count}})",
-    "upcoming": "আসন্ন"
+    "upcoming": "আসন্ন",
+    "completed": "সম্পন্ন",
+    "needs_polishing": "পরিমার্জিত করার প্রয়োজন"
   },
   "columns": {
-    "student": "ছাত্র",
-    "status": "অবস্থা",
-    "paid": "পেইড",
     "when": "কখন",
+    "student": "ছাত্র",
     "tutor": "শিক্ষক",
     "subject_topic": "বিষয় · বিষয়বস্তু",
     "duration": "মেয়াদ",
-    "amount": "পরিমাণ"
+    "status": "অবস্থা",
+    "amount": "পরিমাণ",
+    "paid": "পেইড"
   },
   "actions": {
     "new": "সেশন লগ করুন",
     "new_short": "নতুন সেশন",
     "edit": "সম্পাদনা",
     "mark_completed": "সম্পন্ন চিহ্নিত করুন",
+    "mark_paid": "{{status}} হিসেবে চিহ্নিত করুন",
     "cancel_session": "সেশন বাতিল করুন",
     "no_show": "উপস্থিতি নেই",
     "delete": "মুছুন",
+    "delete_confirm": "এই সেশন মুছে ফেলবেন? এটি আর পূর্বাবস্থায় ফেরানো যাবে না।",
     "save": "সংরক্ষণ করুন",
     "save_session": "সেশন সংরক্ষণ করুন",
     "saving": "সংরক্ষণ হচ্ছে…",
-    "cancel": "বাতিল করুন",
-    "mark_paid": "{{status}} হিসেবে চিহ্নিত করুন",
-    "delete_confirm": "এই সেশন মুছে ফেলবেন? এটি আর পূর্বাবস্থায় ফেরানো যাবে না।",
     "view_student": "ছাত্র দেখুন",
     "resume_draft": "রিজ্যুমের খসড়া",
     "discard_draft": "বাতিল করুন",
@@ -46,7 +46,8 @@
     "polish_with_ai": "এআই দিয়ে পালিশ করুন",
     "polishing": "পোলিশ করা…",
     "edit_shared": "শেয়ারকৃত সংস্করণ সম্পাদনা করুন",
-    "done_editing": "সম্পাদনা শেষ"
+    "done_editing": "সম্পাদনা শেষ",
+    "cancel": "বাতিল করুন"
   },
   "loading": "লোড হচ্ছে…",
   "not_found": "সেশন পাওয়া যায়নি।",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "ছাত্র",
-    "status": "অবস্থা",
     "student_required": "ছাত্র *",
     "tutor": "শিক্ষক",
     "tutor_self": "তুমি",
@@ -78,6 +78,7 @@
     "charge_rate": "চার্জ রেট (প্রতি ঘণ্টা)",
     "pay_rate": "টিউটরের বেতন (প্রতি ঘণ্টা)",
     "pay_rate_hint": "আপনি যদি এই সেশনে টিউশন দিয়ে থাকেন তবে ফাঁকা রাখুন।",
+    "status": "অবস্থা",
     "notes_internal": "ব্যক্তিগত নোট",
     "notes_internal_placeholder": "আপনি কী কী আলোচনা করেছেন? এটা কেমন হলো?",
     "notes_internal_hint": "শুধুমাত্র আপনি এগুলো দেখতে পাবেন। মাইকে ট্যাপ করে ডিক্টেট করুন — ট্রান্সক্রিপ্ট সংযুক্ত হবে। প্যারেন্ট-ফ্রেন্ডলি সংস্করণ প্রকাশ করতে 'AI দিয়ে Polish' এ ক্লিক করুন।",
@@ -110,38 +111,11 @@
     "no_show": "উপস্থিতি নেই"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "নতুন সেশন",
     "banner_unfinished": "{{when}} থেকে আপনার অসম্পূর্ণ পরিবর্তনগুলি রয়েছে।",
     "draft_subtitle_new": "{{name}}-এর নতুন সেশন",
+    "draft_subtitle_new_no_name": "নতুন সেশন",
     "last_edited": "শেষবার সম্পাদিত {{when}}"
   },
-  "detail": {
-    "due_prefix": "ডেডলাইন: {{date}}",
-    "overdue_badge": "বকেয়া",
-    "when": "কখন",
-    "what": "কি",
-    "money": "টাকা",
-    "charge": "চার্জ",
-    "tutor_pay": "টিউটরের বেতন",
-    "tutor_with": "টিউটর: {{name}}",
-    "tutor_you": "শিক্ষক: আপনি",
-    "parent_facing_notes": "অভিভাবকদের জন্য নোট",
-    "private_notes": "ব্যক্তিগত নোট",
-    "homework_set": "হোমওয়ার্ক নির্ধারণ করা হয়েছে",
-    "next_focus": "পরবর্তী সেশনের ফোকাস",
-    "completed_badge": "✓ সম্পন্ন"
-  },
-  "save_status": {
-    "saving": "সংরক্ষণ হচ্ছে…",
-    "saved_locally": "স্থানীয়ভাবে সংরক্ষিত",
-    "saved": "সংরক্ষিত"
-  },
-  "errors": {
-    "not_signed_in": "সাইন ইন করা নেই।",
-    "select_at_least_one": "কমপক্ষে একটি সেশন নির্বাচন করুন।",
-    "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।"
-  },
-  "subtitle_session": "সেশন",
   "relative_time": {
     "just_now": "এখনি",
     "min_ago_one": "১ মিনিট আগে",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "কিছু একটা ভুল হয়েছে। আপনার নোটগুলো এখনও সংরক্ষিত আছে — অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।",
   "polish_needs_student_duration": "প্রথমে একজন শিক্ষার্থী এবং সময়কাল নির্বাচন করুন।",
-  "select_student": "একজন শিক্ষার্থী নির্বাচন করুন"
+  "select_student": "একজন শিক্ষার্থী নির্বাচন করুন",
+  "detail": {
+    "when": "কখন",
+    "what": "কি",
+    "money": "টাকা",
+    "charge": "চার্জ",
+    "tutor_pay": "টিউটরের বেতন",
+    "tutor_with": "টিউটর: {{name}}",
+    "tutor_you": "শিক্ষক: আপনি",
+    "parent_facing_notes": "অভিভাবকদের জন্য নোট",
+    "private_notes": "ব্যক্তিগত নোট",
+    "homework_set": "হোমওয়ার্ক নির্ধারণ করা হয়েছে",
+    "next_focus": "পরবর্তী সেশনের ফোকাস",
+    "due_prefix": "ডেডলাইন: {{date}}",
+    "completed_badge": "✓ সম্পন্ন",
+    "overdue_badge": "বকেয়া"
+  },
+  "save_status": {
+    "saved_locally": "স্থানীয়ভাবে সংরক্ষিত",
+    "saving": "সংরক্ষণ হচ্ছে…",
+    "saved": "সংরক্ষিত"
+  },
+  "errors": {
+    "select_at_least_one": "কমপক্ষে একটি সেশন নির্বাচন করুন।",
+    "not_signed_in": "সাইন ইন করা নেই।",
+    "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।"
+  }
 }

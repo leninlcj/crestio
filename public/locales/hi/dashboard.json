@@ -1,5 +1,8 @@
 {
   "kicker": "आज",
+  "greeting_morning": "सुबह बधाई, {{name}}",
+  "greeting_afternoon": "शुभ अपराह्न, {{name}}",
+  "greeting_evening": "शुभ संध्या, {{name}}",
   "loading_error": "आपका डैशबोर्ड लोड नहीं हो सका।",
   "trial_banner": {
     "days_left_one": "आपके परीक्षण में 1 दिन शेष है।",
@@ -28,21 +31,21 @@
       "kicker": "अनबिल",
       "title_one": "{{count}} परिवार के पास अनबिल किए गए सत्र हैं",
       "title_other": "{{count}} परिवारों के पास बिना बिल वाले सत्र होते हैं",
-      "total_uninvoiced": "कुल अनचालानित: {{amount}}",
-      "cta": "सभी का चालान बनाएँ →",
       "student_count_one": "{{count}} छात्र",
-      "student_count_other": "{{count}} छात्र"
+      "student_count_other": "{{count}} छात्र",
+      "total_uninvoiced": "कुल अनचालानित: {{amount}}",
+      "cta": "सभी का चालान बनाएँ →"
     },
     "reschedules": {
       "kicker": "आपकी प्रतिक्रिया चाहिए",
       "title_one": "{{count}} पुनः निर्धारित अनुरोध प्रतीक्षारत",
       "title_other": "{{count}} लंबित पुनर्निर्धारण अनुरोध",
-      "accept": "स्वीकार करें",
-      "reject": "अस्वीकार करें",
-      "open": "खुला",
       "row_description": "{{parent}} {{student}} के सत्र का पुनर्निर्धारण प्रस्तावित।",
       "row_original": "मूल:",
-      "row_proposed": "प्रस्तावित:"
+      "row_proposed": "प्रस्तावित:",
+      "accept": "स्वीकार करें",
+      "reject": "अस्वीकार करें",
+      "open": "खुला"
     },
     "week_ahead": {
       "kicker": "इस सप्ताह",
@@ -65,8 +68,5 @@
       "schedule": "एक सत्र निर्धारित करें →",
       "add_student": "छात्र जोड़ें →"
     }
-  },
-  "greeting_morning": "सुबह बधाई, {{name}}",
-  "greeting_afternoon": "शुभ अपराह्न, {{name}}",
-  "greeting_evening": "शुभ संध्या, {{name}}"
+  }
 }

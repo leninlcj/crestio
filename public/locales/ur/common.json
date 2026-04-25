@@ -19,18 +19,34 @@
     "search_placeholder": "تلاش…",
     "not_found": "ملو نہ سکا",
     "dismiss": "رد کریں",
-    "sending": " بھیجنے میں…",
-    "done": "مکمل",
-    "more": "مزید",
     "submit": "جمع کریں",
     "send": " بھیجیں",
+    "sending": " بھیجنے میں…",
     "restore": " بحال کریں",
     "discard": "رد کریں",
     "continue": "جاری رکھیں",
     "retry": "دوبارہ کوشش کریں",
+    "done": "مکمل",
+    "more": "مزید",
     "less": "کم",
     "add": "شامل کریں",
     "remove": "ہٹا دیں"
+  },
+  "connectors": {
+    "at_time": "پر",
+    "with_tutor": "کے ساتھ {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "شیڈول کریں",
+    "new_session": "نیا سیشن",
+    "today": "آج",
+    "week": "ہفتہ",
+    "day": "دن",
+    "review": "نظرثانی →",
+    "pending_requests_one": "{{count}} والد درخواست آپ کے جواب کا انتظار کر رہی ہے",
+    "pending_requests_other": "{{count}} والدین کی درخواستیں آپ کے جواب کے منتظر ہیں"
   },
   "nav": {
     "overview": "جائزہ",
@@ -65,56 +81,69 @@
     "group_messages": "پیغامات"
   },
   "assistant": {
+    "placeholder": "کچھ پوچھیں…",
     "send": " بھیجیں",
     "sending": " بھیجنے میں…",
-    "confirm_typed_button": "تصدیق کریں",
-    "cancel": "منسوخ کریں",
-    "placeholder": "کچھ پوچھیں…",
     "new_conversation": "نئی گفتگو",
     "conversations": "گفتگو",
     "thinking": "سوچ رہا ہوں…",
     "confirm_typed_label": "آگے بڑھنے کے لیے confirm ٹائپ کریں",
+    "confirm_typed_button": "تصدیق کریں",
+    "cancel": "منسوخ کریں",
     "execute": "عملدرآمد کریں",
     "capability_title": "اسسٹنٹ کیا کر سکتا ہے؟",
     "capability_close": "سمجھ گیا"
   },
   "notifications": {
-    "all": "تمام",
-    "dismiss": "رد کریں",
     "bell_label": "اطلاعات",
     "empty": "کوئی اطلاع نہیں۔",
     "unread": "پڑھا نہ گیا",
+    "all": "تمام",
     "mark_all_read": "سب کو پڑھا ہوا نشان کریں",
     "mark_read": "مارک نے پڑھا",
+    "dismiss": "رد کریں",
     "see_all": "سب دیکھیں →"
   },
   "quick_log": {
-    "log_session": "لاگ سیشن",
-    "add_student": "طالب علم شامل کریں",
     "label": "تیز لاگ",
     "title": "کچھ جلدی لاگ کریں",
-    "voice_note": "آواز نوٹ"
+    "voice_note": "آواز نوٹ",
+    "log_session": "لاگ سیشن",
+    "add_student": "طالب علم شامل کریں"
+  },
+  "voice_recorder": {
+    "start": "ریکارڈنگ شروع کریں",
+    "stop": "رکیں",
+    "recording": "ریکارڈنگ…",
+    "transcribing": "ٹرانسکرپشن…",
+    "error": "اسے ٹرانسکرائب نہیں کیا جا سکا — براہِ کرم دوبارہ کوشش کریں۔"
   },
   "support": {
-    "message": "پیغام",
-    "send": " بھیجیں",
-    "close": "بند کریں",
     "open_button": "مدد چاہیے؟",
     "title": "ہمیں بتائیں کہ کیا معاملہ ہے",
     "subject": "موضوع",
+    "message": "پیغام",
+    "send": " بھیجیں",
     "sent_title": "سمجھ گیا، شکریہ۔",
     "sent_body": "ہم آپ کے اکاؤنٹ پر ای میل کا جواب دیں گے۔ ایک کاروباری دن کے اندر جواب کی توقع رکھیں۔",
+    "close": "بند کریں",
     "error": " بھیج نہیں سکا۔   کچھ دیر بعد دوبارہ کوشش کریں۔"
   },
   "billing_gate": {
-    "cta_subscribe": "سبسکرائب کریں",
     "trial_expired_title": "آپ کا مقدمہ ختم ہو چکا ہے۔",
     "trial_expired_body": "کریسٹِیو استعمال کرتے رہنے کے لیے سبسکرائب کریں۔",
     "past_due_title": "سبسکرپشن کی میعاد ختم ہو چکی ہے۔",
     "past_due_body": "جاری رکھنے کے لیے اپنا ادائیگی کا طریقہ اپ ڈیٹ کریں۔",
     "canceled_title": "سبسکرپشن منسوخ کر دی گئی",
     "canceled_body": "کام جاری رکھنے کے لیے دوبارہ فعال کریں۔",
+    "cta_subscribe": "سبسکرائب کریں",
     "cta_manage": "بلنگ کا انتظام کریں"
+  },
+  "error_boundary": {
+    "title": "کچھ ٹوٹ گیا۔",
+    "body": "صفحے پر غیر متوقع طور پر خرابی پیش آ گئی۔ براہِ کرم صفحہ دوبارہ لوڈ کریں۔ اگر یہ مسئلہ بار بار پیش آئے تو براہِ کرم سپورٹ سے رابطہ کریں۔",
+    "reload": "دوبارہ لوڈ کریں",
+    "contact_support": "مدد سے رابطہ کریں"
   },
   "status": {
     "draft": "مسودہ",
@@ -137,34 +166,5 @@
     "not_signed_in": "سائن ان نہیں ہوا۔",
     "rate_limited": "بہت زیادہ درخواستیں۔   کچھ دیر بعد دوبارہ کوشش کریں۔",
     "network": "نیٹ ورک کا مسئلہ۔ اپنا کنکشن چیک کریں۔"
-  },
-  "connectors": {
-    "at_time": "پر",
-    "with_tutor": "کے ساتھ {{name}}",
-    "comma_sep": ", ",
-    "dot_sep": " · "
-  },
-  "calendar_page": {
-    "subtitle": "شیڈول کریں",
-    "new_session": "نیا سیشن",
-    "today": "آج",
-    "week": "ہفتہ",
-    "day": "دن",
-    "review": "نظرثانی →",
-    "pending_requests_one": "{{count}} والد درخواست آپ کے جواب کا انتظار کر رہی ہے",
-    "pending_requests_other": "{{count}} والدین کی درخواستیں آپ کے جواب کے منتظر ہیں"
-  },
-  "voice_recorder": {
-    "start": "ریکارڈنگ شروع کریں",
-    "stop": "رکیں",
-    "recording": "ریکارڈنگ…",
-    "transcribing": "ٹرانسکرپشن…",
-    "error": "اسے ٹرانسکرائب نہیں کیا جا سکا — براہِ کرم دوبارہ کوشش کریں۔"
-  },
-  "error_boundary": {
-    "title": "کچھ ٹوٹ گیا۔",
-    "body": "صفحے پر غیر متوقع طور پر خرابی پیش آ گئی۔ براہِ کرم صفحہ دوبارہ لوڈ کریں۔ اگر یہ مسئلہ بار بار پیش آئے تو براہِ کرم سپورٹ سے رابطہ کریں۔",
-    "reload": "دوبارہ لوڈ کریں",
-    "contact_support": "مدد سے رابطہ کریں"
   }
 }

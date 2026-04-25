@@ -4,9 +4,8 @@
     "greeting": "Bonjour {{name}}",
     "greeting_fallback": "Votre tableau de bord",
     "loading_error": "Impossible de charger votre tableau de bord.",
-    "this_week_empty": "Pas de session cette semaine.",
-    "no_access": "Vous n'y avez pas accès.",
     "this_week": "Cette semaine",
+    "this_week_empty": "Pas de session cette semaine.",
     "recent_updates": "Dernières mises à jour de votre tuteur",
     "your_children": "Vos enfants",
     "at_a_glance": "En bref",
@@ -16,6 +15,7 @@
       "paid": "Payant",
       "outstanding": "En attente"
     },
+    "no_access": "Vous n'y avez pas accès.",
     "change_requested": "Modification demandée"
   },
   "nav": {
@@ -75,27 +75,27 @@
   },
   "invoices_page": {
     "kicker": "Factures",
-    "due_label": "{{date}}",
-    "status_paid": "Payant",
-    "status_overdue": "En retard",
     "heading": "Vos factures",
     "empty": "Aucune facture pour l'instant.",
     "outstanding_eyebrow": "En attente",
     "outstanding_note": "Pour effectuer le paiement, suivez les instructions figurant sur chaque facture envoyée par votre tuteur.",
     "family_badge": "FAMILLE",
-    "issued_label": "Publié l'{{date}}"
+    "issued_label": "Publié l'{{date}}",
+    "due_label": "{{date}}",
+    "status_paid": "Payant",
+    "status_overdue": "En retard"
   },
   "invoice_detail": {
+    "back": "← Factures",
     "not_found": "Facture introuvable.",
+    "number_label": "{{number}} des factures",
+    "heading_fallback": "Facture",
     "status_paid": "Payant",
     "status_overdue": "En retard",
     "issued": "Émises",
     "due": "À payer",
-    "sessions": "Séances",
-    "back": "← Factures",
-    "number_label": "{{number}} des factures",
-    "heading_fallback": "Facture",
     "period": "Période",
+    "sessions": "Séances",
     "no_line_items": "Aucun élément.",
     "no_sessions": "Cette facture ne comporte aucune séance.",
     "minutes_suffix": "{{minutes}} min",
@@ -114,13 +114,13 @@
     "heading": "Vos notifications"
   },
   "signin": {
+    "kicker": "Portail des parents",
     "heading": "Se connecter",
     "email_label": "E-mail",
     "password_label": "Mot de passe",
+    "forgot": "Mot de passe oublié ?",
     "submit": "Se connecter",
     "submitting": "Connexion en cours…",
-    "kicker": "Portail des parents",
-    "forgot": "Mot de passe oublié ?",
     "error_generic": "Échec de la connexion.",
     "error_not_parent": "Cette connexion est réservée aux parents. Si vous êtes tuteur, connectez-vous à l'adresse /auth/signin.",
     "forgot_need_email": "Entrez d'abord votre adresse e-mail, puis appuyez sur « Mot de passe oublié ».",
@@ -128,26 +128,26 @@
     "invitation_hint": "Vous n'avez pas encore reçu d'invitation de votre tuteur ? Demandez-lui de vous en envoyer une."
   },
   "settings_page": {
+    "kicker": "Compte",
     "heading": "Paramètres",
     "loading": "Chargement en cours…",
+    "details_heading": "Vos coordonnées",
     "email_label": "E-mail",
+    "email_hint": "Contactez votre tuteur si vous devez changer d'adresse e-mail.",
+    "name_label": "Nom",
     "save": "Enregistrer",
     "saving": "Enregistrement en cours…",
     "saved": "Enregistré.",
-    "new_password_label": "Nouveau mot de passe",
-    "updating": "Mise à jour en cours…",
-    "sign_out_heading": "Se déconnecter",
-    "sign_out": "Se déconnecter",
-    "kicker": "Compte",
-    "details_heading": "Vos coordonnées",
-    "email_hint": "Contactez votre tuteur si vous devez changer d'adresse e-mail.",
-    "name_label": "Nom",
     "change_password": "Modifier le mot de passe",
+    "new_password_label": "Nouveau mot de passe",
     "password_min": "Au moins 8 caractères.",
     "password_too_short": "Le mot de passe doit comporter au moins 8 caractères.",
     "password_updated": "Mot de passe mis à jour.",
     "update_password": "Mettre à jour le mot de passe",
+    "updating": "Mise à jour en cours…",
+    "sign_out_heading": "Se déconnecter",
     "sign_out_body": "La déconnexion met fin à cette session.",
+    "sign_out": "Se déconnecter",
     "msg_notifs_heading": "Notifications de messages",
     "msg_notifs_body": "Choisissez quand Crestio vous envoie des e-mails. Les messages dans l'application s'affichent quoi qu'il arrive.",
     "msg_when_label": "M'envoyer un e-mail lorsque mon tuteur m'envoie un message",
@@ -157,7 +157,6 @@
   },
   "settings_notifications_page": {
     "kicker": "Paramètres",
-    "saved": "Enregistré.",
     "heading": "Notifications par e-mail",
     "intro": "Les notifications dans l'application s'affichent toujours, quel que soit le réglage de ces options. Celles-ci ne concernent que l'envoi des e-mails.",
     "toggles": {
@@ -185,12 +184,10 @@
         "label": "Messages urgents uniquement",
         "description": "Si cette option est activée, les e-mails concernant les messages normaux ou d'information ne seront pas envoyés."
       }
-    }
+    },
+    "saved": "Enregistré."
   },
   "accept": {
-    "email_label": "E-mail",
-    "name_label": "Votre nom",
-    "creating": "Création du compte…",
     "kicker": "Portail des parents",
     "checking": "Vérification de l'invitation…",
     "missing_token": "Ce lien ne contient pas de jeton d'invitation.",
@@ -201,12 +198,15 @@
     "back_home": "Retour à la page d'accueil",
     "accept_heading": "Acceptez votre invitation",
     "accept_body": "{{tutor}} vous a invité à consulter les sessions de tutorat d'{{student}}.",
+    "email_label": "E-mail",
     "email_hint": "Elles proviennent de votre invitation. Elles ne peuvent pas être modifiées ici.",
+    "name_label": "Votre nom",
     "name_placeholder": "Facultatif",
     "password_label": "Créer un mot de passe",
     "password_min": "Au moins 8 caractères.",
     "password_too_short": "Le mot de passe doit comporter au moins 8 caractères.",
     "create": "Créer un compte parent",
+    "creating": "Création du compte…",
     "create_failed": "Impossible de créer un compte."
   }
 }

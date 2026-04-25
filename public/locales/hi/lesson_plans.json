@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "लोड हो रहा है…"
-  },
   "page": {
     "subtitle": "शिक्षण",
     "title": "पाठ योजनाएँ"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "एआई",
     "unassigned": "असाइन नहीं किया गया"
+  },
+  "common": {
+    "loading": "लोड हो रहा है…"
+  },
+  "new": {
+    "subtitle_edit": "योजना संपादित करें",
+    "subtitle_generate": "योजना उत्पन्न करें",
+    "title_default_edit": "पाठ योजना",
+    "title_new": "नया पाठ योजना",
+    "delete": "मिटायें",
+    "confirm_delete": "क्या इस पाठ योजना को हटा दें?",
+    "form": {
+      "subject_label": "विषय *",
+      "subject_placeholder": "उदा. गणित एडवांस्ड",
+      "year_level_label": "वर्ष स्तर",
+      "year_level_placeholder": "उदाहरण के लिए कक्षा 11",
+      "topic_label": "विषय *",
+      "topic_placeholder": "उदाहरण के लिए: भागों द्वारा समाकलन का परिचय",
+      "duration_label": "अवधि (मिनट)",
+      "student_link_label": "छात्र से संबंध (वैकल्पिक)",
+      "student_none": "—",
+      "plan_label": "योजना (मार्कडाउन)",
+      "plan_placeholder": "# पाठ योजना\n\n## उद्देश्य\n- …",
+      "preview_toggle_edit": "संपादित करें",
+      "preview_toggle_preview": " पूर्वावलोकन",
+      "preview_empty": "अभी तक कुछ नहीं। एक उत्पन्न करें या अपना स्वयं का पेस्ट करें।",
+      "preview_placeholder": "_आपकी योजना यहाँ पूर्वावलोकन की जाएगी।_",
+      "preview_eyebrow": " पूर्वावलोकन"
+    },
+    "actions": {
+      "generate": "योजना उत्पन्न करें",
+      "regenerate": "योजना पुनः उत्पन्न करें",
+      "generating": "योजना उत्पन्न हो रही है…",
+      "save_new": "योजना सहेजें",
+      "save_changes": "बदलाव सहेजें",
+      "saving": "बचाना…",
+      "cancel": "रद्द करें"
+    },
+    "usage_line": "{{used}} {{limit}}की दैनिक पीढ़ियों का उपयोग।",
+    "errors": {
+      "subject_topic_required": "विषय और विषय-वस्तु उत्पन्न करने के लिए आवश्यक हैं।",
+      "not_signed_in": "साइन इन नहीं किया गया।",
+      "no_organisation": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।",
+      "server_returned": "सर्वर ने लौटाया: {{status}}",
+      "server_returned_with_text": "सर्वर ने लौटाया {{status}}: {{text}}",
+      "no_plan": "सर्वर ने कोई योजना नहीं लौटाई।",
+      "generic": "कुछ गलत हो गया।",
+      "rate_limited_one": "आपने पिछले 24 घंटों में {{limit}} पाठ योजनाएँ उत्पन्न की हैं। आप अगले {{hours}} घंटे में और अधिक उत्पन्न कर सकते हैं।",
+      "rate_limited_other": "आपने पिछले 24 घंटों में {{limit}} पाठ योजनाएँ उत्पन्न की हैं। आप अगले {{hours}} घंटों में और अधिक उत्पन्न कर सकते हैं।",
+      "rate_limited_soon": "आपने पिछले 24 घंटों में AI के माध्यम से {{limit}} पाठ योजनाएँ उत्पन्न की हैं। आप जल्द ही और उत्पन्न कर सकते हैं।"
+    }
   }
 }

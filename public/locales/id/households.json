@@ -1,14 +1,28 @@
 {
+  "page": {
+    "subtitle": "Orang",
+    "title": "Rumah tangga"
+  },
   "actions": {
-    "cancel": "Batalkan",
     "new": "+ Rumah tangga baru",
+    "cancel": "Batalkan",
     "create": "Buat",
     "creating": "Sedang membuat…"
   },
+  "form": {
+    "name_label": "Nama rumah tangga",
+    "name_placeholder": "misalnya: Keluarga Chen"
+  },
   "filters": {
+    "search_placeholder": "Cari rumah tangga, orang tua, siswa…",
     "active": "Aktif",
-    "archived": "Tersimpan",
-    "search_placeholder": "Cari rumah tangga, orang tua, siswa…"
+    "archived": "Tersimpan"
+  },
+  "empty": {
+    "none": "Belum ada rumah tangga",
+    "archived_none": "Tidak ada rumah tangga yang diarsipkan",
+    "description": "Sebuah rumah tangga mengelompokkan saudara kandung di bawah satu kontak penagihan. Saat Anda menghubungkan orang tua dengan siswa, rumah tangga akan dibuat secara otomatis.",
+    "create": "Buat rumah tangga"
   },
   "common": {
     "loading": "Sedang dimuat…",
@@ -18,34 +32,101 @@
   },
   "card": {
     "archived_badge": "Tersimpan",
-    "students_one": "{{count}} siswa",
-    "students_other": "{{count}} siswa",
     "parent_label_fallback": "Orang tua",
     "needs_primary": "Membutuhkan orang tua utama",
     "no_students": "Tidak ada siswa",
+    "students_one": "{{count}} siswa",
+    "students_other": "{{count}} siswa",
     "parents_one": "{{count}} orang tua",
     "parents_other": "{{count}} orang tua",
     "summary": "{{students}} · {{parents}}"
   },
   "suggestion": {
-    "dismiss": "Tutup",
     "fallback_parent": "orang tua yang berbagi tanggung jawab",
     "question_existing": "{{students}} {{parent}}. Apakah akan digabungkan menjadi satu rumah tangga?",
     "question_new": "{{students}} {{parent}}. Apakah akan menggabungkannya menjadi rumah tangga baru?",
-    "accept": "Kelompok →"
+    "accept": "Kelompok →",
+    "dismiss": "Tutup"
   },
-  "page": {
-    "subtitle": "Orang",
-    "title": "Rumah tangga"
-  },
-  "form": {
-    "name_label": "Nama rumah tangga",
-    "name_placeholder": "misalnya: Keluarga Chen"
-  },
-  "empty": {
-    "none": "Belum ada rumah tangga",
-    "archived_none": "Tidak ada rumah tangga yang diarsipkan",
-    "description": "Sebuah rumah tangga mengelompokkan saudara kandung di bawah satu kontak penagihan. Saat Anda menghubungkan orang tua dengan siswa, rumah tangga akan dibuat secara otomatis.",
-    "create": "Buat rumah tangga"
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "Tidak dapat memuat data rumah tangga.",
+    "not_found_title": "Tidak ditemukan",
+    "not_found_body": "Rumah tangga tidak ditemukan.",
+    "subtitle_archived": "Rumah tangga yang telah diarsipkan",
+    "subtitle_active": "Rumah tangga",
+    "archive": "Arsip",
+    "unarchive": "Kembalikan ke arsip",
+    "confirm_archive": "Apakah rumah tangga ini akan disimpan dalam arsip? Siswa dan orang tua tetap berada di tempat; rumah tangga ini disembunyikan dari daftar.",
+    "edit_name": "Edit nama",
+    "save": "Simpan",
+    "saving": "Menyimpan…",
+    "cancel": "Batalkan",
+    "billed_to_prefix": "Ditagih kepada",
+    "parent_fallback": "Orang tua",
+    "needs_primary": "Diperlukan orang tua utama",
+    "tabs": {
+      "members": "Anggota",
+      "sessions": "Sesi",
+      "invoices": "Faktur",
+      "notes": "Catatan"
+    },
+    "members": {
+      "parents_heading": "Orang tua",
+      "add_co_parent": "+ Tambahkan orang tua bersama",
+      "cancel": "Batalkan",
+      "no_parents": "Belum ada orang tua yang terhubung.",
+      "no_name": "(tanpa nama)",
+      "primary_badge": "Utama",
+      "make_primary": "Jadikan sebagai orang tua utama",
+      "remove": "Hapus",
+      "confirm_remove_parent": "Apakah ingin menghapus orang tua ini dari rumah tangga? Mereka tetap memiliki akses ke siswa yang terhubung dengan mereka.",
+      "students_heading": "Siswa",
+      "add_sibling": "+ Tambahkan saudara kandung",
+      "no_students": "Belum ada siswa di rumah tangga ini.",
+      "remove_from_household": "Hapus dari rumah tangga",
+      "confirm_remove_student": "Hapus siswa ini dari rumah tangga? Sesi dan faktur tetap utuh."
+    },
+    "add_parent": {
+      "loading": "Memuat orang tua…",
+      "select_placeholder": "Pilih orang tua yang sudah ada…",
+      "no_name": "(tanpa nama)",
+      "invite_hint": "Untuk menambahkan orang tua baru, undang mereka dari halaman siswa — akun mereka akan dibuat setelah mereka menerima undangan.",
+      "submit": "Tambahkan orang tua",
+      "submitting": "Menambahkan…",
+      "error_default": "Tidak dapat menambahkan orang tua."
+    },
+    "add_student": {
+      "loading": "Memuat data siswa…",
+      "select_placeholder": "Pilih seorang siswa…",
+      "in_other_household": " (di rumah tangga lain)",
+      "confirm_move": "Siswa ini berada di rumah tangga lain. Apakah ingin memindahkannya ke rumah tangga ini?",
+      "link_parents": "Hubungkan juga siswa ini dengan orang tua dalam rumah tangga tersebut",
+      "submit": "Tambahkan ke rumah tangga",
+      "submitting": "Menambahkan…",
+      "error_default": "Tidak dapat menambahkan siswa."
+    },
+    "sessions_tab": {
+      "empty": "Belum ada sesi untuk rumah tangga ini.",
+      "col_when": "Ketika",
+      "col_student": "Mahasiswa",
+      "col_subject_topic": "Mata pelajaran · Topik",
+      "col_status": "Status",
+      "col_amount": "Jumlah"
+    },
+    "invoices_tab": {
+      "empty": "Belum ada tagihan untuk rumah tangga ini. Fitur penagihan massal akan segera hadir — Anda dapat menagih siswa secara individual dari halaman Tagihan.",
+      "household_fallback": "Rumah tangga",
+      "issued_prefix": "Diterbitkan{{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "Alergi, batasan jadwal, preferensi penagihan…",
+      "save": "Simpan catatan",
+      "saving": "Menyimpan…",
+      "cancel": "Batalkan",
+      "empty": "Belum ada catatan rumah tangga.",
+      "edit": "Edit catatan",
+      "add": "Tambahkan catatan"
+    }
   }
 }

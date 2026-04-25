@@ -1,14 +1,28 @@
 {
+  "page": {
+    "subtitle": "Personas",
+    "title": "Hogares"
+  },
   "actions": {
-    "cancel": "Cancelar",
     "new": "+ Nuevo hogar",
+    "cancel": "Cancelar",
     "create": "Crear",
     "creating": "Creando…"
   },
+  "form": {
+    "name_label": "Nombre del hogar",
+    "name_placeholder": "p. ej., la familia Chen"
+  },
   "filters": {
+    "search_placeholder": "Buscar hogar, padre, estudiante…",
     "active": "Activo",
-    "archived": "Archivado",
-    "search_placeholder": "Buscar hogar, padre, estudiante…"
+    "archived": "Archivado"
+  },
+  "empty": {
+    "none": "Aún no hay hogares",
+    "archived_none": "No hay hogares archivados",
+    "description": "Un hogar agrupa a los hermanos bajo un único contacto de facturación. Cuando vinculas a un padre o madre con un alumno, se crea automáticamente un hogar.",
+    "create": "Crear un hogar"
   },
   "common": {
     "loading": "Cargando…",
@@ -18,34 +32,101 @@
   },
   "card": {
     "archived_badge": "Archivado",
-    "students_one": "{{count}} estudiante",
-    "students_other": "{{count}} estudiantes",
     "parent_label_fallback": "Padre",
     "needs_primary": "Necesita un progenitor principal",
     "no_students": "No hay estudiantes",
+    "students_one": "{{count}} estudiante",
+    "students_other": "{{count}} estudiantes",
     "parents_one": "{{count}} padre",
     "parents_other": "{{count}} padres",
     "summary": "{{students}} · {{parents}}"
   },
   "suggestion": {
-    "dismiss": "Descartar",
     "fallback_parent": "un progenitor compartido",
     "question_existing": "{{students}} compartir {{parent}}. ¿Agruparlos en un solo hogar?",
     "question_new": "{{students}} compartir {{parent}}. ¿Agruparlos en un nuevo hogar?",
-    "accept": "Grupo →"
+    "accept": "Grupo →",
+    "dismiss": "Descartar"
   },
-  "page": {
-    "subtitle": "Personas",
-    "title": "Hogares"
-  },
-  "form": {
-    "name_label": "Nombre del hogar",
-    "name_placeholder": "p. ej., la familia Chen"
-  },
-  "empty": {
-    "none": "Aún no hay hogares",
-    "archived_none": "No hay hogares archivados",
-    "description": "Un hogar agrupa a los hermanos bajo un único contacto de facturación. Cuando vinculas a un padre o madre con un alumno, se crea automáticamente un hogar.",
-    "create": "Crear un hogar"
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "No se ha podido cargar el hogar.",
+    "not_found_title": "No encontrado",
+    "not_found_body": "No se ha encontrado el hogar.",
+    "subtitle_archived": "Hogar archivado",
+    "subtitle_active": "Hogar",
+    "archive": "Archivo",
+    "unarchive": "Desarchivar",
+    "confirm_archive": "¿Archivar este hogar? Los estudiantes y los padres permanecen en su sitio; el hogar se oculta de las listas.",
+    "edit_name": "Editar nombre",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "billed_to_prefix": "A cargo de",
+    "parent_fallback": "Padre",
+    "needs_primary": "Necesita un padre principal",
+    "tabs": {
+      "members": "Miembros",
+      "sessions": "Sesiones",
+      "invoices": "Facturas",
+      "notes": "Notas"
+    },
+    "members": {
+      "parents_heading": "Padres",
+      "add_co_parent": "+ Añadir copadre",
+      "cancel": "Cancelar",
+      "no_parents": "Aún no hay padres vinculados.",
+      "no_name": "(sin nombre)",
+      "primary_badge": "Principal",
+      "make_primary": "Establecer como principal",
+      "remove": "Eliminar",
+      "confirm_remove_parent": "¿Desea eliminar a este padre del hogar? Mantendrá el acceso a los alumnos vinculados a él.",
+      "students_heading": "Estudiantes",
+      "add_sibling": "+ Añadir hermano",
+      "no_students": "Aún no hay estudiantes en este hogar.",
+      "remove_from_household": "Eliminar del hogar",
+      "confirm_remove_student": "¿Desea eliminar a este estudiante del hogar? Las sesiones y las facturas se mantendrán intactas."
+    },
+    "add_parent": {
+      "loading": "Cargando padres…",
+      "select_placeholder": "Selecciona un padre existente…",
+      "no_name": "(sin nombre)",
+      "invite_hint": "Para añadir un nuevo padre o madre, invítalos desde la página del alumno; se creará su perfil cuando acepten la invitación.",
+      "submit": "Añadir progenitor",
+      "submitting": "Añadiendo…",
+      "error_default": "No se ha podido añadir el padre."
+    },
+    "add_student": {
+      "loading": "Cargando datos de los alumnos…",
+      "select_placeholder": "Elige un estudiante…",
+      "in_other_household": " (en otro hogar)",
+      "confirm_move": "Este estudiante pertenece a otro hogar. ¿Desea trasladarlo a este hogar?",
+      "link_parents": "Vincula también a este alumno con los padres del hogar",
+      "submit": "Añadir al hogar",
+      "submitting": "Añadiendo…",
+      "error_default": "No se ha podido añadir al estudiante."
+    },
+    "sessions_tab": {
+      "empty": "Aún no hay sesiones para este hogar.",
+      "col_when": "Cuando",
+      "col_student": "Estudiante",
+      "col_subject_topic": "Asunto · Tema",
+      "col_status": "Estado",
+      "col_amount": "Importe"
+    },
+    "invoices_tab": {
+      "empty": "Aún no hay facturas para este hogar. La facturación por lotes estará disponible próximamente; puedes facturar a cada estudiante de forma individual desde la página Facturas.",
+      "household_fallback": "Hogar",
+      "issued_prefix": "Publicado el {{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "Alergias, restricciones de horarios, preferencias de facturación...",
+      "save": "Guardar notas",
+      "saving": "Guardando…",
+      "cancel": "Cancelar",
+      "empty": "Aún no hay notas sobre el hogar.",
+      "edit": "Editar notas",
+      "add": "Añadir notas"
+    }
   }
 }

@@ -1,1 +1,56 @@
-{}
+{
+  "test_accounts": {
+    "page": {
+      "subtitle": "Herramientas para propietarios",
+      "title": "Cuentas de prueba"
+    },
+    "intro": {
+      "label": "Cuentas de prueba.",
+      "body": "Se trata de cuentas de prueba precreadas de las que eres propietario. Al iniciar sesión con una de ellas, se abre una nueva sesión sujeta a las mismas reglas de seguridad que cualquier usuario real. Nunca se ven los datos de otros usuarios a través de este proceso."
+    },
+    "list": {
+      "heading": "Tus cuentas de prueba",
+      "loading": "Cargando…",
+      "empty": "Aún no hay cuentas de prueba.",
+      "col_role": "Función",
+      "col_name": "Nombre",
+      "col_email": "Correo electrónico",
+      "col_created": "Creado",
+      "col_last_login": "Último inicio de sesión",
+      "name_dash": "—",
+      "last_login_dash": "—",
+      "login_busy": "…",
+      "login_button": "Iniciar sesión como cuenta de prueba",
+      "delete_button": "Eliminar",
+      "confirm_delete": "¿Desea eliminar la cuenta de prueba {{email}}? Esto eliminará al usuario de autenticación y no se podrá deshacer."
+    },
+    "create": {
+      "heading": "Crear cuenta de prueba",
+      "role_label": "Función",
+      "role_tutor": "Tutor (dentro de tu organización)",
+      "role_parent": "Padre (portal)",
+      "name_label": "Nombre",
+      "name_placeholder": "p. ej., Tutor de prueba Mai",
+      "email_label": "Correo electrónico (opcional; se generará automáticamente si se deja en blanco)",
+      "email_placeholder": "test-tutor-abc123@crestio.test",
+      "submit": "Crear cuenta de prueba",
+      "creating": "Creando…",
+      "success_title": "Cuenta de prueba creada.",
+      "success_email_label": "Correo electrónico:",
+      "success_password_label": "Contraseña inicial:",
+      "success_hint": "Guarda esta contraseña ahora; solo se muestra una vez. O haz clic en «Iniciar sesión como prueba» en la tabla de arriba para obtener un enlace mágico de inicio de sesión."
+    },
+    "recent": {
+      "heading": "Sesiones de prueba recientes",
+      "empty": "Aún no hay inicios de sesión en cuentas de prueba.",
+      "role_unknown": "desconocido",
+      "ended_suffix": " · finalizado"
+    },
+    "errors": {
+      "load_failed": "No se han podido cargar las cuentas de prueba.",
+      "create_failed": "No se ha podido crear la cuenta de prueba.",
+      "login_link_failed": "No se ha podido generar el enlace de inicio de sesión.",
+      "delete_failed": "No se ha podido eliminar."
+    }
+  }
+}

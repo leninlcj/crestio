@@ -19,18 +19,34 @@
     "search_placeholder": "Pesquisar…",
     "not_found": "Não encontrado",
     "dismiss": "Ignorar",
-    "sending": "Enviando…",
-    "done": "Concluído",
-    "more": "Mais",
     "submit": "Enviar",
     "send": "Enviar",
+    "sending": "Enviando…",
     "restore": "Restaurar",
     "discard": "Ignorar",
     "continue": "Continuar",
     "retry": "Tentar novamente",
+    "done": "Concluído",
+    "more": "Mais",
     "less": "Menos",
     "add": "Adicionar",
     "remove": "Remover"
+  },
+  "connectors": {
+    "at_time": "para",
+    "with_tutor": "com o {{name}}",
+    "comma_sep": ", ",
+    "dot_sep": " · "
+  },
+  "calendar_page": {
+    "subtitle": "Agendar",
+    "new_session": "Nova sessão",
+    "today": "Hoje",
+    "week": "Semana",
+    "day": "Dia",
+    "review": "Revisar →",
+    "pending_requests_one": "{{count}} Solicitação dos pais aguardando sua resposta",
+    "pending_requests_other": "{{count}} solicitações dos pais aguardando sua resposta"
   },
   "nav": {
     "overview": "Visão geral",
@@ -65,56 +81,69 @@
     "group_messages": "Mensagens"
   },
   "assistant": {
+    "placeholder": "Pergunte algo…",
     "send": "Enviar",
     "sending": "Enviando…",
-    "confirm_typed_button": "Confirmar",
-    "cancel": "Cancelar",
-    "placeholder": "Pergunte algo…",
     "new_conversation": "Nova conversa",
     "conversations": "Conversas",
     "thinking": "Pensando…",
     "confirm_typed_label": "Digite “confirmar” para continuar",
+    "confirm_typed_button": "Confirmar",
+    "cancel": "Cancelar",
     "execute": "Executar",
     "capability_title": "O que o assistente pode fazer?",
     "capability_close": "Entendi"
   },
   "notifications": {
-    "all": "Todas",
-    "dismiss": "Ignorar",
     "bell_label": "Notificações",
     "empty": "Sem notificações.",
     "unread": "Não lida",
+    "all": "Todas",
     "mark_all_read": "Marcar tudo como lido",
     "mark_read": "Marcar como lida",
+    "dismiss": "Ignorar",
     "see_all": "Ver tudo →"
   },
   "quick_log": {
-    "log_session": "Registro da sessão",
-    "add_student": "Adicionar aluno",
     "label": "Log rápido",
     "title": "Registre algo rapidamente",
-    "voice_note": "Nota de voz"
+    "voice_note": "Nota de voz",
+    "log_session": "Registro da sessão",
+    "add_student": "Adicionar aluno"
+  },
+  "voice_recorder": {
+    "start": "Comece a gravar",
+    "stop": "Cancelar",
+    "recording": "Gravando…",
+    "transcribing": "Transcrevendo…",
+    "error": "Não foi possível transcrever isso — tente novamente."
   },
   "support": {
-    "message": "Mensagem",
-    "send": "Enviar",
-    "close": "Fechar",
     "open_button": "Precisa de ajuda?",
     "title": "Conte-nos o que está acontecendo",
     "subject": "Assunto",
+    "message": "Mensagem",
+    "send": "Enviar",
     "sent_title": "Entendi, obrigado.",
     "sent_body": "Responderemos ao e-mail enviado para sua conta. Você receberá uma resposta em até um dia útil.",
+    "close": "Fechar",
     "error": "Não foi possível enviar. Tente novamente daqui a pouco."
   },
   "billing_gate": {
-    "cta_subscribe": "Inscreva-se",
     "trial_expired_title": "Seu período de avaliação terminou",
     "trial_expired_body": "Inscreva-se para continuar usando o Crestio.",
     "past_due_title": "A assinatura está vencida",
     "past_due_body": "Atualize sua forma de pagamento para continuar.",
     "canceled_title": "Assinatura cancelada",
     "canceled_body": "Reative para continuar trabalhando.",
+    "cta_subscribe": "Inscreva-se",
     "cta_manage": "Gerenciar cobranças"
+  },
+  "error_boundary": {
+    "title": "Algo quebrou.",
+    "body": "A página apresentou um erro inesperado. Tente recarregá-la. Se o problema persistir, entre em contato com o suporte.",
+    "reload": "Atualizar",
+    "contact_support": "Entre em contato com o suporte"
   },
   "status": {
     "draft": "Rascunho",
@@ -137,34 +166,5 @@
     "not_signed_in": "Não está conectado.",
     "rate_limited": "Excesso de solicitações. Tente novamente daqui a pouco.",
     "network": "Problema de rede. Verifique sua conexão."
-  },
-  "connectors": {
-    "at_time": "para",
-    "with_tutor": "com o {{name}}",
-    "comma_sep": ", ",
-    "dot_sep": " · "
-  },
-  "calendar_page": {
-    "subtitle": "Agendar",
-    "new_session": "Nova sessão",
-    "today": "Hoje",
-    "week": "Semana",
-    "day": "Dia",
-    "review": "Revisar →",
-    "pending_requests_one": "{{count}} Solicitação dos pais aguardando sua resposta",
-    "pending_requests_other": "{{count}} solicitações dos pais aguardando sua resposta"
-  },
-  "voice_recorder": {
-    "start": "Comece a gravar",
-    "stop": "Cancelar",
-    "recording": "Gravando…",
-    "transcribing": "Transcrevendo…",
-    "error": "Não foi possível transcrever isso — tente novamente."
-  },
-  "error_boundary": {
-    "title": "Algo quebrou.",
-    "body": "A página apresentou um erro inesperado. Tente recarregá-la. Se o problema persistir, entre em contato com o suporte.",
-    "reload": "Atualizar",
-    "contact_support": "Entre em contato com o suporte"
   }
 }

@@ -3,38 +3,6 @@
     "subtitle": "দল",
     "title": "টিউটররা"
   },
-  "table": {
-    "name": "নাম",
-    "subjects": "বিষয়সমূহ",
-    "students": "শিক্ষার্থীরা",
-    "em_dash": "—",
-    "linked_login": "লিঙ্কড লগইন",
-    "pay_rate": "বেতন হার",
-    "this_month": "এই মাসে",
-    "linked_yes": "হ্যাঁ",
-    "linked_no": "না"
-  },
-  "new": {
-    "page_subtitle": "শিক্ষকবৃন্দ",
-    "email_label": "ইমেল",
-    "phone_label": "ফোন",
-    "notes_label": "নোটস",
-    "saving": "সংরক্ষণ হচ্ছে…",
-    "cancel": "বাতিল করুন",
-    "not_signed_in": "সাইন ইন করা নেই।",
-    "no_organization": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।",
-    "page_title": "নতুন শিক্ষক",
-    "name_label": "নাম *",
-    "subjects_label": "তারা যে বিষয়গুলো পড়ান",
-    "subjects_placeholder": "গণিত, রসায়ন",
-    "subjects_hint": "কমা দ্বারা পৃথক।",
-    "pay_rate_label": "প্রতি ঘণ্টার বেতন",
-    "pay_rate_placeholder": "যেমন ৫৫",
-    "submit": "টিউটর তৈরি করুন"
-  },
-  "common": {
-    "loading": "লোড হচ্ছে…"
-  },
   "actions": {
     "add": "টিউটর যোগ করুন",
     "add_one": "একজন টিউটর যোগ করুন"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "এখনও কোনো টিউটর নেই",
     "description": "যখন আপনি আপনার ব্যবসায় পড়ানোর জন্য কাউকে যুক্ত করবেন, তখন তাদের টিউটর হিসেবে যোগ করুন। যদি আপনি একক টিউটর হন, তাহলে এটি এড়িয়ে যেতে পারেন।"
+  },
+  "table": {
+    "name": "নাম",
+    "subjects": "বিষয়সমূহ",
+    "linked_login": "লিঙ্কড লগইন",
+    "students": "শিক্ষার্থীরা",
+    "pay_rate": "বেতন হার",
+    "this_month": "এই মাসে",
+    "linked_yes": "হ্যাঁ",
+    "linked_no": "না",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "শিক্ষকবৃন্দ",
+    "page_title": "নতুন শিক্ষক",
+    "name_label": "নাম *",
+    "email_label": "ইমেল",
+    "phone_label": "ফোন",
+    "subjects_label": "তারা যে বিষয়গুলো পড়ান",
+    "subjects_placeholder": "গণিত, রসায়ন",
+    "subjects_hint": "কমা দ্বারা পৃথক।",
+    "pay_rate_label": "প্রতি ঘণ্টার বেতন",
+    "pay_rate_placeholder": "যেমন ৫৫",
+    "notes_label": "নোটস",
+    "submit": "টিউটর তৈরি করুন",
+    "saving": "সংরক্ষণ হচ্ছে…",
+    "cancel": "বাতিল করুন",
+    "not_signed_in": "সাইন ইন করা নেই।",
+    "no_organization": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।"
+  },
+  "common": {
+    "loading": "লোড হচ্ছে…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "লোড হচ্ছে…",
+    "not_found_title": "মিলেনি",
+    "not_found_body": "টিউটর পাওয়া যায়নি।",
+    "subtitle": "টিউটর",
+    "edit": "সম্পাদনা",
+    "delete": "মুছুন",
+    "save": "সংরক্ষণ করুন",
+    "saving": "সংরক্ষণ হচ্ছে…",
+    "cancel": "বাতিল করুন",
+    "confirm_delete": "{{name}} মুছে ফেলবেন? তাদের পূর্ববর্তী সেশনগুলো থাকবে, কিন্তু টিউটরের লিঙ্ক হারিয়ে যাবে। এটি আর পূর্বাবস্থায় ফেরানো যাবে না।",
+    "form": {
+      "name_label": "নাম",
+      "email_label": "ইমেল",
+      "phone_label": "ফোন",
+      "subjects_label": "বিষয়সমূহ",
+      "pay_rate_label": "বেতন হার",
+      "notes_label": "নোটস"
+    },
+    "contact_eyebrow": "যোগাযোগ",
+    "no_contact": "যোগাযোগ করবেন না।",
+    "teaches_eyebrow": "শিক্ষান দেন",
+    "no_subjects": "—",
+    "pay_eyebrow": "পরিশোধ করুন",
+    "rate_label": "হার: ",
+    "rate_per_hour": " / hr",
+    "total_label": "মোট পরিশোধিত/বকেয়া: ",
+    "notes_eyebrow": "নোটস",
+    "record_eyebrow": "রেকর্ড",
+    "recent_heading": "সাম্প্রতিক সেশনসমূহ",
+    "no_sessions": "এখনো কোনো সেশন নির্ধারিত হয়নি।",
+    "table": {
+      "when": "কখন",
+      "subject": "বিষয়",
+      "duration": "মেয়াদ",
+      "status": "অবস্থা",
+      "pay": "পরিশোধ করুন",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} মিনিট"
+    }
   }
 }

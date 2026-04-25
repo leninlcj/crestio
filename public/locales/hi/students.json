@@ -1,5 +1,6 @@
 {
   "subtitle": "लोग",
+  "subtitle_archived": "आर्काइव किया गया छात्र",
   "subtitle_student": "छात्र",
   "title_list": "छात्र",
   "title_new": "नया छात्र",
@@ -15,14 +16,18 @@
     "unarchive": "अनआर्काइव",
     "delete": "मिटायें"
   },
+  "filters": {
+    "active": "सक्रिय",
+    "archived": "संचित"
+  },
   "empty": {
     "no_students": "अभी तक कोई छात्र नहीं",
     "no_archived": "कोई संग्रहीत छात्र नहीं",
     "description_owner": "सत्रों को ट्रैक करने और बिलिंग शुरू करने के लिए अपना पहला छात्र जोड़ें।",
     "description_tutor": "आपकी संस्था के मालिक आपको छात्र आवंटित करेंगे।",
+    "no_tutor_record": "अभी तक कोई छात्र आवंटित नहीं किया गया है",
     "show_archived": "यहाँ संग्रहीत छात्र दिखाई देते हैं।",
-    "add_first": "एक छात्र जोड़ें",
-    "no_tutor_record": "अभी तक कोई छात्र आवंटित नहीं किया गया है"
+    "add_first": "एक छात्र जोड़ें"
   },
   "loading": "लोड हो रहा है…",
   "denied": "आपके पास इस छात्र तक पहुंच नहीं है। अपने संगठन के मालिक से कहें कि वे आपको यह असाइन करें।",
@@ -33,6 +38,10 @@
     "record": "रिकॉर्ड",
     "track": "ट्रैक"
   },
+  "filter_banner": {
+    "homework_pending": "लंबित होमवर्क वाले छात्रों को दिखा रहा है।",
+    "clear_filter": "फ़िल्टर साफ़ करें"
+  },
   "columns": {
     "name": "नाम",
     "year": "वर्ष",
@@ -40,11 +49,10 @@
     "parent": "अभिभावक",
     "rate": "दर"
   },
+  "search_placeholder": "नाम, स्कूल, अभिभावक खोजें…",
+  "test_pill": "परीक्षा",
   "cards": {
     "contact": "संपर्क",
-    "billing": "बिलिंग",
-    "notes_heading": "टिप्पणियाँ",
-    "assigned_saved": "सहेजा गया।",
     "contact_parent": "अभिभावक: ",
     "contact_email": "ईमेल: ",
     "contact_phone": "फ़ोन: ",
@@ -53,18 +61,18 @@
     "year": "वर्ष: ",
     "school": "विद्यालय: ",
     "subjects": "विषय: ",
+    "billing": "बिलिंग",
     "rate": "दर: ",
     "rate_per_hour": " / प्रति घंटा",
     "lifetime": "जीवन भर: ",
     "sessions": "सत्र: ",
+    "notes_heading": "टिप्पणियाँ",
     "assigned_tutor": "नियुक्त ट्यूटर",
     "unassigned_option": "असाइन नहीं किया गया (मालिक सीधे संभालता है)",
-    "assigned_tutor_hint": "केवल वे ट्यूटर जो अपने निमंत्रण को स्वीकार कर चुके हैं, यहाँ दिखाई देते हैं।"
+    "assigned_tutor_hint": "केवल वे ट्यूटर जो अपने निमंत्रण को स्वीकार कर चुके हैं, यहाँ दिखाई देते हैं।",
+    "assigned_saved": "सहेजा गया।"
   },
   "new_form": {
-    "notes": "टिप्पणियाँ",
-    "save": "छात्र जोड़ें",
-    "cancel": "रद्द करें",
     "name_required": "नाम *",
     "name_placeholder": "उदाहरण के लिए सैम चेन",
     "year_level": "वर्ष स्तर",
@@ -77,15 +85,17 @@
     "parent_phone": "अभिभावक का फोन",
     "parent_email": "अभिभावक ईमेल",
     "hourly_rate": "प्रति घंटा दर",
-    "saving": "जोड़ रहे हैं…"
+    "notes": "टिप्पणियाँ",
+    "save": "छात्र जोड़ें",
+    "saving": "जोड़ रहे हैं…",
+    "cancel": "रद्द करें"
   },
   "parent_access": {
-    "pending_heading": "लंबित",
-    "inviting": "भेज रहा है…",
     "kicker": "अभिभावक पहुँच",
     "heading": "इस छात्र के नोट्स कौन देख सकता है",
     "none_yet": "अभी तक कोई अभिभावक लिंक या आमंत्रित नहीं किया गया है।",
     "linked_heading": "लिंक्ड",
+    "pending_heading": "लंबित",
     "invited_when": "आमंत्रित {{when}}",
     "revoke": "पहुँच रद्द करें",
     "revoke_confirm": "क्या इस अभिभावक की पहुँच रद्द करें? वे अब कोई भी सत्र नहीं देख पाएंगे।",
@@ -93,6 +103,7 @@
     "parent_email": "अभिभावक ईमेल",
     "parent_email_placeholder": "parent@example.com",
     "invite": "माता-पिता को आमंत्रित करें",
+    "inviting": "भेज रहा है…",
     "invitation_sent": "{{email}} को निमंत्रण भेजा गया।",
     "invitation_created": "आमंत्रण बनाया गया।",
     "invitation_share_hint": "यदि माता-पिता को ईमेल प्राप्त नहीं होता है तो इस लिंक को उनके साथ साझा करें:"
@@ -103,25 +114,21 @@
     "new": "नया सत्र"
   },
   "homework_heading": {
+    "kicker": "ट्रैक",
     "heading": "गृहकार्य",
+    "none": "अभी तक कोई होमवर्क असाइन नहीं किया गया है। सत्र लॉग करते समय होमवर्क जोड़ें।",
     "mark_as_done": "पूरा हुआ के रूप में चिह्नित करें",
+    "marking": "चिह्नित कर रहा है…",
     "completed": "पूरा हुआ",
     "overdue": "देर से",
-    "due_label": "बकाया {{date}}",
-    "kicker": "ट्रैक",
-    "none": "अभी तक कोई होमवर्क असाइन नहीं किया गया है। सत्र लॉग करते समय होमवर्क जोड़ें।",
-    "marking": "चिह्नित कर रहा है…",
     "due_today": "आज देय",
     "due_tomorrow": "कल तक जमा करें",
     "due_in_days_one": "{{count}} दिन तक देय",
     "due_in_days_other": "{{count}} दिनों में देय",
-    "marked_complete_on": "{{date}} पर पूरा चिह्नित"
+    "marked_complete_on": "{{date}} पर पूरा चिह्नित",
+    "due_label": "बकाया {{date}}"
   },
   "from_last_session": {
-    "hours_ago_one": "1 घंटा पहले",
-    "hours_ago_other": "{{count}} घंटे पहले",
-    "days_ago_one": "1 दिन पहले",
-    "days_ago_other": "{{count}} दिन पहले",
     "kicker": "पिछले सत्र से",
     "covered_prefix": "पिछली बार आपने कवर किया था: ",
     "homework_done": "✓ होमवर्क पूरा: {{description}}",
@@ -132,30 +139,23 @@
     "open_last_session": "पिछला सत्र खोलें →",
     "log_new_session": "इस संदर्भ के साथ नया सत्र लॉग करें →",
     "yesterday": "कल",
-    "earlier_today": "आज पहले"
+    "earlier_today": "आज पहले",
+    "hours_ago_one": "1 घंटा पहले",
+    "hours_ago_other": "{{count}} घंटे पहले",
+    "days_ago_one": "1 दिन पहले",
+    "days_ago_other": "{{count}} दिन पहले"
   },
   "household": {
     "kicker": "गृहस्थी",
-    "remove": "हटाएँ",
-    "loading": "लोड हो रहा है…",
     "not_in_household": "घर में नहीं।",
     "billing_note": " · बिलिंग समूह भाई-बहनों को एक साथ समूहित करता है",
     "assign": "गृह निर्दिष्ट करें",
     "change": "बदलें",
+    "remove": "हटाएँ",
     "remove_confirm": "क्या इस छात्र को घर से हटाया जाए? वे संगठन में बने रहते हैं।",
-    "pick_placeholder": "एक घर चुनें…"
+    "pick_placeholder": "एक घर चुनें…",
+    "loading": "लोड हो रहा है…"
   },
-  "subtitle_archived": "आर्काइव किया गया छात्र",
-  "filters": {
-    "active": "सक्रिय",
-    "archived": "संचित"
-  },
-  "filter_banner": {
-    "homework_pending": "लंबित होमवर्क वाले छात्रों को दिखा रहा है।",
-    "clear_filter": "फ़िल्टर साफ़ करें"
-  },
-  "search_placeholder": "नाम, स्कूल, अभिभावक खोजें…",
-  "test_pill": "परीक्षा",
   "delete_confirm": "क्या आप {{name}} को स्थायी रूप से हटाना चाहते हैं? इससे उनके सभी सत्र भी हटा दिए जाएंगे। इसे वापस नहीं किया जा सकता।",
   "archive_confirm_archive": "{{name}} का आर्काइव करें? आप बाद में उन्हें अनआर्काइव कर सकते हैं।",
   "archive_confirm_restore": "{{name}} को पुनर्स्थापित करें?"

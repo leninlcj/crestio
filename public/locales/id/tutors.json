@@ -3,38 +3,6 @@
     "subtitle": "Tim",
     "title": "Pengajar"
   },
-  "table": {
-    "name": "Nama",
-    "subjects": "Mata pelajaran",
-    "students": "Siswa",
-    "em_dash": "—",
-    "linked_login": "Masuk melalui akun terhubung",
-    "pay_rate": "Tarif pembayaran",
-    "this_month": "Bulan ini",
-    "linked_yes": "Ya",
-    "linked_no": "Tidak"
-  },
-  "new": {
-    "page_subtitle": "Pengajar",
-    "email_label": "Email",
-    "phone_label": "Telepon",
-    "notes_label": "Catatan",
-    "saving": "Menyimpan…",
-    "cancel": "Batalkan",
-    "not_signed_in": "Belum masuk.",
-    "no_organization": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai.",
-    "page_title": "Tutor baru",
-    "name_label": "Nama *",
-    "subjects_label": "Mata pelajaran yang mereka ajarkan",
-    "subjects_placeholder": "Matematika, Kimia",
-    "subjects_hint": "Dipisahkan dengan koma.",
-    "pay_rate_label": "Tarif per jam",
-    "pay_rate_placeholder": "misalnya 55",
-    "submit": "Buat tutor"
-  },
-  "common": {
-    "loading": "Sedang dimuat…"
-  },
   "actions": {
     "add": "Tambahkan tutor",
     "add_one": "Tambahkan tutor"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "Belum ada tutor",
     "description": "Tambahkan tutor saat Anda merekrut orang untuk mengajar di bisnis Anda. Jika Anda adalah tutor mandiri, Anda dapat melewati langkah ini."
+  },
+  "table": {
+    "name": "Nama",
+    "subjects": "Mata pelajaran",
+    "linked_login": "Masuk melalui akun terhubung",
+    "students": "Siswa",
+    "pay_rate": "Tarif pembayaran",
+    "this_month": "Bulan ini",
+    "linked_yes": "Ya",
+    "linked_no": "Tidak",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "Pengajar",
+    "page_title": "Tutor baru",
+    "name_label": "Nama *",
+    "email_label": "Email",
+    "phone_label": "Telepon",
+    "subjects_label": "Mata pelajaran yang mereka ajarkan",
+    "subjects_placeholder": "Matematika, Kimia",
+    "subjects_hint": "Dipisahkan dengan koma.",
+    "pay_rate_label": "Tarif per jam",
+    "pay_rate_placeholder": "misalnya 55",
+    "notes_label": "Catatan",
+    "submit": "Buat tutor",
+    "saving": "Menyimpan…",
+    "cancel": "Batalkan",
+    "not_signed_in": "Belum masuk.",
+    "no_organization": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai."
+  },
+  "common": {
+    "loading": "Sedang dimuat…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "Sedang dimuat…",
+    "not_found_title": "Tidak ditemukan",
+    "not_found_body": "Pengajar tidak ditemukan.",
+    "subtitle": "Pengajar",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "save": "Simpan",
+    "saving": "Menyimpan…",
+    "cancel": "Batalkan",
+    "confirm_delete": "Hapus {{name}}? Sesi-sesi sebelumnya tetap ada, tetapi tautan tutor akan hilang. Tindakan ini tidak dapat dibatalkan.",
+    "form": {
+      "name_label": "Nama",
+      "email_label": "Email",
+      "phone_label": "Telepon",
+      "subjects_label": "Mata pelajaran",
+      "pay_rate_label": "Tarif pembayaran",
+      "notes_label": "Catatan"
+    },
+    "contact_eyebrow": "Kontak",
+    "no_contact": "Tidak ada kontak.",
+    "teaches_eyebrow": "Mengajar",
+    "no_subjects": "—",
+    "pay_eyebrow": "Bayar",
+    "rate_label": "Tarif: ",
+    "rate_per_hour": " / hr",
+    "total_label": "Total yang telah dibayar/terutang: ",
+    "notes_eyebrow": "Catatan",
+    "record_eyebrow": "Catatan",
+    "recent_heading": "Sesi terbaru",
+    "no_sessions": "Belum ada sesi yang ditugaskan.",
+    "table": {
+      "when": "Kapan",
+      "subject": "Subjek",
+      "duration": "Durasi",
+      "status": "Status",
+      "pay": "Bayar",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} min"
+    }
   }
 }

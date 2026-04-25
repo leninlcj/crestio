@@ -4,9 +4,8 @@
     "greeting": "Halo {{name}}",
     "greeting_fallback": "Dasbor Anda",
     "loading_error": "Tidak dapat memuat dasbor Anda.",
-    "this_week_empty": "Tidak ada sesi minggu ini.",
-    "no_access": "Anda tidak memiliki akses.",
     "this_week": "Minggu ini",
+    "this_week_empty": "Tidak ada sesi minggu ini.",
     "recent_updates": "Pembaruan terbaru dari tutor Anda",
     "your_children": "Anak-anak Anda",
     "at_a_glance": "Sekilas",
@@ -16,6 +15,7 @@
       "paid": "Berbayar",
       "outstanding": "Belum diselesaikan"
     },
+    "no_access": "Anda tidak memiliki akses.",
     "change_requested": "Perubahan diminta"
   },
   "nav": {
@@ -75,27 +75,27 @@
   },
   "invoices_page": {
     "kicker": "Faktur",
-    "due_label": "{{date}}",
-    "status_paid": "Berbayar",
-    "status_overdue": "Tunggakan",
     "heading": "Tagihan Anda",
     "empty": "Belum ada faktur.",
     "outstanding_eyebrow": "Belum diselesaikan",
     "outstanding_note": "Untuk melakukan pembayaran, ikuti petunjuk yang tertera pada setiap faktur dari tutor Anda.",
     "family_badge": "KELUARGA",
-    "issued_label": "Diterbitkan{{date}}"
+    "issued_label": "Diterbitkan{{date}}",
+    "due_label": "{{date}}",
+    "status_paid": "Berbayar",
+    "status_overdue": "Tunggakan"
   },
   "invoice_detail": {
+    "back": "← Faktur",
     "not_found": "Tagihan tidak ditemukan.",
+    "number_label": "Faktur {{number}}",
+    "heading_fallback": "Faktur",
     "status_paid": "Berbayar",
     "status_overdue": "Tunggakan",
     "issued": "Diterbitkan",
     "due": "Jatuh tempo",
-    "sessions": "Sesi",
-    "back": "← Faktur",
-    "number_label": "Faktur {{number}}",
-    "heading_fallback": "Faktur",
     "period": "Periode",
+    "sessions": "Sesi",
     "no_line_items": "Tidak ada item.",
     "no_sessions": "Tidak ada sesi pada faktur ini.",
     "minutes_suffix": "{{minutes}} menit",
@@ -114,13 +114,13 @@
     "heading": "Pemberitahuan Anda"
   },
   "signin": {
+    "kicker": "Portal orang tua",
     "heading": "Masuk",
     "email_label": "Email",
     "password_label": "Kata sandi",
+    "forgot": "Lupa kata sandi?",
     "submit": "Masuk",
     "submitting": "Masuk…",
-    "kicker": "Portal orang tua",
-    "forgot": "Lupa kata sandi?",
     "error_generic": "Gagal masuk.",
     "error_not_parent": "Masuk ini hanya untuk orang tua. Jika Anda seorang tutor, silakan masuk di /auth/signin.",
     "forgot_need_email": "Masukkan alamat email Anda terlebih dahulu, lalu ketuk Lupa kata sandi.",
@@ -128,26 +128,26 @@
     "invitation_hint": "Belum menerima undangan dari tutor Anda? Minta mereka untuk mengirimkannya."
   },
   "settings_page": {
+    "kicker": "Akun",
     "heading": "Pengaturan",
     "loading": "Sedang dimuat…",
+    "details_heading": "Detail Anda",
     "email_label": "Email",
+    "email_hint": "Hubungi tutor Anda jika alamat email Anda perlu diubah.",
+    "name_label": "Nama",
     "save": "Simpan",
     "saving": "Menyimpan…",
     "saved": "Tersimpan.",
-    "new_password_label": "Kata sandi baru",
-    "updating": "Sedang diperbarui…",
-    "sign_out_heading": "Keluar",
-    "sign_out": "Keluar",
-    "kicker": "Akun",
-    "details_heading": "Detail Anda",
-    "email_hint": "Hubungi tutor Anda jika alamat email Anda perlu diubah.",
-    "name_label": "Nama",
     "change_password": "Ubah kata sandi",
+    "new_password_label": "Kata sandi baru",
     "password_min": "Setidaknya 8 karakter.",
     "password_too_short": "Kata sandi harus terdiri dari minimal 8 karakter.",
     "password_updated": "Kata sandi telah diperbarui.",
     "update_password": "Perbarui kata sandi",
+    "updating": "Sedang diperbarui…",
+    "sign_out_heading": "Keluar",
     "sign_out_body": "Keluar akan mengakhiri sesi ini.",
+    "sign_out": "Keluar",
     "msg_notifs_heading": "Pemberitahuan pesan",
     "msg_notifs_body": "Pilih kapan Crestio mengirimkan email kepada Anda. Pesan dalam aplikasi tetap akan muncul.",
     "msg_when_label": "Kirimkan email kepada saya ketika tutor saya mengirimkan pesan kepada saya",
@@ -157,7 +157,6 @@
   },
   "settings_notifications_page": {
     "kicker": "Pengaturan",
-    "saved": "Tersimpan.",
     "heading": "Pemberitahuan email",
     "intro": "Pemberitahuan dalam aplikasi selalu muncul terlepas dari pengaturan ini. Pengaturan ini hanya mengontrol pengiriman email.",
     "toggles": {
@@ -185,12 +184,10 @@
         "label": "Hanya pesan mendesak",
         "description": "Jika diaktifkan, lewati email untuk pesan biasa atau pesan informasi."
       }
-    }
+    },
+    "saved": "Tersimpan."
   },
   "accept": {
-    "email_label": "Email",
-    "name_label": "Nama Anda",
-    "creating": "Membuat akun…",
     "kicker": "Portal orang tua",
     "checking": "Memeriksa undangan…",
     "missing_token": "Tautan ini tidak memiliki token undangan.",
@@ -201,12 +198,15 @@
     "back_home": "Kembali ke beranda",
     "accept_heading": "Terima undangan Anda",
     "accept_body": "{{tutor}} telah mengundang Anda untuk melihat sesi bimbingan belajar {{student}}.",
+    "email_label": "Email",
     "email_hint": "Dari undangan Anda. Tidak dapat diubah di sini.",
+    "name_label": "Nama Anda",
     "name_placeholder": "Opsional",
     "password_label": "Buat kata sandi",
     "password_min": "Setidaknya 8 karakter.",
     "password_too_short": "Kata sandi harus terdiri dari minimal 8 karakter.",
     "create": "Buat akun induk",
+    "creating": "Membuat akun…",
     "create_failed": "Tidak dapat membuat akun."
   }
 }

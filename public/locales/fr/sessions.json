@@ -1,42 +1,42 @@
 {
   "subtitle": "Séances",
+  "subtitle_session": "Session",
   "title_list": "Séances",
   "title_new": "Enregistrer la session",
   "title_loading": "…",
   "title_not_available": "Non disponible",
   "title_not_found": "Introuvable",
   "filter": {
-    "completed": "Terminé",
-    "needs_polishing": "À peaufiner",
     "all": "Toutes",
     "drafts": "Brouillons",
     "drafts_count": "Brouillons ({{count}})",
-    "upcoming": "À venir"
+    "upcoming": "À venir",
+    "completed": "Terminé",
+    "needs_polishing": "À peaufiner"
   },
   "columns": {
-    "student": "Étudiant",
-    "status": "Statut",
-    "paid": "Payant",
     "when": "Quand",
+    "student": "Étudiant",
     "tutor": "Tuteur",
     "subject_topic": "Sujet · Thème",
     "duration": "Durée",
-    "amount": "Montant"
+    "status": "Statut",
+    "amount": "Montant",
+    "paid": "Payant"
   },
   "actions": {
     "new": "Enregistrer la session",
     "new_short": "Nouvelle session",
     "edit": "Modifier",
     "mark_completed": "Marquer comme terminé",
+    "mark_paid": "Marquer comme «{{status}}»",
     "cancel_session": "Annuler la séance",
     "no_show": "Absence",
     "delete": "Supprimer",
+    "delete_confirm": "Supprimer cette session ? Cette action ne peut pas être annulée.",
     "save": "Enregistrer",
     "save_session": "Enregistrer la session",
     "saving": "Enregistrement en cours…",
-    "cancel": "Annuler",
-    "mark_paid": "Marquer comme «{{status}}»",
-    "delete_confirm": "Supprimer cette session ? Cette action ne peut pas être annulée.",
     "view_student": "Voir l'étudiant",
     "resume_draft": "Brouillon de CV",
     "discard_draft": "Ignorer",
@@ -46,7 +46,8 @@
     "polish_with_ai": "Polonais avec l'IA",
     "polishing": "Polissage…",
     "edit_shared": "Modifier la version partagée",
-    "done_editing": "Modification terminée"
+    "done_editing": "Modification terminée",
+    "cancel": "Annuler"
   },
   "loading": "Chargement en cours…",
   "not_found": "Session introuvable.",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "Étudiant",
-    "status": "Statut",
     "student_required": "Étudiant *",
     "tutor": "Tuteur",
     "tutor_self": "Vous",
@@ -78,6 +78,7 @@
     "charge_rate": "Tarif horaire",
     "pay_rate": "Tarif horaire du tuteur",
     "pay_rate_hint": "Laissez ce champ vide si vous avez donné des cours particuliers lors de cette session.",
+    "status": "Statut",
     "notes_internal": "Notes personnelles",
     "notes_internal_placeholder": "Quels sujets avez-vous abordés ? Comment cela s'est-il passé ?",
     "notes_internal_hint": "Vous êtes le seul à les voir. Appuyez sur le micro pour dicter — les transcriptions s'ajoutent automatiquement. Cliquez sur « Polir avec l'IA » pour publier une version adaptée aux parents.",
@@ -110,38 +111,11 @@
     "no_show": "Absence"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "Nouvelle session",
     "banner_unfinished": "Vous avez des modifications en attente provenant de {{when}}.",
     "draft_subtitle_new": "Nouvelle session pour {{name}}",
+    "draft_subtitle_new_no_name": "Nouvelle session",
     "last_edited": "Dernière modification le {{when}}"
   },
-  "detail": {
-    "due_prefix": "{{date}}",
-    "overdue_badge": "En retard",
-    "when": "Quand",
-    "what": "Quoi",
-    "money": "L'argent",
-    "charge": "frais",
-    "tutor_pay": "rémunération du tuteur",
-    "tutor_with": "Formateur : {{name}}",
-    "tutor_you": "Tuteur : Vous",
-    "parent_facing_notes": "Notes à l'intention des parents",
-    "private_notes": "Notes personnelles",
-    "homework_set": "Devoirs à faire",
-    "next_focus": "Points à aborder lors de la prochaine session",
-    "completed_badge": "✓ Terminé"
-  },
-  "save_status": {
-    "saving": "Enregistrement en cours…",
-    "saved_locally": "Enregistré localement",
-    "saved": "Enregistré"
-  },
-  "errors": {
-    "not_signed_in": "Vous n'êtes pas connecté.",
-    "select_at_least_one": "Sélectionnez au moins une session.",
-    "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai."
-  },
-  "subtitle_session": "Session",
   "relative_time": {
     "just_now": "à l'instant",
     "min_ago_one": "Il y a 1 min",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "Une erreur s'est produite. Vos notes ont bien été enregistrées — veuillez réessayer dans quelques instants.",
   "polish_needs_student_duration": "Commencez par choisir un élève et la durée.",
-  "select_student": "Choisissez un élève"
+  "select_student": "Choisissez un élève",
+  "detail": {
+    "when": "Quand",
+    "what": "Quoi",
+    "money": "L'argent",
+    "charge": "frais",
+    "tutor_pay": "rémunération du tuteur",
+    "tutor_with": "Formateur : {{name}}",
+    "tutor_you": "Tuteur : Vous",
+    "parent_facing_notes": "Notes à l'intention des parents",
+    "private_notes": "Notes personnelles",
+    "homework_set": "Devoirs à faire",
+    "next_focus": "Points à aborder lors de la prochaine session",
+    "due_prefix": "{{date}}",
+    "completed_badge": "✓ Terminé",
+    "overdue_badge": "En retard"
+  },
+  "save_status": {
+    "saved_locally": "Enregistré localement",
+    "saving": "Enregistrement en cours…",
+    "saved": "Enregistré"
+  },
+  "errors": {
+    "select_at_least_one": "Sélectionnez au moins une session.",
+    "not_signed_in": "Vous n'êtes pas connecté.",
+    "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai."
+  }
 }

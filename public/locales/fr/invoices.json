@@ -20,11 +20,11 @@
     "per_student": "Par élève"
   },
   "columns": {
-    "billed_to": "Facturé à",
-    "status": "Statut",
     "number": "Nombre",
+    "billed_to": "Facturé à",
     "issued": "Émises",
     "due": "À payer",
+    "status": "Statut",
     "total": "Total"
   },
   "not_found": "Facture introuvable.",
@@ -42,13 +42,13 @@
     "period_custom": "Gamme personnalisée…",
     "from": "Source :",
     "to": "À",
+    "back_to_list": "Retour à la liste des factures",
     "households": "Ménages",
     "sessions": "Séances",
     "unbilled_total": "Total non facturé",
+    "nothing_title": "Rien à facturer",
     "nothing_body": "Aucune séance terminée et non facturée pour cette période. Enregistrez d'autres séances ou sélectionnez une autre période.",
     "loading": "Chargement en cours…",
-    "back_to_list": "Retour à la liste des factures",
-    "nothing_title": "Rien à facturer",
     "save_drafts": "Enregistrer comme brouillons",
     "send": "Envoyer les factures"
   },

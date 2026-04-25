@@ -1,50 +1,22 @@
 {
-  "nav": {
-    "sign_in": "Se connecter",
-    "pricing": "Tarifs",
-    "start_trial": "Commencez votre essai gratuit",
-    "open_menu": "Ouvrir le menu",
-    "close_menu": "Fermer le menu"
-  },
-  "footer": {
-    "sign_in": "Se connecter",
-    "privacy": "Confidentialité",
-    "terms": "Conditions générales",
-    "made_in": "Fabriqué en Australie · 2026",
-    "support": "Assistance"
-  },
-  "contact": {
-    "email_label": "E-mail",
-    "eyebrow": "Nous contacter",
-    "heading": "Dites bonjour",
-    "intro": "Questions, rapports de bogues, commentaires, compliments, réclamations : tout est le bienvenu. Une personne lit ces messages et y répond, généralement dans la journée.",
-    "copy": "Copier",
-    "copied": "Copié",
-    "or_send_via_mail": "Ou envoyez-le via votre application de messagerie",
-    "name_label": "Votre nom (facultatif)",
-    "email_field_label": "Votre adresse e-mail (facultatif)",
-    "email_hint": "Indiquez-le si vous souhaitez recevoir une réponse.",
-    "message_label": "Message *",
-    "message_placeholder": "Qu'avez-vous en tête ?",
-    "submit": "Ouvrir dans Mail",
-    "submit_note": "Cela ouvre votre application de messagerie par défaut avec le message pré-rédigé. Le message ne sera envoyé qu'une fois que vous l'aurez validé.",
-    "footer_location": "crestio · Sydney · 2026",
-    "subject_named": "Message d'{{name}}",
-    "subject_anonymous": "Message provenant du site web de Crestio",
-    "body_from": "Source : {{name}}",
-    "body_reply_to": "Répondre à : {{email}}"
-  },
   "meta": {
     "home_title": "Crestio — logiciel destiné aux tuteurs australiens",
     "home_description": "Gérez vos élèves, enregistrez les sessions, peaufinez vos notes grâce à l'IA et partagez les progrès avec les parents — le tout depuis un seul tableau de bord. À partir de 24 $/mois. Essai gratuit de 7 jours.",
     "contact_title": "Contact · Crestio"
+  },
+  "nav": {
+    "pricing": "Tarifs",
+    "sign_in": "Se connecter",
+    "start_trial": "Commencer l'essai gratuit",
+    "open_menu": "Ouvrir le menu",
+    "close_menu": "Fermer le menu"
   },
   "deleted_banner": "Votre compte a été supprimé. Nous regrettons votre départ.",
   "hero": {
     "eyebrow": "Pour les tuteurs indépendants et les petites équipes",
     "heading": "L'outil tout-en-un pour les tuteurs qui prennent leur travail au sérieux.",
     "subheading": "Gérez vos élèves, enregistrez les sessions, peaufinez vos notes grâce à l'IA et partagez les progrès avec les parents — le tout depuis un seul tableau de bord. Pour les tuteurs indépendants et les petites équipes.",
-    "cta": "Commencez votre essai gratuit",
+    "cta": "Commencer l'essai gratuit",
     "price_note": "À partir de {{price}} par mois. Essai gratuit de 7 jours. Résiliation possible à tout moment.",
     "see_plans": "Voir tous les forfaits →"
   },
@@ -153,5 +125,33 @@
     "button": "Commencer l'essai gratuit",
     "questions_part1": "Des questions ? Envoyez-nous un e-mail ",
     "questions_part2": "."
+  },
+  "footer": {
+    "made_in": "Fabriqué en Australie · 2026",
+    "sign_in": "Se connecter",
+    "privacy": "Confidentialité",
+    "terms": "Conditions générales",
+    "support": "Assistance"
+  },
+  "contact": {
+    "eyebrow": "Nous contacter",
+    "heading": "Dites bonjour",
+    "intro": "Questions, rapports de bogues, commentaires, compliments, réclamations : tout est le bienvenu. Une personne lit ces messages et y répond, généralement dans la journée.",
+    "email_label": "E-mail",
+    "copy": "Copier",
+    "copied": "Copié",
+    "or_send_via_mail": "Ou envoyez-le via votre application de messagerie",
+    "name_label": "Votre nom (facultatif)",
+    "email_field_label": "Votre adresse e-mail (facultatif)",
+    "email_hint": "Indiquez-le si vous souhaitez recevoir une réponse.",
+    "message_label": "Message *",
+    "message_placeholder": "Qu'avez-vous en tête ?",
+    "submit": "Ouvrir dans Mail",
+    "submit_note": "Cela ouvre votre application de messagerie par défaut avec le message pré-rédigé. Le message ne sera envoyé qu'une fois que vous l'aurez validé.",
+    "footer_location": "crestio · Sydney · 2026",
+    "subject_named": "Message d'{{name}}",
+    "subject_anonymous": "Message provenant du site web de Crestio",
+    "body_from": "Source : {{name}}",
+    "body_reply_to": "Répondre à : {{email}}"
   }
 }

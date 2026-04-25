@@ -20,11 +20,11 @@
     "per_student": "Por alumno"
   },
   "columns": {
-    "billed_to": "Facturado a",
-    "status": "Estado",
     "number": "Número",
+    "billed_to": "Facturado a",
     "issued": "Emitidas",
     "due": "A pagar",
+    "status": "Estado",
     "total": "Total"
   },
   "not_found": "No se ha encontrado la factura.",
@@ -42,13 +42,13 @@
     "period_custom": "Rango personalizado…",
     "from": "De",
     "to": "A",
+    "back_to_list": "Volver a la lista de facturas",
     "households": "Hogares",
     "sessions": "Sesiones",
     "unbilled_total": "Total sin facturar",
+    "nothing_title": "No hay nada que facturar",
     "nothing_body": "No hay sesiones completadas sin facturar en este periodo. Registra más sesiones o selecciona otro intervalo de fechas.",
     "loading": "Cargando…",
-    "back_to_list": "Volver a la lista de facturas",
-    "nothing_title": "No hay nada que facturar",
     "save_drafts": "Guardar como borradores",
     "send": "Enviar facturas"
   },

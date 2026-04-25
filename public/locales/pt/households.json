@@ -1,14 +1,28 @@
 {
+  "page": {
+    "subtitle": "Pessoas",
+    "title": "Famílias"
+  },
   "actions": {
-    "cancel": "Cancelar",
     "new": "+ Novo agregado familiar",
+    "cancel": "Cancelar",
     "create": "Criar",
     "creating": "Criando…"
   },
+  "form": {
+    "name_label": "Nome do agregado familiar",
+    "name_placeholder": "por exemplo, família Chen"
+  },
   "filters": {
+    "search_placeholder": "Pesquisar família, pai/mãe, aluno…",
     "active": "Ativo",
-    "archived": "Arquivado",
-    "search_placeholder": "Pesquisar família, pai/mãe, aluno…"
+    "archived": "Arquivado"
+  },
+  "empty": {
+    "none": "Ainda não há famílias",
+    "archived_none": "Não há famílias arquivadas",
+    "description": "Um agregado familiar agrupa irmãos sob um único contato de cobrança. Quando você vincula um pai ou mãe a um aluno, um agregado familiar é criado automaticamente.",
+    "create": "Criar um agregado familiar"
   },
   "common": {
     "loading": "Carregando…",
@@ -18,34 +32,101 @@
   },
   "card": {
     "archived_badge": "Arquivado",
-    "students_one": "{{count}} aluno",
-    "students_other": "{{count}} alunos",
     "parent_label_fallback": "Pai/mãe",
     "needs_primary": "Precisa de um responsável principal",
     "no_students": "Nenhum aluno",
+    "students_one": "{{count}} aluno",
+    "students_other": "{{count}} alunos",
     "parents_one": "{{count}} pai/mãe",
     "parents_other": "{{count}} pais",
     "summary": "{{students}} · {{parents}}"
   },
   "suggestion": {
-    "dismiss": "Ignorar",
     "fallback_parent": "um dos pais",
     "question_existing": "{{students}} {{parent}}. Agrupá-los em um único agregado familiar?",
     "question_new": "{{students}} {{parent}}. Agrupá-los em um novo agregado familiar?",
-    "accept": "Grupo →"
+    "accept": "Grupo →",
+    "dismiss": "Ignorar"
   },
-  "page": {
-    "subtitle": "Pessoas",
-    "title": "Famílias"
-  },
-  "form": {
-    "name_label": "Nome do agregado familiar",
-    "name_placeholder": "por exemplo, família Chen"
-  },
-  "empty": {
-    "none": "Ainda não há famílias",
-    "archived_none": "Não há famílias arquivadas",
-    "description": "Um agregado familiar agrupa irmãos sob um único contato de cobrança. Quando você vincula um pai ou mãe a um aluno, um agregado familiar é criado automaticamente.",
-    "create": "Criar um agregado familiar"
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "Não foi possível carregar o domicílio.",
+    "not_found_title": "Não encontrado",
+    "not_found_body": "Não foi encontrada nenhuma família.",
+    "subtitle_archived": "Família arquivada",
+    "subtitle_active": "Gastos domésticos",
+    "archive": "Arquivo",
+    "unarchive": "Desarquivar",
+    "confirm_archive": "Arquivar este domicílio? Alunos e pais permanecem onde estão; o domicílio fica oculto nas listas.",
+    "edit_name": "Editar nome",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "cancel": "Cancelar",
+    "billed_to_prefix": "Cobrado a",
+    "parent_fallback": "Pai/mãe",
+    "needs_primary": "Requer um pai principal",
+    "tabs": {
+      "members": "Membros",
+      "sessions": "Sessões",
+      "invoices": "Faturas",
+      "notes": "Notas"
+    },
+    "members": {
+      "parents_heading": "Pais",
+      "add_co_parent": "+ Adicionar co-pai",
+      "cancel": "Cancelar",
+      "no_parents": "Ainda não há pais vinculados.",
+      "no_name": "(sem nome)",
+      "primary_badge": "Principal",
+      "make_primary": "Definir como principal",
+      "remove": "Remover",
+      "confirm_remove_parent": "Remover este responsável do domicílio? Ele manterá acesso aos alunos vinculados a ele.",
+      "students_heading": "Alunos",
+      "add_sibling": "+ Adicionar irmão",
+      "no_students": "Ainda não há alunos nesta família.",
+      "remove_from_household": "Remover do domicílio",
+      "confirm_remove_student": "Remover este aluno do domicílio? As sessões e as faturas permanecem inalteradas."
+    },
+    "add_parent": {
+      "loading": "Carregando pais…",
+      "select_placeholder": "Escolha um pai existente…",
+      "no_name": "(sem nome)",
+      "invite_hint": "Para adicionar um novo responsável, convide-o a partir da página do aluno — ele será criado assim que aceitar o convite.",
+      "submit": "Adicionar pai/mãe",
+      "submitting": "Adicionando…",
+      "error_default": "Não foi possível adicionar o responsável."
+    },
+    "add_student": {
+      "loading": "Carregando alunos…",
+      "select_placeholder": "Escolha um aluno…",
+      "in_other_household": " (em outro domicílio)",
+      "confirm_move": "Este aluno está em outro domicílio. Deseja transferi-lo para este domicílio?",
+      "link_parents": "Vincule também este aluno aos pais da família",
+      "submit": "Adicionar ao domicílio",
+      "submitting": "Adicionando…",
+      "error_default": "Não foi possível adicionar o aluno."
+    },
+    "sessions_tab": {
+      "empty": "Ainda não há sessões para esta família.",
+      "col_when": "Quando",
+      "col_student": "Aluno",
+      "col_subject_topic": "Assunto · Tema",
+      "col_status": "Status",
+      "col_amount": "Valor"
+    },
+    "invoices_tab": {
+      "empty": "Ainda não há faturas para esta família. O faturamento em lote estará disponível em breve — você pode faturar alunos individualmente na página Faturas.",
+      "household_fallback": "Gastos domésticos",
+      "issued_prefix": "Publicado em {{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "Alergias, restrições de horário, preferências de cobrança…",
+      "save": "Salvar notas",
+      "saving": "Salvando…",
+      "cancel": "Cancelar",
+      "empty": "Ainda não há notas sobre o domicílio.",
+      "edit": "Editar notas",
+      "add": "Adicionar notas"
+    }
   }
 }

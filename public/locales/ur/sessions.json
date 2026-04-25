@@ -1,42 +1,42 @@
 {
   "subtitle": "سیشنز",
+  "subtitle_session": "سیشن",
   "title_list": "سیشنز",
   "title_new": "سیشن لاگ کریں",
   "title_loading": "…",
   "title_not_available": "دستیاب نہیں",
   "title_not_found": "ملو نہ سکا",
   "filter": {
-    "completed": "مکمل شدہ",
-    "needs_polishing": "سنوارنے کی ضرورت ہے",
     "all": "تمام",
     "drafts": "مسودے",
     "drafts_count": "مسودے ({{count}})",
-    "upcoming": "آنے والے"
+    "upcoming": "آنے والے",
+    "completed": "مکمل شدہ",
+    "needs_polishing": "سنوارنے کی ضرورت ہے"
   },
   "columns": {
-    "student": "طالب علم",
-    "status": "حالت",
-    "paid": "ادائیگی شدہ",
     "when": "کب",
+    "student": "طالب علم",
     "tutor": "ٹیوٹر",
     "subject_topic": "مضمون · موضوع",
     "duration": "دورانئہ",
-    "amount": "رقم"
+    "status": "حالت",
+    "amount": "رقم",
+    "paid": "ادائیگی شدہ"
   },
   "actions": {
     "new": "سیشن لاگ کریں",
     "new_short": "نیا سیشن",
     "edit": "ترمیم",
     "mark_completed": "پورا ہوا",
+    "mark_paid": "اسے '{{status}}' کے طور پر نشان زد کریں۔",
     "cancel_session": "سیشن منسوخ کریں",
     "no_show": "حاضری نہ ہونے",
     "delete": "مٹائیں",
+    "delete_confirm": "اس سیشن کو حذف کریں؟ اسے واپس نہیں کیا جا سکتا۔",
     "save": "محفوظ کریں",
     "save_session": "سیشن محفوظ کریں",
     "saving": "محفوظ کر رہے ہیں…",
-    "cancel": "منسوخ کریں",
-    "mark_paid": "اسے '{{status}}' کے طور پر نشان زد کریں۔",
-    "delete_confirm": "اس سیشن کو حذف کریں؟ اسے واپس نہیں کیا جا سکتا۔",
     "view_student": "طالب علم دیکھیں",
     "resume_draft": "سوانح حیات کا مسودہ",
     "discard_draft": "رد کریں",
@@ -46,7 +46,8 @@
     "polish_with_ai": "AI کے ساتھ پالش کریں",
     "polishing": "پالش کرنا…",
     "edit_shared": "مشترکہ ورژن میں ترمیم کریں",
-    "done_editing": "ترمیم مکمل ہو گئی"
+    "done_editing": "ترمیم مکمل ہو گئی",
+    "cancel": "منسوخ کریں"
   },
   "loading": "لوڈ ہو رہا ہے…",
   "not_found": "سیشن نہیں ملا۔",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "طالب علم",
-    "status": "حالت",
     "student_required": "طالب علم *",
     "tutor": "ٹیوٹر",
     "tutor_self": "آپ",
@@ -71,13 +71,14 @@
     "subject_placeholder": "مثلاً ریاضی ایڈوانسڈ",
     "topic": "موضوع",
     "topic_placeholder": "مثلاً پیرابولاز",
-    "when": "کب",
+    "when": "جب",
     "when_required": "جب *",
     "duration": "دورانئہ (منٹ)",
     "duration_required": "دورانئہ (منٹ) *",
     "charge_rate": "چارج کی شرح (فی گھنٹہ)",
     "pay_rate": "ٹیوٹر کی فی گھنٹہ اجرت",
     "pay_rate_hint": "اگر آپ نے اس سیشن میں ٹیوشن دی ہے تو خالی چھوڑ دیں۔",
+    "status": "حالت",
     "notes_internal": "ذاتی نوٹس",
     "notes_internal_placeholder": "آپ نے کیا زیرِ بحث لایا؟ یہ کیسا رہا؟",
     "notes_internal_hint": "صرف آپ انہیں دیکھ سکتے ہیں۔ ڈکٹیٹ کرنے کے لیے مائیک پر ٹیپ کریں — ٹرانسکرپٹس منسلک ہو جائیں گی۔ والدین کے لیے موزوں ورژن شائع کرنے کے لیے AI کے ساتھ Polish پر کلک کریں۔",
@@ -110,38 +111,11 @@
     "no_show": "حاضری نہ ہونے"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "نیا سیشن",
     "banner_unfinished": "آپ کے پاس {{when}} سے نامکمل تبدیلیاں ہیں۔",
     "draft_subtitle_new": "{{name}} کے لیے نیا سیشن",
+    "draft_subtitle_new_no_name": "نیا سیشن",
     "last_edited": "آخری ترمیم {{when}}"
   },
-  "detail": {
-    "due_prefix": "جمع کروائیں: {{date}}",
-    "overdue_badge": "باقی ماندہ",
-    "when": "جب",
-    "what": "کیا",
-    "money": "پیسے",
-    "charge": "چارج",
-    "tutor_pay": "ٹیوٹر کی فیس",
-    "tutor_with": "ٹیوٹر: {{name}}",
-    "tutor_you": "ٹیوٹر: آپ",
-    "parent_facing_notes": "والدین کے لیے نوٹس",
-    "private_notes": "ذاتی نوٹس",
-    "homework_set": "گھر کا کام دیا گیا",
-    "next_focus": "اگلے سیشن کے لیے توجہ",
-    "completed_badge": "✓ مکمل"
-  },
-  "save_status": {
-    "saving": "محفوظ کر رہے ہیں…",
-    "saved_locally": "مقامی طور پر محفوظ شدہ",
-    "saved": "محفوظ شدہ"
-  },
-  "errors": {
-    "not_signed_in": "سائن ان نہیں ہوا۔",
-    "select_at_least_one": "کم از کم ایک سیشن منتخب کریں۔",
-    "no_organisation": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: support@crestio.ai۔"
-  },
-  "subtitle_session": "سیشن",
   "relative_time": {
     "just_now": "ابھی ابھی",
     "min_ago_one": "1 منٹ پہلے",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "کچھ غلط ہو گیا۔ آپ کے نوٹس اب بھی محفوظ ہیں — براہِ کرم چند لمحوں میں دوبارہ کوشش کریں۔",
   "polish_needs_student_duration": "سب سے پہلے ایک طالب علم اور دورانیہ منتخب کریں۔",
-  "select_student": "ایک طالب علم کا انتخاب کریں"
+  "select_student": "ایک طالب علم کا انتخاب کریں",
+  "detail": {
+    "when": "جب",
+    "what": "کیا",
+    "money": "پیسے",
+    "charge": "چارج",
+    "tutor_pay": "ٹیوٹر کی فیس",
+    "tutor_with": "ٹیوٹر: {{name}}",
+    "tutor_you": "ٹیوٹر: آپ",
+    "parent_facing_notes": "والدین کے لیے نوٹس",
+    "private_notes": "ذاتی نوٹس",
+    "homework_set": "گھر کا کام دیا گیا",
+    "next_focus": "اگلے سیشن کے لیے توجہ",
+    "due_prefix": "جمع کروائیں: {{date}}",
+    "completed_badge": "✓ مکمل",
+    "overdue_badge": "باقی ماندہ"
+  },
+  "save_status": {
+    "saved_locally": "مقامی طور پر محفوظ شدہ",
+    "saving": "محفوظ کر رہے ہیں…",
+    "saved": "محفوظ شدہ"
+  },
+  "errors": {
+    "select_at_least_one": "کم از کم ایک سیشن منتخب کریں۔",
+    "not_signed_in": "سائن ان نہیں ہوا۔",
+    "no_organisation": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: support@crestio.ai۔"
+  }
 }

@@ -20,11 +20,11 @@
     "per_student": "Por aluno"
   },
   "columns": {
-    "billed_to": "Cobrado a",
-    "status": "Status",
     "number": "Número",
+    "billed_to": "Cobrado a",
     "issued": "Emitidas",
     "due": "Vencimento",
+    "status": "Status",
     "total": "Total"
   },
   "not_found": "Fatura não encontrada.",
@@ -42,13 +42,13 @@
     "period_custom": "Intervalo personalizado…",
     "from": "De",
     "to": "Para",
+    "back_to_list": "Voltar à lista de faturas",
     "households": "Famílias",
     "sessions": "Sessões",
     "unbilled_total": "Total não faturado",
+    "nothing_title": "Não há nada a faturar",
     "nothing_body": "Não há sessões concluídas e não faturadas neste período. Registre mais sessões ou selecione um intervalo de datas diferente.",
     "loading": "Carregando…",
-    "back_to_list": "Voltar à lista de faturas",
-    "nothing_title": "Não há nada a faturar",
     "save_drafts": "Salvar como rascunhos",
     "send": "Enviar faturas"
   },

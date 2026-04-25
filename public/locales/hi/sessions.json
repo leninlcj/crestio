@@ -1,42 +1,42 @@
 {
   "subtitle": "सत्र",
+  "subtitle_session": "सत्र",
   "title_list": "सत्र",
   "title_new": "सत्र दर्ज करें",
   "title_loading": "…",
   "title_not_available": "उपलब्ध नहीं",
   "title_not_found": "नहीं मिला",
   "filter": {
-    "completed": "पूरा हुआ",
-    "needs_polishing": "संशोधन की आवश्यकता है",
     "all": "सभी",
     "drafts": "मसौदे",
     "drafts_count": "ड्राफ्ट्स ({{count}})",
-    "upcoming": "आगामी"
+    "upcoming": "आगामी",
+    "completed": "पूरा हुआ",
+    "needs_polishing": "संशोधन की आवश्यकता है"
   },
   "columns": {
-    "student": "छात्र",
-    "status": "स्थिति",
-    "paid": "भुगतान किया गया",
     "when": "कब",
+    "student": "छात्र",
     "tutor": "ट्यूटर",
     "subject_topic": "विषय · विषय-वस्तु",
     "duration": "अवधि",
-    "amount": "राशि"
+    "status": "स्थिति",
+    "amount": "राशि",
+    "paid": "भुगतान किया गया"
   },
   "actions": {
     "new": "सत्र दर्ज करें",
     "new_short": "नया सत्र",
     "edit": "संपादित करें",
     "mark_completed": "पूरा हुआ",
+    "mark_paid": "{{status}}",
     "cancel_session": "सत्र रद्द करें",
     "no_show": "नहीं आया",
     "delete": "मिटायें",
+    "delete_confirm": "इस सत्र को हटाएँ? इसे वापस नहीं लिया जा सकता।",
     "save": "सहेजें",
     "save_session": "सत्र सहेजें",
     "saving": "बचाना…",
-    "cancel": "रद्द करें",
-    "mark_paid": "{{status}}",
-    "delete_confirm": "इस सत्र को हटाएँ? इसे वापस नहीं लिया जा सकता।",
     "view_student": "छात्र देखें",
     "resume_draft": "रिज़्यूमे मसौदा",
     "discard_draft": "अस्वीकार करें",
@@ -46,7 +46,8 @@
     "polish_with_ai": "एआई के साथ पॉलिश करें",
     "polishing": "पॉलिशिंग…",
     "edit_shared": "साझा संस्करण संपादित करें",
-    "done_editing": "संपादन पूरा"
+    "done_editing": "संपादन पूरा",
+    "cancel": "रद्द करें"
   },
   "loading": "लोड हो रहा है…",
   "not_found": "सत्र नहीं मिला।",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "छात्र",
-    "status": "स्थिति",
     "student_required": "छात्र *",
     "tutor": "ट्यूटर",
     "tutor_self": "तुम",
@@ -78,6 +78,7 @@
     "charge_rate": "चार्ज दर (प्रति घंटा)",
     "pay_rate": "ट्यूटर की दर (प्रति घंटा)",
     "pay_rate_hint": "यदि आपने इस सत्र में ट्यूटरिंग की है तो इसे खाली छोड़ दें।",
+    "status": "स्थिति",
     "notes_internal": "निजी नोट्स",
     "notes_internal_placeholder": "आपने क्या-क्या कवर किया? यह कैसा रहा?",
     "notes_internal_hint": "केवल आप इन्हें देख सकते हैं।   डिक्टेट करने के लिए माइक पर टैप करें — ट्रांसक्रिप्ट जुड़ जाएँगी।   माता-पिता के अनुकूल संस्करण प्रकाशित करने के लिए 'AI से पॉलिश करें' पर क्लिक करें।",
@@ -110,38 +111,11 @@
     "no_show": "नहीं आया"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "नया सत्र",
     "banner_unfinished": "आपके पास {{when}} से अधूरे बदलाव हैं।",
     "draft_subtitle_new": "{{name}} के लिए नया सत्र",
+    "draft_subtitle_new_no_name": "नया सत्र",
     "last_edited": "अंतिम संपादन {{when}}"
   },
-  "detail": {
-    "due_prefix": "बकाया {{date}}",
-    "overdue_badge": "देर से",
-    "when": "कब",
-    "what": "क्या",
-    "money": "पैसा",
-    "charge": "शुल्क",
-    "tutor_pay": "ट्यूटर का भुगतान",
-    "tutor_with": "ट्यूटर: {{name}}",
-    "tutor_you": "ट्यूटर: आप",
-    "parent_facing_notes": "अभिभावकों के लिए नोट्स",
-    "private_notes": "निजी नोट्स",
-    "homework_set": "होमवर्क सेट",
-    "next_focus": "अगले सत्र के लिए फोकस",
-    "completed_badge": "✓ पूरा हुआ"
-  },
-  "save_status": {
-    "saving": "बचाना…",
-    "saved_locally": "स्थानीय रूप से सहेजा गया",
-    "saved": "सहेजा गया"
-  },
-  "errors": {
-    "not_signed_in": "साइन इन नहीं किया गया।",
-    "select_at_least_one": "कम से कम एक सत्र चुनें।",
-    "no_organisation": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।"
-  },
-  "subtitle_session": "सत्र",
   "relative_time": {
     "just_now": "बस अभी",
     "min_ago_one": "1 मिनट पहले",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "कुछ गलत हो गया। आपके नोट्स अभी भी सहेजे हुए हैं — कृपया थोड़ी देर में फिर से प्रयास करें।",
   "polish_needs_student_duration": "पहले एक छात्र और अवधि चुनें।",
-  "select_student": "एक छात्र चुनें"
+  "select_student": "एक छात्र चुनें",
+  "detail": {
+    "when": "कब",
+    "what": "क्या",
+    "money": "पैसा",
+    "charge": "शुल्क",
+    "tutor_pay": "ट्यूटर का भुगतान",
+    "tutor_with": "ट्यूटर: {{name}}",
+    "tutor_you": "ट्यूटर: आप",
+    "parent_facing_notes": "अभिभावकों के लिए नोट्स",
+    "private_notes": "निजी नोट्स",
+    "homework_set": "होमवर्क सेट",
+    "next_focus": "अगले सत्र के लिए फोकस",
+    "due_prefix": "बकाया {{date}}",
+    "completed_badge": "✓ पूरा हुआ",
+    "overdue_badge": "देर से"
+  },
+  "save_status": {
+    "saved_locally": "स्थानीय रूप से सहेजा गया",
+    "saving": "बचाना…",
+    "saved": "सहेजा गया"
+  },
+  "errors": {
+    "select_at_least_one": "कम से कम एक सत्र चुनें।",
+    "not_signed_in": "साइन इन नहीं किया गया।",
+    "no_organisation": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।"
+  }
 }

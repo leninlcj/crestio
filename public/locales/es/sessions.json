@@ -1,42 +1,42 @@
 {
   "subtitle": "Sesiones",
+  "subtitle_session": "Sesión",
   "title_list": "Sesiones",
   "title_new": "Registrar sesión",
   "title_loading": "…",
   "title_not_available": "No disponible",
   "title_not_found": "No encontrado",
   "filter": {
-    "completed": "Completado",
-    "needs_polishing": "Necesita pulirse",
     "all": "Todas",
     "drafts": "Borradores",
     "drafts_count": "Borradores ({{count}})",
-    "upcoming": "Próximas"
+    "upcoming": "Próximas",
+    "completed": "Completado",
+    "needs_polishing": "Necesita pulirse"
   },
   "columns": {
-    "student": "Estudiante",
-    "status": "Estado",
-    "paid": "De pago",
     "when": "Cuándo",
+    "student": "Estudiante",
     "tutor": "Tutor",
     "subject_topic": "Asunto · Tema",
     "duration": "Duración",
-    "amount": "Importe"
+    "status": "Estado",
+    "amount": "Importe",
+    "paid": "De pago"
   },
   "actions": {
     "new": "Registrar sesión",
     "new_short": "Nueva sesión",
     "edit": "Editar",
     "mark_completed": "Marcar como completada",
+    "mark_paid": "Marcar como «{{status}}»",
     "cancel_session": "Cancelar sesión",
     "no_show": "No se presenta",
     "delete": "Eliminar",
+    "delete_confirm": "¿Desea eliminar esta sesión? Esta acción no se puede deshacer.",
     "save": "Guardar",
     "save_session": "Guardar sesión",
     "saving": "Guardando…",
-    "cancel": "Cancelar",
-    "mark_paid": "Marcar como «{{status}}»",
-    "delete_confirm": "¿Desea eliminar esta sesión? Esta acción no se puede deshacer.",
     "view_student": "Ver estudiante",
     "resume_draft": "Borrador del currículum",
     "discard_draft": "Descartar",
@@ -46,7 +46,8 @@
     "polish_with_ai": "Polaco con IA",
     "polishing": "Puliendo…",
     "edit_shared": "Editar versión compartida",
-    "done_editing": "Edición completada"
+    "done_editing": "Edición completada",
+    "cancel": "Cancelar"
   },
   "loading": "Cargando…",
   "not_found": "No se ha encontrado la sesión.",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "Estudiante",
-    "status": "Estado",
     "student_required": "Estudiante *",
     "tutor": "Tutor",
     "tutor_self": "Tú",
@@ -78,7 +78,8 @@
     "charge_rate": "Tarifa (por hora)",
     "pay_rate": "Tarifa del tutor (por hora)",
     "pay_rate_hint": "Déjalo en blanco si has impartido esta sesión.",
-    "notes_internal": "Notas privadas",
+    "status": "Estado",
+    "notes_internal": "Notas personales",
     "notes_internal_placeholder": "¿Qué temas tratasteis? ¿Cómo fue?",
     "notes_internal_hint": "Solo tú puedes verlas. Toca el micrófono para dictar; las transcripciones se añaden al final. Haz clic en «Pulir con IA» para publicar una versión apta para padres.",
     "notes_parent_facing": "Compartido con los padres",
@@ -110,38 +111,11 @@
     "no_show": "No se presenta"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "Nueva sesión",
     "banner_unfinished": "Tienes cambios pendientes de {{when}}.",
     "draft_subtitle_new": "Nueva sesión de «{{name}}»",
+    "draft_subtitle_new_no_name": "Nueva sesión",
     "last_edited": "Última edición{{when}}"
   },
-  "detail": {
-    "due_prefix": "{{date}}",
-    "overdue_badge": "Vencido",
-    "when": "Cuándo",
-    "what": "¿Qué?",
-    "money": "Dinero",
-    "charge": "carga",
-    "tutor_pay": "pago al tutor",
-    "tutor_with": "Profesor: {{name}}",
-    "tutor_you": "Profesor: Tú",
-    "parent_facing_notes": "Notas para los padres",
-    "private_notes": "Notas personales",
-    "homework_set": "Tareas asignadas",
-    "next_focus": "Enfoque para la próxima sesión",
-    "completed_badge": "✓ Completado"
-  },
-  "save_status": {
-    "saving": "Guardando…",
-    "saved_locally": "Guardado localmente",
-    "saved": "Guardado"
-  },
-  "errors": {
-    "not_signed_in": "No has iniciado sesión.",
-    "select_at_least_one": "Selecciona al menos una sesión.",
-    "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai."
-  },
-  "subtitle_session": "Sesión",
   "relative_time": {
     "just_now": "justo ahora",
     "min_ago_one": "Hace 1 minuto",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "Ha ocurrido un error. Tus notas siguen guardadas; vuelve a intentarlo en unos momentos.",
   "polish_needs_student_duration": "Selecciona primero un alumno y la duración.",
-  "select_student": "Selecciona a un alumno"
+  "select_student": "Selecciona a un alumno",
+  "detail": {
+    "when": "Cuándo",
+    "what": "¿Qué?",
+    "money": "Dinero",
+    "charge": "carga",
+    "tutor_pay": "pago al tutor",
+    "tutor_with": "Profesor: {{name}}",
+    "tutor_you": "Profesor: Tú",
+    "parent_facing_notes": "Notas para los padres",
+    "private_notes": "Notas personales",
+    "homework_set": "Tareas asignadas",
+    "next_focus": "Enfoque para la próxima sesión",
+    "due_prefix": "{{date}}",
+    "completed_badge": "✓ Completado",
+    "overdue_badge": "Vencido"
+  },
+  "save_status": {
+    "saved_locally": "Guardado localmente",
+    "saving": "Guardando…",
+    "saved": "Guardado"
+  },
+  "errors": {
+    "select_at_least_one": "Selecciona al menos una sesión.",
+    "not_signed_in": "No has iniciado sesión.",
+    "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai."
+  }
 }

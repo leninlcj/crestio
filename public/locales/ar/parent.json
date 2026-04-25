@@ -4,9 +4,8 @@
     "greeting": "مرحباً {{name}}",
     "greeting_fallback": "لوحة التحكم الخاصة بك",
     "loading_error": "تعذر تحميل لوحة التحكم الخاصة بك.",
-    "this_week_empty": "لا توجد جلسات هذا الأسبوع.",
-    "no_access": "لا تملك حق الوصول.",
     "this_week": "هذا الأسبوع",
+    "this_week_empty": "لا توجد جلسات هذا الأسبوع.",
     "recent_updates": "آخر المستجدات من مدرسك",
     "your_children": "أطفالكم",
     "at_a_glance": "لمحة عامة",
@@ -16,6 +15,7 @@
       "paid": "مدفوعة",
       "outstanding": "معلقة"
     },
+    "no_access": "لا تملك حق الوصول.",
     "change_requested": "طلب التغيير"
   },
   "nav": {
@@ -75,27 +75,27 @@
   },
   "invoices_page": {
     "kicker": "الفواتير",
-    "due_label": "بفضل {{date}}",
-    "status_paid": "مدفوع",
-    "status_overdue": "متأخر",
     "heading": "فواتيرك",
     "empty": "لا توجد فواتير حتى الآن.",
     "outstanding_eyebrow": "معلقة",
     "outstanding_note": "للدفع، اتبع التعليمات الواردة في كل فاتورة من مدرسك.",
     "family_badge": "الأسرة",
-    "issued_label": "صدر في {{date}}"
+    "issued_label": "صدر في {{date}}",
+    "due_label": "بفضل {{date}}",
+    "status_paid": "مدفوع",
+    "status_overdue": "متأخر"
   },
   "invoice_detail": {
+    "back": "← الفواتير",
     "not_found": "لم يتم العثور على الفاتورة.",
+    "number_label": "الفاتورة {{number}}",
+    "heading_fallback": "الفاتورة",
     "status_paid": "مدفوع",
     "status_overdue": "متأخر",
     "issued": "صادرة",
     "due": "مستحق",
-    "sessions": "الجلسات",
-    "back": "← الفواتير",
-    "number_label": "الفاتورة {{number}}",
-    "heading_fallback": "الفاتورة",
     "period": "الفترة",
+    "sessions": "الجلسات",
     "no_line_items": "لا توجد بنود.",
     "no_sessions": "لا توجد جلسات في هذه الفاتورة.",
     "minutes_suffix": "{{minutes}} دقيقة",
@@ -114,13 +114,13 @@
     "heading": "إشعاراتك"
   },
   "signin": {
+    "kicker": "بوابة أولياء الأمور",
     "heading": "تسجيل الدخول",
     "email_label": "البريد الإلكتروني",
     "password_label": "كلمة المرور",
+    "forgot": "هل نسيت كلمة المرور؟",
     "submit": "تسجيل الدخول",
     "submitting": "تسجيل الدخول...",
-    "kicker": "بوابة أولياء الأمور",
-    "forgot": "هل نسيت كلمة المرور؟",
     "error_generic": "فشل تسجيل الدخول.",
     "error_not_parent": "تسجيل الدخول هذا مخصص للآباء والأمهات فقط. إذا كنت مدرسًا خصوصيًا، فقم بتسجيل الدخول على /auth/signin.",
     "forgot_need_email": "أدخل بريدك الإلكتروني أولاً، ثم انقر على \"نسيت كلمة المرور\".",
@@ -128,26 +128,26 @@
     "invitation_hint": "لم تتلقَ دعوة من مدرسك بعد؟ اطلب منه إرسال واحدة."
   },
   "settings_page": {
+    "kicker": "الحساب",
     "heading": "الإعدادات",
     "loading": "جاري التحميل...",
+    "details_heading": "بياناتك",
     "email_label": "البريد الإلكتروني",
+    "email_hint": "اتصل بمعلمك إذا كنت بحاجة إلى تغيير بريدك الإلكتروني.",
+    "name_label": "الاسم",
     "save": "حفظ",
     "saving": "جاري الحفظ…",
     "saved": "تم الحفظ.",
-    "new_password_label": "كلمة مرور جديدة",
-    "updating": "جاري التحديث...",
-    "sign_out_heading": "تسجيل الخروج",
-    "sign_out": "تسجيل الخروج",
-    "kicker": "الحساب",
-    "details_heading": "بياناتك",
-    "email_hint": "اتصل بمعلمك إذا كنت بحاجة إلى تغيير بريدك الإلكتروني.",
-    "name_label": "الاسم",
     "change_password": "تغيير كلمة المرور",
+    "new_password_label": "كلمة مرور جديدة",
     "password_min": "8 أحرف على الأقل.",
     "password_too_short": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
     "password_updated": "تم تحديث كلمة المرور.",
     "update_password": "تحديث كلمة المرور",
+    "updating": "جاري التحديث...",
+    "sign_out_heading": "تسجيل الخروج",
     "sign_out_body": "تؤدي عملية تسجيل الخروج إلى إنهاء هذه الجلسة.",
+    "sign_out": "تسجيل الخروج",
     "msg_notifs_heading": "إشعارات الرسائل",
     "msg_notifs_body": "اختر متى ترغب في تلقي رسائل البريد الإلكتروني من Crestio. ستظهر الرسائل داخل التطبيق بغض النظر عن ذلك.",
     "msg_when_label": "أرسل لي رسالة بريد إلكتروني عندما يرسل لي مدرسي رسالة",
@@ -157,7 +157,6 @@
   },
   "settings_notifications_page": {
     "kicker": "الإعدادات",
-    "saved": "تم الحفظ.",
     "heading": "إشعارات البريد الإلكتروني",
     "intro": "تظهر الإشعارات داخل التطبيق دائمًا بغض النظر عن هذه الخيارات. فهذه الخيارات تتحكم فقط في إرسال البريد الإلكتروني.",
     "toggles": {
@@ -185,12 +184,10 @@
         "label": "الرسائل العاجلة فقط",
         "description": "إذا تم تشغيل هذه الميزة، فسيتم تخطي رسائل البريد الإلكتروني الخاصة بالرسائل العادية أو الرسائل الإعلامية."
       }
-    }
+    },
+    "saved": "تم الحفظ."
   },
   "accept": {
-    "email_label": "البريد الإلكتروني",
-    "name_label": "اسمك",
-    "creating": "إنشاء حساب...",
     "kicker": "بوابة أولياء الأمور",
     "checking": "التحقق من الدعوة...",
     "missing_token": "هذا الرابط يفتقد رمز الدعوة الخاص به.",
@@ -201,12 +198,15 @@
     "back_home": "العودة إلى الصفحة الرئيسية",
     "accept_heading": "قبول دعوتك",
     "accept_body": "{{tutor}} لقد تمت دعوتك لمشاهدة جلسات التدريس الخاصة بـ {{student}}.",
+    "email_label": "البريد الإلكتروني",
     "email_hint": "من دعوتك. لا يمكن تغييرها هنا.",
+    "name_label": "اسمك",
     "name_placeholder": "اختياري",
     "password_label": "إنشاء كلمة مرور",
     "password_min": "8 أحرف على الأقل.",
     "password_too_short": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
     "create": "إنشاء حساب الوالد",
+    "creating": "إنشاء حساب...",
     "create_failed": "تعذر إنشاء الحساب."
   }
 }

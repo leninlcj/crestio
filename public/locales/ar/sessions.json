@@ -1,42 +1,42 @@
 {
   "subtitle": "الجلسات",
+  "subtitle_session": "الجلسة",
   "title_list": "الجلسات",
   "title_new": "تسجيل الجلسة",
   "title_loading": "…",
   "title_not_available": "غير متاح",
   "title_not_found": "لم يتم العثور عليه",
   "filter": {
-    "completed": "تم الانتهاء",
-    "needs_polishing": "يحتاج إلى صقل",
     "all": "الكل",
     "drafts": "المسودات",
     "drafts_count": "المسودات ({{count}})",
-    "upcoming": "قادمة"
+    "upcoming": "قادمة",
+    "completed": "تم الانتهاء",
+    "needs_polishing": "يحتاج إلى صقل"
   },
   "columns": {
-    "student": "الطالب",
-    "status": "الحالة",
-    "paid": "مدفوع",
     "when": "متى",
+    "student": "الطالب",
     "tutor": "المعلم",
     "subject_topic": "الموضوع · الموضوع",
     "duration": "المدة",
-    "amount": "المبلغ"
+    "status": "الحالة",
+    "amount": "المبلغ",
+    "paid": "مدفوع"
   },
   "actions": {
     "new": "تسجيل الجلسة",
     "new_short": "جلسة جديدة",
     "edit": "تحرير",
     "mark_completed": "ضع علامة \"مكتمل\"",
+    "mark_paid": "وضع علامة \"{{status}}\"",
     "cancel_session": "إلغاء الجلسة",
     "no_show": "عدم الحضور",
     "delete": "حذف",
+    "delete_confirm": "هل تريد حذف هذه الجلسة؟ لا يمكن التراجع عن هذه العملية.",
     "save": "حفظ",
     "save_session": "حفظ الجلسة",
     "saving": "جاري الحفظ…",
-    "cancel": "إلغاء",
-    "mark_paid": "وضع علامة \"{{status}}\"",
-    "delete_confirm": "هل تريد حذف هذه الجلسة؟ لا يمكن التراجع عن هذه العملية.",
     "view_student": "عرض الطالب",
     "resume_draft": "مسودة السيرة الذاتية",
     "discard_draft": "تجاهل",
@@ -46,7 +46,8 @@
     "polish_with_ai": "التحسين باستخدام الذكاء الاصطناعي",
     "polishing": "التلميع...",
     "edit_shared": "تحرير النسخة المشتركة",
-    "done_editing": "تم الانتهاء من التحرير"
+    "done_editing": "تم الانتهاء من التحرير",
+    "cancel": "إلغاء"
   },
   "loading": "جاري التحميل...",
   "not_found": "لم يتم العثور على الجلسة.",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "الطالب",
-    "status": "الحالة",
     "student_required": "طالب *",
     "tutor": "المعلم",
     "tutor_self": "أنت",
@@ -78,6 +78,7 @@
     "charge_rate": "سعر الخدمة (في الساعة)",
     "pay_rate": "أجر المُدرّس (في الساعة)",
     "pay_rate_hint": "اترك هذا الخان فارغًا إذا كنت قد قمت بالتدريس في هذه الجلسة.",
+    "status": "الحالة",
     "notes_internal": "ملاحظات خاصة",
     "notes_internal_placeholder": "ماذا تناولت؟ كيف سارت الأمور؟",
     "notes_internal_hint": "أنت وحدك من يمكنه رؤية هذه. اضغط على الميكروفون لإملاء النص — وسيتم إضافة النصوص المكتوبة. انقر على \"تحسين النص باستخدام الذكاء الاصطناعي\" لنشر نسخة مناسبة للآباء.",
@@ -110,38 +111,11 @@
     "no_show": "عدم الحضور"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "جلسة جديدة",
     "banner_unfinished": "لديك تغييرات غير مكتملة من {{when}}.",
     "draft_subtitle_new": "جلسة جديدة لـ {{name}}",
+    "draft_subtitle_new_no_name": "جلسة جديدة",
     "last_edited": "آخر تعديل{{when}}"
   },
-  "detail": {
-    "due_prefix": "بفضل {{date}}",
-    "overdue_badge": "متأخر",
-    "when": "متى",
-    "what": "ماذا",
-    "money": "المال",
-    "charge": "الشحن",
-    "tutor_pay": "أجر المعلم",
-    "tutor_with": "المعلم: {{name}}",
-    "tutor_you": "المعلم: أنت",
-    "parent_facing_notes": "ملاحظات موجهة للآباء",
-    "private_notes": "ملاحظات خاصة",
-    "homework_set": "الواجبات المنزلية المحددة",
-    "next_focus": "التركيز في الجلسة القادمة",
-    "completed_badge": "✓ تم الانتهاء"
-  },
-  "save_status": {
-    "saving": "جاري الحفظ…",
-    "saved_locally": "تم الحفظ محليًا",
-    "saved": "تم الحفظ"
-  },
-  "errors": {
-    "not_signed_in": "لم يتم تسجيل الدخول.",
-    "select_at_least_one": "اختر جلسة واحدة على الأقل.",
-    "no_organisation": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai."
-  },
-  "subtitle_session": "الجلسة",
   "relative_time": {
     "just_now": "الآن",
     "min_ago_one": "قبل دقيقة واحدة",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "حدث خطأ ما. لا تزال ملاحظاتك محفوظة — يرجى المحاولة مرة أخرى بعد قليل.",
   "polish_needs_student_duration": "اختر الطالب ومدة الدرس أولاً.",
-  "select_student": "اختر طالبًا"
+  "select_student": "اختر طالبًا",
+  "detail": {
+    "when": "متى",
+    "what": "ماذا",
+    "money": "المال",
+    "charge": "الشحن",
+    "tutor_pay": "أجر المعلم",
+    "tutor_with": "المعلم: {{name}}",
+    "tutor_you": "المعلم: أنت",
+    "parent_facing_notes": "ملاحظات موجهة للآباء",
+    "private_notes": "ملاحظات خاصة",
+    "homework_set": "الواجبات المنزلية المحددة",
+    "next_focus": "التركيز في الجلسة القادمة",
+    "due_prefix": "بفضل {{date}}",
+    "completed_badge": "✓ تم الانتهاء",
+    "overdue_badge": "متأخر"
+  },
+  "save_status": {
+    "saved_locally": "تم الحفظ محليًا",
+    "saving": "جاري الحفظ…",
+    "saved": "تم الحفظ"
+  },
+  "errors": {
+    "select_at_least_one": "اختر جلسة واحدة على الأقل.",
+    "not_signed_in": "لم يتم تسجيل الدخول.",
+    "no_organisation": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai."
+  }
 }

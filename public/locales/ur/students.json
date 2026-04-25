@@ -1,5 +1,6 @@
 {
   "subtitle": "لوگ",
+  "subtitle_archived": "آرکائیو شدہ طالب علم",
   "subtitle_student": "طالب علم",
   "title_list": "طلبا",
   "title_new": "نیا طالب علم",
@@ -15,14 +16,18 @@
     "unarchive": "واپس بحال کریں",
     "delete": "مٹائیں"
   },
+  "filters": {
+    "active": "فعال",
+    "archived": "آرکائیو شدہ"
+  },
   "empty": {
     "no_students": "ابھی تک کوئی طالب علم نہیں",
     "no_archived": "کوئی محفوظ شدہ طلبہ نہیں",
     "description_owner": "سیشنز کی ٹریکنگ اور بلنگ شروع کرنے کے لیے اپنا پہلا طالب علم شامل کریں۔",
     "description_tutor": "آپ کی تنظیم کا مالک آپ کو طلباء تفویض کرے گا۔",
+    "no_tutor_record": "ابھی تک کوئی طالب علم تفویض نہیں کیا گیا",
     "show_archived": "آرکائیو شدہ طلباء یہاں ظاہر ہوتے ہیں۔",
-    "add_first": "ایک طالب علم شامل کریں",
-    "no_tutor_record": "ابھی تک کوئی طالب علم تفویض نہیں کیا گیا"
+    "add_first": "ایک طالب علم شامل کریں"
   },
   "loading": "لوڈ ہو رہا ہے…",
   "denied": "آپ کے پاس اس طالب علم تک رسائی نہیں ہے۔ اپنی تنظیم کے مالک سے کہیں کہ وہ اسے آپ کے لیے تفویض کر دے۔",
@@ -33,6 +38,10 @@
     "record": "ریکارڈ",
     "track": "ٹریک"
   },
+  "filter_banner": {
+    "homework_pending": " زیر التواء ہوم ورک والے طلباء دکھا رہا ہے۔",
+    "clear_filter": "فلٹر صاف کریں"
+  },
   "columns": {
     "name": "نام",
     "year": "سال",
@@ -40,11 +49,10 @@
     "parent": "والد",
     "rate": " شرح"
   },
+  "search_placeholder": "نام، اسکول، والدین تلاش کریں…",
+  "test_pill": "ٹیسٹ",
   "cards": {
     "contact": "رابطہ",
-    "billing": "بلنگ",
-    "notes_heading": "نوٹس",
-    "assigned_saved": "محفوظ ہو گیا۔",
     "contact_parent": "والد/والدہ: ",
     "contact_email": "ای میل: ",
     "contact_phone": "فون: ",
@@ -53,18 +61,18 @@
     "year": "سال: ",
     "school": "اسکول: ",
     "subjects": "مضمون: ",
+    "billing": "بلنگ",
     "rate": " شرح: ",
     "rate_per_hour": " / فی گھنٹہ",
     "lifetime": "عمر بھر: ",
     "sessions": "سیشنز: ",
+    "notes_heading": "نوٹس",
     "assigned_tutor": "مقرر کردہ ٹیوٹر",
     "unassigned_option": "غیر تفویض شدہ (مالک براہِ راست سنبھالتا ہے)",
-    "assigned_tutor_hint": "صرف وہ ٹیوٹرز جو اپنی دعوت قبول کر چکے ہیں یہاں دکھائے جاتے ہیں۔"
+    "assigned_tutor_hint": "صرف وہ ٹیوٹرز جو اپنی دعوت قبول کر چکے ہیں یہاں دکھائے جاتے ہیں۔",
+    "assigned_saved": "محفوظ ہو گیا۔"
   },
   "new_form": {
-    "notes": "نوٹس",
-    "save": "طالب علم شامل کریں",
-    "cancel": "منسوخ کریں",
     "name_required": "نام *",
     "name_placeholder": "مثلاً سیم چن",
     "year_level": "سال کی سطح",
@@ -77,15 +85,17 @@
     "parent_phone": "والدین کا فون",
     "parent_email": "والدین کا ای میل",
     "hourly_rate": "فی گھنٹہ شرح",
-    "saving": "شامل کر رہے ہیں…"
+    "notes": "نوٹس",
+    "save": "طالب علم شامل کریں",
+    "saving": "شامل کر رہے ہیں…",
+    "cancel": "منسوخ کریں"
   },
   "parent_access": {
-    "pending_heading": "معطل",
-    "inviting": " بھیجنے میں…",
     "kicker": "والدین کی رسائی",
     "heading": "یہ طالب علم کے نوٹس کون دیکھ سکتا ہے",
     "none_yet": "ابھی تک کسی بھی والدین کو منسلک یا مدعو نہیں کیا گیا۔",
     "linked_heading": "منسلک",
+    "pending_heading": "معطل",
     "invited_when": "مدعو شدہ {{when}}",
     "revoke": "رسائی منسوخ کریں",
     "revoke_confirm": "کیا اس والدین کی رسائی منسوخ کی جائے؟ وہ اب کوئی سیشن نہیں دیکھ سکیں گے۔",
@@ -93,6 +103,7 @@
     "parent_email": "والدین کا ای میل",
     "parent_email_placeholder": "parent@example.com",
     "invite": "والدین کو مدعو کریں",
+    "inviting": " بھیجنے میں…",
     "invitation_sent": "{{email}} کو دعوت نامہ بھیجا گیا۔",
     "invitation_created": "دعوت نامہ تیار کیا گیا۔",
     "invitation_share_hint": "اگر والدین کو ای میل موصول نہ ہو تو یہ لنک والدین کے ساتھ شیئر کریں:"
@@ -103,25 +114,21 @@
     "new": "نیا سیشن"
   },
   "homework_heading": {
+    "kicker": "ٹریک",
     "heading": "گھر کا کام",
+    "none": "ابھی تک کوئی ہوم ورک تفویض نہیں کیا گیا۔ سیشن لاگ کرتے وقت ہوم ورک شامل کریں۔",
     "mark_as_done": "پورا ہونے کے طور پر نشان لگائیں",
+    "marking": "نشان لگانا…",
     "completed": "مکمل شدہ",
     "overdue": "باقی ماندہ",
-    "due_label": "جمع کروائیں: {{date}}",
-    "kicker": "ٹریک",
-    "none": "ابھی تک کوئی ہوم ورک تفویض نہیں کیا گیا۔ سیشن لاگ کرتے وقت ہوم ورک شامل کریں۔",
-    "marking": "نشان لگانا…",
     "due_today": "آج جمع کروائی جائے",
     "due_tomorrow": "کل تک جمع کروائیں",
     "due_in_days_one": "{{count}} دن میں واجب الادا",
     "due_in_days_other": "{{count}} دنوں میں واجب الادا",
-    "marked_complete_on": "{{date}} پر مکمل کے طور پر نشان زد"
+    "marked_complete_on": "{{date}} پر مکمل کے طور پر نشان زد",
+    "due_label": "جمع کروائیں: {{date}}"
   },
   "from_last_session": {
-    "hours_ago_one": "ایک گھنٹہ پہلے",
-    "hours_ago_other": "{{count}} کئی گھنٹے پہلے",
-    "days_ago_one": "1 دن پہلے",
-    "days_ago_other": "{{count}} کئی دن پہلے",
     "kicker": "گزشتہ سیشن سے",
     "covered_prefix": "آخری بار آپ نے کوریج کی: ",
     "homework_done": "✓ ہوم ورک مکمل: {{description}}",
@@ -132,30 +139,23 @@
     "open_last_session": "پچھلا سیشن کھولیں →",
     "log_new_session": "اس سیاق و سباق کے ساتھ نیا سیشن لاگ کریں →",
     "yesterday": "کل",
-    "earlier_today": "آج صبح"
+    "earlier_today": "آج صبح",
+    "hours_ago_one": "ایک گھنٹہ پہلے",
+    "hours_ago_other": "{{count}} کئی گھنٹے پہلے",
+    "days_ago_one": "1 دن پہلے",
+    "days_ago_other": "{{count}} کئی دن پہلے"
   },
   "household": {
     "kicker": "گھریلو",
-    "remove": "ہٹا دیں",
-    "loading": "لوڈ ہو رہا ہے…",
     "not_in_household": "گھر میں نہیں۔",
     "billing_note": " · بلنگ گروپس بہن بھائیوں کو ایک ساتھ",
     "assign": "گھر تفویض کریں",
     "change": "تبدیل کریں",
+    "remove": "ہٹا دیں",
     "remove_confirm": "کیا اس طالب علم کو گھر سے نکالا جائے؟ وہ تنظیم میں ہی رہتا ہے۔",
-    "pick_placeholder": "ایک گھرانہ منتخب کریں…"
+    "pick_placeholder": "ایک گھرانہ منتخب کریں…",
+    "loading": "لوڈ ہو رہا ہے…"
   },
-  "subtitle_archived": "آرکائیو شدہ طالب علم",
-  "filters": {
-    "active": "فعال",
-    "archived": "آرکائیو شدہ"
-  },
-  "filter_banner": {
-    "homework_pending": " زیر التواء ہوم ورک والے طلباء دکھا رہا ہے۔",
-    "clear_filter": "فلٹر صاف کریں"
-  },
-  "search_placeholder": "نام، اسکول، والدین تلاش کریں…",
-  "test_pill": "ٹیسٹ",
   "delete_confirm": "کیا آپ {{name}} کو مستقل طور پر حذف کرنا چاہتے ہیں؟ اس سے ان کے تمام سیشنز بھی حذف ہو جائیں گے۔ اسے واپس نہیں کیا جا سکتا۔",
   "archive_confirm_archive": "آرکائیو {{name}}؟ آپ بعد میں انہیں دوبارہ بازیافت کر سکتے ہیں۔",
   "archive_confirm_restore": "{{name}} کو بحال کریں؟"

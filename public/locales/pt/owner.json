@@ -1,1 +1,56 @@
-{}
+{
+  "test_accounts": {
+    "page": {
+      "subtitle": "Ferramentas do proprietário",
+      "title": "Contas de teste"
+    },
+    "intro": {
+      "label": "Contas de teste.",
+      "body": "Essas são contas de teste pré-criadas que pertencem a você. Ao fazer login em uma delas, é iniciada uma nova sessão sujeita às mesmas regras de segurança que qualquer usuário real. Você nunca tem acesso aos dados de outros usuários por meio desse fluxo."
+    },
+    "list": {
+      "heading": "Suas contas de teste",
+      "loading": "Carregando…",
+      "empty": "Ainda não há contas de teste.",
+      "col_role": "Função",
+      "col_name": "Nome",
+      "col_email": "E-mail",
+      "col_created": "Criado",
+      "col_last_login": "Último login",
+      "name_dash": "—",
+      "last_login_dash": "—",
+      "login_busy": "…",
+      "login_button": "Faça login como conta de teste",
+      "delete_button": "Excluir",
+      "confirm_delete": "Excluir conta de teste {{email}}? Isso exclui o usuário de autenticação e não pode ser revertido."
+    },
+    "create": {
+      "heading": "Criar conta de teste",
+      "role_label": "Função",
+      "role_tutor": "Tutor (dentro da sua organização)",
+      "role_parent": "Página principal (portal)",
+      "name_label": "Nome",
+      "name_placeholder": "por exemplo: Tutor de Teste Mai",
+      "email_label": "E-mail (opcional — gerado automaticamente se deixado em branco)",
+      "email_placeholder": "test-tutor-abc123@crestio.test",
+      "submit": "Criar conta de teste",
+      "creating": "Criando…",
+      "success_title": "Conta de teste criada.",
+      "success_email_label": "E-mail:",
+      "success_password_label": "Senha inicial:",
+      "success_hint": "Salve essa senha agora — ela é exibida apenas uma vez. Ou clique em “Entrar como teste” na tabela acima para obter um link mágico de login."
+    },
+    "recent": {
+      "heading": "Sessões de teste recentes",
+      "empty": "Ainda não há logins de contas de teste.",
+      "role_unknown": "desconhecido",
+      "ended_suffix": " · encerrado"
+    },
+    "errors": {
+      "load_failed": "Não foi possível carregar as contas de teste.",
+      "create_failed": "Não foi possível criar a conta de teste.",
+      "login_link_failed": "Não foi possível gerar o link de login.",
+      "delete_failed": "Não foi possível excluir."
+    }
+  }
+}

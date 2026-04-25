@@ -1,50 +1,22 @@
 {
-  "nav": {
-    "sign_in": "登录",
-    "pricing": "价格",
-    "start_trial": "立即免费试用",
-    "open_menu": "展开菜单",
-    "close_menu": "关闭菜单"
-  },
-  "footer": {
-    "sign_in": "登录",
-    "privacy": "隐私政策",
-    "terms": "条款",
-    "made_in": "澳大利亚制造 · 2026",
-    "support": "支持"
-  },
-  "contact": {
-    "email_label": "电子邮件",
-    "eyebrow": "联系我们",
-    "heading": "打个招呼",
-    "intro": "问题、错误报告、反馈、表扬、投诉——我们都欢迎。由专人阅读并回复，通常会在一天内完成。",
-    "copy": "复制",
-    "copied": "已复制",
-    "or_send_via_mail": "或通过您的邮件应用发送",
-    "name_label": "您的姓名（可选）",
-    "email_field_label": "您的电子邮件（可选）",
-    "email_hint": "如需回复，请包含此信息。",
-    "message_label": "消息 *",
-    "message_placeholder": "您有什么想法？",
-    "submit": "在邮件中打开",
-    "submit_note": "这将打开您的默认邮件应用，并显示已起草的邮件。在您亲自发送之前，邮件不会被发送出去。",
-    "footer_location": "crestio · 悉尼 · 2026",
-    "subject_named": "{{name}} 的留言",
-    "subject_anonymous": "来自Crestio网站的信息",
-    "body_from": "来源：{{name}}",
-    "body_reply_to": "回复至：{{email}}"
-  },
   "meta": {
     "home_title": "Crestio — 面向澳大利亚家教的软件",
     "home_description": "通过一个控制面板即可管理学生、记录课程、利用人工智能优化笔记，并与家长分享学习进展。每月仅需 24 美元起。提供 7 天免费试用。",
     "contact_title": "联系我们 · Crestio"
+  },
+  "nav": {
+    "pricing": "价格",
+    "sign_in": "登录",
+    "start_trial": "开始免费试用",
+    "open_menu": "展开菜单",
+    "close_menu": "关闭菜单"
   },
   "deleted_banner": "您的账户已被删除。很遗憾您要离开。",
   "hero": {
     "eyebrow": "面向独立家教及小型团队",
     "heading": "专为认真对待工作的家教打造的一站式工具。",
     "subheading": "通过一个控制面板即可管理学生、记录课程、利用 AI 优化笔记，并与家长分享学习进展。专为独立家教及小型团队设计。",
-    "cta": "立即免费试用",
+    "cta": "开始免费试用",
     "price_note": "每月仅需 {{price}}。7 天免费试用。随时可取消。",
     "see_plans": "查看所有套餐 →"
   },
@@ -153,5 +125,33 @@
     "button": "开始免费试用",
     "questions_part1": "有疑问吗？请发送邮件 ",
     "questions_part2": "."
+  },
+  "footer": {
+    "made_in": "澳大利亚制造 · 2026",
+    "sign_in": "登录",
+    "privacy": "隐私政策",
+    "terms": "条款",
+    "support": "支持"
+  },
+  "contact": {
+    "eyebrow": "联系我们",
+    "heading": "打个招呼",
+    "intro": "问题、错误报告、反馈、表扬、投诉——我们都欢迎。由专人阅读并回复，通常会在一天内完成。",
+    "email_label": "电子邮件",
+    "copy": "复制",
+    "copied": "已复制",
+    "or_send_via_mail": "或通过您的邮件应用发送",
+    "name_label": "您的姓名（可选）",
+    "email_field_label": "您的电子邮件（可选）",
+    "email_hint": "如需回复，请包含此信息。",
+    "message_label": "消息 *",
+    "message_placeholder": "您有什么想法？",
+    "submit": "在邮件中打开",
+    "submit_note": "这将打开您的默认邮件应用，并显示已起草的邮件。在您亲自发送之前，邮件不会被发送出去。",
+    "footer_location": "crestio · 悉尼 · 2026",
+    "subject_named": "{{name}} 的留言",
+    "subject_anonymous": "来自Crestio网站的信息",
+    "body_from": "来源：{{name}}",
+    "body_reply_to": "回复至：{{email}}"
   }
 }

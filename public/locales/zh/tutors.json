@@ -3,38 +3,6 @@
     "subtitle": "团队",
     "title": "家教"
   },
-  "table": {
-    "name": "名称",
-    "subjects": "科目",
-    "students": "学生",
-    "em_dash": "—",
-    "linked_login": "关联登录",
-    "pay_rate": "报酬标准",
-    "this_month": "本月",
-    "linked_yes": "是",
-    "linked_no": "否"
-  },
-  "new": {
-    "page_subtitle": "辅导老师",
-    "email_label": "电子邮件",
-    "phone_label": "手机",
-    "notes_label": "备注",
-    "saving": "正在保存……",
-    "cancel": "取消",
-    "not_signed_in": "尚未登录。",
-    "no_organization": "您的账户未关联任何组织。请联系 support@crestio.ai。",
-    "page_title": "新导师",
-    "name_label": "姓名 *",
-    "subjects_label": "他们教授的科目",
-    "subjects_placeholder": "数学、化学",
-    "subjects_hint": "用逗号分隔。",
-    "pay_rate_label": "每小时薪资",
-    "pay_rate_placeholder": "例如 55",
-    "submit": "创建家教"
-  },
-  "common": {
-    "loading": "正在加载……"
-  },
   "actions": {
     "add": "添加家教",
     "add_one": "添加一位家教"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "目前尚无辅导老师",
     "description": "当您招募人员为您的机构授课时，请添加这些导师。如果您是独立导师，可以跳过此步骤。"
+  },
+  "table": {
+    "name": "名称",
+    "subjects": "科目",
+    "linked_login": "关联登录",
+    "students": "学生",
+    "pay_rate": "报酬标准",
+    "this_month": "本月",
+    "linked_yes": "是",
+    "linked_no": "否",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "辅导老师",
+    "page_title": "新导师",
+    "name_label": "姓名 *",
+    "email_label": "电子邮件",
+    "phone_label": "手机",
+    "subjects_label": "他们教授的科目",
+    "subjects_placeholder": "数学、化学",
+    "subjects_hint": "用逗号分隔。",
+    "pay_rate_label": "每小时薪资",
+    "pay_rate_placeholder": "例如 55",
+    "notes_label": "备注",
+    "submit": "创建家教",
+    "saving": "正在保存……",
+    "cancel": "取消",
+    "not_signed_in": "尚未登录。",
+    "no_organization": "您的账户未关联任何组织。请联系 support@crestio.ai。"
+  },
+  "common": {
+    "loading": "正在加载……"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "正在加载……",
+    "not_found_title": "未找到",
+    "not_found_body": "未找到该导师。",
+    "subtitle": "导师",
+    "edit": "编辑",
+    "delete": "删除",
+    "save": "保存",
+    "saving": "正在保存……",
+    "cancel": "取消",
+    "confirm_delete": "删除 {{name}}？过去的课程记录将保留，但会失去该导师的链接。此操作无法撤销。",
+    "form": {
+      "name_label": "名称",
+      "email_label": "电子邮件",
+      "phone_label": "手机",
+      "subjects_label": "科目",
+      "pay_rate_label": "报酬标准",
+      "notes_label": "备注"
+    },
+    "contact_eyebrow": "联系方式",
+    "no_contact": "无法联系。",
+    "teaches_eyebrow": "教授科目",
+    "no_subjects": "—",
+    "pay_eyebrow": "费用",
+    "rate_label": "学费： ",
+    "rate_per_hour": " / hr",
+    "total_label": "已支付/应付总额： ",
+    "notes_eyebrow": "备注",
+    "record_eyebrow": "记录",
+    "recent_heading": "最近的课程",
+    "no_sessions": "尚未安排任何课程。",
+    "table": {
+      "when": "何时",
+      "subject": "主题",
+      "duration": "时长",
+      "status": "状态",
+      "pay": "费用",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} min"
+    }
   }
 }

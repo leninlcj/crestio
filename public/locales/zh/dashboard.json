@@ -1,5 +1,8 @@
 {
   "kicker": "今天",
+  "greeting_morning": "早上好，{{name}}",
+  "greeting_afternoon": "下午好，{{name}}",
+  "greeting_evening": "晚上好，{{name}}",
   "loading_error": "无法加载您的仪表板。",
   "trial_banner": {
     "days_left_one": "您的试用期还剩1天。",
@@ -28,21 +31,21 @@
       "kicker": "未开票",
       "title_one": "{{count}} 该家庭有未结算的疗程",
       "title_other": "{{count}} 如今的家庭有未计费的咨询时段",
-      "total_uninvoiced": "未开票总额：{{amount}}",
-      "cta": "开具所有发票 →",
       "student_count_one": "{{count}} 学生",
-      "student_count_other": "{{count}} 学生"
+      "student_count_other": "{{count}} 学生",
+      "total_uninvoiced": "未开票总额：{{amount}}",
+      "cta": "开具所有发票 →"
     },
     "reschedules": {
       "kicker": "需要您的回复",
       "title_one": "{{count}} 待处理的改期请求",
       "title_other": "{{count}} 待处理的改期请求",
-      "accept": "接受",
-      "reject": "拒绝",
-      "open": "打开",
       "row_description": "{{parent}} 提议将{{student}}的会议改期。",
       "row_original": "原文：",
-      "row_proposed": "建议："
+      "row_proposed": "建议：",
+      "accept": "接受",
+      "reject": "拒绝",
+      "open": "打开"
     },
     "week_ahead": {
       "kicker": "本周",
@@ -65,8 +68,5 @@
       "schedule": "预约课程 →",
       "add_student": "添加学生 →"
     }
-  },
-  "greeting_morning": "早上好，{{name}}",
-  "greeting_afternoon": "下午好，{{name}}",
-  "greeting_evening": "晚上好，{{name}}"
+  }
 }

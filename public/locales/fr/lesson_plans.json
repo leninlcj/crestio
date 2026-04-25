@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "Chargement en cours…"
-  },
   "page": {
     "subtitle": "Enseignement",
     "title": "Plans de cours"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "IA",
     "unassigned": "Non attribué"
+  },
+  "common": {
+    "loading": "Chargement en cours…"
+  },
+  "new": {
+    "subtitle_edit": "Modifier le plan",
+    "subtitle_generate": "Générer un plan",
+    "title_default_edit": "Plan de cours",
+    "title_new": "Nouveau plan de cours",
+    "delete": "Supprimer",
+    "confirm_delete": "Supprimer ce plan de cours ?",
+    "form": {
+      "subject_label": "Matière *",
+      "subject_placeholder": "par exemple : Mathématiques avancées",
+      "year_level_label": "Niveau scolaire",
+      "year_level_placeholder": "par exemple : 11e année",
+      "topic_label": "Sujet *",
+      "topic_placeholder": "Par exemple : Introduction à l'intégration par parties",
+      "duration_label": "Durée (minutes)",
+      "student_link_label": "Lien vers l'élève (facultatif)",
+      "student_none": "—",
+      "plan_label": "Plan (markdown)",
+      "plan_placeholder": "# Plan de cours\n\n## Objectifs\n- …",
+      "preview_toggle_edit": "Modifier",
+      "preview_toggle_preview": "Aperçu",
+      "preview_empty": "_Rien pour l'instant. Générez-en un ou collez le vôtre._",
+      "preview_placeholder": "_Votre plan s'affichera ici en aperçu._",
+      "preview_eyebrow": "Aperçu"
+    },
+    "actions": {
+      "generate": "Générer un plan",
+      "regenerate": "Regénérer le plan",
+      "generating": "Génération du plan…",
+      "save_new": "Enregistrer le plan",
+      "save_changes": "Enregistrer les modifications",
+      "saving": "Enregistrement en cours…",
+      "cancel": "Annuler"
+    },
+    "usage_line": "{{used}} des générations quotidiennes d'{{limit}}s utilisées.",
+    "errors": {
+      "subject_topic_required": "La matière et le thème sont obligatoires pour la génération.",
+      "not_signed_in": "Vous n'êtes pas connecté.",
+      "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai.",
+      "server_returned": "Le serveur a renvoyé {{status}}",
+      "server_returned_with_text": "{{status}} renvoyée par le serveur : {{text}}",
+      "no_plan": "Le serveur n'a renvoyé aucun plan.",
+      "generic": "Une erreur s'est produite.",
+      "rate_limited_one": "Vous avez généré {{limit}} plans de cours au cours des dernières 24 heures. Vous pouvez en générer d'autres dans {{hours}} heure.",
+      "rate_limited_other": "Vous avez généré {{limit}} plans de cours au cours des dernières 24 heures. Vous pourrez en générer d'autres dans {{hours}} heures.",
+      "rate_limited_soon": "Vous avez généré un{{limit}}s de plans de cours au cours des dernières 24 heures. Vous pourrez en générer d'autres prochainement."
+    }
   }
 }

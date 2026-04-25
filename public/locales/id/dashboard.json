@@ -1,5 +1,8 @@
 {
   "kicker": "Hari ini",
+  "greeting_morning": "Selamat pagi, {{name}}",
+  "greeting_afternoon": "Selamat siang, {{name}}",
+  "greeting_evening": "Selamat malam, {{name}}",
   "loading_error": "Tidak dapat memuat dasbor Anda.",
   "trial_banner": {
     "days_left_one": "Anda memiliki sisa 1 hari masa uji coba.",
@@ -28,21 +31,21 @@
       "kicker": "Belum ditagih",
       "title_one": "{{count}} keluarga saat ini memiliki sesi yang belum ditagih",
       "title_other": "{{count}} keluarga-keluarga saat ini memiliki sesi yang belum ditagih",
-      "total_uninvoiced": "Total yang belum ditagih: {{amount}}",
-      "cta": "Tagih semuanya →",
       "student_count_one": "{{count}} siswa",
-      "student_count_other": "{{count}} siswa"
+      "student_count_other": "{{count}} siswa",
+      "total_uninvoiced": "Total yang belum ditagih: {{amount}}",
+      "cta": "Tagih semuanya →"
     },
     "reschedules": {
       "kicker": "Butuh tanggapan Anda",
       "title_one": "{{count}} Permintaan penjadwalan ulang sedang menunggu",
       "title_other": "{{count}} permintaan penjadwalan ulang yang sedang menunggu",
-      "accept": "Setuju",
-      "reject": "Tolak",
-      "open": "Buka",
       "row_description": "{{parent}} usulan penundaan sesi yang dijadwalkan untuk {{student}}.",
       "row_original": "Asli:",
-      "row_proposed": "Usulan:"
+      "row_proposed": "Usulan:",
+      "accept": "Setuju",
+      "reject": "Tolak",
+      "open": "Buka"
     },
     "week_ahead": {
       "kicker": "Minggu ini",
@@ -65,8 +68,5 @@
       "schedule": "Jadwalkan sesi →",
       "add_student": "Tambahkan siswa →"
     }
-  },
-  "greeting_morning": "Selamat pagi, {{name}}",
-  "greeting_afternoon": "Selamat siang, {{name}}",
-  "greeting_evening": "Selamat malam, {{name}}"
+  }
 }

@@ -1,5 +1,8 @@
 {
   "kicker": "Hoy",
+  "greeting_morning": "Buenos días, {{name}}",
+  "greeting_afternoon": "Buenas tardes, {{name}}",
+  "greeting_evening": "Buenas noches, {{name}}",
   "loading_error": "No se ha podido cargar tu panel de control.",
   "trial_banner": {
     "days_left_one": "Te queda 1 día de prueba.",
@@ -28,21 +31,21 @@
       "kicker": "Sin facturar",
       "title_one": "{{count}} La familia de hoy tiene sesiones sin facturar",
       "title_other": "{{count}} las familias tienen sesiones sin facturar",
-      "total_uninvoiced": "Total sin facturar: {{amount}}",
-      "cta": "Facturar todo →",
       "student_count_one": "{{count}} estudiante",
-      "student_count_other": "{{count}} estudiantes"
+      "student_count_other": "{{count}} estudiantes",
+      "total_uninvoiced": "Total sin facturar: {{amount}}",
+      "cta": "Facturar todo →"
     },
     "reschedules": {
       "kicker": "Necesita tu respuesta",
       "title_one": "{{count}} solicitud de reprogramación pendiente",
       "title_other": "{{count}} solicitudes de reprogramación pendientes",
-      "accept": "Aceptar",
-      "reject": "Rechazar",
-      "open": "Abrir",
       "row_description": "{{parent}} propuso cambiar la fecha de la sesión de «{{student}}».",
       "row_original": "Original:",
-      "row_proposed": "Propuesta:"
+      "row_proposed": "Propuesta:",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "open": "Abrir"
     },
     "week_ahead": {
       "kicker": "Esta semana",
@@ -65,8 +68,5 @@
       "schedule": "Reserva una sesión →",
       "add_student": "Añadir un alumno →"
     }
-  },
-  "greeting_morning": "Buenos días, {{name}}",
-  "greeting_afternoon": "Buenas tardes, {{name}}",
-  "greeting_evening": "Buenas noches, {{name}}"
+  }
 }

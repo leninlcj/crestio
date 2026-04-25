@@ -1,5 +1,8 @@
 {
   "kicker": "আজ",
+  "greeting_morning": "শুভ সকাল, {{name}}",
+  "greeting_afternoon": "শুভ দুপুর, {{name}}",
+  "greeting_evening": "শুভ সন্ধ্যা, {{name}}",
   "loading_error": "আপনার ড্যাশবোর্ড লোড করা যায়নি।",
   "trial_banner": {
     "days_left_one": "আপনার ট্রায়ালে ১ দিন বাকি আছে।",
@@ -28,21 +31,21 @@
       "kicker": "বিল করা হয়নি",
       "title_one": "{{count}} পরিবারের বিলবিহীন সেশন রয়েছে",
       "title_other": "{{count}} পরিবারগুলোর বিল করা হয়নি এমন সেশন রয়েছে",
-      "total_uninvoiced": "মোট বিল ইস্যু হয়নি: {{amount}}",
-      "cta": "সব ইনভয়েস →",
       "student_count_one": "{{count}} ছাত্র/ছাত্রী",
-      "student_count_other": "{{count}} শিক্ষার্থীরা"
+      "student_count_other": "{{count}} শিক্ষার্থীরা",
+      "total_uninvoiced": "মোট বিল ইস্যু হয়নি: {{amount}}",
+      "cta": "সব ইনভয়েস →"
     },
     "reschedules": {
       "kicker": "আপনার প্রতিক্রিয়া প্রয়োজন",
       "title_one": "{{count}} সময়সূচি পুনঃনির্ধারণের অনুরোধ অপেক্ষমাণ",
       "title_other": "{{count}} পুনঃনির্ধারণের অনুরোধ অপেক্ষমাণ",
-      "accept": "গ্রহণ করুন",
-      "reject": " প্রত্যাখ্যান",
-      "open": "খোলা",
       "row_description": "{{parent}} {{student}}-এর সেশন পুনঃনির্ধারণের প্রস্তাব।",
       "row_original": "মূল:",
-      "row_proposed": "প্রস্তাবিত:"
+      "row_proposed": "প্রস্তাবিত:",
+      "accept": "গ্রহণ করুন",
+      "reject": " প্রত্যাখ্যান",
+      "open": "খোলা"
     },
     "week_ahead": {
       "kicker": "এই সপ্তাহে",
@@ -65,8 +68,5 @@
       "schedule": "একটি সেশন নির্ধারণ করুন →",
       "add_student": "একজন শিক্ষার্থী যোগ করুন →"
     }
-  },
-  "greeting_morning": "শুভ সকাল, {{name}}",
-  "greeting_afternoon": "শুভ দুপুর, {{name}}",
-  "greeting_evening": "শুভ সন্ধ্যা, {{name}}"
+  }
 }

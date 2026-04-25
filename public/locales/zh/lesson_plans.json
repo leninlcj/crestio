@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "正在加载……"
-  },
   "page": {
     "subtitle": "教学",
     "title": "教案"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "AI",
     "unassigned": "未分配"
+  },
+  "common": {
+    "loading": "正在加载……"
+  },
+  "new": {
+    "subtitle_edit": "编辑教案",
+    "subtitle_generate": "生成教案",
+    "title_default_edit": "教案",
+    "title_new": "新教案",
+    "delete": "删除",
+    "confirm_delete": "删除此教案？",
+    "form": {
+      "subject_label": "科目 *",
+      "subject_placeholder": "例如：数学进阶",
+      "year_level_label": "年级",
+      "year_level_placeholder": "例如：11年级",
+      "topic_label": "主题 *",
+      "topic_placeholder": "例如：分部积分法入门",
+      "duration_label": "时长（分钟）",
+      "student_link_label": "学生链接（可选）",
+      "student_none": "—",
+      "plan_label": "教案 (Markdown)",
+      "plan_placeholder": "# 教案\n\n## 教学目标\n- …",
+      "preview_toggle_edit": "编辑",
+      "preview_toggle_preview": "预览",
+      "preview_empty": "_尚未填写。请生成一个或粘贴您自己的内容。_",
+      "preview_placeholder": "_您的教案预览将显示在此处。_",
+      "preview_eyebrow": "预览"
+    },
+    "actions": {
+      "generate": "生成教案",
+      "regenerate": "重新生成教案",
+      "generating": "正在生成教案……",
+      "save_new": "保存教案",
+      "save_changes": "保存更改",
+      "saving": "正在保存……",
+      "cancel": "取消"
+    },
+    "usage_line": "{{used}} {{limit}}的每日生成次数。",
+    "errors": {
+      "subject_topic_required": "生成时必须填写学科和主题。",
+      "not_signed_in": "尚未登录。",
+      "no_organisation": "您的账户未关联任何组织。请联系 support@crestio.ai。",
+      "server_returned": "服务器返回 {{status}}",
+      "server_returned_with_text": "服务器返回{{status}}：{{text}}",
+      "no_plan": "服务器未返回任何教案。",
+      "generic": "出现错误。",
+      "rate_limited_one": "您在过去24小时内已生成{{limit}}份教案。您可以在{{hours}}小时内生成更多教案。",
+      "rate_limited_other": "您在过去 24 小时内生成了 {{limit}} 个教案。您可以在 {{hours}} 小时内生成更多教案。",
+      "rate_limited_soon": "您在过去24小时内已生成{{limit}}份教案。您很快可以生成更多。"
+    }
   }
 }

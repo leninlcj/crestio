@@ -1,1 +1,56 @@
-{}
+{
+  "test_accounts": {
+    "page": {
+      "subtitle": "Alat untuk pemilik",
+      "title": "Akun uji coba"
+    },
+    "intro": {
+      "label": "Akun uji coba.",
+      "body": "Ini adalah akun uji coba yang telah dibuat sebelumnya dan Anda miliki. Masuk menggunakan salah satunya akan membuka sesi baru yang tunduk pada aturan keamanan yang sama seperti pengguna sungguhan. Anda tidak akan pernah melihat data pengguna lain melalui alur ini."
+    },
+    "list": {
+      "heading": "Akun uji coba Anda",
+      "loading": "Sedang dimuat…",
+      "empty": "Belum ada akun uji coba.",
+      "col_role": "Peran",
+      "col_name": "Nama",
+      "col_email": "Email",
+      "col_created": "Dibuat",
+      "col_last_login": "Login terakhir",
+      "name_dash": "—",
+      "last_login_dash": "—",
+      "login_busy": "…",
+      "login_button": "Masuk sebagai akun uji coba",
+      "delete_button": "Hapus",
+      "confirm_delete": "Hapus akun uji coba {{email}}? Tindakan ini akan menghapus pengguna otorisasi dan tidak dapat dibatalkan."
+    },
+    "create": {
+      "heading": "Buat akun uji coba",
+      "role_label": "Peran",
+      "role_tutor": "Tutor (di dalam organisasi Anda)",
+      "role_parent": "Induk (portal)",
+      "name_label": "Nama",
+      "name_placeholder": "Contoh: Akun Uji Coba Tutor Mai",
+      "email_label": "Email (opsional — akan dibuat secara otomatis jika dikosongkan)",
+      "email_placeholder": "test-tutor-abc123@crestio.test",
+      "submit": "Buat akun uji coba",
+      "creating": "Sedang membuat…",
+      "success_title": "Akun uji telah dibuat.",
+      "success_email_label": "Email:",
+      "success_password_label": "Kata sandi awal:",
+      "success_hint": "Simpan kata sandi ini sekarang — kata sandi ini hanya ditampilkan sekali. Atau klik \"Masuk sebagai akun uji coba\" pada tabel di atas untuk mendapatkan tautan login khusus."
+    },
+    "recent": {
+      "heading": "Sesi uji coba terbaru",
+      "empty": "Belum ada login akun uji coba.",
+      "role_unknown": "tidak diketahui",
+      "ended_suffix": " · berakhir"
+    },
+    "errors": {
+      "load_failed": "Tidak dapat memuat akun uji coba.",
+      "create_failed": "Tidak dapat membuat akun uji coba.",
+      "login_link_failed": "Tidak dapat membuat tautan masuk.",
+      "delete_failed": "Tidak dapat dihapus."
+    }
+  }
+}

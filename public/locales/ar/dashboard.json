@@ -1,5 +1,8 @@
 {
   "kicker": "اليوم",
+  "greeting_morning": "صباح الخير، {{name}}",
+  "greeting_afternoon": "مساء الخير، {{name}}",
+  "greeting_evening": "مساء الخير، {{name}}",
   "loading_error": "تعذر تحميل لوحة التحكم الخاصة بك.",
   "trial_banner": {
     "days_left_one": "تبقى لك يوم واحد في الفترة التجريبية.",
@@ -28,21 +31,21 @@
       "kicker": "غير مفوترة",
       "title_one": "{{count}} لدى العائلة جلسات غير مدفوعة",
       "title_other": "{{count}} تتمتع العائلات بجلسات مجانية",
-      "total_uninvoiced": "إجمالي المبالغ غير المفوترة: {{amount}}",
-      "cta": "إصدار فواتير لكل شيء →",
       "student_count_one": "{{count}} طالب",
-      "student_count_other": "{{count}} الطلاب"
+      "student_count_other": "{{count}} الطلاب",
+      "total_uninvoiced": "إجمالي المبالغ غير المفوترة: {{amount}}",
+      "cta": "إصدار فواتير لكل شيء →"
     },
     "reschedules": {
       "kicker": "يحتاج إلى ردك",
       "title_one": "{{count}} طلب إعادة الجدولة قيد الانتظار",
       "title_other": "{{count}} طلبات إعادة الجدولة المعلقة",
-      "accept": "قبول",
-      "reject": "رفض",
-      "open": "فتح",
       "row_description": "{{parent}} اقترح تأجيل جلسة شركة «{{student}}».",
       "row_original": "الأصل:",
-      "row_proposed": "المقترح:"
+      "row_proposed": "المقترح:",
+      "accept": "قبول",
+      "reject": "رفض",
+      "open": "فتح"
     },
     "week_ahead": {
       "kicker": "هذا الأسبوع",
@@ -65,8 +68,5 @@
       "schedule": "حجز جلسة →",
       "add_student": "إضافة طالب →"
     }
-  },
-  "greeting_morning": "صباح الخير، {{name}}",
-  "greeting_afternoon": "مساء الخير، {{name}}",
-  "greeting_evening": "مساء الخير، {{name}}"
+  }
 }

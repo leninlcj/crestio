@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "جاري التحميل..."
-  },
   "page": {
     "subtitle": "التدريس",
     "title": "خطط الدروس"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "الذكاء الاصطناعي",
     "unassigned": "غير مخصص"
+  },
+  "common": {
+    "loading": "جاري التحميل..."
+  },
+  "new": {
+    "subtitle_edit": "تحرير الخطة",
+    "subtitle_generate": "إنشاء خطة",
+    "title_default_edit": "خطة الدرس",
+    "title_new": "خطة درس جديدة",
+    "delete": "حذف",
+    "confirm_delete": "هل تريد حذف خطة الدرس هذه؟",
+    "form": {
+      "subject_label": "الموضوع *",
+      "subject_placeholder": "مثل الرياضيات المتقدمة",
+      "year_level_label": "السنة الدراسية",
+      "year_level_placeholder": "على سبيل المثال: الصف الحادي عشر",
+      "topic_label": "الموضوع *",
+      "topic_placeholder": "على سبيل المثال: مقدمة في التكامل بالتجزئة",
+      "duration_label": "المدة (بالدقائق)",
+      "student_link_label": "رابط إلى الطالب (اختياري)",
+      "student_none": "—",
+      "plan_label": "الخطة (تخفيض السعر)",
+      "plan_placeholder": "# خطة الدرس\n\n## الأهداف\n- …",
+      "preview_toggle_edit": "تحرير",
+      "preview_toggle_preview": "معاينة",
+      "preview_empty": "_لا يوجد شيء بعد. قم بإنشاء عنوان فرعي أو الصق عنوانك الخاص._",
+      "preview_placeholder": "_سيتم عرض معاينة خطتك هنا._",
+      "preview_eyebrow": "معاينة"
+    },
+    "actions": {
+      "generate": "إنشاء خطة",
+      "regenerate": "إعادة إنشاء الخطة",
+      "generating": "جاري إنشاء الخطة...",
+      "save_new": "حفظ الخطة",
+      "save_changes": "حفظ التغييرات",
+      "saving": "جاري الحفظ…",
+      "cancel": "إلغاء"
+    },
+    "usage_line": "{{used}} من {{limit}} الأجيال اليومية المستخدمة.",
+    "errors": {
+      "subject_topic_required": "يجب تحديد المادة والموضوع لإجراء الإنشاء.",
+      "not_signed_in": "لم يتم تسجيل الدخول.",
+      "no_organisation": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai.",
+      "server_returned": "أعاد الخادم {{status}}",
+      "server_returned_with_text": "أعاد الخادم {{status}}: {{text}}",
+      "no_plan": "لم يعرض الخادم أي خطة.",
+      "generic": "حدث خطأ ما.",
+      "rate_limited_one": "لقد أنشأت {{limit}} خطة درس خلال الـ 24 ساعة الماضية. يمكنك إنشاء المزيد خلال {{hours}} ساعة.",
+      "rate_limited_other": "لقد أنشأت خطط دروس ب{{limit}}خطة خلال الـ24 ساعة الماضية. يمكنك إنشاء المزيد خلال {{hours}}ساعات.",
+      "rate_limited_soon": "لقد أنشأت خطط دروس ب{{limit}}خلال الـ24 ساعة الماضية. يمكنك إنشاء المزيد قريبًا."
+    }
   }
 }

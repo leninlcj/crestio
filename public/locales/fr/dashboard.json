@@ -1,5 +1,8 @@
 {
   "kicker": "Aujourd'hui",
+  "greeting_morning": "Bonjour, {{name}}",
+  "greeting_afternoon": "Bonjour, {{name}}",
+  "greeting_evening": "Bonsoir, {{name}}",
   "loading_error": "Impossible de charger votre tableau de bord.",
   "trial_banner": {
     "days_left_one": "Il vous reste 1 jour d'essai.",
@@ -28,21 +31,21 @@
       "kicker": "Non facturé",
       "title_one": "{{count}} La famille d'aujourd'hui a des séances non facturées",
       "title_other": "{{count}} les familles bénéficient de séances gratuites",
-      "total_uninvoiced": "Total non facturé : {{amount}}",
-      "cta": "Facturer tout →",
       "student_count_one": "{{count}} étudiant",
-      "student_count_other": "{{count}} étudiants"
+      "student_count_other": "{{count}} étudiants",
+      "total_uninvoiced": "Total non facturé : {{amount}}",
+      "cta": "Facturer tout →"
     },
     "reschedules": {
       "kicker": "Nécessite votre réponse",
       "title_one": "{{count}} demande de report en attente",
       "title_other": "{{count}} demandes de report en attente",
-      "accept": "Accepter",
-      "reject": "Refuser",
-      "open": "Ouvrir",
       "row_description": "{{parent}} a proposé de reporter la séance d'{{student}}.",
       "row_original": "Original :",
-      "row_proposed": "Proposition :"
+      "row_proposed": "Proposition :",
+      "accept": "Accepter",
+      "reject": "Refuser",
+      "open": "Ouvrir"
     },
     "week_ahead": {
       "kicker": "Cette semaine",
@@ -65,8 +68,5 @@
       "schedule": "Prendre rendez-vous →",
       "add_student": "Ajouter un élève →"
     }
-  },
-  "greeting_morning": "Bonjour, {{name}}",
-  "greeting_afternoon": "Bonjour, {{name}}",
-  "greeting_evening": "Bonsoir, {{name}}"
+  }
 }

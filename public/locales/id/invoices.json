@@ -20,11 +20,11 @@
     "per_student": "Per siswa"
   },
   "columns": {
-    "billed_to": "Ditagih kepada",
-    "status": "Status",
     "number": "Nomor",
+    "billed_to": "Ditagih kepada",
     "issued": "Diterbitkan",
     "due": "Jatuh tempo",
+    "status": "Status",
     "total": "Total"
   },
   "not_found": "Tagihan tidak ditemukan.",
@@ -42,13 +42,13 @@
     "period_custom": "Rentang khusus…",
     "from": "Dari",
     "to": "Untuk",
+    "back_to_list": "Kembali ke daftar faktur",
     "households": "Rumah tangga",
     "sessions": "Sesi",
     "unbilled_total": "Total yang belum ditagih",
+    "nothing_title": "Tidak ada yang perlu ditagih",
     "nothing_body": "Tidak ada sesi yang telah diselesaikan namun belum ditagih pada periode ini. Catat lebih banyak sesi atau pilih rentang tanggal yang berbeda.",
     "loading": "Sedang dimuat…",
-    "back_to_list": "Kembali ke daftar faktur",
-    "nothing_title": "Tidak ada yang perlu ditagih",
     "save_drafts": "Simpan sebagai draf",
     "send": "Kirim faktur"
   },

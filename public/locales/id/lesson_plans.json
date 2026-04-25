@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "Sedang dimuat…"
-  },
   "page": {
     "subtitle": "Pengajaran",
     "title": "Rencana pelajaran"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "AI",
     "unassigned": "Belum ditugaskan"
+  },
+  "common": {
+    "loading": "Sedang dimuat…"
+  },
+  "new": {
+    "subtitle_edit": "Edit rencana",
+    "subtitle_generate": "Buat rencana",
+    "title_default_edit": "Rencana pelajaran",
+    "title_new": "Rencana pelajaran baru",
+    "delete": "Hapus",
+    "confirm_delete": "Hapus rencana pelajaran ini?",
+    "form": {
+      "subject_label": "Mata pelajaran *",
+      "subject_placeholder": "misalnya Matematika Tingkat Lanjut",
+      "year_level_label": "Tingkat kelas",
+      "year_level_placeholder": "misalnya Kelas 11",
+      "topic_label": "Topik *",
+      "topic_placeholder": "misalnya: Pengenalan integrasi dengan bagian-bagian",
+      "duration_label": "Durasi (menit)",
+      "student_link_label": "Tautan ke siswa (opsional)",
+      "student_none": "—",
+      "plan_label": "Rencana (markdown)",
+      "plan_placeholder": "# Rencana pelajaran\n\n## Tujuan\n- …",
+      "preview_toggle_edit": "Edit",
+      "preview_toggle_preview": "Pratinjau",
+      "preview_empty": "_Belum ada. Buat atau tempelkan teks Anda sendiri._",
+      "preview_placeholder": "_Rencana Anda akan ditampilkan di sini._",
+      "preview_eyebrow": "Pratinjau"
+    },
+    "actions": {
+      "generate": "Buat rencana",
+      "regenerate": "Buat ulang rencana",
+      "generating": "Sedang membuat rencana…",
+      "save_new": "Simpan rencana",
+      "save_changes": "Simpan perubahan",
+      "saving": "Menyimpan…",
+      "cancel": "Batalkan"
+    },
+    "usage_line": "{{used}} dari generasi harian {{limit}} yang digunakan.",
+    "errors": {
+      "subject_topic_required": "Mata pelajaran dan topik wajib diisi untuk menghasilkan.",
+      "not_signed_in": "Belum masuk.",
+      "no_organisation": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai.",
+      "server_returned": "Server mengembalikan {{status}}",
+      "server_returned_with_text": "Server mengembalikan pesan \"{{status}}\": {{text}}",
+      "no_plan": "Server tidak menemukan rencana pelajaran.",
+      "generic": "Terjadi kesalahan.",
+      "rate_limited_one": "Anda telah membuat {{limit}} rencana pelajaran dalam 24 jam terakhir. Anda dapat membuat lebih banyak lagi dalam {{hours}} jam.",
+      "rate_limited_other": "Anda telah membuat {{limit}} rencana pelajaran dalam 24 jam terakhir. Anda dapat membuat lebih banyak lagi dalam {{hours}} jam.",
+      "rate_limited_soon": "Anda telah membuat rencana pelajar{{limit}}-an dalam 24 jam terakhir. Anda dapat membuat lebih banyak lagi segera."
+    }
   }
 }

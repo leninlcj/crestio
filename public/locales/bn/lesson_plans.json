@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "লোড হচ্ছে…"
-  },
   "page": {
     "subtitle": "শিক্ষাদান",
     "title": "পাঠ পরিকল্পনা"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "এআই",
     "unassigned": "অবণ্টিত"
+  },
+  "common": {
+    "loading": "লোড হচ্ছে…"
+  },
+  "new": {
+    "subtitle_edit": "পরিকল্পনা সম্পাদনা করুন",
+    "subtitle_generate": "পরিকল্পনা তৈরি করুন",
+    "title_default_edit": "পাঠ পরিকল্পনা",
+    "title_new": "নতুন পাঠ পরিকল্পনা",
+    "delete": "মুছুন",
+    "confirm_delete": "এই পাঠ পরিকল্পনাটি মুছে ফেলবেন?",
+    "form": {
+      "subject_label": "বিষয় *",
+      "subject_placeholder": "যেমন: গণিত অ্যাডভান্সড",
+      "year_level_label": "বর্ষ স্তর",
+      "year_level_placeholder": "যেমন: ১১তম শ্রেণি",
+      "topic_label": "বিষয় *",
+      "topic_placeholder": "যেমন: অংশবিভাগের মাধ্যমে সংহতনের পরিচিতি",
+      "duration_label": "দৈর্ঘ্য (মিনিট)",
+      "student_link_label": "শিক্ষার্থীর সাথে সংযোগ (ঐচ্ছিক)",
+      "student_none": "—",
+      "plan_label": "পরিকল্পনা (মার্কডাউন)",
+      "plan_placeholder": "# পাঠ পরিকল্পনা\n\n## উদ্দেশ্যসমূহ\n- …",
+      "preview_toggle_edit": "সম্পাদনা",
+      "preview_toggle_preview": "প্রিভিউ",
+      "preview_empty": "এখনও কিছুই নেই। একটি তৈরি করুন অথবা আপনার নিজস্বটি পেস্ট করুন।",
+      "preview_placeholder": "আপনার পরিকল্পনা এখানে পূর্বরূপ দেখানো হবে।",
+      "preview_eyebrow": "প্রিভিউ"
+    },
+    "actions": {
+      "generate": "পরিকল্পনা তৈরি করুন",
+      "regenerate": "পরিকল্পনা পুনরায় তৈরি করুন",
+      "generating": "পরিকল্পনা তৈরি হচ্ছে…",
+      "save_new": "পরিকল্পনা সংরক্ষণ করুন",
+      "save_changes": "পরিবর্তনগুলি সংরক্ষণ করুন",
+      "saving": "সংরক্ষণ হচ্ছে…",
+      "cancel": "বাতিল করুন"
+    },
+    "usage_line": "{{used}} {{limit}}-এর দৈনিক প্রজন্ম ব্যবহারের",
+    "errors": {
+      "subject_topic_required": "বিষয় এবং বিষয়বস্তু তৈরি করতে প্রয়োজন।",
+      "not_signed_in": "সাইন ইন করা নেই।",
+      "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।",
+      "server_returned": "সার্ভার ফেরত দিয়েছে {{status}}",
+      "server_returned_with_text": "সার্ভার ফেরত দিয়েছে {{status}}: {{text}}",
+      "no_plan": "সার্ভার কোনো পরিকল্পনা ফেরত দেয়নি।",
+      "generic": "কিছু একটা ভুল হয়েছে।",
+      "rate_limited_one": "আপনি গত ২৪ ঘণ্টায় '{{limit}}' পাঠ পরিকল্পনা তৈরি করেছেন। আপনি পরবর্তী ১ ঘণ্টায় আরও তৈরি করতে পারবেন।",
+      "rate_limited_other": "আপনি গত ২৪ ঘণ্টায় '{{limit}}' পাঠ পরিকল্পনা তৈরি করেছেন। আপনি আরও '{{hours}}' ঘণ্টায় তৈরি করতে পারবেন।",
+      "rate_limited_soon": "আপনি গত ২৪ ঘণ্টায় '{{limit}}' পাঠ পরিকল্পনা তৈরি করেছেন। শীঘ্রই আরও তৈরি করতে পারবেন।"
+    }
   }
 }

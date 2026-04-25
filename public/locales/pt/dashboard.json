@@ -1,5 +1,8 @@
 {
   "kicker": "Hoje",
+  "greeting_morning": "Bom dia, {{name}}",
+  "greeting_afternoon": "Boa tarde, {{name}}",
+  "greeting_evening": "Boa noite, {{name}}",
   "loading_error": "Não foi possível carregar seu painel.",
   "trial_banner": {
     "days_left_one": "Você tem mais 1 dia de avaliação.",
@@ -28,21 +31,21 @@
       "kicker": "Não faturado",
       "title_one": "{{count}} A família de hoje tem sessões não cobradas",
       "title_other": "{{count}} As famílias de hoje têm sessões não cobradas",
-      "total_uninvoiced": "Total não faturado: {{amount}}",
-      "cta": "Faturar tudo →",
       "student_count_one": "{{count}} aluno",
-      "student_count_other": "{{count}} alunos"
+      "student_count_other": "{{count}} alunos",
+      "total_uninvoiced": "Total não faturado: {{amount}}",
+      "cta": "Faturar tudo →"
     },
     "reschedules": {
       "kicker": "Precisa da sua resposta",
       "title_one": "{{count}} solicitação de remarcação em espera",
       "title_other": "{{count}} solicitações de remarcação em espera",
-      "accept": "Aceitar",
-      "reject": "Rejeitar",
-      "open": "Abrir",
       "row_description": "{{parent}} propôs o adiamento da sessão d{{student}}.",
       "row_original": "Original:",
-      "row_proposed": "Proposta:"
+      "row_proposed": "Proposta:",
+      "accept": "Aceitar",
+      "reject": "Rejeitar",
+      "open": "Abrir"
     },
     "week_ahead": {
       "kicker": "Esta semana",
@@ -65,8 +68,5 @@
       "schedule": "Agende uma sessão →",
       "add_student": "Adicionar um aluno →"
     }
-  },
-  "greeting_morning": "Bom dia, {{name}}",
-  "greeting_afternoon": "Boa tarde, {{name}}",
-  "greeting_evening": "Boa noite, {{name}}"
+  }
 }

@@ -4,9 +4,8 @@
     "greeting": "你好，{{name}}",
     "greeting_fallback": "您的仪表盘",
     "loading_error": "无法加载您的仪表板。",
-    "this_week_empty": "本周没有会议。",
-    "no_access": "您没有访问权限。",
     "this_week": "本周",
+    "this_week_empty": "本周没有会议。",
     "recent_updates": "导师的最新动态",
     "your_children": "您的孩子",
     "at_a_glance": "一览",
@@ -16,6 +15,7 @@
       "paid": "已付费",
       "outstanding": "待处理"
     },
+    "no_access": "您没有访问权限。",
     "change_requested": "请求更改"
   },
   "nav": {
@@ -75,27 +75,27 @@
   },
   "invoices_page": {
     "kicker": "发票",
-    "due_label": "来源：{{date}}",
-    "status_paid": "付费",
-    "status_overdue": "逾期",
     "heading": "您的发票",
     "empty": "尚无发票。",
     "outstanding_eyebrow": "待处理",
     "outstanding_note": "如需付款，请按照导师开具的每张发票上的说明操作。",
     "family_badge": "家庭",
-    "issued_label": "发布于 {{date}}"
+    "issued_label": "发布于 {{date}}",
+    "due_label": "来源：{{date}}",
+    "status_paid": "付费",
+    "status_overdue": "逾期"
   },
   "invoice_detail": {
+    "back": "← 发票",
     "not_found": "未找到该发票。",
+    "number_label": "发票 {{number}}",
+    "heading_fallback": "发票",
     "status_paid": "付费",
     "status_overdue": "逾期",
     "issued": "已开具",
     "due": "应付",
-    "sessions": "课程",
-    "back": "← 发票",
-    "number_label": "发票 {{number}}",
-    "heading_fallback": "发票",
     "period": "时段",
+    "sessions": "课程",
     "no_line_items": "无具体项目。",
     "no_sessions": "此发票上没有课程。",
     "minutes_suffix": "{{minutes}} 分钟",
@@ -114,13 +114,13 @@
     "heading": "您的通知"
   },
   "signin": {
+    "kicker": "家长门户",
     "heading": "登录",
     "email_label": "电子邮件",
     "password_label": "密码",
+    "forgot": "忘记密码了吗？",
     "submit": "登录",
     "submitting": "正在登录……",
-    "kicker": "家长门户",
-    "forgot": "忘记密码了吗？",
     "error_generic": "登录失败。",
     "error_not_parent": "此登录仅限家长使用。如果您是辅导老师，请访问 /auth/signin 登录。",
     "forgot_need_email": "请先输入您的电子邮件地址，然后点击“忘记密码”。",
@@ -128,26 +128,26 @@
     "invitation_hint": "还没收到导师的邀请吗？请他们发一份给你。"
   },
   "settings_page": {
+    "kicker": "账户",
     "heading": "设置",
     "loading": "正在加载……",
+    "details_heading": "您的详细信息",
     "email_label": "电子邮件",
+    "email_hint": "如需更改电子邮箱，请联系您的导师。",
+    "name_label": "名称",
     "save": "保存",
     "saving": "正在保存……",
     "saved": "已保存。",
-    "new_password_label": "新密码",
-    "updating": "正在更新……",
-    "sign_out_heading": "注销",
-    "sign_out": "注销",
-    "kicker": "账户",
-    "details_heading": "您的详细信息",
-    "email_hint": "如需更改电子邮箱，请联系您的导师。",
-    "name_label": "名称",
     "change_password": "更改密码",
-    "password_min": "至少8个字符。",
-    "password_too_short": "密码必须至少为8个字符。",
+    "new_password_label": "新密码",
+    "password_min": "至少 8 个字符。",
+    "password_too_short": "密码必须至少为 8 个字符。",
     "password_updated": "密码已更新。",
     "update_password": "更新密码",
+    "updating": "正在更新……",
+    "sign_out_heading": "注销",
     "sign_out_body": "退出登录将结束本次会话。",
+    "sign_out": "注销",
     "msg_notifs_heading": "消息通知",
     "msg_notifs_body": "选择 Crestio 向您发送邮件的时间。应用内消息无论如何都会显示。",
     "msg_when_label": "当我的导师给我发消息时，请通过电子邮件通知我",
@@ -157,7 +157,6 @@
   },
   "settings_notifications_page": {
     "kicker": "设置",
-    "saved": "已保存。",
     "heading": "电子邮件通知",
     "intro": "无论这些开关如何设置，应用内通知都会正常显示。这些设置仅控制电子邮件的发送。",
     "toggles": {
@@ -185,12 +184,10 @@
         "label": "仅接收紧急消息",
         "description": "如果启用此选项，将跳过普通消息或信息类消息的电子邮件通知。"
       }
-    }
+    },
+    "saved": "已保存。"
   },
   "accept": {
-    "email_label": "电子邮件",
-    "name_label": "您的姓名",
-    "creating": "正在创建账户……",
     "kicker": "家长门户",
     "checking": "正在检查邀请……",
     "missing_token": "此链接缺少邀请令牌。",
@@ -201,12 +198,15 @@
     "back_home": "返回首页",
     "accept_heading": "接受您的邀请",
     "accept_body": "{{tutor}} 已邀请您查看 {{student}} 的辅导课程。",
+    "email_label": "电子邮件",
     "email_hint": "来自您的邀请。此处无法更改。",
+    "name_label": "您的姓名",
     "name_placeholder": "可选",
     "password_label": "创建密码",
     "password_min": "至少 8 个字符。",
     "password_too_short": "密码必须至少为 8 个字符。",
     "create": "创建家长账户",
+    "creating": "正在创建账户……",
     "create_failed": "无法创建账户。"
   }
 }

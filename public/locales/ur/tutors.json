@@ -3,38 +3,6 @@
     "subtitle": "ٹیم",
     "title": "ٹیوٹرز"
   },
-  "table": {
-    "name": "نام",
-    "subjects": "مضمون",
-    "students": "طلباء",
-    "em_dash": "—",
-    "linked_login": "منسلک لاگ ان",
-    "pay_rate": "ادائیگی کی شرح",
-    "this_month": "اس ماہ",
-    "linked_yes": "جی ہاں",
-    "linked_no": "نہیں"
-  },
-  "new": {
-    "page_subtitle": "اساتذہ",
-    "email_label": "ای میل",
-    "phone_label": "فون",
-    "notes_label": "نوٹس",
-    "saving": "محفوظ کر رہے ہیں…",
-    "cancel": "منسوخ کریں",
-    "not_signed_in": "سائن ان نہیں ہوا۔",
-    "no_organization": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: support@crestio.ai۔",
-    "page_title": "نیا ٹیوٹر",
-    "name_label": "نام *",
-    "subjects_label": "وہ مضامین جو وہ پڑھاتے ہیں",
-    "subjects_placeholder": "ریاضی، کیمسٹری",
-    "subjects_hint": "کامے سے جدا",
-    "pay_rate_label": "فی گھنٹہ معاوضہ",
-    "pay_rate_placeholder": "مثلاً ۵۵",
-    "submit": "ٹیوٹر بنائیں"
-  },
-  "common": {
-    "loading": "لوڈ ہو رہا ہے…"
-  },
   "actions": {
     "add": "ٹیوٹر شامل کریں",
     "add_one": "ایک ٹیوٹر شامل کریں"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "ابھی تک کوئی ٹیوٹر نہیں ہے",
     "description": "جب آپ اپنے کاروبار میں پڑھانے کے لیے لوگوں کو شامل کرتے ہیں تو ٹیوٹرز شامل کریں۔ اگر آپ اکیلے ٹیوٹر ہیں تو آپ اسے چھوڑ سکتے ہیں۔"
+  },
+  "table": {
+    "name": "نام",
+    "subjects": "مضمون",
+    "linked_login": "منسلک لاگ ان",
+    "students": "طلباء",
+    "pay_rate": "ادائیگی کی شرح",
+    "this_month": "اس ماہ",
+    "linked_yes": "جی ہاں",
+    "linked_no": "نہیں",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "اساتذہ",
+    "page_title": "نیا ٹیوٹر",
+    "name_label": "نام *",
+    "email_label": "ای میل",
+    "phone_label": "فون",
+    "subjects_label": "وہ مضامین جو وہ پڑھاتے ہیں",
+    "subjects_placeholder": "ریاضی، کیمسٹری",
+    "subjects_hint": "کامے سے جدا",
+    "pay_rate_label": "فی گھنٹہ معاوضہ",
+    "pay_rate_placeholder": "مثلاً ۵۵",
+    "notes_label": "نوٹس",
+    "submit": "ٹیوٹر بنائیں",
+    "saving": "محفوظ کر رہے ہیں…",
+    "cancel": "منسوخ کریں",
+    "not_signed_in": "سائن ان نہیں ہوا۔",
+    "no_organization": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: support@crestio.ai۔"
+  },
+  "common": {
+    "loading": "لوڈ ہو رہا ہے…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "لوڈ ہو رہا ہے…",
+    "not_found_title": "ملو نہ سکا",
+    "not_found_body": "ٹیوٹر نہیں ملا۔",
+    "subtitle": "ٹیوٹر",
+    "edit": "ترمیم",
+    "delete": "مٹائیں",
+    "save": "محفوظ کریں",
+    "saving": "محفوظ کر رہے ہیں…",
+    "cancel": "منسوخ کریں",
+    "confirm_delete": "کیا {{name}} حذف کریں؟ ان کے پچھلے سیشنز برقرار رہیں گے، لیکن ٹیوٹر کا لنک ختم ہو جائے گا۔ اسے واپس نہیں کیا جا سکتا۔",
+    "form": {
+      "name_label": "نام",
+      "email_label": "ای میل",
+      "phone_label": "فون",
+      "subjects_label": "مضمون",
+      "pay_rate_label": "ادائیگی کی شرح",
+      "notes_label": "نوٹس"
+    },
+    "contact_eyebrow": "رابطہ",
+    "no_contact": "کوئی رابطہ نہیں۔",
+    "teaches_eyebrow": "پڑھاتا ہے",
+    "no_subjects": "—",
+    "pay_eyebrow": "ادائیگی",
+    "rate_label": " شرح: ",
+    "rate_per_hour": " / hr",
+    "total_label": "کل ادا شدہ/باقی ادائیگی: ",
+    "notes_eyebrow": "نوٹس",
+    "record_eyebrow": "ریکارڈ",
+    "recent_heading": "حالیہ سیشنز",
+    "no_sessions": "ابھی تک کوئی سیشن تفویض نہیں کیا گیا۔",
+    "table": {
+      "when": "جب",
+      "subject": "موضوع",
+      "duration": "دورانئی",
+      "status": "حالت",
+      "pay": "ادائیگی",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} منٹ"
+    }
   }
 }

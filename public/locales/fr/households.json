@@ -1,14 +1,28 @@
 {
+  "page": {
+    "subtitle": "Personnes",
+    "title": "Foyers"
+  },
   "actions": {
-    "cancel": "Annuler",
     "new": "+ Nouveau foyer",
+    "cancel": "Annuler",
     "create": "Créer",
     "creating": "Création en cours…"
   },
+  "form": {
+    "name_label": "Nom du foyer",
+    "name_placeholder": "par exemple : la famille Chen"
+  },
   "filters": {
+    "search_placeholder": "Rechercher un foyer, un parent, un élève…",
     "active": "Actif",
-    "archived": "Archivé",
-    "search_placeholder": "Rechercher un foyer, un parent, un élève…"
+    "archived": "Archivé"
+  },
+  "empty": {
+    "none": "Aucun ménage pour l'instant",
+    "archived_none": "Aucun ménage archivé",
+    "description": "Un ménage regroupe les frères et sœurs sous un seul contact de facturation. Lorsque vous associez un parent à un élève, un ménage est créé automatiquement.",
+    "create": "Créer un ménage"
   },
   "common": {
     "loading": "Chargement en cours…",
@@ -18,34 +32,101 @@
   },
   "card": {
     "archived_badge": "Archivé",
-    "students_one": "{{count}} étudiant",
-    "students_other": "{{count}} étudiants",
     "parent_label_fallback": "Parent",
     "needs_primary": "Doit avoir un parent principal",
     "no_students": "Aucun élève",
+    "students_one": "{{count}} étudiant",
+    "students_other": "{{count}} étudiants",
     "parents_one": "{{count}} parent",
     "parents_other": "{{count}} parents",
     "summary": "{{students}} · {{parents}}"
   },
   "suggestion": {
-    "dismiss": "Ignorer",
     "fallback_parent": "un parent commun",
     "question_existing": "{{students}} partager l'{{parent}}. Les regrouper en un seul foyer ?",
     "question_new": "{{students}} partager l'{{parent}}s. Les regrouper dans un nouveau ménage ?",
-    "accept": "Groupe →"
+    "accept": "Groupe →",
+    "dismiss": "Ignorer"
   },
-  "page": {
-    "subtitle": "Personnes",
-    "title": "Foyers"
-  },
-  "form": {
-    "name_label": "Nom du foyer",
-    "name_placeholder": "par exemple : la famille Chen"
-  },
-  "empty": {
-    "none": "Aucun ménage pour l'instant",
-    "archived_none": "Aucun ménage archivé",
-    "description": "Un ménage regroupe les frères et sœurs sous un seul contact de facturation. Lorsque vous associez un parent à un élève, un ménage est créé automatiquement.",
-    "create": "Créer un ménage"
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "Impossible de charger le ménage.",
+    "not_found_title": "Introuvable",
+    "not_found_body": "Ménage introuvable.",
+    "subtitle_archived": "Ménage archivé",
+    "subtitle_active": "Ménage",
+    "archive": "Archives",
+    "unarchive": "Réactiver",
+    "confirm_archive": "Archiver ce foyer ? Les élèves et les parents restent inchangés ; le foyer est masqué dans les listes.",
+    "edit_name": "Modifier le nom",
+    "save": "Enregistrer",
+    "saving": "Enregistrement en cours…",
+    "cancel": "Annuler",
+    "billed_to_prefix": "Facturé à",
+    "parent_fallback": "Parent",
+    "needs_primary": "Nécessite un parent principal",
+    "tabs": {
+      "members": "Membres",
+      "sessions": "Séances",
+      "invoices": "Factures",
+      "notes": "Remarques"
+    },
+    "members": {
+      "parents_heading": "Parents",
+      "add_co_parent": "+ Ajouter un coparent",
+      "cancel": "Annuler",
+      "no_parents": "Aucun parent n'est encore associé.",
+      "no_name": "(sans nom)",
+      "primary_badge": "Principal",
+      "make_primary": "Définir comme parent principal",
+      "remove": "Supprimer",
+      "confirm_remove_parent": "Souhaitez-vous supprimer ce parent du foyer ? Il conservera l'accès aux élèves qui lui sont associés.",
+      "students_heading": "Étudiants",
+      "add_sibling": "+ Ajouter un frère ou une sœur",
+      "no_students": "Il n'y a pas encore d'étudiants dans ce foyer.",
+      "remove_from_household": "Retirer du foyer",
+      "confirm_remove_student": "Supprimer cet élève du foyer ? Les sessions et les factures restent inchangées."
+    },
+    "add_parent": {
+      "loading": "Chargement des parents…",
+      "select_placeholder": "Choisissez un parent existant…",
+      "no_name": "(sans nom)",
+      "invite_hint": "Pour ajouter un nouveau parent, invitez-le depuis la page de l'élève — il sera ajouté dès qu'il aura accepté.",
+      "submit": "Ajouter un parent",
+      "submitting": "Ajout en cours…",
+      "error_default": "Impossible d'ajouter un parent."
+    },
+    "add_student": {
+      "loading": "Chargement des élèves…",
+      "select_placeholder": "Choisissez un élève…",
+      "in_other_household": " (appartenant à un autre foyer)",
+      "confirm_move": "Cet étudiant fait partie d'un autre foyer. Souhaitez-vous le transférer vers ce foyer ?",
+      "link_parents": "Reliez également cet élève au(x) parent(s) du foyer",
+      "submit": "Ajouter au foyer",
+      "submitting": "Ajout en cours…",
+      "error_default": "Impossible d'ajouter l'étudiant."
+    },
+    "sessions_tab": {
+      "empty": "Aucune séance n'a encore été enregistrée pour ce foyer.",
+      "col_when": "Quand",
+      "col_student": "Étudiant",
+      "col_subject_topic": "Sujet · Thème",
+      "col_status": "Statut",
+      "col_amount": "Montant"
+    },
+    "invoices_tab": {
+      "empty": "Aucune facture n'a encore été émise pour ce foyer. La facturation groupée sera bientôt disponible — vous pouvez facturer chaque élève individuellement depuis la page Factures.",
+      "household_fallback": "Ménage",
+      "issued_prefix": "Publié l'{{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "Allergies, contraintes d'horaires, préférences de facturation…",
+      "save": "Enregistrer les notes",
+      "saving": "Enregistrement en cours…",
+      "cancel": "Annuler",
+      "empty": "Aucune note concernant le foyer pour le moment.",
+      "edit": "Modifier les notes",
+      "add": "Ajouter des notes"
+    }
   }
 }

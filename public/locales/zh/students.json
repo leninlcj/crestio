@@ -1,5 +1,6 @@
 {
   "subtitle": "对象",
+  "subtitle_archived": "已毕业学生",
   "subtitle_student": "学生",
   "title_list": "学生",
   "title_new": "新生",
@@ -15,14 +16,18 @@
     "unarchive": "取消归档",
     "delete": "删除"
   },
+  "filters": {
+    "active": "在读",
+    "archived": "存档"
+  },
   "empty": {
     "no_students": "目前尚无学生",
     "no_archived": "没有存档的学生",
     "description_owner": "添加您的第一位学生，开始记录课程和计费。",
     "description_tutor": "您的组织管理员会将学生分配给您。",
+    "no_tutor_record": "尚未分配任何学生",
     "show_archived": "此处显示已结业的学生。",
-    "add_first": "添加学生",
-    "no_tutor_record": "尚未分配任何学生"
+    "add_first": "添加学生"
   },
   "loading": "正在加载……",
   "denied": "您目前无法访问该学生。请联系您的组织管理员，将其分配给您。",
@@ -33,6 +38,10 @@
     "record": "记录",
     "track": "追踪"
   },
+  "filter_banner": {
+    "homework_pending": "显示有待提交作业的学生。",
+    "clear_filter": "清除筛选条件"
+  },
   "columns": {
     "name": "名称",
     "year": "年级",
@@ -40,11 +49,10 @@
     "parent": "家长",
     "rate": "费率"
   },
+  "search_placeholder": "按姓名、学校、家长搜索……",
+  "test_pill": "测试",
   "cards": {
     "contact": "联系我们",
-    "billing": "账单",
-    "notes_heading": "备注",
-    "assigned_saved": "已保存。",
     "contact_parent": "家长： ",
     "contact_email": "电子邮箱： ",
     "contact_phone": "电话： ",
@@ -53,18 +61,18 @@
     "year": "年级： ",
     "school": "学校： ",
     "subjects": "科目： ",
+    "billing": "账单",
     "rate": "学费： ",
     "rate_per_hour": " / 小时",
     "lifetime": "有效期： ",
     "sessions": "课程： ",
+    "notes_heading": "备注",
     "assigned_tutor": "指定导师",
     "unassigned_option": "未分配（由所有者直接处理）",
-    "assigned_tutor_hint": "此处仅显示已接受邀请的辅导老师。"
+    "assigned_tutor_hint": "此处仅显示已接受邀请的辅导老师。",
+    "assigned_saved": "已保存。"
   },
   "new_form": {
-    "notes": "备注",
-    "save": "添加学生",
-    "cancel": "取消",
     "name_required": "姓名 *",
     "name_placeholder": "例如：陈萨姆",
     "year_level": "年级",
@@ -77,15 +85,17 @@
     "parent_phone": "家长电话",
     "parent_email": "家长邮箱",
     "hourly_rate": "时薪",
-    "saving": "正在添加……"
+    "notes": "备注",
+    "save": "添加学生",
+    "saving": "正在添加……",
+    "cancel": "取消"
   },
   "parent_access": {
-    "pending_heading": "待定",
-    "inviting": "正在发送……",
     "kicker": "家长登录",
     "heading": "谁可以查看该学生的笔记",
     "none_yet": "尚未关联或邀请任何家长。",
     "linked_heading": "相关链接",
+    "pending_heading": "待定",
     "invited_when": "已受邀 {{when}}",
     "revoke": "撤销访问权限",
     "revoke_confirm": "撤销该家长的访问权限？他们将无法再查看任何课程。",
@@ -93,6 +103,7 @@
     "parent_email": "家长邮箱",
     "parent_email_placeholder": "parent@example.com",
     "invite": "邀请家长",
+    "inviting": "正在发送……",
     "invitation_sent": "已向 {{email}} 发送邀请。",
     "invitation_created": "邀请已创建。",
     "invitation_share_hint": "如果家长未收到邮件，请将此链接分享给他们："
@@ -103,25 +114,21 @@
     "new": "新建会话"
   },
   "homework_heading": {
+    "kicker": "追踪",
     "heading": "家庭作业",
+    "none": "目前尚未布置作业。请在记录课程时添加作业。",
     "mark_as_done": "标记为已完成",
+    "marking": "正在标记……",
     "completed": "已完成",
     "overdue": "逾期",
-    "due_label": "来源：{{date}}",
-    "kicker": "追踪",
-    "none": "目前尚未布置作业。请在记录课程时添加作业。",
-    "marking": "正在标记……",
     "due_today": "今日到期",
     "due_tomorrow": "明天到期",
     "due_in_days_one": "{{count}}天内到期",
     "due_in_days_other": "到期日：{{count}}天后",
-    "marked_complete_on": "已在 {{date}} 上标记为已完成"
+    "marked_complete_on": "已在 {{date}} 上标记为已完成",
+    "due_label": "来源：{{date}}"
   },
   "from_last_session": {
-    "hours_ago_one": "1小时前",
-    "hours_ago_other": "{{count}} 数小时前",
-    "days_ago_one": "1天前",
-    "days_ago_other": "{{count}} 几天前",
     "kicker": "来自上一节",
     "covered_prefix": "上次您讲解的内容： ",
     "homework_done": "✓ 作业已完成：{{description}}",
@@ -132,30 +139,23 @@
     "open_last_session": "打开上次会话 →",
     "log_new_session": "使用此上下文记录新会话 →",
     "yesterday": "昨天",
-    "earlier_today": "今天稍早"
+    "earlier_today": "今天稍早",
+    "hours_ago_one": "1小时前",
+    "hours_ago_other": "{{count}} 数小时前",
+    "days_ago_one": "1天前",
+    "days_ago_other": "{{count}} 几天前"
   },
   "household": {
     "kicker": "家庭",
-    "remove": "删除",
-    "loading": "正在加载……",
     "not_in_household": "不属于同一家庭。",
     "billing_note": " · 计费时将兄弟姐妹归为一组",
     "assign": "分配家庭",
     "change": "更改",
+    "remove": "删除",
     "remove_confirm": "将此学生从家庭中移除？他们仍留在组织中。",
-    "pick_placeholder": "选择一个家庭……"
+    "pick_placeholder": "选择一个家庭……",
+    "loading": "正在加载……"
   },
-  "subtitle_archived": "已毕业学生",
-  "filters": {
-    "active": "在读",
-    "archived": "存档"
-  },
-  "filter_banner": {
-    "homework_pending": "显示有待提交作业的学生。",
-    "clear_filter": "清除筛选条件"
-  },
-  "search_placeholder": "按姓名、学校、家长搜索……",
-  "test_pill": "测试",
   "delete_confirm": "要永久删除{{name}}吗？这也会删除其所有会话。此操作无法撤销。",
   "archive_confirm_archive": "归档 {{name}}？您稍后可以取消归档。",
   "archive_confirm_restore": "恢复{{name}}？"

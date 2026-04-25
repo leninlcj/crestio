@@ -1,50 +1,22 @@
 {
-  "nav": {
-    "sign_in": "Iniciar sesión",
-    "pricing": "Precios",
-    "start_trial": "Empieza tu prueba gratuita",
-    "open_menu": "Abrir menú",
-    "close_menu": "Cerrar menú"
-  },
-  "footer": {
-    "sign_in": "Iniciar sesión",
-    "privacy": "Privacidad",
-    "terms": "Términos",
-    "made_in": "Fabricado en Australia · 2026",
-    "support": "Asistencia"
-  },
-  "contact": {
-    "email_label": "Correo electrónico",
-    "eyebrow": "Ponte en contacto",
-    "heading": "Saluda",
-    "intro": "Preguntas, informes de errores, comentarios, elogios, quejas... todo es bienvenido. Una persona lee estos mensajes y responde, normalmente en el plazo de un día.",
-    "copy": "Copia",
-    "copied": "Copiado",
-    "or_send_via_mail": "O envíalo a través de tu aplicación de correo",
-    "name_label": "Tu nombre (opcional)",
-    "email_field_label": "Tu correo electrónico (opcional)",
-    "email_hint": "Incluye esto si quieres recibir una respuesta.",
-    "message_label": "Mensaje *",
-    "message_placeholder": "¿Qué te preocupa?",
-    "submit": "Abrir en Mail",
-    "submit_note": "Esto abre tu aplicación de correo electrónico predeterminada con el mensaje redactado. No se envía nada hasta que tú mismo lo envíes.",
-    "footer_location": "crestio · Sídney · 2026",
-    "subject_named": "Mensaje de {{name}}",
-    "subject_anonymous": "Mensaje de la página web de Crestio",
-    "body_from": "Fuente: {{name}}",
-    "body_reply_to": "Responder a: {{email}}"
-  },
   "meta": {
     "home_title": "Crestio: software para tutores australianos",
     "home_description": "Gestiona a los alumnos, registra las sesiones, perfecciona los apuntes con IA y comparte el progreso con los padres, todo desde un único panel de control. Desde 24 $ al mes. Prueba gratuita de 7 días.",
     "contact_title": "Contacto · Crestio"
+  },
+  "nav": {
+    "pricing": "Precios",
+    "sign_in": "Iniciar sesión",
+    "start_trial": "Empieza la prueba gratuita",
+    "open_menu": "Abrir menú",
+    "close_menu": "Cerrar menú"
   },
   "deleted_banner": "Tu cuenta ha sido eliminada. Lamentamos que te vayas.",
   "hero": {
     "eyebrow": "Para profesores particulares y pequeños equipos",
     "heading": "La herramienta todo en uno para profesores particulares que se toman su trabajo en serio.",
     "subheading": "Gestiona a los alumnos, registra las sesiones, perfecciona los apuntes con IA y comparte el progreso con los padres, todo desde un único panel de control. Para tutores independientes y equipos pequeños.",
-    "cta": "Empieza tu prueba gratuita",
+    "cta": "Empieza la prueba gratuita",
     "price_note": "Desde {{price}} al mes. 7 días de prueba gratuita. Cancela en cualquier momento.",
     "see_plans": "Ver todos los planes →"
   },
@@ -153,5 +125,33 @@
     "button": "Empieza la prueba gratuita",
     "questions_part1": "¿Tienes alguna pregunta? Envía un correo electrónico ",
     "questions_part2": "."
+  },
+  "footer": {
+    "made_in": "Fabricado en Australia · 2026",
+    "sign_in": "Iniciar sesión",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "support": "Asistencia"
+  },
+  "contact": {
+    "eyebrow": "Ponte en contacto",
+    "heading": "Saluda",
+    "intro": "Preguntas, informes de errores, comentarios, elogios, quejas... todo es bienvenido. Una persona lee estos mensajes y responde, normalmente en el plazo de un día.",
+    "email_label": "Correo electrónico",
+    "copy": "Copia",
+    "copied": "Copiado",
+    "or_send_via_mail": "O envíalo a través de tu aplicación de correo",
+    "name_label": "Tu nombre (opcional)",
+    "email_field_label": "Tu correo electrónico (opcional)",
+    "email_hint": "Incluye esto si quieres recibir una respuesta.",
+    "message_label": "Mensaje *",
+    "message_placeholder": "¿Qué te preocupa?",
+    "submit": "Abrir en Mail",
+    "submit_note": "Esto abre tu aplicación de correo electrónico predeterminada con el mensaje redactado. No se envía nada hasta que tú mismo lo envíes.",
+    "footer_location": "crestio · Sídney · 2026",
+    "subject_named": "Mensaje de {{name}}",
+    "subject_anonymous": "Mensaje de la página web de Crestio",
+    "body_from": "Fuente: {{name}}",
+    "body_reply_to": "Responder a: {{email}}"
   }
 }

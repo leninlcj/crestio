@@ -1,1 +1,56 @@
-{}
+{
+  "test_accounts": {
+    "page": {
+      "subtitle": "管理员工具",
+      "title": "测试账户"
+    },
+    "intro": {
+      "label": "测试账户。",
+      "body": "这些是您拥有的预先创建的测试账户。使用其中一个账户登录将开启一个新会话，该会话受与真实用户相同的安全规则约束。通过此流程，您绝不会看到其他用户的数据。"
+    },
+    "list": {
+      "heading": "您的测试账户",
+      "loading": "正在加载……",
+      "empty": "目前尚无测试账户。",
+      "col_role": "角色",
+      "col_name": "名称",
+      "col_email": "电子邮件",
+      "col_created": "已创建",
+      "col_last_login": "最后一次登录",
+      "name_dash": "—",
+      "last_login_dash": "—",
+      "login_busy": "…",
+      "login_button": "以测试身份登录",
+      "delete_button": "删除",
+      "confirm_delete": "删除测试账户 {{email}}？此操作将删除该认证用户，且无法撤销。"
+    },
+    "create": {
+      "heading": "创建测试账户",
+      "role_label": "角色",
+      "role_tutor": "导师（在您的组织内）",
+      "role_parent": "父级（门户）",
+      "name_label": "名称",
+      "name_placeholder": "例如：测试导师 Mai",
+      "email_label": "电子邮件（可选——若留空则自动生成）",
+      "email_placeholder": "test-tutor-abc123@crestio.test",
+      "submit": "创建测试账户",
+      "creating": "正在创建……",
+      "success_title": "测试账户已创建。",
+      "success_email_label": "电子邮件：",
+      "success_password_label": "初始密码：",
+      "success_hint": "请立即保存此密码——它仅显示一次。或者点击上表中的“以测试身份登录”获取魔法链接登录。"
+    },
+    "recent": {
+      "heading": "最近的测试会话",
+      "empty": "目前尚无测试账户登录记录。",
+      "role_unknown": "未知",
+      "ended_suffix": " · 已结束"
+    },
+    "errors": {
+      "load_failed": "无法加载测试账户。",
+      "create_failed": "无法创建测试账户。",
+      "login_link_failed": "无法生成登录链接。",
+      "delete_failed": "无法删除。"
+    }
+  }
+}

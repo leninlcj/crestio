@@ -1,5 +1,6 @@
 {
   "subtitle": "Pessoas",
+  "subtitle_archived": "Alunos arquivados",
   "subtitle_student": "Aluno",
   "title_list": "Alunos",
   "title_new": "Novo aluno",
@@ -15,14 +16,18 @@
     "unarchive": "Desarquivar",
     "delete": "Excluir"
   },
+  "filters": {
+    "active": "Ativos",
+    "archived": "Arquivado"
+  },
   "empty": {
     "no_students": "Ainda não há alunos",
     "no_archived": "Não há alunos arquivados",
     "description_owner": "Adicione seu primeiro aluno para começar a acompanhar as sessões e o faturamento.",
     "description_tutor": "O responsável pela sua organização designará alunos para você.",
+    "no_tutor_record": "Ainda não há alunos matriculados",
     "show_archived": "Os alunos arquivados aparecem aqui.",
-    "add_first": "Adicionar um aluno",
-    "no_tutor_record": "Ainda não há alunos matriculados"
+    "add_first": "Adicionar um aluno"
   },
   "loading": "Carregando…",
   "denied": "Você não tem acesso a este aluno. Peça ao responsável pela sua organização para atribuí-lo a você.",
@@ -33,6 +38,10 @@
     "record": "Registro",
     "track": "Acompanhar"
   },
+  "filter_banner": {
+    "homework_pending": "Exibindo alunos com tarefas pendentes.",
+    "clear_filter": "Limpar filtro"
+  },
   "columns": {
     "name": "Nome",
     "year": "Ano",
@@ -40,11 +49,10 @@
     "parent": "Pais",
     "rate": "Taxa"
   },
+  "search_placeholder": "Pesquisar nome, escola, pai/mãe…",
+  "test_pill": "TESTE",
   "cards": {
     "contact": "Contato",
-    "billing": "Faturamento",
-    "notes_heading": "Notas",
-    "assigned_saved": "Salvo.",
     "contact_parent": "Pais: ",
     "contact_email": "E-mail: ",
     "contact_phone": "Telefone: ",
@@ -53,18 +61,18 @@
     "year": "Ano: ",
     "school": "Escola: ",
     "subjects": "Disciplinas: ",
+    "billing": "Faturamento",
     "rate": "Taxa: ",
     "rate_per_hour": " / hora",
     "lifetime": "Vigência: ",
     "sessions": "Turmas: ",
+    "notes_heading": "Notas",
     "assigned_tutor": "Orientador designado",
     "unassigned_option": "Não atribuído (o proprietário lida diretamente)",
-    "assigned_tutor_hint": "Apenas os tutores que aceitaram o convite aparecem aqui."
+    "assigned_tutor_hint": "Apenas os tutores que aceitaram o convite aparecem aqui.",
+    "assigned_saved": "Salvo."
   },
   "new_form": {
-    "notes": "Notas",
-    "save": "Adicionar aluno",
-    "cancel": "Cancelar",
     "name_required": "Nome *",
     "name_placeholder": "por exemplo, Sam Chen",
     "year_level": "Série",
@@ -77,15 +85,17 @@
     "parent_phone": "Telefone dos pais",
     "parent_email": "E-mail dos pais",
     "hourly_rate": "Taxa por hora",
-    "saving": "Adicionando…"
+    "notes": "Notas",
+    "save": "Adicionar aluno",
+    "saving": "Adicionando…",
+    "cancel": "Cancelar"
   },
   "parent_access": {
-    "pending_heading": "Pendente",
-    "inviting": "Enviando…",
     "kicker": "Acesso para pais",
     "heading": "Quem pode ver as anotações deste aluno",
     "none_yet": "Ainda não há pais vinculados ou convidados.",
     "linked_heading": "Relacionados",
+    "pending_heading": "Pendente",
     "invited_when": "{{when}} convidados",
     "revoke": "Revogar acesso",
     "revoke_confirm": "Revogar o acesso deste pai/mãe? Ele/ela não verá mais nenhuma sessão.",
@@ -93,6 +103,7 @@
     "parent_email": "E-mail dos pais",
     "parent_email_placeholder": "parent@example.com",
     "invite": "Convidar os pais",
+    "inviting": "Enviando…",
     "invitation_sent": "Convite enviado para {{email}}.",
     "invitation_created": "Convite criado.",
     "invitation_share_hint": "Compartilhe este link com os pais caso eles não recebam o e-mail:"
@@ -103,25 +114,21 @@
     "new": "Nova sessão"
   },
   "homework_heading": {
+    "kicker": "Acompanhar",
     "heading": "Lição de casa",
+    "none": "Ainda não há tarefas de casa atribuídas. Adicione tarefas de casa ao registrar uma sessão.",
     "mark_as_done": "Marcar como concluído",
+    "marking": "Marcando…",
     "completed": "Concluído",
     "overdue": "Em atraso",
-    "due_label": "Devido a {{date}}",
-    "kicker": "Acompanhar",
-    "none": "Ainda não há tarefas de casa atribuídas. Adicione tarefas de casa ao registrar uma sessão.",
-    "marking": "Marcando…",
     "due_today": "Vencimento hoje",
     "due_tomorrow": "Vencimento amanhã",
     "due_in_days_one": "Vencimento em um dia d{{count}}",
     "due_in_days_other": "Vencimento em {{count}} dias",
-    "marked_complete_on": "Marcado como concluído em {{date}}"
+    "marked_complete_on": "Marcado como concluído em {{date}}",
+    "due_label": "Devido a {{date}}"
   },
   "from_last_session": {
-    "hours_ago_one": "Há 1 hora",
-    "hours_ago_other": "{{count}} há algumas horas",
-    "days_ago_one": "Há 1 dia",
-    "days_ago_other": "{{count}} há alguns dias",
     "kicker": "Da última sessão",
     "covered_prefix": "Da última vez, você abordou: ",
     "homework_done": "✓ Tarefa concluída: {{description}}",
@@ -132,30 +139,23 @@
     "open_last_session": "Abrir última sessão →",
     "log_new_session": "Registrar nova sessão com este contexto →",
     "yesterday": "ontem",
-    "earlier_today": "hoje cedo"
+    "earlier_today": "hoje cedo",
+    "hours_ago_one": "Há 1 hora",
+    "hours_ago_other": "{{count}} há algumas horas",
+    "days_ago_one": "Há 1 dia",
+    "days_ago_other": "{{count}} há alguns dias"
   },
   "household": {
     "kicker": "Gastos domésticos",
-    "remove": "Remover",
-    "loading": "Carregando…",
     "not_in_household": "Não pertence a um domicílio.",
     "billing_note": " · o faturamento agrupa irmãos",
     "assign": "Atribuir família",
     "change": "Alterar",
+    "remove": "Remover",
     "remove_confirm": "Remover este aluno do grupo familiar? Ele permanecerá na organização.",
-    "pick_placeholder": "Escolha um domicílio…"
+    "pick_placeholder": "Escolha um domicílio…",
+    "loading": "Carregando…"
   },
-  "subtitle_archived": "Alunos arquivados",
-  "filters": {
-    "active": "Ativos",
-    "archived": "Arquivado"
-  },
-  "filter_banner": {
-    "homework_pending": "Exibindo alunos com tarefas pendentes.",
-    "clear_filter": "Limpar filtro"
-  },
-  "search_placeholder": "Pesquisar nome, escola, pai/mãe…",
-  "test_pill": "TESTE",
   "delete_confirm": "Deseja excluir {{name}} permanentemente? Isso também excluirá todas as sessões dele. Essa ação não pode ser revertida.",
   "archive_confirm_archive": "Arquivar {{name}}? Você pode desarquivá-los mais tarde.",
   "archive_confirm_restore": "Restaurar {{name}}?"

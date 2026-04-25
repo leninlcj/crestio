@@ -3,38 +3,6 @@
     "subtitle": "टीम",
     "title": "ट्यूटर्स"
   },
-  "table": {
-    "name": "नाम",
-    "subjects": "विषय",
-    "students": "छात्र",
-    "em_dash": "—",
-    "linked_login": "लिंक्ड लॉगिन",
-    "pay_rate": "भुगतान दर",
-    "this_month": "इस महीने",
-    "linked_yes": "हाँ",
-    "linked_no": "नहीं"
-  },
-  "new": {
-    "page_subtitle": "ट्यूटर्स",
-    "email_label": "ईमेल",
-    "phone_label": "फ़ोन",
-    "notes_label": "टिप्पणियाँ",
-    "saving": "बचाना…",
-    "cancel": "रद्द करें",
-    "not_signed_in": "साइन इन नहीं किया गया।",
-    "no_organization": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।",
-    "page_title": "नया ट्यूटर",
-    "name_label": "नाम *",
-    "subjects_label": "वे विषय जिन्हें वे पढ़ाते हैं",
-    "subjects_placeholder": "गणित, रसायन विज्ञान",
-    "subjects_hint": "अल्पविराम से अलग।",
-    "pay_rate_label": "प्रति घंटे का भुगतान दर",
-    "pay_rate_placeholder": "उदाहरण के लिए 55",
-    "submit": "ट्यूटर बनाएँ"
-  },
-  "common": {
-    "loading": "लोड हो रहा है…"
-  },
   "actions": {
     "add": "ट्यूटर जोड़ें",
     "add_one": "ट्यूटर जोड़ें"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "अभी तक कोई ट्यूटर नहीं है",
     "description": "जब आप अपने व्यवसाय में पढ़ाने के लिए लोगों को शामिल करते हैं, तो ट्यूटर्स जोड़ें। यदि आप अकेले ट्यूटर हैं, तो आप इसे छोड़ सकते हैं।"
+  },
+  "table": {
+    "name": "नाम",
+    "subjects": "विषय",
+    "linked_login": "लिंक्ड लॉगिन",
+    "students": "छात्र",
+    "pay_rate": "भुगतान दर",
+    "this_month": "इस महीने",
+    "linked_yes": "हाँ",
+    "linked_no": "नहीं",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "ट्यूटर्स",
+    "page_title": "नया ट्यूटर",
+    "name_label": "नाम *",
+    "email_label": "ईमेल",
+    "phone_label": "फ़ोन",
+    "subjects_label": "वे विषय जिन्हें वे पढ़ाते हैं",
+    "subjects_placeholder": "गणित, रसायन विज्ञान",
+    "subjects_hint": "अल्पविराम से अलग।",
+    "pay_rate_label": "प्रति घंटे का भुगतान दर",
+    "pay_rate_placeholder": "उदाहरण के लिए 55",
+    "notes_label": "टिप्पणियाँ",
+    "submit": "ट्यूटर बनाएँ",
+    "saving": "बचाना…",
+    "cancel": "रद्द करें",
+    "not_signed_in": "साइन इन नहीं किया गया।",
+    "no_organization": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।"
+  },
+  "common": {
+    "loading": "लोड हो रहा है…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "लोड हो रहा है…",
+    "not_found_title": "नहीं मिला",
+    "not_found_body": "ट्यूटर नहीं मिला।",
+    "subtitle": "ट्यूटर",
+    "edit": "संपादित करें",
+    "delete": "मिटायें",
+    "save": "सहेजें",
+    "saving": "बचाना…",
+    "cancel": "रद्द करें",
+    "confirm_delete": "{{name}} को हटाएँ? उनके पिछले सत्र बने रहते हैं, लेकिन ट्यूटर लिंक खो जाता है। इसे वापस नहीं किया जा सकता।",
+    "form": {
+      "name_label": "नाम",
+      "email_label": "ईमेल",
+      "phone_label": "फ़ोन",
+      "subjects_label": "विषय",
+      "pay_rate_label": "भुगतान दर",
+      "notes_label": "टिप्पणियाँ"
+    },
+    "contact_eyebrow": "संपर्क",
+    "no_contact": "कोई संपर्क नहीं।",
+    "teaches_eyebrow": "पढ़ाते हैं",
+    "no_subjects": "—",
+    "pay_eyebrow": "भुगतान",
+    "rate_label": "दर: ",
+    "rate_per_hour": " / hr",
+    "total_label": "कुल भुगतान/देय: ",
+    "notes_eyebrow": "टिप्पणियाँ",
+    "record_eyebrow": "रिकॉर्ड",
+    "recent_heading": "हाल के सत्र",
+    "no_sessions": "अभी तक कोई सत्र निर्धारित नहीं किया गया है।",
+    "table": {
+      "when": "कब",
+      "subject": "विषय",
+      "duration": "अवधि",
+      "status": "स्थिति",
+      "pay": "भुगतान",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} मिन"
+    }
   }
 }

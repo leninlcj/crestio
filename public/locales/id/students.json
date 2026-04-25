@@ -1,5 +1,6 @@
 {
   "subtitle": "Orang-orang",
+  "subtitle_archived": "Mahasiswa yang telah lulus",
   "subtitle_student": "Mahasiswa",
   "title_list": "Siswa",
   "title_new": "Siswa baru",
@@ -15,14 +16,18 @@
     "unarchive": "Kembalikan ke arsip",
     "delete": "Hapus"
   },
+  "filters": {
+    "active": "Aktif",
+    "archived": "Tersimpan"
+  },
   "empty": {
     "no_students": "Belum ada siswa",
     "no_archived": "Tidak ada siswa yang telah lulus",
     "description_owner": "Tambahkan siswa pertama Anda untuk mulai melacak sesi dan penagihan.",
     "description_tutor": "Pemilik organisasi Anda akan menugaskan siswa kepada Anda.",
+    "no_tutor_record": "Belum ada mahasiswa yang ditugaskan",
     "show_archived": "Siswa yang telah lulus tercantum di sini.",
-    "add_first": "Tambahkan siswa",
-    "no_tutor_record": "Belum ada mahasiswa yang ditugaskan"
+    "add_first": "Tambahkan siswa"
   },
   "loading": "Sedang dimuat…",
   "denied": "Anda tidak memiliki akses ke siswa ini. Minta pemilik organisasi Anda untuk menugaskan siswa tersebut kepada Anda.",
@@ -33,6 +38,10 @@
     "record": "Catatan",
     "track": "Lacak"
   },
+  "filter_banner": {
+    "homework_pending": "Menampilkan mahasiswa yang memiliki tugas yang belum diselesaikan.",
+    "clear_filter": "Hapus filter"
+  },
   "columns": {
     "name": "Nama",
     "year": "Tahun",
@@ -40,11 +49,10 @@
     "parent": "Orang tua",
     "rate": "Tarif"
   },
+  "search_placeholder": "Cari nama, sekolah, orang tua…",
+  "test_pill": "UJIAN",
   "cards": {
     "contact": "Hubungi kami",
-    "billing": "Penagihan",
-    "notes_heading": "Catatan",
-    "assigned_saved": "Tersimpan.",
     "contact_parent": "Orang tua: ",
     "contact_email": "Email: ",
     "contact_phone": "Telepon: ",
@@ -53,18 +61,18 @@
     "year": "Tahun: ",
     "school": "Sekolah: ",
     "subjects": "Mata pelajaran: ",
+    "billing": "Penagihan",
     "rate": "Tarif: ",
     "rate_per_hour": " / jam",
     "lifetime": "Seumur hidup: ",
     "sessions": "Sesi: ",
+    "notes_heading": "Catatan",
     "assigned_tutor": "Dosen pembimbing yang ditugaskan",
     "unassigned_option": "Belum ditugaskan (ditangani langsung oleh pemilik)",
-    "assigned_tutor_hint": "Hanya tutor yang telah menerima undangan mereka yang ditampilkan di sini."
+    "assigned_tutor_hint": "Hanya tutor yang telah menerima undangan mereka yang ditampilkan di sini.",
+    "assigned_saved": "Tersimpan."
   },
   "new_form": {
-    "notes": "Catatan",
-    "save": "Tambahkan siswa",
-    "cancel": "Batalkan",
     "name_required": "Nama *",
     "name_placeholder": "misalnya Sam Chen",
     "year_level": "Tingkat kelas",
@@ -77,15 +85,17 @@
     "parent_phone": "Nomor telepon orang tua",
     "parent_email": "Alamat email orang tua",
     "hourly_rate": "Tarif per jam",
-    "saving": "Menambahkan…"
+    "notes": "Catatan",
+    "save": "Tambahkan siswa",
+    "saving": "Menambahkan…",
+    "cancel": "Batalkan"
   },
   "parent_access": {
-    "pending_heading": "Menunggu",
-    "inviting": "Mengirim…",
     "kicker": "Akses orang tua",
     "heading": "Siapa yang dapat melihat catatan mahasiswa ini",
     "none_yet": "Belum ada orang tua yang terhubung atau diundang.",
     "linked_heading": "Terhubung",
+    "pending_heading": "Menunggu",
     "invited_when": "{{when}} yang diundang",
     "revoke": "Cabut akses",
     "revoke_confirm": "Apakah Anda ingin mencabut akses orang tua ini? Mereka tidak akan lagi dapat melihat sesi apa pun.",
@@ -93,6 +103,7 @@
     "parent_email": "Alamat email orang tua",
     "parent_email_placeholder": "parent@example.com",
     "invite": "Undang orang tua",
+    "inviting": "Mengirim…",
     "invitation_sent": "Undangan telah dikirim ke {{email}}.",
     "invitation_created": "Undangan telah dibuat.",
     "invitation_share_hint": "Bagikan tautan ini kepada orang tua jika mereka tidak menerima email:"
@@ -103,25 +114,21 @@
     "new": "Sesi baru"
   },
   "homework_heading": {
+    "kicker": "Lacak",
     "heading": "Pekerjaan rumah",
+    "none": "Belum ada tugas yang diberikan. Tambahkan tugas saat mencatat sesi.",
     "mark_as_done": "Tandai sebagai selesai",
+    "marking": "Menandai…",
     "completed": "Selesai",
     "overdue": "Tunggakan",
-    "due_label": "{{date}}",
-    "kicker": "Lacak",
-    "none": "Belum ada tugas yang diberikan. Tambahkan tugas saat mencatat sesi.",
-    "marking": "Menandai…",
     "due_today": "Jatuh tempo hari ini",
     "due_tomorrow": "Jatuh tempo besok",
     "due_in_days_one": "Jatuh tempo dalam {{count}} hari",
     "due_in_days_other": "Jatuh tempo dalam {{count}} hari",
-    "marked_complete_on": "Ditandai sebagai selesai pada {{date}}"
+    "marked_complete_on": "Ditandai sebagai selesai pada {{date}}",
+    "due_label": "{{date}}"
   },
   "from_last_session": {
-    "hours_ago_one": "1 jam yang lalu",
-    "hours_ago_other": "{{count}} beberapa jam yang lalu",
-    "days_ago_one": "1 hari yang lalu",
-    "days_ago_other": "{{count}} beberapa hari yang lalu",
     "kicker": "Dari sesi sebelumnya",
     "covered_prefix": "Yang terakhir kali Anda bahas: ",
     "homework_done": "✓ Tugas sudah selesai: {{description}}",
@@ -132,30 +139,23 @@
     "open_last_session": "Buka sesi terakhir →",
     "log_new_session": "Catat sesi baru dengan konteks ini →",
     "yesterday": "kemarin",
-    "earlier_today": "pada awal hari ini"
+    "earlier_today": "pada awal hari ini",
+    "hours_ago_one": "1 jam yang lalu",
+    "hours_ago_other": "{{count}} beberapa jam yang lalu",
+    "days_ago_one": "1 hari yang lalu",
+    "days_ago_other": "{{count}} beberapa hari yang lalu"
   },
   "household": {
     "kicker": "Rumah tangga",
-    "remove": "Hapus",
-    "loading": "Sedang dimuat…",
     "not_in_household": "Tidak termasuk dalam kelompok rumah tangga.",
     "billing_note": " · penagihan menggabungkan saudara kandung",
     "assign": "Tetapkan rumah tangga",
     "change": "Ubah",
+    "remove": "Hapus",
     "remove_confirm": "Hapus siswa ini dari kelompok rumah tangga? Mereka tetap berada di organisasi.",
-    "pick_placeholder": "Pilih sebuah rumah tangga…"
+    "pick_placeholder": "Pilih sebuah rumah tangga…",
+    "loading": "Sedang dimuat…"
   },
-  "subtitle_archived": "Mahasiswa yang telah lulus",
-  "filters": {
-    "active": "Aktif",
-    "archived": "Tersimpan"
-  },
-  "filter_banner": {
-    "homework_pending": "Menampilkan mahasiswa yang memiliki tugas yang belum diselesaikan.",
-    "clear_filter": "Hapus filter"
-  },
-  "search_placeholder": "Cari nama, sekolah, orang tua…",
-  "test_pill": "UJIAN",
   "delete_confirm": "Hapus \"{{name}}\" secara permanen? Tindakan ini juga akan menghapus semua sesi mereka. Tindakan ini tidak dapat dibatalkan.",
   "archive_confirm_archive": "{{name}} Arsip? Anda dapat mengembalikan arsip tersebut nanti.",
   "archive_confirm_restore": "{{name}} dipulihkan?"

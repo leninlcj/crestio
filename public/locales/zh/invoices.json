@@ -20,11 +20,11 @@
     "per_student": "按学生人数计算"
   },
   "columns": {
-    "billed_to": "开具给",
-    "status": "状态",
     "number": "编号",
+    "billed_to": "开具给",
     "issued": "已开具",
     "due": "应付",
+    "status": "状态",
     "total": "合计"
   },
   "not_found": "未找到该发票。",
@@ -42,13 +42,13 @@
     "period_custom": "自定义范围……",
     "from": "来源",
     "to": "致",
+    "back_to_list": "返回发票列表",
     "households": "家庭",
     "sessions": "课程",
     "unbilled_total": "未开具的总金额",
+    "nothing_title": "无需开具发票",
     "nothing_body": "本期间无已完成的未开票课程。请记录更多课程或选择其他日期范围。",
     "loading": "正在加载……",
-    "back_to_list": "返回发票列表",
-    "nothing_title": "无需开具发票",
     "save_drafts": "保存为草稿",
     "send": "发送发票"
   },

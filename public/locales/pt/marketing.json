@@ -1,43 +1,15 @@
 {
-  "nav": {
-    "sign_in": "Entrar",
-    "pricing": "Preços",
-    "start_trial": "Comece o teste gratuito",
-    "open_menu": "Abrir menu",
-    "close_menu": "Fechar menu"
-  },
-  "footer": {
-    "sign_in": "Entrar",
-    "privacy": "Privacidade",
-    "terms": "Termos",
-    "made_in": "Fabricado na Austrália · 2026",
-    "support": "Suporte"
-  },
-  "contact": {
-    "email_label": "E-mail",
-    "eyebrow": "Entre em contato",
-    "heading": "Diga olá",
-    "intro": "Perguntas, relatórios de bugs, comentários, elogios, reclamações — tudo é bem-vindo. Uma pessoa lê tudo isso e responde, geralmente em até um dia.",
-    "copy": "Cópia",
-    "copied": "Copiado",
-    "or_send_via_mail": "Ou envie pelo seu aplicativo de e-mail",
-    "name_label": "Seu nome (opcional)",
-    "email_field_label": "Seu e-mail (opcional)",
-    "email_hint": "Inclua isso se desejar receber uma resposta.",
-    "message_label": "Mensagem *",
-    "message_placeholder": "O que você tem em mente?",
-    "submit": "Abrir no Mail",
-    "submit_note": "Isso abre seu aplicativo de e-mail padrão com a mensagem já redigida. Nada será enviado até que você mesmo a envie.",
-    "footer_location": "crestio · Sydney · 2026",
-    "subject_named": "Mensagem de {{name}}",
-    "subject_anonymous": "Mensagem do site da Crestio",
-    "body_from": "Fonte: {{name}}",
-    "body_reply_to": "Responder para: {{email}}"
-  },
   "meta": {
     "home_title": "Crestio — software para professores particulares australianos",
     "home_description": "Gerencie alunos, registre sessões, aprimore anotações com IA e compartilhe o progresso com os pais — tudo a partir de um único painel. A partir de US$ 24/mês. 7 dias de teste gratuito.",
     "contact_title": "Contato · Crestio"
+  },
+  "nav": {
+    "pricing": "Preços",
+    "sign_in": "Entrar",
+    "start_trial": "Comece o teste gratuito",
+    "open_menu": "Abrir menu",
+    "close_menu": "Fechar menu"
   },
   "deleted_banner": "Sua conta foi excluída. Lamentamos sua saída.",
   "hero": {
@@ -153,5 +125,33 @@
     "button": "Comece o teste gratuito",
     "questions_part1": "Tem alguma dúvida? Envie um e-mail ",
     "questions_part2": "."
+  },
+  "footer": {
+    "made_in": "Fabricado na Austrália · 2026",
+    "sign_in": "Entrar",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "support": "Suporte"
+  },
+  "contact": {
+    "eyebrow": "Entre em contato",
+    "heading": "Diga olá",
+    "intro": "Perguntas, relatórios de bugs, comentários, elogios, reclamações — tudo é bem-vindo. Uma pessoa lê tudo isso e responde, geralmente em até um dia.",
+    "email_label": "E-mail",
+    "copy": "Cópia",
+    "copied": "Copiado",
+    "or_send_via_mail": "Ou envie pelo seu aplicativo de e-mail",
+    "name_label": "Seu nome (opcional)",
+    "email_field_label": "Seu e-mail (opcional)",
+    "email_hint": "Inclua isso se desejar receber uma resposta.",
+    "message_label": "Mensagem *",
+    "message_placeholder": "O que você tem em mente?",
+    "submit": "Abrir no Mail",
+    "submit_note": "Isso abre seu aplicativo de e-mail padrão com a mensagem já redigida. Nada será enviado até que você mesmo a envie.",
+    "footer_location": "crestio · Sydney · 2026",
+    "subject_named": "Mensagem de {{name}}",
+    "subject_anonymous": "Mensagem do site da Crestio",
+    "body_from": "Fonte: {{name}}",
+    "body_reply_to": "Responder para: {{email}}"
   }
 }

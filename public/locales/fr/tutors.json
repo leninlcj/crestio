@@ -3,38 +3,6 @@
     "subtitle": "Équipe",
     "title": "Tuteurs"
   },
-  "table": {
-    "name": "Nom",
-    "subjects": "Matières",
-    "students": "Étudiants",
-    "em_dash": "—",
-    "linked_login": "Connexion via un compte lié",
-    "pay_rate": "Taux de rémunération",
-    "this_month": "Ce mois-ci",
-    "linked_yes": "Oui",
-    "linked_no": "Non"
-  },
-  "new": {
-    "page_subtitle": "Tuteurs",
-    "email_label": "E-mail",
-    "phone_label": "Téléphone",
-    "notes_label": "Remarques",
-    "saving": "Enregistrement en cours…",
-    "cancel": "Annuler",
-    "not_signed_in": "Vous n'êtes pas connecté.",
-    "no_organization": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai.",
-    "page_title": "Nouveau tuteur",
-    "name_label": "Nom *",
-    "subjects_label": "Matières qu'ils enseignent",
-    "subjects_placeholder": "Mathématiques, chimie",
-    "subjects_hint": "Séparés par une virgule.",
-    "pay_rate_label": "Tarif horaire",
-    "pay_rate_placeholder": "par exemple 55",
-    "submit": "Créer un tuteur"
-  },
-  "common": {
-    "loading": "Chargement en cours…"
-  },
   "actions": {
     "add": "Ajouter un tuteur",
     "add_one": "Ajouter un tuteur"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "Pas encore de tuteurs",
     "description": "Ajoutez des tuteurs lorsque vous recrutez des personnes pour enseigner au sein de votre entreprise. Si vous êtes tuteur indépendant, vous pouvez ignorer cette étape."
+  },
+  "table": {
+    "name": "Nom",
+    "subjects": "Matières",
+    "linked_login": "Connexion via un compte lié",
+    "students": "Étudiants",
+    "pay_rate": "Taux de rémunération",
+    "this_month": "Ce mois-ci",
+    "linked_yes": "Oui",
+    "linked_no": "Non",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "Tuteurs",
+    "page_title": "Nouveau tuteur",
+    "name_label": "Nom *",
+    "email_label": "E-mail",
+    "phone_label": "Téléphone",
+    "subjects_label": "Matières qu'ils enseignent",
+    "subjects_placeholder": "Mathématiques, chimie",
+    "subjects_hint": "Séparés par une virgule.",
+    "pay_rate_label": "Tarif horaire",
+    "pay_rate_placeholder": "par exemple 55",
+    "notes_label": "Remarques",
+    "submit": "Créer un tuteur",
+    "saving": "Enregistrement en cours…",
+    "cancel": "Annuler",
+    "not_signed_in": "Vous n'êtes pas connecté.",
+    "no_organization": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai."
+  },
+  "common": {
+    "loading": "Chargement en cours…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "Chargement en cours…",
+    "not_found_title": "Introuvable",
+    "not_found_body": "Tuteur introuvable.",
+    "subtitle": "Tuteur",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "saving": "Enregistrement en cours…",
+    "cancel": "Annuler",
+    "confirm_delete": "Supprimer {{name}} ? Ses sessions passées seront conservées, mais le lien vers le tuteur sera supprimé. Cette action est irréversible.",
+    "form": {
+      "name_label": "Nom",
+      "email_label": "E-mail",
+      "phone_label": "Téléphone",
+      "subjects_label": "Matières",
+      "pay_rate_label": "Taux de rémunération",
+      "notes_label": "Remarques"
+    },
+    "contact_eyebrow": "Contact",
+    "no_contact": "Pas de contact.",
+    "teaches_eyebrow": "Enseigne",
+    "no_subjects": "—",
+    "pay_eyebrow": "Rémunération",
+    "rate_label": "Tarif : ",
+    "rate_per_hour": " / hr",
+    "total_label": "Total payé/dû : ",
+    "notes_eyebrow": "Remarques",
+    "record_eyebrow": "Fiche",
+    "recent_heading": "Séances récentes",
+    "no_sessions": "Aucune session n'a encore été attribuée.",
+    "table": {
+      "when": "Quand",
+      "subject": "Objet",
+      "duration": "Durée",
+      "status": "Statut",
+      "pay": "Rémunération",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} min"
+    }
   }
 }

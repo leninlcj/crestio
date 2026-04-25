@@ -1,43 +1,15 @@
 {
-  "nav": {
-    "sign_in": "Masuk",
-    "pricing": "Harga",
-    "start_trial": "Mulai uji coba gratis",
-    "open_menu": "Buka menu",
-    "close_menu": "Tutup menu"
-  },
-  "footer": {
-    "sign_in": "Masuk",
-    "privacy": "Privasi",
-    "terms": "Ketentuan",
-    "made_in": "Dibuat di Australia · 2026",
-    "support": "Dukungan"
-  },
-  "contact": {
-    "email_label": "Email",
-    "eyebrow": "Hubungi kami",
-    "heading": "Sapa",
-    "intro": "Pertanyaan, laporan bug, masukan, pujian, keluhan — semuanya diterima. Ada seseorang yang membaca pesan-pesan ini dan membalasnya, biasanya dalam waktu satu hari.",
-    "copy": "Salin",
-    "copied": "Disalin",
-    "or_send_via_mail": "Atau kirim melalui aplikasi email Anda",
-    "name_label": "Nama Anda (opsional)",
-    "email_field_label": "Alamat email Anda (opsional)",
-    "email_hint": "Sertakan ini jika Anda ingin mendapatkan balasan.",
-    "message_label": "Pesan *",
-    "message_placeholder": "Apa yang ada di pikiran Anda?",
-    "submit": "Buka di Mail",
-    "submit_note": "Ini akan membuka aplikasi email bawaan Anda dengan pesan yang sudah dibuat. Pesan tersebut tidak akan terkirim sampai Anda mengirimkannya sendiri.",
-    "footer_location": "crestio · Sydney · 2026",
-    "subject_named": "Pesan dari {{name}}",
-    "subject_anonymous": "Pesan dari situs web Crestio",
-    "body_from": "Dari: {{name}}",
-    "body_reply_to": "Balas ke: {{email}}"
-  },
   "meta": {
     "home_title": "Crestio — perangkat lunak untuk tutor di Australia",
     "home_description": "Kelola siswa, catat sesi, sempurnakan catatan dengan AI, dan bagikan kemajuan kepada orang tua — semuanya dari satu dasbor. Mulai dari $24/bulan. Uji coba gratis selama 7 hari.",
     "contact_title": "Kontak · Crestio"
+  },
+  "nav": {
+    "pricing": "Harga",
+    "sign_in": "Masuk",
+    "start_trial": "Mulai uji coba gratis",
+    "open_menu": "Buka menu",
+    "close_menu": "Tutup menu"
   },
   "deleted_banner": "Akun Anda telah dihapus. Sayang sekali Anda pergi.",
   "hero": {
@@ -153,5 +125,33 @@
     "button": "Mulai uji coba gratis",
     "questions_part1": "Ada pertanyaan? Kirim email ",
     "questions_part2": "."
+  },
+  "footer": {
+    "made_in": "Dibuat di Australia · 2026",
+    "sign_in": "Masuk",
+    "privacy": "Privasi",
+    "terms": "Ketentuan",
+    "support": "Dukungan"
+  },
+  "contact": {
+    "eyebrow": "Hubungi kami",
+    "heading": "Sapa",
+    "intro": "Pertanyaan, laporan bug, masukan, pujian, keluhan — semuanya diterima. Ada seseorang yang membaca pesan-pesan ini dan membalasnya, biasanya dalam waktu satu hari.",
+    "email_label": "Email",
+    "copy": "Salin",
+    "copied": "Disalin",
+    "or_send_via_mail": "Atau kirim melalui aplikasi email Anda",
+    "name_label": "Nama Anda (opsional)",
+    "email_field_label": "Alamat email Anda (opsional)",
+    "email_hint": "Sertakan ini jika Anda ingin mendapatkan balasan.",
+    "message_label": "Pesan *",
+    "message_placeholder": "Apa yang ada di pikiran Anda?",
+    "submit": "Buka di Mail",
+    "submit_note": "Ini akan membuka aplikasi email bawaan Anda dengan pesan yang sudah dibuat. Pesan tersebut tidak akan terkirim sampai Anda mengirimkannya sendiri.",
+    "footer_location": "crestio · Sydney · 2026",
+    "subject_named": "Pesan dari {{name}}",
+    "subject_anonymous": "Pesan dari situs web Crestio",
+    "body_from": "Dari: {{name}}",
+    "body_reply_to": "Balas ke: {{email}}"
   }
 }

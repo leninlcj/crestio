@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "Cargando…"
-  },
   "page": {
     "subtitle": "Enseñanza",
     "title": "Planes de clase"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "IA",
     "unassigned": "Sin asignar"
+  },
+  "common": {
+    "loading": "Cargando…"
+  },
+  "new": {
+    "subtitle_edit": "Editar plan",
+    "subtitle_generate": "Generar plan",
+    "title_default_edit": "Plan de clase",
+    "title_new": "Nuevo plan de clase",
+    "delete": "Eliminar",
+    "confirm_delete": "¿Desea eliminar este plan de clase?",
+    "form": {
+      "subject_label": "Asignatura *",
+      "subject_placeholder": "p. ej., Matemáticas Avanzadas",
+      "year_level_label": "Curso",
+      "year_level_placeholder": "p. ej., 11.º curso",
+      "topic_label": "Tema *",
+      "topic_placeholder": "Por ejemplo: Introducción a la integración por partes",
+      "duration_label": "Duración (minutos)",
+      "student_link_label": "Enlace al alumno (opcional)",
+      "student_none": "—",
+      "plan_label": "Plan (markdown)",
+      "plan_placeholder": "# Plan de clase\n\n## Objetivos\n- …",
+      "preview_toggle_edit": "Editar",
+      "preview_toggle_preview": "Vista previa",
+      "preview_empty": "_Aún no hay nada. Genera uno o pega el tuyo propio._",
+      "preview_placeholder": "_Aquí se mostrará una vista previa de tu plan._",
+      "preview_eyebrow": "Vista previa"
+    },
+    "actions": {
+      "generate": "Generar plan",
+      "regenerate": "Regenerar plan",
+      "generating": "Generando plan...",
+      "save_new": "Guardar plan",
+      "save_changes": "Guardar cambios",
+      "saving": "Guardando…",
+      "cancel": "Cancelar"
+    },
+    "usage_line": "{{used}} de las generaciones diarias de {{limit}} utilizadas.",
+    "errors": {
+      "subject_topic_required": "Para generarlo, es necesario indicar la asignatura y el tema.",
+      "not_signed_in": "No has iniciado sesión.",
+      "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai.",
+      "server_returned": "El servidor devolvió {{status}}",
+      "server_returned_with_text": "El servidor devolvió un error «{{status}}»: {{text}}",
+      "no_plan": "El servidor no ha devuelto ningún plan.",
+      "generic": "Ha ocurrido un error.",
+      "rate_limited_one": "Has generado un{{limit}}s de planes de clase en las últimas 24 horas. Puedes generar más en un{{hours}}a hora.",
+      "rate_limited_other": "Has generado un plan de leccion{{limit}}e en las últimas 24 horas. Puedes generar más en {{hours}} horas.",
+      "rate_limited_soon": "Has generado planes de leccion{{limit}}es en las últimas 24 horas. Pronto podrás generar más."
+    }
   }
 }

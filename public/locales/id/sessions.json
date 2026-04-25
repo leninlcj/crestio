@@ -1,42 +1,42 @@
 {
   "subtitle": "Sesi",
+  "subtitle_session": "Sesi",
   "title_list": "Sesi",
   "title_new": "Catat sesi",
   "title_loading": "…",
   "title_not_available": "Tidak tersedia",
   "title_not_found": "Tidak ditemukan",
   "filter": {
-    "completed": "Selesai",
-    "needs_polishing": "Perlu diperbaiki",
     "all": "Semua",
     "drafts": "Draf",
     "drafts_count": "Draf ({{count}})",
-    "upcoming": "Yang akan datang"
+    "upcoming": "Yang akan datang",
+    "completed": "Selesai",
+    "needs_polishing": "Perlu diperbaiki"
   },
   "columns": {
-    "student": "Mahasiswa",
-    "status": "Status",
-    "paid": "Berbayar",
     "when": "Kapan",
+    "student": "Mahasiswa",
     "tutor": "Pengajar",
     "subject_topic": "Mata pelajaran · Topik",
     "duration": "Durasi",
-    "amount": "Jumlah"
+    "status": "Status",
+    "amount": "Jumlah",
+    "paid": "Berbayar"
   },
   "actions": {
     "new": "Catat sesi",
     "new_short": "Sesi baru",
     "edit": "Edit",
     "mark_completed": "Tandai sebagai selesai",
+    "mark_paid": "Tandai sebagai \"{{status}}\"",
     "cancel_session": "Batalkan sesi",
     "no_show": "Tidak hadir",
     "delete": "Hapus",
+    "delete_confirm": "Hapus sesi ini? Tindakan ini tidak dapat dibatalkan.",
     "save": "Simpan",
     "save_session": "Simpan sesi",
     "saving": "Menyimpan…",
-    "cancel": "Batalkan",
-    "mark_paid": "Tandai sebagai \"{{status}}\"",
-    "delete_confirm": "Hapus sesi ini? Tindakan ini tidak dapat dibatalkan.",
     "view_student": "Lihat siswa",
     "resume_draft": "Draf resume",
     "discard_draft": "Hapus",
@@ -46,7 +46,8 @@
     "polish_with_ai": "Bahasa Polandia dengan AI",
     "polishing": "Sedang memoles…",
     "edit_shared": "Edit versi bersama",
-    "done_editing": "Selesai diedit"
+    "done_editing": "Selesai diedit",
+    "cancel": "Batalkan"
   },
   "loading": "Sedang dimuat…",
   "not_found": "Sesi tidak ditemukan.",
@@ -63,7 +64,6 @@
   },
   "fields": {
     "student": "Mahasiswa",
-    "status": "Status",
     "student_required": "Mahasiswa *",
     "tutor": "Pengajar",
     "tutor_self": "Anda",
@@ -78,6 +78,7 @@
     "charge_rate": "Tarif (per jam)",
     "pay_rate": "Tarif gaji tutor (per jam)",
     "pay_rate_hint": "Biarkan kosong jika Anda menjadi tutor pada sesi ini.",
+    "status": "Status",
     "notes_internal": "Catatan pribadi",
     "notes_internal_placeholder": "Apa saja yang dibahas? Bagaimana hasilnya?",
     "notes_internal_hint": "Hanya Anda yang dapat melihat ini. Ketuk ikon mikrofon untuk mendikte — transkrip akan ditambahkan. Klik \"Polish with AI\" untuk mempublikasikan versi yang ramah orang tua.",
@@ -110,38 +111,11 @@
     "no_show": "Tidak hadir"
   },
   "drafts": {
-    "draft_subtitle_new_no_name": "Sesi baru",
     "banner_unfinished": "Anda memiliki perubahan yang belum diselesaikan dari {{when}}.",
     "draft_subtitle_new": "Sesi baru untuk {{name}}",
+    "draft_subtitle_new_no_name": "Sesi baru",
     "last_edited": "Terakhir diedit{{when}}"
   },
-  "detail": {
-    "due_prefix": "{{date}}",
-    "overdue_badge": "Tunggakan",
-    "when": "Kapan",
-    "what": "Apa",
-    "money": "Uang",
-    "charge": "biaya",
-    "tutor_pay": "gaji tutor",
-    "tutor_with": "Pengajar: {{name}}",
-    "tutor_you": "Pengajar: Anda",
-    "parent_facing_notes": "Catatan untuk orang tua",
-    "private_notes": "Catatan pribadi",
-    "homework_set": "Tugas rumah",
-    "next_focus": "Fokus untuk sesi berikutnya",
-    "completed_badge": "✓ Selesai"
-  },
-  "save_status": {
-    "saving": "Menyimpan…",
-    "saved_locally": "Disimpan secara lokal",
-    "saved": "Tersimpan"
-  },
-  "errors": {
-    "not_signed_in": "Belum masuk.",
-    "select_at_least_one": "Pilih setidaknya satu sesi.",
-    "no_organisation": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai."
-  },
-  "subtitle_session": "Sesi",
   "relative_time": {
     "just_now": "baru saja",
     "min_ago_one": "1 menit yang lalu",
@@ -153,5 +127,31 @@
   },
   "polish_error_generic": "Terjadi kesalahan. Catatan Anda masih tersimpan — silakan coba lagi sebentar lagi.",
   "polish_needs_student_duration": "Pilih siswa dan durasi terlebih dahulu.",
-  "select_student": "Pilih seorang siswa"
+  "select_student": "Pilih seorang siswa",
+  "detail": {
+    "when": "Kapan",
+    "what": "Apa",
+    "money": "Uang",
+    "charge": "biaya",
+    "tutor_pay": "gaji tutor",
+    "tutor_with": "Pengajar: {{name}}",
+    "tutor_you": "Pengajar: Anda",
+    "parent_facing_notes": "Catatan untuk orang tua",
+    "private_notes": "Catatan pribadi",
+    "homework_set": "Tugas rumah",
+    "next_focus": "Fokus untuk sesi berikutnya",
+    "due_prefix": "{{date}}",
+    "completed_badge": "✓ Selesai",
+    "overdue_badge": "Tunggakan"
+  },
+  "save_status": {
+    "saved_locally": "Disimpan secara lokal",
+    "saving": "Menyimpan…",
+    "saved": "Tersimpan"
+  },
+  "errors": {
+    "select_at_least_one": "Pilih setidaknya satu sesi.",
+    "not_signed_in": "Belum masuk.",
+    "no_organisation": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai."
+  }
 }

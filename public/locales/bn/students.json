@@ -1,5 +1,6 @@
 {
   "subtitle": "মানুষ",
+  "subtitle_archived": "আর্কাইভকৃত শিক্ষার্থী",
   "subtitle_student": "ছাত্র",
   "title_list": "শিক্ষার্থীরা",
   "title_new": "নতুন শিক্ষার্থী",
@@ -15,14 +16,18 @@
     "unarchive": "আনআর্কাইভ",
     "delete": "মুছুন"
   },
+  "filters": {
+    "active": "সক্রিয়",
+    "archived": "আর্কাইভ করা"
+  },
   "empty": {
     "no_students": "এখনও কোনো শিক্ষার্থী নেই",
     "no_archived": "কোনও সংরক্ষিত শিক্ষার্থী নেই",
     "description_owner": "সেশন ট্র্যাকিং এবং বিলিং শুরু করতে আপনার প্রথম শিক্ষার্থীকে যুক্ত করুন।",
     "description_tutor": "আপনার প্রতিষ্ঠানের মালিক আপনাকে শিক্ষার্থীরা বরাদ্দ করবেন।",
+    "no_tutor_record": "এখন পর্যন্ত কোনো শিক্ষার্থী বরাদ্দ করা হয়নি",
     "show_archived": "আর্কাইভকৃত শিক্ষার্থীরা এখানে প্রদর্শিত হয়।",
-    "add_first": "একজন শিক্ষার্থী যোগ করুন",
-    "no_tutor_record": "এখন পর্যন্ত কোনো শিক্ষার্থী বরাদ্দ করা হয়নি"
+    "add_first": "একজন শিক্ষার্থী যোগ করুন"
   },
   "loading": "লোড হচ্ছে…",
   "denied": "আপনার এই শিক্ষার্থীর অ্যাক্সেস নেই। আপনার সংস্থার মালিককে তাদের আপনাকে বরাদ্দ করতে বলুন।",
@@ -33,6 +38,10 @@
     "record": "রেকর্ড",
     "track": "ট্র্যাক"
   },
+  "filter_banner": {
+    "homework_pending": "পেন্ডিং হোমওয়ার্ক সহ শিক্ষার্থীদের দেখাচ্ছে।",
+    "clear_filter": "ফিল্টার মুছুন"
+  },
   "columns": {
     "name": "নাম",
     "year": "বছর",
@@ -40,11 +49,10 @@
     "parent": "অভিভাবক",
     "rate": "হার"
   },
+  "search_placeholder": "নাম, স্কুল, অভিভাবক অনুসন্ধান করুন…",
+  "test_pill": "পরীক্ষা",
   "cards": {
     "contact": "যোগাযোগ",
-    "billing": "বিলিং",
-    "notes_heading": "নোটস",
-    "assigned_saved": "সংরক্ষিত।",
     "contact_parent": "অভিভাবক: ",
     "contact_email": "ইমেইল: ",
     "contact_phone": "ফোন: ",
@@ -53,18 +61,18 @@
     "year": "বর্ষ: ",
     "school": "বিদ্যালয়: ",
     "subjects": "বিষয়সমূহ: ",
+    "billing": "বিলিং",
     "rate": "হার: ",
     "rate_per_hour": " / ঘণ্টা",
     "lifetime": "আজীবন: ",
     "sessions": "সেশনসমূহ: ",
+    "notes_heading": "নোটস",
     "assigned_tutor": "নিয়োগকৃত শিক্ষক",
     "unassigned_option": "অবণ্টিত (মালিক সরাসরি পরিচালনা করেন)",
-    "assigned_tutor_hint": "শুধুমাত্র যারা তাদের আমন্ত্রণ গ্রহণ করেছেন এমন টউটররা এখানে প্রদর্শিত হয়।"
+    "assigned_tutor_hint": "শুধুমাত্র যারা তাদের আমন্ত্রণ গ্রহণ করেছেন এমন টউটররা এখানে প্রদর্শিত হয়।",
+    "assigned_saved": "সংরক্ষিত।"
   },
   "new_form": {
-    "notes": "নোটস",
-    "save": "ছাত্র যোগ করুন",
-    "cancel": "বাতিল করুন",
     "name_required": "নাম *",
     "name_placeholder": "যেমন: স্যাম চেন",
     "year_level": "বর্ষ স্তর",
@@ -77,15 +85,17 @@
     "parent_phone": "অভিভাবকের ফোন",
     "parent_email": "অভিভাবকের ইমেইল",
     "hourly_rate": "ঘণ্টাভিত্তিক হার",
-    "saving": "যোগ হচ্ছে…"
+    "notes": "নোটস",
+    "save": "ছাত্র যোগ করুন",
+    "saving": "যোগ হচ্ছে…",
+    "cancel": "বাতিল করুন"
   },
   "parent_access": {
-    "pending_heading": "প্রক্রিয়াধীন",
-    "inviting": "প্রেরণ…",
     "kicker": "অভিভাবক অ্যাক্সেস",
     "heading": "এই শিক্ষার্থীর নোটগুলি কে দেখতে পারে",
     "none_yet": "এখন পর্যন্ত কোনো অভিভাবক যুক্ত বা আমন্ত্রণ জানানো হয়নি।",
     "linked_heading": "সংযুক্ত",
+    "pending_heading": "প্রক্রিয়াধীন",
     "invited_when": "আমন্ত্রিত {{when}}",
     "revoke": "অ্যাক্সেস বাতিল করুন",
     "revoke_confirm": "এই অভিভাবকের অ্যাক্সেস বাতিল করবেন? তারা আর কোনো সেশন দেখতে পারবে না।",
@@ -93,6 +103,7 @@
     "parent_email": "অভিভাবকের ইমেইল",
     "parent_email_placeholder": "parent@example.com",
     "invite": "অভিভাবককে আমন্ত্রণ করুন",
+    "inviting": "প্রেরণ…",
     "invitation_sent": "{{email}}-এ আমন্ত্রণ পাঠানো হয়েছে।",
     "invitation_created": "আমন্ত্রণ তৈরি করা হয়েছে।",
     "invitation_share_hint": "যদি অভিভাবক ইমেইল না পান, তবে এই লিঙ্কটি তাদের সাথে শেয়ার করুন:"
@@ -103,25 +114,21 @@
     "new": "নতুন সেশন"
   },
   "homework_heading": {
+    "kicker": "ট্র্যাক",
     "heading": "গৃহকর্ম",
+    "none": "এখন পর্যন্ত কোনো হোমওয়ার্ক নির্ধারণ করা হয়নি। সেশন লগ করার সময় হোমওয়ার্ক যোগ করুন।",
     "mark_as_done": "সম্পন্ন হিসেবে চিহ্নিত করুন",
+    "marking": "মার্কিং…",
     "completed": "সম্পন্ন",
     "overdue": "বকেয়া",
-    "due_label": "ডেডলাইন: {{date}}",
-    "kicker": "ট্র্যাক",
-    "none": "এখন পর্যন্ত কোনো হোমওয়ার্ক নির্ধারণ করা হয়নি। সেশন লগ করার সময় হোমওয়ার্ক যোগ করুন।",
-    "marking": "মার্কিং…",
     "due_today": "আজ জমা দিতে হবে",
     "due_tomorrow": "আগামীকাল জমা দিতে হবে",
     "due_in_days_one": "{{count}} দিনের মধ্যে প্রদেয়",
     "due_in_days_other": "{{count}} দিনের মধ্যে প্রদেয়",
-    "marked_complete_on": "{{date}}-এ সম্পন্ন হিসেবে চিহ্নিত"
+    "marked_complete_on": "{{date}}-এ সম্পন্ন হিসেবে চিহ্নিত",
+    "due_label": "ডেডলাইন: {{date}}"
   },
   "from_last_session": {
-    "hours_ago_one": "১ ঘণ্টা আগে",
-    "hours_ago_other": "{{count}} ঘণ্টা আগে",
-    "days_ago_one": "১ দিন আগে",
-    "days_ago_other": "{{count}} কয়েক দিন আগে",
     "kicker": "গত সেশন থেকে",
     "covered_prefix": "আপনি শেষবার যা কভার করেছিলেন: ",
     "homework_done": "✓ হোমওয়ার্ক সম্পন্ন: {{description}}",
@@ -132,30 +139,23 @@
     "open_last_session": "শেষ সেশন খুলুন →",
     "log_new_session": "এই প্রসঙ্গে নতুন সেশন লগ করুন →",
     "yesterday": "গতকাল",
-    "earlier_today": "আজ সকালে"
+    "earlier_today": "আজ সকালে",
+    "hours_ago_one": "১ ঘণ্টা আগে",
+    "hours_ago_other": "{{count}} ঘণ্টা আগে",
+    "days_ago_one": "১ দিন আগে",
+    "days_ago_other": "{{count}} কয়েক দিন আগে"
   },
   "household": {
     "kicker": "পরিবার",
-    "remove": "সরান",
-    "loading": "লোড হচ্ছে…",
     "not_in_household": "একই গৃহে নেই।",
     "billing_note": " · বিলিং গ্রুপে ভাইবোনদের একসঙ্গে গ্রুপ করে",
     "assign": "গৃহ বরাদ্দ করুন",
     "change": "পরিবর্তন",
+    "remove": "সরান",
     "remove_confirm": "এই শিক্ষার্থীকে গৃহস্থালি থেকে সরিয়ে ফেলবেন? তারা সংস্থায় থাকবে।",
-    "pick_placeholder": "একটি পরিবার নির্বাচন করুন…"
+    "pick_placeholder": "একটি পরিবার নির্বাচন করুন…",
+    "loading": "লোড হচ্ছে…"
   },
-  "subtitle_archived": "আর্কাইভকৃত শিক্ষার্থী",
-  "filters": {
-    "active": "সক্রিয়",
-    "archived": "আর্কাইভ করা"
-  },
-  "filter_banner": {
-    "homework_pending": "পেন্ডিং হোমওয়ার্ক সহ শিক্ষার্থীদের দেখাচ্ছে।",
-    "clear_filter": "ফিল্টার মুছুন"
-  },
-  "search_placeholder": "নাম, স্কুল, অভিভাবক অনুসন্ধান করুন…",
-  "test_pill": "পরীক্ষা",
   "delete_confirm": "{{name}}-কে স্থায়ীভাবে মুছে ফেলবেন? এতে তাদের সমস্ত সেশনও মুছে যাবে। এটি আর পূর্বাবস্থায় ফেরানো যাবে না।",
   "archive_confirm_archive": "{{name}} সংরক্ষণাগার? আপনি পরে সেগুলো আনআর্কাইভ করতে পারবেন।",
   "archive_confirm_restore": "{{name}} পুনরুদ্ধার করবেন?"

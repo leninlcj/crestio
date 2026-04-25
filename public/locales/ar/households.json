@@ -1,14 +1,28 @@
 {
+  "page": {
+    "subtitle": "الأشخاص",
+    "title": "الأسر"
+  },
   "actions": {
-    "cancel": "إلغاء",
     "new": "+ أسرة جديدة",
+    "cancel": "إلغاء",
     "create": "إنشاء",
     "creating": "جاري الإنشاء..."
   },
+  "form": {
+    "name_label": "اسم الأسرة",
+    "name_placeholder": "مثال: عائلة تشين"
+  },
   "filters": {
+    "search_placeholder": "البحث عن الأسرة، الوالد، الطالب...",
     "active": "نشط",
-    "archived": "المحفوظات",
-    "search_placeholder": "البحث عن الأسرة، الوالد، الطالب..."
+    "archived": "المحفوظات"
+  },
+  "empty": {
+    "none": "لا توجد أسر حتى الآن",
+    "archived_none": "لا توجد أسر محفوظة",
+    "description": "يجمع الأسرة الأشقاء تحت جهة اتصال واحدة للفواتير. عند ربط أحد الوالدين بطالب، يتم إنشاء أسرة تلقائيًا.",
+    "create": "إنشاء أسرة"
   },
   "common": {
     "loading": "جاري التحميل...",
@@ -18,34 +32,101 @@
   },
   "card": {
     "archived_badge": "المحفوظات",
-    "students_one": "{{count}} طالب",
-    "students_other": "{{count}} الطلاب",
     "parent_label_fallback": "الوالد",
     "needs_primary": "يحتاج إلى والد أو والدة رئيسيين",
     "no_students": "لا يوجد طلاب",
+    "students_one": "{{count}} طالب",
+    "students_other": "{{count}} الطلاب",
     "parents_one": "{{count}} الوالد",
     "parents_other": "{{count}} الوالدين",
     "summary": "{{students}} · {{parents}}"
   },
   "suggestion": {
-    "dismiss": "تجاهل",
     "fallback_parent": "والد مشترك",
     "question_existing": "{{students}} {{parent}}. هل يتم تجميعهم في أسرة واحدة؟",
     "question_new": "{{students}} {{parent}}. هل يتم تجميعهم في أسرة جديدة؟",
-    "accept": "المجموعة →"
+    "accept": "المجموعة →",
+    "dismiss": "تجاهل"
   },
-  "page": {
-    "subtitle": "الأشخاص",
-    "title": "الأسر"
-  },
-  "form": {
-    "name_label": "اسم الأسرة",
-    "name_placeholder": "مثال: عائلة تشين"
-  },
-  "empty": {
-    "none": "لا توجد أسر حتى الآن",
-    "archived_none": "لا توجد أسر محفوظة",
-    "description": "يجمع الأسرة الأشقاء تحت جهة اتصال واحدة للفواتير. عند ربط أحد الوالدين بطالب، يتم إنشاء أسرة تلقائيًا.",
-    "create": "إنشاء أسرة"
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "تعذر تحميل بيانات الأسرة.",
+    "not_found_title": "لم يتم العثور عليه",
+    "not_found_body": "لم يتم العثور على الأسرة.",
+    "subtitle_archived": "أسرة محفوظة",
+    "subtitle_active": "الأسرة",
+    "archive": "الأرشيف",
+    "unarchive": "إلغاء الأرشفة",
+    "confirm_archive": "هل تريد أرشفة هذه الأسرة؟ يبقى الطلاب والآباء في مكانهم؛ ويتم إخفاء الأسرة من القوائم.",
+    "edit_name": "تحرير الاسم",
+    "save": "حفظ",
+    "saving": "جاري الحفظ…",
+    "cancel": "إلغاء",
+    "billed_to_prefix": "يتم إرسال الفاتورة إلى",
+    "parent_fallback": "الوالد",
+    "needs_primary": "يحتاج إلى والد رئيسي",
+    "tabs": {
+      "members": "الأعضاء",
+      "sessions": "الجلسات",
+      "invoices": "الفواتير",
+      "notes": "ملاحظات"
+    },
+    "members": {
+      "parents_heading": "الوالدان",
+      "add_co_parent": "+ إضافة والد مشارك",
+      "cancel": "إلغاء",
+      "no_parents": "لم يتم ربط أي والدين بعد.",
+      "no_name": "(بدون اسم)",
+      "primary_badge": "الأولي",
+      "make_primary": "جعله الوالد الرئيسي",
+      "remove": "إزالة",
+      "confirm_remove_parent": "هل تريد إزالة هذا الوالد من الأسرة؟ سيحتفظ بالوصول إلى الطلاب المرتبطين به.",
+      "students_heading": "الطلاب",
+      "add_sibling": "+ إضافة شقيق",
+      "no_students": "لا يوجد طلاب في هذا المنزل حتى الآن.",
+      "remove_from_household": "حذف من الأسرة",
+      "confirm_remove_student": "هل تريد إزالة هذا الطالب من الأسرة؟ ستبقى الدورات والفواتير كما هي."
+    },
+    "add_parent": {
+      "loading": "جاري تحميل الوالدين...",
+      "select_placeholder": "اختر أحد الوالدين الموجودين...",
+      "no_name": "(بدون اسم)",
+      "invite_hint": "لإضافة ولي أمر جديد، قم بدعوته من صفحة الطالب — سيتم إنشاؤه عند قبوله.",
+      "submit": "إضافة والد",
+      "submitting": "إضافة...",
+      "error_default": "تعذر إضافة الوالد."
+    },
+    "add_student": {
+      "loading": "جاري تحميل الطلاب...",
+      "select_placeholder": "اختر طالبًا...",
+      "in_other_household": " (في أسرة أخرى)",
+      "confirm_move": "هذا الطالب ينتمي إلى أسرة أخرى. هل تريد نقله إلى هذه الأسرة؟",
+      "link_parents": "اربط هذا الطالب أيضًا بوالدي (والدي) الأسرة",
+      "submit": "إضافة إلى الأسرة",
+      "submitting": "إضافة...",
+      "error_default": "تعذر إضافة الطالب."
+    },
+    "sessions_tab": {
+      "empty": "لا توجد جلسات حتى الآن لهذا المنزل.",
+      "col_when": "متى",
+      "col_student": "الطالب",
+      "col_subject_topic": "الموضوع · الموضوع",
+      "col_status": "الحالة",
+      "col_amount": "المبلغ"
+    },
+    "invoices_tab": {
+      "empty": "لا توجد فواتير لهذا المنزل حتى الآن. ستتوفر ميزة إصدار الفواتير المجمعة قريبًا — يمكنك إصدار فواتير للطلاب بشكل فردي من صفحة الفواتير.",
+      "household_fallback": "الأسرة",
+      "issued_prefix": "صدر في {{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "الحساسية، قيود الجدول الزمني، تفضيلات الفوترة...",
+      "save": "حفظ الملاحظات",
+      "saving": "جاري الحفظ…",
+      "cancel": "إلغاء",
+      "empty": "لا توجد ملاحظات عن الأسرة حتى الآن.",
+      "edit": "تحرير الملاحظات",
+      "add": "إضافة ملاحظات"
+    }
   }
 }

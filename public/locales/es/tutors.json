@@ -3,38 +3,6 @@
     "subtitle": "Equipo",
     "title": "Tutores"
   },
-  "table": {
-    "name": "Nombre",
-    "subjects": "Asignaturas",
-    "students": "Estudiantes",
-    "em_dash": "—",
-    "linked_login": "Inicio de sesión vinculado",
-    "pay_rate": "Tarifa",
-    "this_month": "Este mes",
-    "linked_yes": "Sí",
-    "linked_no": "No"
-  },
-  "new": {
-    "page_subtitle": "Tutores",
-    "email_label": "Correo electrónico",
-    "phone_label": "Teléfono",
-    "notes_label": "Notas",
-    "saving": "Guardando…",
-    "cancel": "Cancelar",
-    "not_signed_in": "No has iniciado sesión.",
-    "no_organization": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai.",
-    "page_title": "Nuevo tutor",
-    "name_label": "Nombre *",
-    "subjects_label": "Asignaturas que imparten",
-    "subjects_placeholder": "Matemáticas, Química",
-    "subjects_hint": "Separados por comas.",
-    "pay_rate_label": "Tarifa por hora",
-    "pay_rate_placeholder": "p. ej. 55",
-    "submit": "Crear tutor"
-  },
-  "common": {
-    "loading": "Cargando…"
-  },
   "actions": {
     "add": "Añadir tutor",
     "add_one": "Añadir un tutor"
@@ -42,5 +10,79 @@
   "empty": {
     "title": "Aún no hay tutores",
     "description": "Añade tutores cuando contrates a personas para que impartan clases en tu empresa. Si eres un tutor autónomo, puedes saltarte este paso."
+  },
+  "table": {
+    "name": "Nombre",
+    "subjects": "Asignaturas",
+    "linked_login": "Inicio de sesión vinculado",
+    "students": "Estudiantes",
+    "pay_rate": "Tarifa",
+    "this_month": "Este mes",
+    "linked_yes": "Sí",
+    "linked_no": "No",
+    "em_dash": "—"
+  },
+  "new": {
+    "page_subtitle": "Tutores",
+    "page_title": "Nuevo tutor",
+    "name_label": "Nombre *",
+    "email_label": "Correo electrónico",
+    "phone_label": "Teléfono",
+    "subjects_label": "Asignaturas que imparten",
+    "subjects_placeholder": "Matemáticas, Química",
+    "subjects_hint": "Separados por comas.",
+    "pay_rate_label": "Tarifa por hora",
+    "pay_rate_placeholder": "p. ej. 55",
+    "notes_label": "Notas",
+    "submit": "Crear tutor",
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "not_signed_in": "No has iniciado sesión.",
+    "no_organization": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai."
+  },
+  "common": {
+    "loading": "Cargando…"
+  },
+  "detail": {
+    "loading_title": "…",
+    "loading": "Cargando…",
+    "not_found_title": "No encontrado",
+    "not_found_body": "No se ha encontrado al tutor.",
+    "subtitle": "Profesor",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "confirm_delete": "¿Eliminar {{name}}? Se mantendrán sus sesiones anteriores, pero se eliminará el enlace al tutor. Esta acción no se puede deshacer.",
+    "form": {
+      "name_label": "Nombre",
+      "email_label": "Correo electrónico",
+      "phone_label": "Teléfono",
+      "subjects_label": "Asignaturas",
+      "pay_rate_label": "Tarifa",
+      "notes_label": "Notas"
+    },
+    "contact_eyebrow": "Contacto",
+    "no_contact": "Sin contacto.",
+    "teaches_eyebrow": "Imparte clases de",
+    "no_subjects": "—",
+    "pay_eyebrow": "Pago",
+    "rate_label": "Tarifa: ",
+    "rate_per_hour": " / h",
+    "total_label": "Total pagado/pendiente: ",
+    "notes_eyebrow": "Notas",
+    "record_eyebrow": "Registro",
+    "recent_heading": "Sesiones recientes",
+    "no_sessions": "Aún no se le han asignado sesiones.",
+    "table": {
+      "when": "Cuándo",
+      "subject": "Asunto",
+      "duration": "Duración",
+      "status": "Estado",
+      "pay": "Pago",
+      "subject_dash": "—",
+      "duration_minutes": "{{count}} min"
+    }
   }
 }

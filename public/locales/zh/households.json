@@ -1,14 +1,28 @@
 {
+  "page": {
+    "subtitle": "人员",
+    "title": "家庭"
+  },
   "actions": {
-    "cancel": "取消",
     "new": "+ 新建家庭",
+    "cancel": "取消",
     "create": "创建",
     "creating": "正在创建……"
   },
+  "form": {
+    "name_label": "家庭名称",
+    "name_placeholder": "例如：陈家"
+  },
   "filters": {
+    "search_placeholder": "搜索家庭、家长、学生……",
     "active": "活跃",
-    "archived": "已存档",
-    "search_placeholder": "搜索家庭、家长、学生……"
+    "archived": "已存档"
+  },
+  "empty": {
+    "none": "目前尚无家庭",
+    "archived_none": "没有存档的家庭",
+    "description": "一个家庭将兄弟姐妹归入同一个账单联系人名下。当您将家长与学生关联时，系统会自动创建一个家庭。",
+    "create": "创建一个家庭"
   },
   "common": {
     "loading": "正在加载……",
@@ -18,34 +32,101 @@
   },
   "card": {
     "archived_badge": "已存档",
-    "students_one": "{{count}} 学生",
-    "students_other": "{{count}} 学生",
     "parent_label_fallback": "家长",
     "needs_primary": "需指定主要监护人",
     "no_students": "没有学生",
+    "students_one": "{{count}} 学生",
+    "students_other": "{{count}} 学生",
     "parents_one": "{{count}} 家长",
     "parents_other": "{{count}} 父母",
     "summary": "{{students}} · {{parents}}"
   },
   "suggestion": {
-    "dismiss": "关闭",
     "fallback_parent": "共同监护人",
     "question_existing": "{{students}} {{parent}}。将它们归为一个家庭吗？",
     "question_new": "{{students}} {{parent}}。是否将其归为一个新家庭？",
-    "accept": "组 →"
+    "accept": "组 →",
+    "dismiss": "关闭"
   },
-  "page": {
-    "subtitle": "人员",
-    "title": "家庭"
-  },
-  "form": {
-    "name_label": "家庭名称",
-    "name_placeholder": "例如：陈家"
-  },
-  "empty": {
-    "none": "目前尚无家庭",
-    "archived_none": "没有存档的家庭",
-    "description": "一个家庭将兄弟姐妹归入同一个账单联系人名下。当您将家长与学生关联时，系统会自动创建一个家庭。",
-    "create": "创建一个家庭"
+  "detail": {
+    "loading_title": "…",
+    "load_failed": "无法加载家庭信息。",
+    "not_found_title": "未找到",
+    "not_found_body": "未找到该家庭。",
+    "subtitle_archived": "已存档家庭",
+    "subtitle_active": "家庭",
+    "archive": "存档",
+    "unarchive": "取消归档",
+    "confirm_archive": "将该家庭归档？学生和家长信息保持不变；该家庭将从列表中隐藏。",
+    "edit_name": "编辑姓名",
+    "save": "保存",
+    "saving": "正在保存……",
+    "cancel": "取消",
+    "billed_to_prefix": "账单收件人",
+    "parent_fallback": "家长",
+    "needs_primary": "需要指定主要家长",
+    "tabs": {
+      "members": "成员",
+      "sessions": "课程",
+      "invoices": "发票",
+      "notes": "备注"
+    },
+    "members": {
+      "parents_heading": "父母",
+      "add_co_parent": "+ 添加共同监护人",
+      "cancel": "取消",
+      "no_parents": "尚未关联任何父母。",
+      "no_name": "（无姓名）",
+      "primary_badge": "主要",
+      "make_primary": "设为主家长",
+      "remove": "删除",
+      "confirm_remove_parent": "将此家长从家庭中移除？他们仍可访问其关联的学生。",
+      "students_heading": "学生",
+      "add_sibling": "+ 添加兄弟姐妹",
+      "no_students": "该家庭目前尚无学生。",
+      "remove_from_household": "从家庭中移除",
+      "confirm_remove_student": "将此学生从家庭中移除？课程和账单保持不变。"
+    },
+    "add_parent": {
+      "loading": "正在加载父母信息……",
+      "select_placeholder": "选择一位现有的家长……",
+      "no_name": "（无姓名）",
+      "invite_hint": "要添加一位全新的家长，请从学生的页面邀请他们——他们接受邀请后，系统将自动创建该家长信息。",
+      "submit": "添加家长",
+      "submitting": "正在添加……",
+      "error_default": "无法添加家长。"
+    },
+    "add_student": {
+      "loading": "正在加载学生信息……",
+      "select_placeholder": "选择一名学生……",
+      "in_other_household": " （属于另一个家庭）",
+      "confirm_move": "该学生目前属于另一个家庭。是否将其移至本家庭？",
+      "link_parents": "同时将该学生与该家庭的父母关联",
+      "submit": "添加至家庭",
+      "submitting": "正在添加……",
+      "error_default": "无法添加学生。"
+    },
+    "sessions_tab": {
+      "empty": "该家庭目前尚无课程记录。",
+      "col_when": "何时",
+      "col_student": "学生",
+      "col_subject_topic": "主题 · 议题",
+      "col_status": "状态",
+      "col_amount": "数量"
+    },
+    "invoices_tab": {
+      "empty": "该家庭目前尚无账单。批量开票功能即将上线——您可通过“账单”页面为单个学生开具账单。",
+      "household_fallback": "家庭",
+      "issued_prefix": "发布于 {{date}}"
+    },
+    "notes_tab": {
+      "placeholder": "过敏史、时间安排限制、账单偏好……",
+      "save": "保存备注",
+      "saving": "正在保存……",
+      "cancel": "取消",
+      "empty": "目前尚无家庭备注。",
+      "edit": "编辑备注",
+      "add": "添加备注"
+    }
   }
 }

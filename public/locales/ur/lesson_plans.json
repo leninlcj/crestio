@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "لوڈ ہو رہا ہے…"
-  },
   "page": {
     "subtitle": "تعلیم",
     "title": "سبق کے منصوبے"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "مصنوعی ذہانت",
     "unassigned": "غیر تفویض شدہ"
+  },
+  "common": {
+    "loading": "لوڈ ہو رہا ہے…"
+  },
+  "new": {
+    "subtitle_edit": "منصوبہ ترمیم کریں",
+    "subtitle_generate": "منصوبہ تیار کریں",
+    "title_default_edit": "سبق کا منصوبہ",
+    "title_new": "نیا سبق کا منصوبہ",
+    "delete": "مٹائیں",
+    "confirm_delete": "اس سبق کے منصوبے کو حذف کریں؟",
+    "form": {
+      "subject_label": "مضمون *",
+      "subject_placeholder": "مثلاً ریاضی ایڈوانسڈ",
+      "year_level_label": "سال کی سطح",
+      "year_level_placeholder": "مثلاً گیارہویں جماعت",
+      "topic_label": "موضوع *",
+      "topic_placeholder": "مثلاً اجزاء کے ذریعے انضمام کا تعارف",
+      "duration_label": "دورانئہ (منٹ)",
+      "student_link_label": "طالب علم سے رابطہ (اختیاری)",
+      "student_none": "—",
+      "plan_label": "منصوبہ (مارک ڈاؤن)",
+      "plan_placeholder": "# سبق کا منصوبہ\n\n## مقاصد\n- …",
+      "preview_toggle_edit": "ترمیم",
+      "preview_toggle_preview": "پریویو",
+      "preview_empty": "_ابھی کچھ نہیں۔ ایک تیار کریں یا اپنا خود کا پیسٹ کریں۔_",
+      "preview_placeholder": "آپ کا منصوبہ یہاں پیش نظارہ ہوگا۔",
+      "preview_eyebrow": "پریویو"
+    },
+    "actions": {
+      "generate": "منصوبہ تیار کریں",
+      "regenerate": "منصوبہ دوبارہ تیار کریں",
+      "generating": "منصوبہ تیار ہو رہا ہے…",
+      "save_new": "منصوبہ محفوظ کریں",
+      "save_changes": "تبدیلیاں محفوظ کریں",
+      "saving": "محفوظ کر رہے ہیں…",
+      "cancel": "منسوخ کریں"
+    },
+    "usage_line": "{{used}} روزانہ استعمال ہونے والی{{limit}}کی جنریشنز میں سے۔",
+    "errors": {
+      "subject_topic_required": "مضمون اور موضوع پیدا کرنے کے لیے ضروری ہیں۔",
+      "not_signed_in": "سائن ان نہیں ہوا۔",
+      "no_organisation": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: support@crestio.ai۔",
+      "server_returned": "سرور نے {{status}} واپس کیا",
+      "server_returned_with_text": "سرور نے درج ذیل پیغام واپس کیا: {{text}}",
+      "no_plan": "سرور نے کوئی منصوبہ واپس نہیں کیا۔",
+      "generic": "کچھ غلط ہو گیا۔",
+      "rate_limited_one": "آپ نے گزشتہ 24 گھنٹوں میں AI کے ذریعے {{limit}} سبق کے منصوبے تیار کیے ہیں۔ آپ {{hours}} گھنٹے میں مزید تیار کر سکتے ہیں۔",
+      "rate_limited_other": "آپ نے گزشتہ 24 گھنٹوں میں AI کے ذریعے {{limit}} سبق کے منصوبے تیار کیے ہیں۔ آپ {{hours}} گھنٹوں میں مزید تیار کر سکتے ہیں۔",
+      "rate_limited_soon": "آپ نے گزشتہ 24 گھنٹوں میں AI کے ذریعے {{limit}} کے لیے سبق کے منصوبے تیار کیے ہیں۔ آپ جلد ہی مزید تیار کر سکتے ہیں۔"
+    }
   }
 }

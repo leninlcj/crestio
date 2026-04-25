@@ -1,7 +1,4 @@
 {
-  "common": {
-    "loading": "Carregando…"
-  },
   "page": {
     "subtitle": "Ensino",
     "title": "Planos de aula"
@@ -17,5 +14,56 @@
   "card": {
     "ai_badge": "IA",
     "unassigned": "Não atribuído"
+  },
+  "common": {
+    "loading": "Carregando…"
+  },
+  "new": {
+    "subtitle_edit": "Editar plano",
+    "subtitle_generate": "Gerar plano",
+    "title_default_edit": "Plano de aula",
+    "title_new": "Novo plano de aula",
+    "delete": "Excluir",
+    "confirm_delete": "Excluir este plano de aula?",
+    "form": {
+      "subject_label": "Assunto *",
+      "subject_placeholder": "por exemplo, Matemática Avançada",
+      "year_level_label": "Série",
+      "year_level_placeholder": "por exemplo, 11º ano",
+      "topic_label": "Tópico *",
+      "topic_placeholder": "por exemplo: Introdução à integração por partes",
+      "duration_label": "Duração (minutos)",
+      "student_link_label": "Link para o aluno (opcional)",
+      "student_none": "—",
+      "plan_label": "Plano (markdown)",
+      "plan_placeholder": "# Plano de aula\n\n## Objetivos\n- …",
+      "preview_toggle_edit": "Editar",
+      "preview_toggle_preview": "Visualizar",
+      "preview_empty": "_Ainda não há nada. Gere um ou cole o seu próprio._",
+      "preview_placeholder": "_Seu plano será exibido aqui._",
+      "preview_eyebrow": "Visualizar"
+    },
+    "actions": {
+      "generate": "Gerar plano",
+      "regenerate": "Regenerar plano",
+      "generating": "Gerando plano…",
+      "save_new": "Salvar plano",
+      "save_changes": "Salvar alterações",
+      "saving": "Salvando…",
+      "cancel": "Cancelar"
+    },
+    "usage_line": "{{used}} das gerações diárias do {{limit}} utilizadas.",
+    "errors": {
+      "subject_topic_required": "É necessário informar a disciplina e o tema para gerar.",
+      "not_signed_in": "Não está conectado.",
+      "no_organisation": "Nenhuma organização está vinculada à sua conta. Entre em contato com support@crestio.ai.",
+      "server_returned": "O servidor retornou {{status}}",
+      "server_returned_with_text": "{{status}} retornado pelo servidor: {{text}}",
+      "no_plan": "O servidor não retornou nenhum plano.",
+      "generic": "Ocorreu um erro.",
+      "rate_limited_one": "Você gerou {{limit}} planos de aula nas últimas 24 horas. Você pode gerar mais em {{hours}} hora.",
+      "rate_limited_other": "Você gerou {{limit}} planos de aula nas últimas 24 horas. Você pode gerar mais em {{hours}} horas.",
+      "rate_limited_soon": "Você gerou planos de aul{{limit}}es nas últimas 24 horas. Você poderá gerar mais em breve."
+    }
   }
 }
