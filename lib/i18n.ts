@@ -71,6 +71,7 @@ export const NAMESPACES = [
   'settings',
   'students',
   'tutors',
+  'welcome',
 ] as const;
 
 const FALLBACK: SupportedLocale = 'en';

@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "title": "Welcome to Crestio"
+  },
+  "loading": "Confirming your payment…",
+  "paid": {
+    "eyebrow": "Payment received",
+    "heading": "Welcome to Crestio.",
+    "subheading_logged_out": "We've sent a sign-in link to {{email}}. Open that email to finish setting up your account.",
+    "subheading_no_email": "We've sent a sign-in link to your email. Open it to finish setting up your account.",
+    "plan_line": "{{plan}} · billed {{interval}}",
+    "resend_button": "Resend the email",
+    "resend_pending": "Sending…",
+    "resend_done": "Sent. Check your inbox in a minute.",
+    "resend_rate_limited": "Already sent recently. Try again in {{minutes}} minutes.",
+    "resend_failed": "Couldn't resend. Try again or email support@crestio.ai.",
+    "spam_hint": "If it isn't there in a minute, check your spam folder.",
+    "support_line": "Stuck? Email support@crestio.ai and we'll sort it out."
+  },
+  "logged_in": {
+    "heading": "You're already signed in.",
+    "subheading": "Taking you to your dashboard…",
+    "go_to_app": "Go to my dashboard"
+  },
+  "unpaid": {
+    "heading": "Your payment didn't complete.",
+    "body": "Stripe didn't return a successful payment for this checkout. If your card was charged, email support@crestio.ai with the time you paid and we'll sort it out.",
+    "back_to_pricing": "Back to pricing"
+  },
+  "missing": {
+    "heading": "We can't find that checkout.",
+    "body": "This page needs a session id from a Crestio checkout. If you came here from an email or after paying, something dropped along the way.",
+    "back_to_pricing": "See plans"
+  },
+  "error": {
+    "heading": "Something went wrong.",
+    "body": "We couldn't look up your payment right now. Refresh in a moment, or email support@crestio.ai if it keeps happening."
+  }
+}
