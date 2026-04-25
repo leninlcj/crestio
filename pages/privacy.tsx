@@ -83,6 +83,9 @@ export default function Privacy() {
       <p>
         We keep your data for as long as your account is active. If you cancel or delete your account, we permanently remove all associated data within 30 days. Billing records are retained for 7 years as required by Australian tax law.
       </p>
+      <p>
+        Files you upload (PDFs, images) are stored on our behalf by Supabase in Sydney, Australia. They are private — only you, tutors in your organisation, and parents you have explicitly linked to a student can view them. Files are deleted as part of the same 30-day account-deletion window. If your subscription is cancelled, your files remain intact for 60 days so you can re-subscribe without losing them; they are then permanently deleted.
+      </p>
 
       <h2 id="your-rights">Your rights</h2>
       <p>

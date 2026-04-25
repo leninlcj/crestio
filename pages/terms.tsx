@@ -5,6 +5,7 @@ const TOC = [
   { id: 'who-can-use', label: 'Who can use Crestio' },
   { id: 'your-account', label: 'Your account' },
   { id: 'your-content', label: 'Your content' },
+  { id: 'uploaded-content', label: 'User uploaded content' },
   { id: 'acceptable-use', label: 'Acceptable use' },
   { id: 'billing', label: 'Subscription and billing' },
   { id: 'ai-content', label: 'AI-generated content' },
@@ -42,6 +43,25 @@ export default function Terms() {
         You own the content you add to Crestio — student records, session notes, lesson plans, invoices, and messages. By using Crestio, you grant us a limited license to store, display, and process this content solely to provide the service to you.
       </p>
 
+      <h2 id="uploaded-content">User uploaded content</h2>
+      <p>
+        Crestio lets tutors upload files — PDFs, images, and other documents — to share with their students and the parents linked to those students. By uploading a file, you warrant that:
+      </p>
+      <ul>
+        <li>You hold all necessary rights to share the file (copyright, model release, parental consent for any image of a child, etc).</li>
+        <li>The file does not infringe any third party's rights and does not contain unlawful, harmful, or harassing material.</li>
+        <li>You have permission from the relevant parents to share files concerning their children.</li>
+      </ul>
+      <p>
+        You retain ownership of files you upload. By uploading, you grant Crestio a limited licence to store, process, and deliver the file to the people you have explicitly linked to (your students' parents, your organisation's tutors). You agree to indemnify Crestio against any third-party claim arising from a file you upload.
+      </p>
+      <p>
+        <strong>Takedown.</strong> If you believe a file on Crestio infringes your rights or contains harmful material, email <a href="mailto:support@crestio.ai">support@crestio.ai</a> with the file URL or a description, the rights you hold, and your contact details. We will review within 5 business days and remove or restrict access where appropriate.
+      </p>
+      <p>
+        Crestio does not actively review uploaded files. We may remove files that violate these terms or applicable law.
+      </p>
+
       <h2 id="acceptable-use">Acceptable use</h2>
       <p>You agree not to:</p>
       <ul>
@@ -49,7 +69,9 @@ export default function Terms() {
         <li>Add student or parent information without appropriate consent.</li>
         <li>Share your account with others (team accounts exist for this purpose).</li>
         <li>Attempt to access other users' data.</li>
-        <li>Upload harmful code or attempt to disrupt the service.</li>
+        <li>Upload harmful code, executables, or files that attempt to disrupt the service.</li>
+        <li>Upload material you do not have the right to share.</li>
+        <li>Attempt to bypass the file viewer's access controls (signed URLs, watermarks, view restrictions).</li>
         <li>Resell access to Crestio.</li>
       </ul>
 
