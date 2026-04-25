@@ -71,7 +71,9 @@
     "expired": "Viewer link expired. Refresh to load again.",
     "denied": "You're not authorized to view this file.",
     "no_download": "Saving and printing aren't allowed. Please review with your tutor or parent if you need a copy.",
-    "devtools_warning": "Viewer not available with developer tools open. Close DevTools to view."
+    "devtools_warning": "Viewer not available with developer tools open. Close DevTools to view.",
+    "unable_to_load": "Unable to load file.",
+    "refresh": "Refresh"
   },
   "parent": {
     "section_title": "Files from your tutor",

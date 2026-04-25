@@ -1,21 +1,36 @@
-// Protected file viewer — PDF (iframe) or image (img). Authenticated.
+// Protected file viewer — PDF (pdf.js canvas) or image (img). Authenticated.
 //
 // Layered protections (best-effort, not absolute — a determined user can still
 // screenshot, but these stop casual saving):
 //   • Server returns a 60s signed URL via /api/files/[id]/view-url and writes
 //     the file_views audit row before responding.
-//   • PDF iframe loads with #toolbar=0&navpanes=0 to hide native download UI.
+//   • PDFs render via pdf.js (react-pdf) onto <canvas> elements — no iframe,
+//     no native browser PDF toolbar, no Chrome iframe-PDF block.
 //   • Right-click suppressed everywhere; Cmd/Ctrl+S/P/A intercepted.
 //   • Watermark overlay (Team only) shows viewer email + ISO timestamp,
 //     diagonal across the viewport, pointer-events: none.
 //   • DevTools heuristic: outerWidth - innerWidth > 200 (panel docked) blurs
 //     the file. Imperfect — enough to make screen recording awkward.
+//
+// The page is split into outer/inner: the outer waits for the LocaleProvider
+// to finish booting i18n before rendering the inner — otherwise
+// useTranslation runs against an uninitialized i18next instance and falls
+// back to the raw keys.
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
+import { useLocale } from '../../lib/localeContext';
+
+// react-pdf imports pdfjs-dist which uses DOMMatrix and other browser-only
+// globals. Dynamic import with ssr:false keeps it out of the SSR bundle.
+const PdfRenderer = dynamic(
+  () => import('../../components/files/PdfRenderer').then((m) => m.PdfRenderer),
+  { ssr: false },
+);
 
 type ViewPayload = {
   signed_url: string;
@@ -24,7 +39,22 @@ type ViewPayload = {
   watermark_text: string | null;
 };
 
-export default function FileViewer() {
+export default function FileViewerPage() {
+  // LocaleProvider initialises i18next inside a useEffect; useTranslation
+  // called before that fires returns the keys verbatim. Gate the inner
+  // component on isReady so every translation call sees a live instance.
+  const { isReady } = useLocale();
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-ink text-cream flex items-center justify-center">
+        <div className="text-cream/60 text-sm tracking-widest uppercase">Loading</div>
+      </div>
+    );
+  }
+  return <FileViewerInner />;
+}
+
+function FileViewerInner() {
   const router = useRouter();
   const { t } = useTranslation('files');
   const { id } = router.query;
@@ -33,6 +63,7 @@ export default function FileViewer() {
   const [authReady, setAuthReady] = useState(false);
   const [devtoolsOpen, setDevtoolsOpen] = useState(false);
   const [shortcutToast, setShortcutToast] = useState<string | null>(null);
+  const [renderNonce, setRenderNonce] = useState(0); // bump to force PdfRenderer remount on retry
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Load + expiry refresh.
@@ -62,7 +93,7 @@ export default function FileViewer() {
         const payload = (await res.json()) as ViewPayload;
         setData(payload);
         setAuthReady(true);
-        // Refresh the URL ~5s before expiry so the iframe/image survives.
+        // Refresh the URL ~5s before expiry so the renderer survives.
         const ms = Math.max(15_000, new Date(payload.expires_at).getTime() - Date.now() - 5_000);
         timer = setTimeout(load, ms);
       } catch {
@@ -139,7 +170,6 @@ export default function FileViewer() {
 
   const isImage = data.mime_type.startsWith('image/');
   const isPdf = data.mime_type === 'application/pdf';
-  const pdfSrc = isPdf ? `${data.signed_url}#toolbar=0&navpanes=0&statusbar=0&messages=0` : data.signed_url;
 
   return (
     <div
@@ -157,12 +187,13 @@ export default function FileViewer() {
           className={`absolute inset-0 transition-[filter] ${devtoolsOpen ? 'blur-md pointer-events-none' : ''}`}
         >
           {isPdf && (
-            <iframe
-              title={t('viewer.loading')}
-              src={pdfSrc}
-              className="w-full h-full bg-cream"
-              sandbox="allow-scripts allow-same-origin"
-              referrerPolicy="no-referrer"
+            <PdfRenderer
+              key={`${data.signed_url}::${renderNonce}`}
+              url={data.signed_url}
+              loadingLabel={t('viewer.loading')}
+              errorLabel={t('viewer.unable_to_load')}
+              retryLabel={t('viewer.refresh')}
+              onRetry={() => setRenderNonce((n) => n + 1)}
             />
           )}
           {isImage && (
@@ -207,7 +238,7 @@ export default function FileViewer() {
 }
 
 function Watermark({ text }: { text: string }) {
-  // Repeat the watermark text in a 3×4 grid, rotated, to cover the viewport.
+  // Repeat the watermark text in a 5×4 grid, rotated, to cover the viewport.
   const rows = Array.from({ length: 5 });
   const cols = Array.from({ length: 4 });
   return (
