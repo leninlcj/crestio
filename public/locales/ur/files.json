@@ -1,0 +1,14 @@
+{
+  "page": {
+    "filter_student": "طالب علم"
+  },
+  "actions": {
+    "delete": "مٹائیں"
+  },
+  "common": {
+    "cancel": "منسوخ کریں"
+  },
+  "move": {
+    "pick_student": "ایک طالب علم منتخب کریں…"
+  }
+}

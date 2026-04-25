@@ -1,26 +1,22 @@
 {
+  "meta": {
+    "title": "欢迎来到Crestio"
+  },
+  "loading": "正在确认您的付款……",
   "paid": {
-    "resend_pending": "正在发送……",
     "eyebrow": "已收到款项",
     "heading": "欢迎来到Crestio。",
     "subheading_logged_out": "我们已向 {{email}} 发送了一条登录链接。请打开该邮件以完成账户设置。",
     "subheading_no_email": "我们已将登录链接发送至您的邮箱。请点击该链接完成账户设置。",
     "plan_line": "{{plan}} · 账单地址：{{interval}}",
     "resend_button": "重新发送电子邮件",
+    "resend_pending": "正在发送……",
     "resend_done": "已发送。请稍后查看您的收件箱。",
     "resend_rate_limited": "该消息已于近期发送。请在{{minutes}}分钟后重试。",
     "resend_failed": "无法重新发送。请重试，或发送邮件至 support@crestio.ai。",
     "spam_hint": "如果一分钟内还没收到，请检查您的垃圾邮件文件夹。",
     "support_line": "遇到问题了吗？请发送邮件至 support@crestio.ai，我们会帮您解决。"
   },
-  "error": {
-    "heading": "出现错误。",
-    "body": "我们目前无法查询到您的付款记录。请稍后刷新页面；如果问题仍然存在，请发送电子邮件至 support@crestio.ai。"
-  },
-  "meta": {
-    "title": "欢迎来到Crestio"
-  },
-  "loading": "正在确认您的付款……",
   "logged_in": {
     "heading": "您已登录。",
     "subheading": "正在带您进入仪表盘……",
@@ -35,5 +31,9 @@
     "heading": "我们找不到该结账页面。",
     "body": "此页面需要来自 Crestio 结账流程的会话 ID。如果您是通过电子邮件链接进入此页面，或在付款后访问此页面，说明过程中出现了问题。",
     "back_to_pricing": "查看方案"
+  },
+  "error": {
+    "heading": "出现错误。",
+    "body": "我们目前无法查询到您的付款记录。请稍后刷新页面；如果问题仍然存在，请发送电子邮件至 support@crestio.ai。"
   }
 }

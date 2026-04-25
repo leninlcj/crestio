@@ -1,0 +1,83 @@
+{
+  "loading": "Loading files…",
+  "viewed_count_one": "viewed {{count}} time",
+  "viewed_count_other": "viewed {{count}} times",
+  "viewed_count": "viewed {{count}} times",
+  "page": {
+    "title": "Files",
+    "title_loading": "Files",
+    "subtitle": "Shared with students and parents",
+    "tab_all": "All files",
+    "tab_library": "Org library",
+    "filter_student": "Student",
+    "filter_all_students": "All students"
+  },
+  "upload": {
+    "label": "Upload",
+    "button": "Upload files",
+    "hint": "PDFs and images. Word, Excel, and PowerPoint coming soon."
+  },
+  "usage": {
+    "label": "Storage",
+    "of": "of",
+    "warn_80": "You're nearing your storage limit. Delete files you no longer need.",
+    "full": "Storage full. Delete files or upgrade plan.",
+    "full_tooltip": "Storage full. Delete files or upgrade plan."
+  },
+  "search": {
+    "placeholder": "Search files by name…"
+  },
+  "empty": {
+    "student": "No files yet. Upload worksheets, past papers, or notes to share with this student and their parents.",
+    "session": "No files attached to this session yet.",
+    "library": "No org library files yet. Upload resources here to share with all your tutors."
+  },
+  "actions": {
+    "rename": "Rename",
+    "move": "Move",
+    "delete": "Delete"
+  },
+  "common": {
+    "cancel": "Cancel"
+  },
+  "move": {
+    "title": "Move file to another student",
+    "pick_student": "Pick a student…",
+    "confirm": "Move file"
+  },
+  "confirm": {
+    "delete": "Delete this file? Students and parents will no longer see it. This cannot be undone."
+  },
+  "errors": {
+    "not_signed_in": "You're not signed in.",
+    "upload_failed": "Upload failed. Please try again.",
+    "finalize_failed": "Could not finish uploading. Please try again.",
+    "unsafe_filename": "Filename rejected. No path traversal or script files.",
+    "file_too_large": "File too large. Max {{max}} per file on this plan.",
+    "org_storage_full": "Storage full. Delete files or upgrade plan."
+  },
+  "analytics": {
+    "none": "No views yet.",
+    "more": "more",
+    "unknown_viewer": "Unknown viewer"
+  },
+  "upgrade": {
+    "title": "Org library is a Team feature",
+    "body": "Share resources across all your tutors. Upgrade to Team to enable the org library, watermarking, and search.",
+    "cta": "See plans"
+  },
+  "viewer": {
+    "loading": "Preparing viewer…",
+    "expired": "Viewer link expired. Refresh to load again.",
+    "denied": "You're not authorized to view this file.",
+    "no_download": "Saving and printing aren't allowed. Please review with your tutor or parent if you need a copy.",
+    "devtools_warning": "Viewer not available with developer tools open. Close DevTools to view."
+  },
+  "parent": {
+    "section_title": "Files from your tutor",
+    "session_files": "Session files",
+    "resources": "Resources",
+    "empty": "No files shared yet."
+  },
+  "session_files_section": "Files for this session"
+}

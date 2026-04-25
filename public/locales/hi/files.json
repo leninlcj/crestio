@@ -1,0 +1,17 @@
+{
+  "page": {
+    "filter_student": "छात्र"
+  },
+  "actions": {
+    "delete": "मिटायें"
+  },
+  "common": {
+    "cancel": "रद्द करें"
+  },
+  "move": {
+    "pick_student": "एक छात्र चुनें…"
+  },
+  "upgrade": {
+    "cta": "योजनाएँ देखें"
+  }
+}

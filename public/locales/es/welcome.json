@@ -1,26 +1,22 @@
 {
+  "meta": {
+    "title": "Bienvenido a Crestio"
+  },
+  "loading": "Confirmando tu pago…",
   "paid": {
-    "resend_pending": "Enviando…",
     "eyebrow": "Pago recibido",
     "heading": "Bienvenido a Crestio.",
     "subheading_logged_out": "Te hemos enviado un enlace de inicio de sesión a {{email}}. Abre ese correo electrónico para completar la configuración de tu cuenta.",
     "subheading_no_email": "Te hemos enviado un enlace de inicio de sesión a tu correo electrónico. Ábrelo para completar la configuración de tu cuenta.",
     "plan_line": "{{plan}} · A cargo de {{interval}}",
     "resend_button": "Reenviar el correo electrónico",
+    "resend_pending": "Enviando…",
     "resend_done": "Ya está enviado. Echa un vistazo a tu bandeja de entrada dentro de un momento.",
     "resend_rate_limited": "Ya se ha enviado recientemente. Inténtalo de nuevo dentro de unos {{minutes}} minutos.",
     "resend_failed": "No se ha podido reenviar. Inténtalo de nuevo o envía un correo electrónico a support@crestio.ai.",
     "spam_hint": "Si no lo ves en un minuto, revisa tu carpeta de correo no deseado.",
     "support_line": "¿Tienes algún problema? Envía un correo electrónico a support@crestio.ai y lo solucionaremos."
   },
-  "error": {
-    "heading": "Ha ocurrido un error.",
-    "body": "No hemos podido consultar tu pago en este momento. Actualiza la página dentro de un momento o envía un correo electrónico a support@crestio.ai si el problema persiste."
-  },
-  "meta": {
-    "title": "Bienvenido a Crestio"
-  },
-  "loading": "Confirmando tu pago…",
   "logged_in": {
     "heading": "Ya has iniciado sesión.",
     "subheading": "Te llevamos a tu panel de control…",
@@ -35,5 +31,9 @@
     "heading": "No encontramos esa caja.",
     "body": "Esta página necesita un identificador de sesión de un proceso de pago de Crestio. Si has llegado aquí desde un correo electrónico o después de realizar el pago, se ha perdido algo por el camino.",
     "back_to_pricing": "Ver planos"
+  },
+  "error": {
+    "heading": "Ha ocurrido un error.",
+    "body": "No hemos podido consultar tu pago en este momento. Actualiza la página dentro de un momento o envía un correo electrónico a support@crestio.ai si el problema persiste."
   }
 }

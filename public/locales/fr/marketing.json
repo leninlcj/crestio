@@ -67,8 +67,8 @@
     "recommended_banner": "Recommandé pour la plupart des tuteurs",
     "tier_name": "Crestio {{tier}}",
     "footer_note": "Prix en AUD. TTC (TVA comprise) le cas échéant. Résiliation possible à tout moment.",
-    "sticky_mobile_cta": "Commencer l'essai gratuit",
     "pay_now_secondary": "Passez l'essai — payez maintenant →",
+    "sticky_mobile_cta": "Commencer l'essai gratuit",
     "sticky_mobile_pay_now": "Payer maintenant"
   },
   "tiers": {

@@ -1,0 +1,14 @@
+{
+  "page": {
+    "filter_student": "Aluno"
+  },
+  "actions": {
+    "delete": "Excluir"
+  },
+  "common": {
+    "cancel": "Cancelar"
+  },
+  "move": {
+    "pick_student": "Escolha um aluno…"
+  }
+}

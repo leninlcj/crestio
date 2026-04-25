@@ -1,26 +1,22 @@
 {
+  "meta": {
+    "title": "Bienvenue chez Crestio"
+  },
+  "loading": "Confirmation de votre paiement…",
   "paid": {
-    "resend_pending": "Envoi en cours…",
     "eyebrow": "Paiement reçu",
     "heading": "Bienvenue chez Crestio.",
     "subheading_logged_out": "Nous avons envoyé un lien de connexion à l'adresse {{email}}. Ouvrez cet e-mail pour terminer la configuration de votre compte.",
     "subheading_no_email": "Nous vous avons envoyé un lien de connexion par e-mail. Cliquez dessus pour terminer la configuration de votre compte.",
     "plan_line": "{{plan}} · facturé à l'{{interval}}",
     "resend_button": "Renvoyer l'e-mail",
+    "resend_pending": "Envoi en cours…",
     "resend_done": "C'est parti. Vérifie ta boîte de réception dans quelques instants.",
     "resend_rate_limited": "Ce message a déjà été envoyé récemment. Veuillez réessayer dans quelques minutes {{minutes}}.",
     "resend_failed": "Impossible de renvoyer le message. Veuillez réessayer ou envoyer un e-mail à support@crestio.ai.",
     "spam_hint": "Si vous ne l'avez pas reçu d'ici une minute, vérifiez votre dossier de courrier indésirable.",
     "support_line": "Vous avez un problème ? Envoyez un e-mail à support@crestio.ai et nous trouverons une solution."
   },
-  "error": {
-    "heading": "Une erreur s'est produite.",
-    "body": "Nous n'avons pas pu retrouver votre paiement pour le moment. Veuillez actualiser la page dans quelques instants ou envoyer un e-mail à support@crestio.ai si le problème persiste."
-  },
-  "meta": {
-    "title": "Bienvenue chez Crestio"
-  },
-  "loading": "Confirmation de votre paiement…",
   "logged_in": {
     "heading": "Vous êtes déjà connecté.",
     "subheading": "Vous redirige vers votre tableau de bord…",
@@ -35,5 +31,9 @@
     "heading": "Nous ne trouvons pas cette caisse.",
     "body": "Cette page nécessite un identifiant de session provenant d'un paiement effectué via Crestio. Si vous êtes arrivé ici depuis un e-mail ou après avoir effectué un paiement, il y a eu un problème en cours de route.",
     "back_to_pricing": "Voir les plans"
+  },
+  "error": {
+    "heading": "Une erreur s'est produite.",
+    "body": "Nous n'avons pas pu retrouver votre paiement pour le moment. Veuillez actualiser la page dans quelques instants ou envoyer un e-mail à support@crestio.ai si le problème persiste."
   }
 }

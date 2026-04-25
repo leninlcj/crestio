@@ -1,0 +1,17 @@
+{
+  "page": {
+    "filter_student": "الطالب"
+  },
+  "actions": {
+    "delete": "حذف"
+  },
+  "common": {
+    "cancel": "إلغاء"
+  },
+  "move": {
+    "pick_student": "اختر طالبًا..."
+  },
+  "upgrade": {
+    "cta": "انظر المخططات"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "page": {
+    "filter_student": "学生"
+  },
+  "actions": {
+    "delete": "删除"
+  },
+  "common": {
+    "cancel": "取消"
+  },
+  "move": {
+    "pick_student": "选择一名学生……"
+  },
+  "upgrade": {
+    "cta": "查看方案"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "page": {
+    "filter_student": "ছাত্র"
+  },
+  "actions": {
+    "delete": "মুছুন"
+  },
+  "common": {
+    "cancel": "বাতিল করুন"
+  },
+  "move": {
+    "pick_student": "একজন ছাত্র বেছে নিন…"
+  },
+  "upgrade": {
+    "cta": "পরিকল্পনাগুলো দেখুন"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "page": {
+    "filter_student": "Étudiant"
+  },
+  "actions": {
+    "delete": "Supprimer"
+  },
+  "common": {
+    "cancel": "Annuler"
+  },
+  "move": {
+    "pick_student": "Choisissez un élève…"
+  },
+  "upgrade": {
+    "cta": "Voir les plans"
+  }
+}

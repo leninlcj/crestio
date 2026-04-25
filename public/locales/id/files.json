@@ -1,0 +1,14 @@
+{
+  "page": {
+    "filter_student": "Mahasiswa"
+  },
+  "actions": {
+    "delete": "Hapus"
+  },
+  "common": {
+    "cancel": "Batalkan"
+  },
+  "move": {
+    "pick_student": "Pilih seorang siswa…"
+  }
+}

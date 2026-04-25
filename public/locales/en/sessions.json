@@ -142,7 +142,8 @@
     "next_focus": "Focus for next session",
     "due_prefix": "Due {{date}}",
     "completed_badge": "✓ Completed",
-    "overdue_badge": "Overdue"
+    "overdue_badge": "Overdue",
+    "files": "Files for this session"
   },
   "save_status": {
     "saved_locally": "Saved locally",
