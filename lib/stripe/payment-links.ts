@@ -19,8 +19,8 @@ type ModeConfig = Record<PayablePlan, Record<BillingInterval, string>>;
 // --- BEGIN payment-links (auto-generated; do not hand-edit) ---
 const PAYMENT_LINKS_RAW: Record<StripeMode, ModeConfig> = {
   test: {
-    solo: { monthly: '', annual: '' },
-    team: { monthly: '', annual: '' },
+    solo: { monthly: 'https://buy.stripe.com/test_6oU28t7S75TV8uOd380ZW00', annual: 'https://buy.stripe.com/test_28E8wRgoDeqrdP88MS0ZW01' },
+    team: { monthly: 'https://buy.stripe.com/test_4gM14pfkz3LN8uO1kq0ZW02', annual: 'https://buy.stripe.com/test_00w5kFa0faab8uO1kq0ZW03' },
   },
   live: {
     solo: { monthly: '', annual: '' },

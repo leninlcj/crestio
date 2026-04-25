@@ -32,10 +32,12 @@
  *    STRIPE_AUTOMATIC_TAX=true     # enables Stripe Tax on each link
  *                                  # (requires Tax to be configured on the account)
  *
- *  Pre-flight on the Stripe account (Dashboard → Settings → Public details):
- *    - Set Terms of Service URL  → https://crestio.ai/terms
- *    - Set Privacy Policy URL    → https://crestio.ai/privacy
- *    Both are required because each link sets consent_collection.terms_of_service='required'.
+ *  PRE-FLIGHT (LIVE MODE ONLY): Before running this script with sk_live_,
+ *  set Terms of service and Privacy policy URLs in Stripe Dashboard →
+ *  Settings → Business → Public details, AND re-add
+ *  consent_collection.terms_of_service: 'required' to the Payment Link
+ *  creation params (see TODO comment below). Sandbox/test mode does not
+ *  require these.
  * ===========================================================================
  */
 
@@ -89,6 +91,7 @@ async function createOrReuseLink(
     return { url: existing.url, id: existing.id, reused: true };
   }
 
+  // TODO: For live mode, re-add consent_collection: { terms_of_service: 'required' } once ToS + Privacy URLs are configured in Stripe Dashboard. Note: consent_collection.promotions is not available in AU; use allow_promotion_codes at the top level instead.
   const link = await stripe.paymentLinks.create({
     line_items: [{ price: priceId, quantity: 1 }],
     allow_promotion_codes: true,
@@ -108,10 +111,6 @@ async function createOrReuseLink(
         billing_interval: interval,
         source: 'payment_link',
       },
-    },
-    consent_collection: {
-      terms_of_service: 'required',
-      promotions: 'auto',
     },
     after_completion: {
       type: 'redirect',
