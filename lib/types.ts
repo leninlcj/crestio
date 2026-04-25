@@ -178,3 +178,34 @@ export interface LessonPlan {
   created_at: string;
   updated_at: string;
 }
+
+export type FileStatus = 'uploading' | 'processing' | 'ready' | 'failed';
+
+export interface FileRow {
+  id: UUID;
+  organization_id: UUID;
+  uploaded_by_user_id: UUID | null;
+  student_id: UUID | null;
+  session_id: UUID | null;
+  storage_path: string;
+  original_filename: string;
+  display_name: string;
+  mime_type: string;
+  file_size_bytes: number;
+  is_org_library: boolean;
+  status: FileStatus;
+  converted_pdf_path: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+export interface FileView {
+  id: UUID;
+  file_id: UUID;
+  viewer_user_id: UUID;
+  viewer_role: 'student' | 'parent' | 'tutor' | 'owner';
+  viewed_at: string;
+  ip_address: string | null;
+  user_agent: string | null;
+}

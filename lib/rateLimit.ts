@@ -42,4 +42,6 @@ export const LIMITS = {
   assistant: { limit: 60, windowMs: 60 * 60 * 1000 },
   support_submit: { limit: 10, windowMs: 24 * 60 * 60 * 1000 },
   owner_admin: { limit: 30, windowMs: 60 * 1000 },
+  files_upload: { limit: 30, windowMs: 60 * 60 * 1000 },
+  files_view_url: { limit: 600, windowMs: 60 * 60 * 1000 },
 } as const;
