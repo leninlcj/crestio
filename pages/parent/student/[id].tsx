@@ -91,7 +91,16 @@ function relativeOrAbsolute(iso: string): string {
   return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-type Tab = 'calendar' | 'sessions' | 'homework' | 'invoices' | 'updates';
+type Tab = 'calendar' | 'sessions' | 'homework' | 'invoices' | 'updates' | 'files';
+
+type ParentFileRow = {
+  id: string;
+  session_id: string | null;
+  display_name: string;
+  mime_type: string;
+  file_size_bytes: number;
+  created_at: string;
+};
 
 function ParentStudentInner() {
   const router = useRouter();
@@ -101,6 +110,7 @@ function ParentStudentInner() {
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [updates, setUpdates] = useState<ParentUpdate[]>([]);
   const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
+  const [files, setFiles] = useState<ParentFileRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('calendar');
@@ -156,6 +166,18 @@ function ParentStudentInner() {
       .eq('student_id', id)
       .order('issued_on', { ascending: false });
     setInvoices((invRows ?? []) as InvoiceRow[]);
+
+    // Files — RLS allows parent SELECT for non-deleted, non-org-library
+    // student files where the parent has a non-revoked link.
+    const { data: fileRows } = await supabase
+      .from('files')
+      .select('id, session_id, display_name, mime_type, file_size_bytes, created_at')
+      .eq('student_id', id)
+      .eq('is_org_library', false)
+      .eq('status', 'ready')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+    setFiles((fileRows ?? []) as ParentFileRow[]);
     setLoading(false);
   }
 
@@ -243,7 +265,7 @@ function ParentStudentInner() {
 
             <div className="border-b border-rule mb-6 overflow-x-auto">
               <nav className="flex gap-1 min-w-max" role="tablist">
-                {(['calendar', 'sessions', 'homework', 'invoices', 'updates'] as Tab[]).map((t) => (
+                {(['calendar', 'sessions', 'homework', 'invoices', 'updates', 'files'] as Tab[]).map((t) => (
                   <button
                     key={t}
                     type="button"
@@ -287,6 +309,8 @@ function ParentStudentInner() {
             {tab === 'invoices' && <InvoicesTab invoices={invoices} />}
 
             {tab === 'updates' && <UpdatesTab updates={updates} />}
+
+            {tab === 'files' && <FilesTab files={files} sessions={sessions} />}
           </>
         )}
       </main>
@@ -546,6 +570,91 @@ function InvoicesTab({ invoices }: { invoices: InvoiceRow[] }) {
       <div className="text-2xs text-ink-soft pt-2">
         To pay, please follow the instructions on each invoice from your tutor.
       </div>
+    </div>
+  );
+}
+
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 ** 2) return `${(n / 1024).toFixed(1)} KB`;
+  if (n < 1024 ** 3) return `${(n / 1024 ** 2).toFixed(1)} MB`;
+  return `${(n / 1024 ** 3).toFixed(2)} GB`;
+}
+
+function fileTypeLabel(mime: string): string {
+  if (mime.startsWith('image/')) return 'Image';
+  if (mime === 'application/pdf') return 'PDF';
+  return 'File';
+}
+
+function FilesTab({ files, sessions }: { files: ParentFileRow[]; sessions: SessionRow[] }) {
+  if (files.length === 0) {
+    return (
+      <div className="card p-6 text-sm text-ink-muted">
+        No files shared yet.
+      </div>
+    );
+  }
+
+  const sessionFiles = files.filter((f) => f.session_id);
+  const resourceFiles = files.filter((f) => !f.session_id);
+
+  const sessionLabel = (id: string | null): string | null => {
+    if (!id) return null;
+    const s = sessions.find((x) => x.id === id);
+    if (!s) return null;
+    return new Date(s.scheduled_at).toLocaleDateString(activeLocale(), {
+      weekday: 'short', day: 'numeric', month: 'short',
+    });
+  };
+
+  return (
+    <div className="space-y-10">
+      {sessionFiles.length > 0 && (
+        <section>
+          <h2 className="font-display text-2xl tracking-tightest mb-4">Session files</h2>
+          <div className="space-y-2">
+            {sessionFiles.map((f) => (
+              <Link
+                key={f.id}
+                href={`/files/${f.id}`}
+                className="card p-4 flex items-center justify-between gap-3 hover:shadow-lift transition-shadow"
+              >
+                <div className="min-w-0">
+                  <div className="text-sm text-ink truncate">{f.display_name}</div>
+                  <div className="text-2xs text-ink-soft mt-0.5">
+                    {fileTypeLabel(f.mime_type)} · {formatBytes(f.file_size_bytes)}
+                    {sessionLabel(f.session_id) && <> · {sessionLabel(f.session_id)}</>}
+                  </div>
+                </div>
+                <span className="text-xs text-forest underline-offset-2 underline shrink-0">View →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+      {resourceFiles.length > 0 && (
+        <section>
+          <h2 className="font-display text-2xl tracking-tightest mb-4">Resources</h2>
+          <div className="space-y-2">
+            {resourceFiles.map((f) => (
+              <Link
+                key={f.id}
+                href={`/files/${f.id}`}
+                className="card p-4 flex items-center justify-between gap-3 hover:shadow-lift transition-shadow"
+              >
+                <div className="min-w-0">
+                  <div className="text-sm text-ink truncate">{f.display_name}</div>
+                  <div className="text-2xs text-ink-soft mt-0.5">
+                    {fileTypeLabel(f.mime_type)} · {formatBytes(f.file_size_bytes)} · {new Date(f.created_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
+                  </div>
+                </div>
+                <span className="text-xs text-forest underline-offset-2 underline shrink-0">View →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

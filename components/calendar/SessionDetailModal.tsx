@@ -1,9 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Modal } from '../design/Modal';
 import { Badge } from '../design/Badge';
 import { supabase } from '../../lib/supabase';
 import type { CalendarSession } from './types';
 import { activeLocale } from '../../lib/utils';
+
+type SessionFileRow = {
+  id: string;
+  display_name: string;
+  mime_type: string;
+  file_size_bytes: number;
+};
+
+function fmtBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 ** 2) return `${(n / 1024).toFixed(1)} KB`;
+  if (n < 1024 ** 3) return `${(n / 1024 ** 2).toFixed(1)} MB`;
+  return `${(n / 1024 ** 3).toFixed(2)} GB`;
+}
 
 type Props = {
   open: boolean;
@@ -22,6 +37,26 @@ export function SessionDetailModal({ open, onClose, session, onChanged, mode }: 
   const [newTime, setNewTime] = useState('');
   const [newDuration, setNewDuration] = useState(60);
   const [message, setMessage] = useState('');
+
+  const [sessionFiles, setSessionFiles] = useState<SessionFileRow[]>([]);
+
+  useEffect(() => {
+    if (!open || !session?.id) { setSessionFiles([]); return; }
+    let cancelled = false;
+    (async () => {
+      // RLS lets parents (linked) and org members read these.
+      const { data } = await supabase
+        .from('files')
+        .select('id, display_name, mime_type, file_size_bytes')
+        .eq('session_id', session.id)
+        .eq('status', 'ready')
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false });
+      if (cancelled) return;
+      setSessionFiles((data as SessionFileRow[]) ?? []);
+    })();
+    return () => { cancelled = true; };
+  }, [open, session?.id]);
 
   if (!session) return null;
 
@@ -121,6 +156,30 @@ export function SessionDetailModal({ open, onClose, session, onChanged, mode }: 
           <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">When</div>
           <div>{whenDisplay} · {session.duration_minutes} min</div>
         </div>
+
+        {sessionFiles.length > 0 && view === 'root' && (
+          <div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">
+              Files for this session
+            </div>
+            <ul className="space-y-1.5">
+              {sessionFiles.map((f) => (
+                <li key={f.id}>
+                  <Link
+                    href={`/files/${f.id}`}
+                    className="card p-3 flex items-center justify-between gap-3 text-sm hover:shadow-lift transition-shadow"
+                  >
+                    <span className="truncate">{f.display_name}</span>
+                    <span className="text-2xs text-ink-soft shrink-0">
+                      {f.mime_type === 'application/pdf' ? 'PDF' : f.mime_type.startsWith('image/') ? 'Image' : 'File'}
+                      {' · '}{fmtBytes(f.file_size_bytes)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {isParentProposed && mode === 'tutor' && view === 'root' && (
           <div className="card p-4 bg-amber-soft/30 border-amber/50">
