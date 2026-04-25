@@ -2,12 +2,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { getStripe } from '../../../lib/stripe';
-import { resolvePriceId } from '../../../lib/plans';
+import { resolvePriceId, PLAN_CATALOGUE } from '../../../lib/plans';
+import type { PlanTier } from '../../../lib/billing';
 import {
   processReferralOnTrialConversion,
   rejectReferralForPaymentFailure,
 } from '../../../lib/referralConversion';
 import { pushCreditsToStripeBalance } from '../../../lib/credits';
+import { ensureUserAndMagicLink } from '../../../lib/auth/magic-link';
+import { buildWelcomeEmail } from '../../../lib/emails/welcome';
+import { sendEmail } from '../../../lib/email';
 
 export const config = {
   api: {
@@ -109,6 +113,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
+        // New: Payment Link source — provision a fresh user + org + magic-link
+        // email. Runs alongside (not instead of) the existing org-match branch
+        // so resub flows from already-onboarded customers still sync normally.
+        if (session.metadata?.source === 'payment_link') {
+          try {
+            await provisionFromPaymentLink(admin, session);
+          } catch (e) {
+            console.error('[stripe/webhook] payment_link provisioning failed', {
+              event_id: event.id,
+              error: (e as Error)?.message,
+            });
+          }
+        }
         if (session.subscription && typeof session.subscription === 'string') {
           try {
             const stripe = getStripe();
@@ -241,6 +258,134 @@ async function resolveOrgId(admin: ReturnType<typeof getAdmin>, event: Stripe.Ev
     if (data?.id) return data.id;
   }
   return null;
+}
+
+// ---------------------------------------------------------------------------
+// Payment Link provisioning — creates an auth user (handle_new_user trigger
+// scaffolds profile/org/membership), links Stripe ids to the org, sends a
+// welcome email containing a magic-link CTA. Idempotent: re-running for the
+// same checkout session is a no-op via billing_events dedupe + the user
+// existence check.
+// ---------------------------------------------------------------------------
+
+function emailDomain(email: string): string {
+  const at = email.lastIndexOf('@');
+  return at === -1 ? '' : email.slice(at + 1).toLowerCase();
+}
+
+async function provisionFromPaymentLink(
+  admin: NonNullable<ReturnType<typeof getAdmin>>,
+  session: Stripe.Checkout.Session,
+): Promise<void> {
+  const email = session.customer_details?.email ?? session.customer_email ?? null;
+  if (!email) {
+    console.warn('[stripe/webhook] payment_link session missing email', { session: session.id });
+    return;
+  }
+
+  const planTier = session.metadata?.plan_tier as PlanTier | undefined;
+  const billingInterval = session.metadata?.billing_interval as 'monthly' | 'annual' | undefined;
+  const customerId = typeof session.customer === 'string' ? session.customer : (session.customer?.id ?? null);
+  const subscriptionId = typeof session.subscription === 'string' ? session.subscription : null;
+
+  if (!planTier || !billingInterval) {
+    console.warn('[stripe/webhook] payment_link missing plan metadata', { session: session.id });
+    return;
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://crestio.ai';
+  const redirectTo = `${baseUrl}/app`;
+
+  console.log('[stripe/webhook] payment_link provisioning', {
+    session: session.id,
+    email_domain: emailDomain(email),
+    plan: planTier,
+    interval: billingInterval,
+    customer: customerId,
+  });
+
+  const result = await ensureUserAndMagicLink({ admin, email, redirectTo });
+  if (!result.ok) {
+    console.error('[stripe/webhook] ensureUserAndMagicLink failed', {
+      session: session.id,
+      error: result.error,
+    });
+    return;
+  }
+  const { userId, magicLink, isNewUser } = result;
+
+  // Look up the org auto-created by the handle_new_user trigger (or the
+  // user's existing org for repeat customers).
+  const { data: org } = await admin
+    .from('organizations')
+    .select('id, stripe_customer_id, stripe_subscription_id')
+    .eq('owner_user_id', userId)
+    .maybeSingle();
+
+  if (!org?.id) {
+    console.error('[stripe/webhook] org not found after user create', {
+      session: session.id,
+      user: userId,
+    });
+    return;
+  }
+
+  const update: Record<string, unknown> = {
+    plan_tier: planTier,
+    billing_interval: billingInterval,
+    subscription_status: 'active',
+    subscription_updated_at: new Date().toISOString(),
+    cancel_at_period_end: false,
+  };
+  if (customerId) update.stripe_customer_id = customerId;
+  if (subscriptionId) update.stripe_subscription_id = subscriptionId;
+
+  const { error: orgUpdateErr } = await admin
+    .from('organizations')
+    .update(update)
+    .eq('id', org.id);
+  if (orgUpdateErr) {
+    console.error('[stripe/webhook] payment_link org update failed', {
+      session: session.id,
+      error: orgUpdateErr.message,
+      code: orgUpdateErr.code,
+    });
+  } else {
+    console.log('[stripe/webhook] payment_link org updated', {
+      session: session.id,
+      org: org.id,
+      is_new_user: isNewUser,
+    });
+  }
+
+  // Send the welcome email with the magic-link CTA. New users always get
+  // it; for repeat customers (existing org), we still send so they have a
+  // fresh sign-in link in case they weren't logged in when paying.
+  try {
+    const planLabel = PLAN_CATALOGUE[planTier]?.label ?? planTier;
+    const billingIntervalLabel = billingInterval === 'monthly' ? 'monthly' : 'annual';
+    const built = buildWelcomeEmail({
+      recipientEmail: email,
+      magicLinkUrl: magicLink,
+      planLabel,
+      billingIntervalLabel,
+    });
+    const emailResult = await sendEmail({
+      to: email,
+      subject: built.subject,
+      html: built.html,
+      text: built.text,
+    });
+    console.log('[stripe/webhook] welcome email', {
+      session: session.id,
+      email_domain: emailDomain(email),
+      success: emailResult.success,
+      id: emailResult.id,
+      error: emailResult.error,
+    });
+  } catch (e) {
+    console.error('[stripe/webhook] welcome email threw', e);
+  }
 }
 
 async function syncSubscriptionToOrg(
