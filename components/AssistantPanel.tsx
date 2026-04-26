@@ -294,8 +294,10 @@ function PanelContent({ onClose }: { onClose: () => void }) {
       )}
 
       {hasMessages && !pendingAction && (
-        <div className="border-t border-rule px-4 pt-2 pb-0">
-          <div className="flex flex-wrap gap-1.5 pb-2">
+        <div className="border-t border-rule">
+          {/* One-row horizontal scroller. flex-nowrap + overflow-x-auto so
+              long suggestion text never wraps to a second crowded row. */}
+          <div className="flex flex-nowrap gap-1.5 px-4 py-2 overflow-x-auto scrollbar-thin">
             {pageChips.slice(0, 3).map((t) => (
               <InlineChip key={t} text={t} onClick={() => insertChip(t)} />
             ))}
@@ -457,7 +459,7 @@ function InlineChip({ text, onClick }: { text: string; onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="text-2xs text-ink-muted bg-rule-soft/40 border border-rule rounded-full px-2.5 py-1 hover:bg-ruleSoft hover:text-ink transition-colors"
+      className="text-2xs text-ink-muted bg-rule-soft/40 border border-rule rounded-full px-2.5 py-1 whitespace-nowrap shrink-0 hover:bg-ruleSoft hover:text-ink transition-colors duration-200"
     >
       {text}
     </button>

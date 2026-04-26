@@ -160,6 +160,20 @@
   .text-balance {
     text-wrap: balance;
   }
+  /* Slim scrollbars for horizontal scrollers (assistant chip row, etc.) */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(26, 24, 21, 0.18) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(26, 24, 21, 0.18);
+    border-radius: 6px;
+  }
   .num {
     font-feature-settings: 'tnum', 'lnum';
   }
