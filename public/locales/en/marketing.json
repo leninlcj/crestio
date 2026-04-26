@@ -73,7 +73,9 @@
     "footer_note": "Prices in AUD. Inclusive of GST where applicable. Cancel anytime.",
     "pay_now_secondary": "Skip the trial — pay now →",
     "sticky_mobile_cta": "Start free trial",
-    "sticky_mobile_pay_now": "Pay now"
+    "sticky_mobile_pay_now": "Pay now",
+    "sticky_mobile_cta_priced": "Start free trial — {{price}}/mo",
+    "sticky_mobile_dismiss": "Dismiss"
   },
   "tiers": {
     "solo": {

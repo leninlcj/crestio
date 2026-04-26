@@ -559,47 +559,75 @@ function TierCard({
 }
 
 // ---------------------------------------------------------------------------
-// Mobile sticky CTA — pinned to viewport bottom on small screens. Shows after
-// the user scrolls past the hero and hides once they reach #pricing (so it
-// doesn't fight the in-section CTAs).
+// Mobile sticky CTA — pinned to viewport bottom on small screens. Shows once
+// the user has scrolled past the pricing section so the in-pricing CTAs do
+// the work first; afterwards a small reminder rides along until they leave
+// or dismiss it. State persists for the session via sessionStorage.
 // ---------------------------------------------------------------------------
+
+const STICKY_DISMISS_KEY = 'crestio.sticky-cta.dismissed';
 
 function StickyMobileCTA() {
   const { t } = useTranslation('marketing');
+  const { formatMoney } = useLocaleFormatters();
   const [visible, setVisible] = useState(false);
-  const teamPaymentUrl = paymentLinkUrl('team', 'monthly');
+  const [dismissed, setDismissed] = useState(false);
+  const soloPriceShort = formatMoney(
+    PLAN_CATALOGUE.solo.prices.monthly.dollars * 100,
+    'AUD',
+    { maximumFractionDigits: 0 },
+  );
 
   useEffect(() => {
+    try {
+      if (sessionStorage.getItem(STICKY_DISMISS_KEY)) setDismissed(true);
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => {
+    if (dismissed) {
+      setVisible(false);
+      return;
+    }
     const onScroll = () => {
-      const y = window.scrollY;
       const pricingEl = document.getElementById('pricing');
-      const pricingTop = pricingEl ? pricingEl.getBoundingClientRect().top + window.scrollY : Infinity;
-      const showAfter = window.innerHeight * 0.8;
-      setVisible(y > showAfter && y + window.innerHeight < pricingTop + 200);
+      if (!pricingEl) return;
+      const pricingBottom = pricingEl.getBoundingClientRect().bottom + window.scrollY;
+      const y = window.scrollY + window.innerHeight;
+      // Show once the bottom of pricing has scrolled past the viewport bottom
+      // (i.e. the user has read pricing and is past it).
+      setVisible(y > pricingBottom + 24);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [dismissed]);
 
-  if (!visible) return null;
+  function dismiss() {
+    setDismissed(true);
+    try { sessionStorage.setItem(STICKY_DISMISS_KEY, '1'); } catch { /* ignore */ }
+  }
+
+  if (dismissed || !visible) return null;
 
   return (
-    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-cream/95 backdrop-blur border-t border-rule px-4 py-3 flex items-center gap-2">
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-cream/95 backdrop-blur border-t border-rule px-3 py-2.5 pb-safe flex items-center gap-2 animate-fade-in">
       <Link
-        href="/auth/signup?plan=team&interval=monthly"
-        className="btn-primary flex-1 text-sm py-2 min-h-[40px]"
+        href="/auth/signup?plan=solo&interval=monthly"
+        className="btn-primary flex-1 text-sm py-2 min-h-[40px] transition-all duration-200 ease-out"
       >
-        {t('pricing.sticky_mobile_cta')}
+        {t('pricing.sticky_mobile_cta_priced', { price: soloPriceShort })}
       </Link>
-      {teamPaymentUrl && (
-        <a
-          href={teamPaymentUrl}
-          className="text-sm text-ink-muted underline underline-offset-4 px-3 py-2"
-        >
-          {t('pricing.sticky_mobile_pay_now')}
-        </a>
-      )}
+      <button
+        type="button"
+        onClick={dismiss}
+        className="shrink-0 h-10 w-10 grid place-items-center text-ink-soft hover:text-ink transition-colors duration-200"
+        aria-label={t('pricing.sticky_mobile_dismiss')}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M6 6l12 12M6 18L18 6" />
+        </svg>
+      </button>
     </div>
   );
 }
