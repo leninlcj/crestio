@@ -371,6 +371,7 @@ export function AssistantConversationProvider({ children }: { children: ReactNod
         });
         const payload = await res.json().catch(() => ({}));
         if (res.status === 401 && typeof window !== 'undefined') {
+          // Assistant only runs on /app routes (tutor only).
           if (!window.location.pathname.startsWith('/auth/signin')) {
             window.location.href = '/auth/signin?reason=session_expired';
           }

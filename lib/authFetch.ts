@@ -1,10 +1,27 @@
 import { supabase } from './supabase';
 
+// Returns the right signin path for the current page. Parents land back on the
+// parent signin (P1-4.4); everyone else gets the tutor signin.
+function signinPathForCurrentLocation(): string {
+  if (typeof window === 'undefined') return '/auth/signin?reason=session_expired';
+  return window.location.pathname.startsWith('/parent')
+    ? '/parent/signin?reason=session_expired'
+    : '/auth/signin?reason=session_expired';
+}
+
+function alreadyOnSigninPage(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.location.pathname.startsWith('/auth/signin') ||
+    window.location.pathname.startsWith('/parent/signin')
+  );
+}
+
 /**
  * Fetch wrapper that:
  *   - Attaches the current Supabase access token as Bearer auth.
- *   - Detects 401 responses from /api/* routes and redirects the user to
- *     /auth/signin?reason=session_expired.
+ *   - Detects 401 responses from /api/* routes and redirects the user to the
+ *     appropriate signin page (parent vs tutor) with reason=session_expired.
  *
  * Use for any authenticated API call from the client. Server-to-server calls
  * (never from browser) don't need this.
@@ -19,9 +36,8 @@ export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}
   if (res.status === 401 && typeof window !== 'undefined') {
     const pathname = typeof input === 'string' ? input : (input as URL).pathname || '';
     if (pathname.startsWith('/api/')) {
-      // Avoid redirect loop if we're already on the signin page.
-      if (!window.location.pathname.startsWith('/auth/signin')) {
-        window.location.href = '/auth/signin?reason=session_expired';
+      if (!alreadyOnSigninPage()) {
+        window.location.href = signinPathForCurrentLocation();
       }
     }
   }
@@ -48,6 +64,6 @@ export function isJwtExpiryError(err: unknown): boolean {
 
 export function redirectToSignin(): void {
   if (typeof window === 'undefined') return;
-  if (window.location.pathname.startsWith('/auth/signin')) return;
-  window.location.href = '/auth/signin?reason=session_expired';
+  if (alreadyOnSigninPage()) return;
+  window.location.href = signinPathForCurrentLocation();
 }
