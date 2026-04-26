@@ -130,6 +130,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       update.student_id = newStudentId;
       update.session_id = null; // clear stale session linkage on move
     }
+    if ('allow_printing' in body) {
+      if (typeof body.allow_printing !== 'boolean') {
+        return res.status(400).json({ error: 'allow_printing must be boolean.' });
+      }
+      update.allow_printing = body.allow_printing;
+    }
     if (Object.keys(update).length === 0) {
       return res.status(400).json({ error: 'Nothing to update.' });
     }

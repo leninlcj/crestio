@@ -37,6 +37,7 @@ type ViewPayload = {
   expires_at: string;
   mime_type: string;
   watermark_text: string | null;
+  allow_printing: boolean;
 };
 
 export default function FileViewerPage() {
@@ -62,7 +63,6 @@ function FileViewerInner() {
   const [error, setError] = useState<string | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [devtoolsOpen, setDevtoolsOpen] = useState(false);
-  const [shortcutToast, setShortcutToast] = useState<string | null>(null);
   const [renderNonce, setRenderNonce] = useState(0); // bump to force PdfRenderer remount on retry
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -129,7 +129,10 @@ function FileViewerInner() {
   }, []);
 
   // Right-click + keyboard interceptors at the document level.
+  // Skipped silently when allow_printing=true on this file.
+  const allowPrinting = data?.allow_printing === true;
   useEffect(() => {
+    if (allowPrinting) return;
     function onContext(e: MouseEvent) { e.preventDefault(); }
     function onKey(e: KeyboardEvent) {
       const meta = e.metaKey || e.ctrlKey;
@@ -137,8 +140,6 @@ function FileViewerInner() {
       const k = e.key.toLowerCase();
       if (k === 's' || k === 'p' || k === 'a') {
         e.preventDefault();
-        setShortcutToast(t('viewer.no_download'));
-        setTimeout(() => setShortcutToast(null), 2400);
       }
     }
     document.addEventListener('contextmenu', onContext);
@@ -147,7 +148,7 @@ function FileViewerInner() {
       document.removeEventListener('contextmenu', onContext);
       document.removeEventListener('keydown', onKey);
     };
-  }, [t]);
+  }, [allowPrinting]);
 
   if (!authReady) {
     return (
@@ -179,7 +180,6 @@ function FileViewerInner() {
     >
       <header className="px-4 py-3 flex items-center justify-between border-b border-cream/10 text-xs">
         <Link href="/" className="opacity-70 hover:opacity-100">crestio</Link>
-        <span className="opacity-60">{t('viewer.no_download')}</span>
       </header>
 
       <main className="flex-1 relative overflow-hidden">
@@ -224,12 +224,6 @@ function FileViewerInner() {
             <div className="max-w-md">
               <p className="text-sm">{t('viewer.devtools_warning')}</p>
             </div>
-          </div>
-        )}
-
-        {shortcutToast && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-cream text-ink px-4 py-2 rounded-full text-xs shadow-lift">
-            {shortcutToast}
           </div>
         )}
       </main>

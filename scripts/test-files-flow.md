@@ -126,6 +126,18 @@ Confirm the 20 most recent file views match the actions you just performed
 
 ---
 
+## Per-file printing toggle
+
+| # | Action | Expected | OK? |
+|---|---|---|---|
+| 1 | Tutor toggles **Allow printing** ON for a file. Open as student/parent and press Cmd/Ctrl+S. | Native browser save sheet opens. No banner. Watermark still overlays. | |
+| 2 | Tutor toggles **Allow printing** OFF (default for new uploads). Open as student/parent and press Cmd/Ctrl+S. | Save sheet does NOT open. No banner, no toast — silently blocked. Right-click also suppressed. | |
+| 3 | Tutor confirms a freshly uploaded file defaults to OFF. | Toggle starts unchecked; viewer blocks save by default. | |
+| 4 | DevTools test on both states (open Cmd+Opt+I). | Blur overlay appears regardless of allow_printing. | |
+| 5 | Watermark text on Team. | Reads the org name only (no email, no timestamp), repeated diagonally. | |
+
+---
+
 ## Known limitations (carried into followups)
 
 - Office (Word/Excel/PowerPoint) uploads return 415 with "Coming soon".

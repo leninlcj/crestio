@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let q = admin
     .from('files')
-    .select('id, organization_id, uploaded_by_user_id, student_id, session_id, original_filename, display_name, mime_type, file_size_bytes, is_org_library, status, created_at, updated_at', { count: 'exact' })
+    .select('id, organization_id, uploaded_by_user_id, student_id, session_id, original_filename, display_name, mime_type, file_size_bytes, is_org_library, status, created_at, updated_at, allow_printing', { count: 'exact' })
     .eq('organization_id', orgId)
     .is('deleted_at', null)
     .order('created_at', { ascending: false })

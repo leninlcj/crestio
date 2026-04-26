@@ -37,6 +37,10 @@
     "move": "Move",
     "delete": "Delete"
   },
+  "toggle": {
+    "allow_printing": "Allow printing",
+    "allow_printing_help": "Let students and parents save or print this file."
+  },
   "common": {
     "cancel": "Cancel"
   },

@@ -36,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { data: userData, error: authErr } = await userClient.auth.getUser(token);
   if (authErr || !userData?.user) return res.status(401).json({ error: 'Not authenticated.' });
   const userId = userData.user.id;
-  const userEmail = userData.user.email ?? null;
 
   const rl = checkRateLimit({
     key: `files_view_url:${userId}`,
@@ -56,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: file } = await admin
     .from('files')
-    .select('id, organization_id, student_id, is_org_library, storage_path, converted_pdf_path, mime_type, status, deleted_at')
+    .select('id, organization_id, student_id, is_org_library, storage_path, converted_pdf_path, mime_type, status, deleted_at, allow_printing')
     .eq('id', fileId)
     .maybeSingle();
   if (!file) return res.status(404).json({ error: 'File not found.' });
@@ -110,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Resolve plan tier for watermark gating.
   const { data: org } = await admin
-    .from('organizations').select('plan_tier').eq('id', file.organization_id).maybeSingle();
+    .from('organizations').select('plan_tier, name').eq('id', file.organization_id).maybeSingle();
   const planTier = (org?.plan_tier ?? 'solo') as PlanTier;
   const limits = getPlanLimits(planTier);
 
@@ -138,6 +137,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     signed_url: signed.signedUrl,
     expires_at: expiresAt,
     mime_type: file.mime_type,
-    watermark_text: limits.watermark ? watermarkFor(userEmail) : null,
+    watermark_text: limits.watermark ? watermarkFor(org?.name) : null,
+    allow_printing: file.allow_printing === true,
   });
 }

@@ -27,6 +27,7 @@ type FileRow = {
   status: string;
   created_at: string;
   updated_at: string;
+  allow_printing: boolean;
   view_count?: number;
   last_viewed_at?: string | null;
 };
@@ -256,6 +257,21 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
     }
   }
 
+  async function toggleAllowPrinting(f: FileRow) {
+    const next = !f.allow_printing;
+    setFiles((xs) => xs.map((x) => (x.id === f.id ? { ...x, allow_printing: next } : x)));
+    const { data: { session: auth } } = await supabase.auth.getSession();
+    if (!auth?.access_token) return;
+    const res = await fetch(`/api/files/${f.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.access_token}` },
+      body: JSON.stringify({ allow_printing: next }),
+    });
+    if (!res.ok) {
+      setFiles((xs) => xs.map((x) => (x.id === f.id ? { ...x, allow_printing: !next } : x)));
+    }
+  }
+
   async function deleteFile(id: string) {
     if (!window.confirm(t('confirm.delete'))) return;
     const { data: { session: auth } } = await supabase.auth.getSession();
@@ -430,6 +446,18 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
+                <label
+                  className="flex items-center gap-1.5 text-2xs text-ink-muted cursor-pointer select-none"
+                  title={t('toggle.allow_printing_help')}
+                >
+                  <input
+                    type="checkbox"
+                    checked={f.allow_printing}
+                    onChange={() => toggleAllowPrinting(f)}
+                    className="h-3 w-3"
+                  />
+                  {t('toggle.allow_printing')}
+                </label>
                 <button type="button" onClick={() => startRename(f)} className="btn-ghost text-2xs">
                   {t('actions.rename')}
                 </button>
