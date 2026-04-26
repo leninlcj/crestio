@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const token = typeof req.query.token === 'string' ? req.query.token : '';
     if (!token) {
-      return res.status(400).json({ valid: false, error: 'Missing token.' });
+      return res.status(400).json({ valid: false, reason: 'missing', error: 'Missing token.' });
     }
     const { data: invitation } = await admin
       .from('parent_invitations')
@@ -24,13 +24,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .eq('token', token)
       .single();
     if (!invitation) {
-      return res.status(404).json({ valid: false, error: 'Invitation not found.' });
+      // Token doesn't match any invitation row.
+      return res.status(404).json({ valid: false, reason: 'not_found', error: 'Invitation not found.' });
     }
     if (invitation.accepted_at) {
-      return res.status(400).json({ valid: false, error: 'This invitation has already been used.' });
+      return res.status(400).json({ valid: false, reason: 'used', error: 'This invitation has already been used.' });
     }
     if (new Date(invitation.expires_at).getTime() < Date.now()) {
-      return res.status(400).json({ valid: false, error: 'This invitation has expired.' });
+      return res.status(400).json({ valid: false, reason: 'expired', error: 'This invitation has expired.' });
     }
     const { data: student } = await admin
       .from('students')
