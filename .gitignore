@@ -43,3 +43,4 @@ public/locales/.cache/
 .env.vercel
 .env.production
 .env.staging
+.claude/
