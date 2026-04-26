@@ -39,16 +39,19 @@ export function buildWelcomeEmail({
   const safePlan = escapeHtml(planLabel);
   const safeInterval = escapeHtml(billingIntervalLabel);
 
-  const subject = `Welcome to Crestio — sign in to get started`;
+  const subject = `Welcome to Crestio - sign in to get started`;
 
+  // Plaintext must stay pure ASCII. Any non-ASCII char (em-dash, middle-dot)
+  // forces Resend to quoted-printable encode the whole part, and the 76-col
+  // soft line break corrupts the long magic link at the `=` in query strings.
   const text =
     `Welcome to Crestio.\n\n` +
     `Your ${planLabel} (${billingIntervalLabel}) subscription is active. Click the link below to sign in and finish setting up your account.\n\n` +
     `${magicLinkUrl}\n\n` +
     `This link is for ${recipientEmail} and expires in 1 hour. If you didn't sign up, ignore this email.\n\n` +
     `Need help? Reply to this email or write to support@crestio.ai.\n\n` +
-    `—\n` +
-    `Crestio · Made in Sydney · https://crestio.ai\n`;
+    `--\n` +
+    `Crestio | Made in Sydney | https://crestio.ai\n`;
 
   const html = `<!doctype html>
 <html lang="en">

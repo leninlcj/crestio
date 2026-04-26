@@ -40,13 +40,16 @@ export function buildParentInvitationEmail({
 
   const subject = `${tutorBusinessName} invited you to view ${studentFirstName}'s tutoring progress`;
 
+  // Plaintext must stay pure ASCII. Any non-ASCII char (em-dash, middle-dot)
+  // forces Resend to quoted-printable encode the whole part, and the 76-col
+  // soft line break corrupts the long invitation URL at the `=` in `?token=`.
   const text =
     `${tutorBusinessName} has invited you to view ${studentFirstName}'s tutoring sessions on Crestio.\n\n` +
-    `You'll be able to see what's been covered in each session, homework set, and how ${studentFirstName} is progressing — all in one place.\n\n` +
+    `You'll be able to see what's been covered in each session, homework set, and how ${studentFirstName} is progressing -- all in one place.\n\n` +
     `Accept the invitation here:\n${invitationUrl}\n\n` +
     `This invitation link expires in 7 days. If you weren't expecting this email, you can ignore it.\n\n` +
-    `—\n` +
-    `Crestio · Made in Sydney · https://crestio.ai\n`;
+    `--\n` +
+    `Crestio | Made in Sydney | https://crestio.ai\n`;
 
   const html = `<!doctype html>
 <html lang="en">
