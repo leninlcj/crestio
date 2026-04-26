@@ -8,6 +8,8 @@ import { useOrganization } from '../../lib/organizationContext';
 import { Tutor } from '../../lib/types';
 import { formatCents, startOfMonth, startOfWeek, cx } from '../../lib/utils';
 import { activeLocale } from '../../lib/utils';
+import EmptyState from '../../components/EmptyState';
+import { IconCoin } from '../../components/design/icons';
 
 type Preset = 'this_month' | 'last_month' | 'this_week' | 'last_week' | 'custom';
 
@@ -268,9 +270,11 @@ function PayoutsInner() {
       {loading ? (
         <div className="card p-6 text-sm text-ink-muted">Loading…</div>
       ) : sessions.length === 0 ? (
-        <div className="card p-8 text-sm text-ink-muted">
-          No completed sessions in this period.
-        </div>
+        <EmptyState
+          icon={<IconCoin />}
+          title="Nothing to pay out"
+          description="No completed sessions fall in this period yet. Pick a wider range or check back after this week's sessions land."
+        />
       ) : (
         <>
           <div className="card overflow-x-auto">

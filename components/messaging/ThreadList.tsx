@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
 import type { ThreadSummary, Viewer } from './types';
+import EmptyState from '../EmptyState';
+import { IconMessage } from '../design/icons';
 
 // Thread list — used on /app/messages and /parent/messages.
 // Caller passes the base link (`/app/messages` or `/parent/messages`) so we
@@ -111,12 +113,11 @@ export function ThreadList({ basePath, allowArchiveToggle }: Props) {
       ) : error ? (
         <div className="card p-6 text-sm text-claret">{error}</div>
       ) : filtered.length === 0 ? (
-        <div className="card p-8 text-center">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('empty.kicker')}</div>
-          <p className="text-sm text-ink-muted">
-            {isTutorView ? t('empty.body_tutor') : t('empty.body_parent')}
-          </p>
-        </div>
+        <EmptyState
+          icon={<IconMessage />}
+          title={t('empty.kicker')}
+          description={isTutorView ? t('empty.body_tutor') : t('empty.body_parent')}
+        />
       ) : (
         <ul className="divide-y divide-rule border border-rule rounded bg-surface overflow-hidden">
           {filtered.map((t) => {

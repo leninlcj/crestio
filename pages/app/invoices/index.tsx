@@ -6,6 +6,7 @@ import AuthGuard from '../../../components/AuthGuard';
 import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
+import { IconInvoice } from '../../../components/design/icons';
 import { supabase } from '../../../lib/supabase';
 import { Invoice, Student } from '../../../lib/types';
 import { formatCents, formatDate, cx } from '../../../lib/utils';
@@ -93,6 +94,7 @@ function InvoicesInner() {
         <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
+          icon={<IconInvoice />}
           title={t('invoices:empty.no_invoices_title')}
           description={t('invoices:empty.no_invoices_body')}
           action={<Link href="/app/invoices/batch" className="btn-primary">{t('invoices:empty.cta_batch')}</Link>}

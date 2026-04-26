@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
+import { IconUsers, IconArchive } from '../../../components/design/icons';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Student } from '../../../lib/types';
@@ -138,6 +139,7 @@ function StudentsInner() {
         <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
+          icon={showArchived ? <IconArchive /> : <IconUsers />}
           title={showArchived ? t('students:empty.no_archived') : (isTutor ? t('students:empty.no_tutor_record') : t('students:empty.no_students'))}
           description={
             showArchived

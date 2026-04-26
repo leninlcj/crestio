@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
+import { IconCalendar, IconCoin, IconClock, IconArchive } from '../../../components/design/icons';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Session, Student, Tutor } from '../../../lib/types';
@@ -150,14 +151,28 @@ function SessionsInner() {
         <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
       ) : sessions.length === 0 ? (
         <EmptyState
+          icon={
+            filter === 'unpaid' ? <IconCoin /> :
+            filter === 'past' ? <IconArchive /> :
+            filter === 'upcoming' ? <IconCalendar /> : <IconClock />
+          }
           title={
             filter === 'upcoming' ? t('sessions:empty.no_upcoming', { defaultValue: 'No upcoming sessions' }) :
             filter === 'unpaid' ? t('sessions:empty.nothing_unpaid', { defaultValue: 'Nothing unpaid' }) :
             filter === 'past' ? t('sessions:empty.no_past', { defaultValue: 'No past sessions' }) :
             t('sessions:empty.no_sessions')
           }
-          description={filter === 'upcoming' ? t('sessions:empty.schedule_prompt', { defaultValue: 'Schedule one to fill your week.' }) : undefined}
-          action={filter === 'upcoming' ? <Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link> : undefined}
+          description={
+            filter === 'upcoming' ? t('sessions:empty.schedule_prompt', { defaultValue: 'Schedule one to fill your week.' }) :
+            filter === 'unpaid' ? t('sessions:empty.unpaid_prompt', { defaultValue: 'Every completed session is paid for. Nice.' }) :
+            filter === 'past' ? t('sessions:empty.past_prompt', { defaultValue: 'Once you log a session, it lands here.' }) :
+            t('sessions:empty.all_prompt', { defaultValue: 'Log your first session — it only takes a minute.' })
+          }
+          action={
+            (filter === 'upcoming' || filter === 'all') ? (
+              <Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link>
+            ) : undefined
+          }
         />
       ) : (
         <div className="table-wrap">

@@ -5,6 +5,8 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
+import EmptyState from '../../../components/EmptyState';
+import { IconHouseholds, IconArchive } from '../../../components/design/icons';
 
 type Parent = { id: string; name: string | null; email: string | null; is_primary: boolean };
 type StudentLite = { id: string; name: string };
@@ -212,19 +214,16 @@ function HouseholdsInner() {
       {loading ? (
         <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       ) : filtered.length === 0 ? (
-        <div className="card p-8 text-center">
-          <div className="font-display text-2xl mb-2 tracking-tightest">
-            {showArchived ? t('empty.archived_none') : t('empty.none')}
-          </div>
-          <p className="text-sm text-ink-muted mb-5 max-w-md mx-auto">
-            {t('empty.description')}
-          </p>
-          {!isTutor && (
+        <EmptyState
+          icon={showArchived ? <IconArchive /> : <IconHouseholds />}
+          title={showArchived ? t('empty.archived_none') : t('empty.none')}
+          description={t('empty.description')}
+          action={!isTutor ? (
             <button type="button" onClick={() => setNewFormOpen(true)} className="btn-primary">
               {t('empty.create')}
             </button>
-          )}
-        </div>
+          ) : undefined}
+        />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((h) => (

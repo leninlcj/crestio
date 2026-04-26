@@ -5,6 +5,7 @@ import AuthGuard from '../../../components/AuthGuard';
 import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
+import { IconUsers } from '../../../components/design/icons';
 import { supabase } from '../../../lib/supabase';
 import { Tutor } from '../../../lib/types';
 import { initials, startOfMonth } from '../../../lib/utils';
@@ -88,6 +89,7 @@ function TutorsInner() {
         <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       ) : tutors.length === 0 ? (
         <EmptyState
+          icon={<IconUsers />}
           title={t('empty.title')}
           description={t('empty.description')}
           action={<Link href="/app/tutors/new" className="btn-primary">{t('actions.add_one')}</Link>}

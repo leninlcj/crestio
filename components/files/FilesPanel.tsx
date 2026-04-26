@@ -12,6 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
 import { formatBytes, isExecutableFilename, hasPathTraversal, ALLOWED_BASE_MIME_TYPES } from '../../lib/files';
 import { FileTypeIcon } from './FileTypeIcon';
+import EmptyState from '../EmptyState';
+import { IconFolder } from '../design/icons';
+
+function FilesEmptyState({ message }: { message: string }) {
+  return <EmptyState icon={<IconFolder />} title={message} />;
+}
 
 type FileRow = {
   id: string;
@@ -396,7 +402,7 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
       {loading ? (
         <div className="card p-6 text-sm text-ink-muted animate-pulse">{t('loading')}</div>
       ) : files.length === 0 ? (
-        <div className="card p-6 text-sm text-ink-muted">{emptyState}</div>
+        <FilesEmptyState message={emptyState} />
       ) : (
         <div className="space-y-2">
           {files.map((f) => (

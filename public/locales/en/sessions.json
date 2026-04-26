@@ -56,11 +56,14 @@
     "add_student_first_title": "Add a student first",
     "add_student_first_body": "Sessions need a student. Create one, then come back.",
     "add_student_cta": "Add student",
-    "no_sessions": "No sessions yet.",
+    "no_sessions": "No sessions yet",
     "no_upcoming": "No upcoming sessions",
     "no_past": "No past sessions",
     "nothing_unpaid": "Nothing unpaid",
-    "schedule_prompt": "Schedule one to fill your week."
+    "schedule_prompt": "Schedule one to fill your week.",
+    "unpaid_prompt": "Every completed session is paid for. Nice.",
+    "past_prompt": "Once you log a session, it lands here.",
+    "all_prompt": "Log your first session — it only takes a minute."
   },
   "fields": {
     "student": "Student",
