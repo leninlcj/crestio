@@ -38,7 +38,7 @@ export function LegalPage({ title, kicker = 'Legal', lastUpdated, toc, children 
 
         <article className="max-w-2xl mx-auto px-6 md:px-12 py-16 md:py-24">
           <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{kicker}</div>
-          <h1 className="font-display text-5xl md:text-6xl tracking-tightest mb-2">{title}</h1>
+          <h1 className="font-display text-4xl md:text-6xl tracking-tightest mb-2 text-balance">{title}</h1>
           <div className="text-sm text-ink-muted mb-10">{t('last_updated', { date: lastUpdated })}</div>
 
           {showEnglishNotice && (

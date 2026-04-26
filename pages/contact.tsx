@@ -66,7 +66,7 @@ export default function Contact() {
 
         <div className="max-w-xl mx-auto px-6 md:px-12 py-16 md:py-24">
           <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('contact.eyebrow')}</div>
-          <h1 className="font-display text-5xl md:text-6xl tracking-tightest mb-4">{t('contact.heading')}</h1>
+          <h1 className="font-display text-4xl md:text-6xl tracking-tightest mb-4 text-balance">{t('contact.heading')}</h1>
           <p className="text-ink-muted mb-10 leading-relaxed">
             {t('contact.intro')}
           </p>
