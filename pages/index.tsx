@@ -151,21 +151,21 @@ export default function Home() {
 
         <main>
           {/* Hero */}
-          <section className="px-6 md:px-12 pt-10 md:pt-16 pb-16 md:pb-24 max-w-4xl mx-auto text-center">
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-6">
+          <section className="px-6 md:px-12 pt-6 md:pt-10 pb-20 md:pb-28 max-w-4xl mx-auto text-center">
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-4 md:mb-5">
               {t('hero.eyebrow')}
             </div>
-            <h1 className="font-display tracking-tightest text-ink leading-[1.05] text-balance text-4xl sm:text-5xl md:text-6xl mb-6">
+            <h1 className="font-display tracking-tightest text-ink leading-[1.05] text-balance text-4xl sm:text-5xl md:text-6xl mb-5 md:mb-6">
               {t('hero.heading')}
             </h1>
-            <p className="text-base md:text-lg text-ink-muted max-w-2xl mx-auto leading-relaxed mb-8 text-balance">
+            <p className="text-base md:text-lg text-ink-muted max-w-xl mx-auto leading-relaxed mb-9 md:mb-10 text-balance">
               {t('hero.subheading')}
             </p>
 
             <div className="flex flex-col items-center gap-3">
               <Link
                 href="/auth/signup"
-                className="btn-primary text-base px-7 py-3 w-full sm:w-auto min-w-[200px]"
+                className="btn-primary text-base px-7 py-3 w-full sm:w-auto min-w-[200px] transition-all duration-200 ease-out hover:shadow-lift"
               >
                 {t('hero.cta')}
               </Link>
@@ -174,7 +174,7 @@ export default function Home() {
               </div>
               <a
                 href="#pricing"
-                className="text-sm text-ink-muted hover:text-ink underline underline-offset-4 mt-1"
+                className="text-sm text-ink-muted hover:text-ink underline underline-offset-4 mt-1 transition-colors duration-200"
               >
                 {t('hero.see_plans')}
               </a>
