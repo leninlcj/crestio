@@ -15,7 +15,6 @@
   "hero": {
     "eyebrow": "Pour les tuteurs indépendants et les petites équipes",
     "heading": "L'outil tout-en-un pour les tuteurs qui prennent leur travail au sérieux.",
-    "subheading": "Gérez vos élèves, enregistrez les sessions, peaufinez vos notes grâce à l'IA et partagez les progrès avec les parents — le tout depuis un seul tableau de bord. Pour les tuteurs indépendants et les petites équipes.",
     "cta": "Commencer l'essai gratuit",
     "price_note": "À partir de {{price}} par mois. Essai gratuit de 7 jours. Résiliation possible à tout moment.",
     "see_plans": "Voir tous les forfaits →"
@@ -28,7 +27,8 @@
     "line_4": "Vous consacrez deux heures à des tâches administratives pour chaque tranche de cinq heures de cours particuliers."
   },
   "how": {
-    "heading": "Comment fonctionne Crestio"
+    "heading": "Comment fonctionne Crestio",
+    "preview_label": "Aperçu"
   },
   "features": {
     "session_log": {
@@ -69,7 +69,8 @@
     "footer_note": "Prix en AUD. TTC (TVA comprise) le cas échéant. Résiliation possible à tout moment.",
     "pay_now_secondary": "Passez l'essai — payez maintenant →",
     "sticky_mobile_cta": "Commencer l'essai gratuit",
-    "sticky_mobile_pay_now": "Payer maintenant"
+    "sticky_mobile_pay_now": "Payer maintenant",
+    "sticky_mobile_dismiss": "Ignorer"
   },
   "tiers": {
     "solo": {
@@ -130,11 +131,11 @@
     "questions_part2": "."
   },
   "footer": {
-    "made_in": "Fabriqué en Australie · 2026",
     "sign_in": "Se connecter",
     "privacy": "Confidentialité",
     "terms": "Conditions générales",
-    "support": "Assistance"
+    "support": "Assistance",
+    "contact": "Contact"
   },
   "contact": {
     "eyebrow": "Nous contacter",
@@ -151,7 +152,6 @@
     "message_placeholder": "Qu'avez-vous en tête ?",
     "submit": "Ouvrir dans Mail",
     "submit_note": "Cela ouvre votre application de messagerie par défaut avec le message pré-rédigé. Le message ne sera envoyé qu'une fois que vous l'aurez validé.",
-    "footer_location": "crestio · Sydney · 2026",
     "subject_named": "Message d'{{name}}",
     "subject_anonymous": "Message provenant du site web de Crestio",
     "body_from": "Source : {{name}}",

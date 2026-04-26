@@ -15,8 +15,8 @@
       "paid": "Pago",
       "outstanding": "Pendentes"
     },
-    "no_access": "Você não tem acesso.",
-    "change_requested": "Alteração solicitada"
+    "change_requested": "Alteração solicitada",
+    "banner_dismiss": "Ignorar"
   },
   "nav": {
     "calendar": "Calendário",
@@ -125,7 +125,8 @@
     "error_not_parent": "Este login é exclusivo para pais. Se você é tutor, faça login em /auth/signin.",
     "forgot_need_email": "Digite seu e-mail primeiro e, em seguida, toque em Esqueci minha senha.",
     "forgot_sent": "Verifique seu e-mail para obter um link de redefinição.",
-    "invitation_hint": "Ainda não recebeu um convite do seu tutor? Peça para ele enviar um."
+    "invitation_hint": "Ainda não recebeu um convite do seu tutor? Peça para ele enviar um.",
+    "banner_dismiss": "Ignorar"
   },
   "settings_page": {
     "kicker": "Conta",

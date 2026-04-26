@@ -8,8 +8,7 @@
     "generate": "Gerar um plano"
   },
   "empty": {
-    "title": "Ainda não há planos de aula",
-    "description": "Crie um com o Claude em cerca de dez segundos e, em seguida, salve, edite ou reutilize-o."
+    "title": "Ainda não há planos de aula"
   },
   "card": {
     "ai_badge": "IA",

@@ -122,7 +122,6 @@
     "voice_usage_line": "{{count}} dari transkripsi {{max_count}} yang digunakan · {{minutes}} dari {{max_minutes}} menit",
     "voice_resets": "Direset pada tengah malam waktu Sydney.",
     "voice_load_fail": "Tidak dapat memuat data penggunaan.",
-    "voice_privacy": "Voice menggunakan OpenAI Whisper. Audio Anda hanya dikirim saat Anda menggunakan mikrofon, tidak disimpan setelah transkripsi, dan tidak pernah digunakan untuk melatih model.",
     "danger_eyebrow": "Zona berbahaya",
     "delete_heading": "Hapus akun",
     "delete_body_prefix": "Ini akan menghapus akun Anda, semua siswa, sesi, faktur, dan rencana pelajaran secara permanen. Tindakan ini tidak dapat dibatalkan. Ketik ",

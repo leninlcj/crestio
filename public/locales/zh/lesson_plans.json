@@ -8,8 +8,7 @@
     "generate": "生成教案"
   },
   "empty": {
-    "title": "目前尚无教案",
-    "description": "只需十秒左右，即可通过克劳德生成一份教案，随后可保存、编辑或重复使用。"
+    "title": "目前尚无教案"
   },
   "card": {
     "ai_badge": "AI",

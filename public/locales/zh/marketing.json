@@ -15,7 +15,6 @@
   "hero": {
     "eyebrow": "面向独立家教及小型团队",
     "heading": "专为认真对待工作的家教打造的一站式工具。",
-    "subheading": "通过一个控制面板即可管理学生、记录课程、利用 AI 优化笔记，并与家长分享学习进展。专为独立家教及小型团队设计。",
     "cta": "开始免费试用",
     "price_note": "每月仅需 {{price}}。7 天免费试用。随时可取消。",
     "see_plans": "查看所有套餐 →"
@@ -28,7 +27,8 @@
     "line_4": "每进行五小时实际辅导，您就要花两小时处理行政事务。"
   },
   "how": {
-    "heading": "Crestio 的运作方式"
+    "heading": "Crestio 的运作方式",
+    "preview_label": "预览"
   },
   "features": {
     "session_log": {
@@ -69,7 +69,8 @@
     "footer_note": "价格以澳元计。如适用，已包含商品及服务税（GST）。可随时取消。",
     "pay_now_secondary": "跳过试用期 — 立即付款 →",
     "sticky_mobile_cta": "开始免费试用",
-    "sticky_mobile_pay_now": "立即支付"
+    "sticky_mobile_pay_now": "立即支付",
+    "sticky_mobile_dismiss": "关闭"
   },
   "tiers": {
     "solo": {
@@ -130,11 +131,11 @@
     "questions_part2": "."
   },
   "footer": {
-    "made_in": "澳大利亚制造 · 2026",
     "sign_in": "登录",
     "privacy": "隐私政策",
     "terms": "条款",
-    "support": "支持"
+    "support": "支持",
+    "contact": "联系我们"
   },
   "contact": {
     "eyebrow": "联系我们",
@@ -151,7 +152,6 @@
     "message_placeholder": "您有什么想法？",
     "submit": "在邮件中打开",
     "submit_note": "这将打开您的默认邮件应用，并显示已起草的邮件。在您亲自发送之前，邮件不会被发送出去。",
-    "footer_location": "crestio · 悉尼 · 2026",
     "subject_named": "{{name}} 的留言",
     "subject_anonymous": "来自Crestio网站的信息",
     "body_from": "来源：{{name}}",

@@ -7,7 +7,6 @@
     "name_placeholder": "例如：Alex Morgan",
     "business_label": "企业名称",
     "business_placeholder": "例如：摩根家教",
-    "business_hint": "显示在发票上以及您的仪表盘顶部。",
     "phone_label": "电话（可选）",
     "default_rate_label": "默认小时费率",
     "currency_label": "货币",

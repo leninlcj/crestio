@@ -122,7 +122,6 @@
     "voice_usage_line": "{{count}} das transcrições do {{max_count}} utilizadas · {{minutes}} das transcrições do {{max_minutes}}",
     "voice_resets": "Reinicia à meia-noite, horário de Sydney.",
     "voice_load_fail": "Não foi possível carregar o uso.",
-    "voice_privacy": "O Voice usa o OpenAI Whisper. Seu áudio é enviado apenas quando você usa o microfone, não é armazenado após a transcrição e nunca é usado para treinar modelos.",
     "danger_eyebrow": "Zona de perigo",
     "delete_heading": "Excluir conta",
     "delete_body_prefix": "Isso exclui permanentemente sua conta, todos os seus alunos, sessões, faturas e planos de aula. Essa ação não pode ser revertida. Digite ",

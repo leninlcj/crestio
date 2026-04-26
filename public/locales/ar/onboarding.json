@@ -7,7 +7,6 @@
     "name_placeholder": "على سبيل المثال: أليكس مورغان",
     "business_label": "اسم الشركة",
     "business_placeholder": "على سبيل المثال: Morgan Tutoring",
-    "business_hint": "يظهر على الفواتير وفي الجزء العلوي من لوحة التحكم الخاصة بك.",
     "phone_label": "رقم الهاتف (اختياري)",
     "default_rate_label": "السعر الافتراضي للساعة",
     "currency_label": "العملة",

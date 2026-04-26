@@ -15,7 +15,6 @@
   "hero": {
     "eyebrow": "Para profesores particulares y pequeños equipos",
     "heading": "La herramienta todo en uno para profesores particulares que se toman su trabajo en serio.",
-    "subheading": "Gestiona a los alumnos, registra las sesiones, perfecciona los apuntes con IA y comparte el progreso con los padres, todo desde un único panel de control. Para tutores independientes y equipos pequeños.",
     "cta": "Empieza la prueba gratuita",
     "price_note": "Desde {{price}} al mes. 7 días de prueba gratuita. Cancela en cualquier momento.",
     "see_plans": "Ver todos los planes →"
@@ -28,7 +27,8 @@
     "line_4": "Dedicas dos horas a tareas administrativas por cada cinco horas de clases particulares."
   },
   "how": {
-    "heading": "Cómo funciona Crestio"
+    "heading": "Cómo funciona Crestio",
+    "preview_label": "Vista previa"
   },
   "features": {
     "session_log": {
@@ -69,7 +69,8 @@
     "footer_note": "Precios en AUD. Incluyen el IVA cuando sea aplicable. Cancela en cualquier momento.",
     "pay_now_secondary": "No te quedes con la versión de prueba: paga ahora →",
     "sticky_mobile_cta": "Empieza la prueba gratuita",
-    "sticky_mobile_pay_now": "Pagar ahora"
+    "sticky_mobile_pay_now": "Pagar ahora",
+    "sticky_mobile_dismiss": "Descartar"
   },
   "tiers": {
     "solo": {
@@ -130,11 +131,11 @@
     "questions_part2": "."
   },
   "footer": {
-    "made_in": "Fabricado en Australia · 2026",
     "sign_in": "Iniciar sesión",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "support": "Asistencia"
+    "support": "Asistencia",
+    "contact": "Contacto"
   },
   "contact": {
     "eyebrow": "Ponte en contacto",
@@ -151,7 +152,6 @@
     "message_placeholder": "¿Qué te preocupa?",
     "submit": "Abrir en Mail",
     "submit_note": "Esto abre tu aplicación de correo electrónico predeterminada con el mensaje redactado. No se envía nada hasta que tú mismo lo envíes.",
-    "footer_location": "crestio · Sídney · 2026",
     "subject_named": "Mensaje de {{name}}",
     "subject_anonymous": "Mensaje de la página web de Crestio",
     "body_from": "Fuente: {{name}}",

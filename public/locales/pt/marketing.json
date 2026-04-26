@@ -15,7 +15,6 @@
   "hero": {
     "eyebrow": "Para professores particulares e pequenas equipes",
     "heading": "A ferramenta completa para professores particulares que levam seu trabalho a sério.",
-    "subheading": "Gerencie alunos, registre sessões, aprimore anotações com IA e compartilhe o progresso com os pais — tudo a partir de um único painel. Para professores particulares e pequenas equipes.",
     "cta": "Comece o teste gratuito",
     "price_note": "A partir de {{price}} por mês. 7 dias de teste gratuito. Cancele a qualquer momento.",
     "see_plans": "Ver todos os planos →"
@@ -28,7 +27,8 @@
     "line_4": "Você gasta duas horas com tarefas administrativas para cada cinco horas de aulas particulares."
   },
   "how": {
-    "heading": "Como funciona o Crestio"
+    "heading": "Como funciona o Crestio",
+    "preview_label": "Visualizar"
   },
   "features": {
     "session_log": {
@@ -69,7 +69,8 @@
     "footer_note": "Preços em AUD. Incluindo GST, quando aplicável. Cancele a qualquer momento.",
     "pay_now_secondary": "Pule a versão de avaliação — pague agora →",
     "sticky_mobile_cta": "Comece o teste gratuito",
-    "sticky_mobile_pay_now": "Pagar agora"
+    "sticky_mobile_pay_now": "Pagar agora",
+    "sticky_mobile_dismiss": "Ignorar"
   },
   "tiers": {
     "solo": {
@@ -130,11 +131,11 @@
     "questions_part2": "."
   },
   "footer": {
-    "made_in": "Fabricado na Austrália · 2026",
     "sign_in": "Entrar",
     "privacy": "Privacidade",
     "terms": "Termos",
-    "support": "Suporte"
+    "support": "Suporte",
+    "contact": "Contato"
   },
   "contact": {
     "eyebrow": "Entre em contato",
@@ -151,7 +152,6 @@
     "message_placeholder": "O que você tem em mente?",
     "submit": "Abrir no Mail",
     "submit_note": "Isso abre seu aplicativo de e-mail padrão com a mensagem já redigida. Nada será enviado até que você mesmo a envie.",
-    "footer_location": "crestio · Sydney · 2026",
     "subject_named": "Mensagem de {{name}}",
     "subject_anonymous": "Mensagem do site da Crestio",
     "body_from": "Fonte: {{name}}",

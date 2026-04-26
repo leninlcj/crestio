@@ -15,8 +15,8 @@
       "paid": "Payant",
       "outstanding": "En attente"
     },
-    "no_access": "Vous n'y avez pas accès.",
-    "change_requested": "Modification demandée"
+    "change_requested": "Modification demandée",
+    "banner_dismiss": "Ignorer"
   },
   "nav": {
     "calendar": "Calendrier",
@@ -125,7 +125,8 @@
     "error_not_parent": "Cette connexion est réservée aux parents. Si vous êtes tuteur, connectez-vous à l'adresse /auth/signin.",
     "forgot_need_email": "Entrez d'abord votre adresse e-mail, puis appuyez sur « Mot de passe oublié ».",
     "forgot_sent": "Vérifiez votre boîte mail pour obtenir un lien de réinitialisation.",
-    "invitation_hint": "Vous n'avez pas encore reçu d'invitation de votre tuteur ? Demandez-lui de vous en envoyer une."
+    "invitation_hint": "Vous n'avez pas encore reçu d'invitation de votre tuteur ? Demandez-lui de vous en envoyer une.",
+    "banner_dismiss": "Ignorer"
   },
   "settings_page": {
     "kicker": "Compte",

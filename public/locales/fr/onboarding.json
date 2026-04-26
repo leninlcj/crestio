@@ -7,7 +7,6 @@
     "name_placeholder": "par exemple : Alex Morgan",
     "business_label": "Nom de l'entreprise",
     "business_placeholder": "par exemple : Morgan Tutoring",
-    "business_hint": "Indiqué sur les factures et en haut de votre tableau de bord.",
     "phone_label": "Téléphone (facultatif)",
     "default_rate_label": "Tarif horaire par défaut",
     "currency_label": "Devise",

@@ -15,8 +15,8 @@
       "paid": "已付费",
       "outstanding": "待处理"
     },
-    "no_access": "您没有访问权限。",
-    "change_requested": "请求更改"
+    "change_requested": "请求更改",
+    "banner_dismiss": "关闭"
   },
   "nav": {
     "calendar": "日历",
@@ -125,7 +125,8 @@
     "error_not_parent": "此登录仅限家长使用。如果您是辅导老师，请访问 /auth/signin 登录。",
     "forgot_need_email": "请先输入您的电子邮件地址，然后点击“忘记密码”。",
     "forgot_sent": "请查收您的电子邮件，获取重置链接。",
-    "invitation_hint": "还没收到导师的邀请吗？请他们发一份给你。"
+    "invitation_hint": "还没收到导师的邀请吗？请他们发一份给你。",
+    "banner_dismiss": "关闭"
   },
   "settings_page": {
     "kicker": "账户",

@@ -15,8 +15,8 @@
       "paid": "De pago",
       "outstanding": "Pendientes"
     },
-    "no_access": "No tienes acceso.",
-    "change_requested": "Solicitud de cambio"
+    "change_requested": "Solicitud de cambio",
+    "banner_dismiss": "Descartar"
   },
   "nav": {
     "calendar": "Calendario",
@@ -125,7 +125,8 @@
     "error_not_parent": "Este inicio de sesión es solo para padres. Si eres tutor, inicia sesión en /auth/signin.",
     "forgot_need_email": "Introduce primero tu correo electrónico y, a continuación, pulsa en «Olvidé mi contraseña».",
     "forgot_sent": "Comprueba tu correo electrónico para encontrar el enlace de restablecimiento.",
-    "invitation_hint": "¿Aún no has recibido una invitación de tu tutor? Pídele que te envíe una."
+    "invitation_hint": "¿Aún no has recibido una invitación de tu tutor? Pídele que te envíe una.",
+    "banner_dismiss": "Descartar"
   },
   "settings_page": {
     "kicker": "Cuenta",

@@ -15,8 +15,8 @@
       "paid": "Berbayar",
       "outstanding": "Belum diselesaikan"
     },
-    "no_access": "Anda tidak memiliki akses.",
-    "change_requested": "Perubahan diminta"
+    "change_requested": "Perubahan diminta",
+    "banner_dismiss": "Tutup"
   },
   "nav": {
     "calendar": "Kalender",
@@ -125,7 +125,8 @@
     "error_not_parent": "Masuk ini hanya untuk orang tua. Jika Anda seorang tutor, silakan masuk di /auth/signin.",
     "forgot_need_email": "Masukkan alamat email Anda terlebih dahulu, lalu ketuk Lupa kata sandi.",
     "forgot_sent": "Periksa email Anda untuk tautan reset.",
-    "invitation_hint": "Belum menerima undangan dari tutor Anda? Minta mereka untuk mengirimkannya."
+    "invitation_hint": "Belum menerima undangan dari tutor Anda? Minta mereka untuk mengirimkannya.",
+    "banner_dismiss": "Tutup"
   },
   "settings_page": {
     "kicker": "Akun",

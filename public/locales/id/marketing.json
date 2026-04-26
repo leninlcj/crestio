@@ -15,7 +15,6 @@
   "hero": {
     "eyebrow": "Untuk tutor independen dan tim kecil",
     "heading": "Alat serba guna untuk tutor yang serius dalam pekerjaannya.",
-    "subheading": "Kelola siswa, catat sesi, sempurnakan catatan dengan AI, dan bagikan kemajuan kepada orang tua — semuanya dari satu dasbor. Untuk tutor independen dan tim kecil.",
     "cta": "Mulai uji coba gratis",
     "price_note": "Mulai dari {{price}} per bulan. Uji coba gratis selama 7 hari. Batalkan kapan saja.",
     "see_plans": "Lihat semua paket →"
@@ -28,7 +27,8 @@
     "line_4": "Anda menghabiskan dua jam untuk urusan administrasi untuk setiap lima jam bimbingan belajar yang sebenarnya."
   },
   "how": {
-    "heading": "Cara kerja Crestio"
+    "heading": "Cara kerja Crestio",
+    "preview_label": "Pratinjau"
   },
   "features": {
     "session_log": {
@@ -69,7 +69,8 @@
     "footer_note": "Harga dalam AUD. Termasuk GST jika berlaku. Dapat dibatalkan kapan saja.",
     "pay_now_secondary": "Lewati masa uji coba — bayar sekarang →",
     "sticky_mobile_cta": "Mulai uji coba gratis",
-    "sticky_mobile_pay_now": "Bayar sekarang"
+    "sticky_mobile_pay_now": "Bayar sekarang",
+    "sticky_mobile_dismiss": "Tutup"
   },
   "tiers": {
     "solo": {
@@ -130,11 +131,11 @@
     "questions_part2": "."
   },
   "footer": {
-    "made_in": "Dibuat di Australia · 2026",
     "sign_in": "Masuk",
     "privacy": "Privasi",
     "terms": "Ketentuan",
-    "support": "Dukungan"
+    "support": "Dukungan",
+    "contact": "Hubungi kami"
   },
   "contact": {
     "eyebrow": "Hubungi kami",
@@ -151,7 +152,6 @@
     "message_placeholder": "Apa yang ada di pikiran Anda?",
     "submit": "Buka di Mail",
     "submit_note": "Ini akan membuka aplikasi email bawaan Anda dengan pesan yang sudah dibuat. Pesan tersebut tidak akan terkirim sampai Anda mengirimkannya sendiri.",
-    "footer_location": "crestio · Sydney · 2026",
     "subject_named": "Pesan dari {{name}}",
     "subject_anonymous": "Pesan dari situs web Crestio",
     "body_from": "Dari: {{name}}",

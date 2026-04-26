@@ -122,7 +122,6 @@
     "voice_usage_line": "{{count}} {{max_count}}转录服务 · {{minutes}} 来自 {{max_minutes}} 分钟",
     "voice_resets": "于悉尼时间午夜重置。",
     "voice_load_fail": "无法加载使用情况。",
-    "voice_privacy": "语音功能使用 OpenAI Whisper。您的音频仅在使用麦克风时才会被发送，转录完成后不会被存储，且绝不会用于训练模型。",
     "danger_eyebrow": "危险区域",
     "delete_heading": "删除账户",
     "delete_body_prefix": "此操作将永久删除您的账户、所有学生、课程、发票和教案。此操作无法撤销。请输入 ",
