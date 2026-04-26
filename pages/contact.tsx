@@ -2,8 +2,18 @@ import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useTranslation } from 'react-i18next';
+import { useLocale } from '../lib/localeContext';
 
+// Gate on LocaleProvider's isReady so useTranslation never runs against an
+// uninitialised i18next instance — otherwise the page paints raw keys for
+// ~500ms before hydrating.
 export default function Contact() {
+  const { isReady } = useLocale();
+  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
+  return <ContactInner />;
+}
+
+function ContactInner() {
   const { t } = useTranslation('marketing');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

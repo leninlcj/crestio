@@ -3,13 +3,22 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import Screenshot from '../components/marketing/Screenshot';
 import FaqItem from '../components/marketing/FaqItem';
 import { PLAN_CATALOGUE, type BillingInterval } from '../lib/plans';
 import { useLocaleFormatters } from '../lib/useLocaleFormatters';
+import { useLocale } from '../lib/localeContext';
 import { paymentLinkUrl, isPayablePlan } from '../lib/stripe/payment-links';
 
+// LocaleProvider initialises i18next inside a useEffect; calling useTranslation
+// before that fires returns the keys verbatim. Gate the inner page on isReady
+// so every translation call sees a live instance and we never paint raw keys.
 export default function Home() {
+  const { isReady } = useLocale();
+  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
+  return <HomeInner />;
+}
+
+function HomeInner() {
   const router = useRouter();
   const { t } = useTranslation('marketing');
   const [showDeleted, setShowDeleted] = useState(false);
@@ -193,11 +202,18 @@ export default function Home() {
                       {t(`features.${key}.body`)}
                     </p>
                   </div>
-                  <Screenshot
-                    src={FEATURE_SCREENSHOTS[key]}
-                    alt={t(`features.${key}.alt`)}
-                    caption={t(`features.${key}.caption`)}
-                  />
+                  <div className="rounded-lg border border-rule bg-surface shadow-card overflow-hidden">
+                    <div className="aspect-[16/10] bg-ruleSoft flex items-center justify-center px-6">
+                      <div className="text-center">
+                        <div className="font-display text-xl md:text-2xl tracking-tightest text-ink mb-2 text-balance">
+                          {t(`features.${key}.title`)}
+                        </div>
+                        <div className="text-2xs uppercase tracking-widest text-ink-soft">
+                          Screenshot coming soon
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </article>
               ))}
             </div>
@@ -541,10 +557,3 @@ function StickyMobileCTA() {
 // ---------------------------------------------------------------------------
 
 const FEATURE_KEYS = ['session_log', 'polish', 'invoices', 'parent_portal'] as const;
-
-const FEATURE_SCREENSHOTS: Record<(typeof FEATURE_KEYS)[number], string> = {
-  session_log: '/marketing/screenshot-session-log.png',
-  polish: '/marketing/screenshot-polish.png',
-  invoices: '/marketing/screenshot-invoices.png',
-  parent_portal: '/marketing/screenshot-parent-portal.png',
-};

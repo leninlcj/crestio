@@ -2,8 +2,18 @@ import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
+import { useLocale } from '../../lib/localeContext';
 
+// Gate on LocaleProvider's isReady so useTranslation never runs against an
+// uninitialised i18next instance — otherwise the page paints raw keys for
+// ~500ms before hydrating.
 export default function ForgotPassword() {
+  const { isReady } = useLocale();
+  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
+  return <ForgotPasswordInner />;
+}
+
+function ForgotPasswordInner() {
   const { t } = useTranslation('auth');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);

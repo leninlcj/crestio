@@ -12,7 +12,17 @@ type Props = {
   children: ReactNode;
 };
 
-export function LegalPage({ title, kicker = 'Legal', lastUpdated, toc, children }: Props) {
+// Outer gate: useTranslation called before LocaleProvider finishes booting
+// returns the keys verbatim, which paints raw "footer.copyright" etc for
+// ~500ms before hydration. Hold the render until isReady so the translation
+// instance exists on first paint. Covers both /terms and /privacy.
+export function LegalPage(props: Props) {
+  const { isReady } = useLocale();
+  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
+  return <LegalPageInner {...props} />;
+}
+
+function LegalPageInner({ title, kicker = 'Legal', lastUpdated, toc, children }: Props) {
   const { t } = useTranslation('legal');
   const { locale } = useLocale();
   const showEnglishNotice = locale !== 'en';

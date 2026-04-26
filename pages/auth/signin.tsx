@@ -3,12 +3,22 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
+import { useLocale } from '../../lib/localeContext';
 
 type Step = 'password' | 'mfa';
 
 const MAX_MFA_ATTEMPTS = 5;
 
+// Gate on LocaleProvider's isReady so useTranslation never runs against an
+// uninitialised i18next instance — otherwise the page paints raw keys for
+// ~500ms before hydrating.
 export default function SignIn() {
+  const { isReady } = useLocale();
+  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
+  return <SignInInner />;
+}
+
+function SignInInner() {
   const router = useRouter();
   const { t } = useTranslation('auth');
   const [step, setStep] = useState<Step>('password');

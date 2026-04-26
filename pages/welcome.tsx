@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
+import { useLocale } from '../lib/localeContext';
 import { PLAN_CATALOGUE } from '../lib/plans';
 
 type SessionInfo = {
@@ -29,7 +30,16 @@ type ResendState =
   | { kind: 'rate_limited'; minutes: number }
   | { kind: 'failed' };
 
+// Gate on LocaleProvider's isReady so useTranslation never runs against an
+// uninitialised i18next instance — otherwise the page paints raw keys for
+// ~500ms before hydrating.
 export default function Welcome() {
+  const { isReady } = useLocale();
+  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
+  return <WelcomeInner />;
+}
+
+function WelcomeInner() {
   const { t } = useTranslation('welcome');
   const router = useRouter();
   const [state, setState] = useState<LookupState>({ kind: 'loading' });
