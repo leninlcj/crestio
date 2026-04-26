@@ -11,6 +11,10 @@ function OnboardingInner() {
   const router = useRouter();
   const [ownerName, setOwnerName] = useState('');
   const [businessName, setBusinessName] = useState('');
+  // Suggested business name from the auto-generated org name (e.g. "alex
+  // Tutoring"). Shown as a placeholder; the user must confirm or edit before
+  // it's saved (P1-2.2).
+  const [businessSuggestion, setBusinessSuggestion] = useState('');
   const [phone, setPhone] = useState('');
   const [defaultRate, setDefaultRate] = useState('80');
   const [currency, setCurrency] = useState('AUD');
@@ -37,12 +41,27 @@ function OnboardingInner() {
         if (p.default_rate_cents) setDefaultRate((p.default_rate_cents / 100).toString());
         if (p.currency) setCurrency(p.currency);
       }
+      // The signup trigger seeds organizations.name = "<email_prefix> Tutoring".
+      // Use it as the placeholder so users can take it as-is or edit it.
+      const { data: org } = await supabase
+        .from('organizations')
+        .select('name')
+        .eq('owner_user_id', session.user.id)
+        .maybeSingle();
+      if (org?.name) setBusinessSuggestion(org.name);
     })();
   }, [router]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    const trimmedBusiness = businessName.trim();
+    if (!trimmedBusiness) {
+      setError(t('setup.business_required'));
+      return;
+    }
+
     setLoading(true);
 
     const { data: { session } } = await supabase.auth.getSession();
@@ -52,11 +71,11 @@ function OnboardingInner() {
       return;
     }
 
-    const { error: err } = await supabase
+    const { error: profileErr } = await supabase
       .from('profiles')
       .update({
         owner_name: ownerName || null,
-        business_name: businessName || null,
+        business_name: trimmedBusiness,
         phone: phone || null,
         default_rate_cents: dollarsToCents(defaultRate),
         currency,
@@ -64,9 +83,23 @@ function OnboardingInner() {
       })
       .eq('id', session.user.id);
 
+    if (profileErr) {
+      setLoading(false);
+      setError(profileErr.message);
+      return;
+    }
+
+    // Replace the auto-generated organization name with what the user just
+    // confirmed. This is the name parents see in invitation emails, file
+    // watermarks, etc — must match what the tutor wants from day 1.
+    const { error: orgErr } = await supabase
+      .from('organizations')
+      .update({ name: trimmedBusiness })
+      .eq('owner_user_id', session.user.id);
+
     setLoading(false);
-    if (err) {
-      setError(err.message);
+    if (orgErr) {
+      setError(orgErr.message);
       return;
     }
     router.push('/app');
@@ -104,18 +137,29 @@ function OnboardingInner() {
               />
             </div>
             <div>
-              <label className="label">{t('setup.business_label')}</label>
+              <label htmlFor="onboarding-business" className="label">{t('setup.business_label')}</label>
               <input
+                id="onboarding-business"
                 type="text"
                 required
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 className="input"
-                placeholder={t('setup.business_placeholder')}
+                placeholder={businessSuggestion || t('setup.business_placeholder')}
+                autoComplete="organization"
               />
               <div className="text-2xs text-ink-soft mt-1.5">
                 {t('setup.business_hint')}
               </div>
+              {businessSuggestion && !businessName && (
+                <button
+                  type="button"
+                  onClick={() => setBusinessName(businessSuggestion)}
+                  className="mt-2 text-2xs text-forest hover:text-forest-ink underline underline-offset-2"
+                >
+                  {t('setup.business_use_suggestion', { name: businessSuggestion })}
+                </button>
+              )}
             </div>
             <div>
               <label className="label">{t('setup.phone_label')}</label>
