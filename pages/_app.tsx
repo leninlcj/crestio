@@ -16,6 +16,7 @@ import {
 import BillingRequiredModal from '../components/BillingRequiredModal';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ReferralCapture from '../components/ReferralCapture';
+import { ToastProvider } from '../components/design/Toast';
 import '../styles/globals.css';
 
 type SsrI18n = { locale: string; resources: I18nResources };
@@ -54,9 +55,11 @@ export default function App({ Component, pageProps }: AppProps) {
               <BillingProvider>
                 <ErrorBoundary>
                   <AssistantConversationProvider>
-                    <ReferralCapture />
-                    <Component {...pageProps} />
-                    <BillingRequiredModal />
+                    <ToastProvider>
+                      <ReferralCapture />
+                      <Component {...pageProps} />
+                      <BillingRequiredModal />
+                    </ToastProvider>
                   </AssistantConversationProvider>
                 </ErrorBoundary>
               </BillingProvider>
