@@ -1,16 +1,29 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
 import { serverSideTranslations } from '../../lib/i18nServer';
+import { useIsSignedIn } from '../../lib/useIsSignedIn';
 
 export default function ForgotPassword() {
   const { t } = useTranslation('auth');
+  const router = useRouter();
+  const signedIn = useIsSignedIn();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // If a signed-in user lands here, send them to /app — they don't need a
+  // password reset; clicking "Sign in" from the marketing nav while logged
+  // in used to bounce here for the same reason (P1-1.1).
+  useEffect(() => {
+    if (signedIn === true) router.replace('/app');
+  }, [signedIn, router]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -36,6 +49,9 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
+      <Head>
+        <title>{t('forgot_password.page_title')}</title>
+      </Head>
       <div className="px-6 md:px-12 py-6">
         <Link href="/" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>
@@ -71,9 +87,12 @@ export default function ForgotPassword() {
 
               <form onSubmit={onSubmit} className="space-y-5">
                 <div>
-                  <label className="label">{t('forgot_password.email')}</label>
+                  <label htmlFor="forgot-email" className="label">{t('forgot_password.email')}</label>
                   <input
+                    id="forgot-email"
                     type="email"
+                    name="email"
+                    autoComplete="email"
                     required
                     autoFocus
                     value={email}

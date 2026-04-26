@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
@@ -87,6 +88,9 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
+      <Head>
+        <title>{t('signup.page_title')}</title>
+      </Head>
       <div className="px-6 md:px-12 py-6">
         <Link href="/" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>
@@ -117,17 +121,21 @@ export default function SignUp() {
 
               <form onSubmit={onSubmit} className="space-y-5">
                 <div>
-                  <label className="label">{t('signup.email')}</label>
+                  <label htmlFor="signup-email" className="label">{t('signup.email')}</label>
                   <input
-                    type="email" required autoFocus
+                    id="signup-email"
+                    type="email" name="email" autoComplete="email"
+                    required autoFocus
                     value={email} onChange={(e) => setEmail(e.target.value)}
                     className="input"
                   />
                 </div>
                 <div>
-                  <label className="label">{t('signup.password')}</label>
+                  <label htmlFor="signup-password" className="label">{t('signup.password')}</label>
                   <input
-                    type="password" required minLength={8}
+                    id="signup-password"
+                    type="password" name="new-password" autoComplete="new-password"
+                    required minLength={8}
                     value={password} onChange={(e) => setPassword(e.target.value)}
                     className="input"
                   />
@@ -144,11 +152,13 @@ export default function SignUp() {
                   </button>
                 ) : (
                   <div>
-                    <label className="label">
+                    <label htmlFor="signup-referral" className="label">
                       {t('signup.referral_label')} <span className="text-ink-soft normal-case tracking-normal font-normal">{t('signup.referral_optional')}</span>
                     </label>
                     <input
+                      id="signup-referral"
                       type="text"
+                      name="referral-code"
                       value={referralCode}
                       onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
                       placeholder="CRESTIO-XXXXYYYY"

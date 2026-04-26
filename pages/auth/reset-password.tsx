@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
@@ -47,6 +48,9 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
+      <Head>
+        <title>{t('reset_password.page_title')}</title>
+      </Head>
       <div className="px-6 md:px-12 py-6">
         <Link href="/" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>
@@ -73,9 +77,12 @@ export default function ResetPassword() {
           ) : (
             <form onSubmit={onSubmit} className="space-y-5">
               <div>
-                <label className="label">{t('reset_password.new_password')}</label>
+                <label htmlFor="reset-new-password" className="label">{t('reset_password.new_password')}</label>
                 <input
+                  id="reset-new-password"
                   type="password"
+                  name="new-password"
+                  autoComplete="new-password"
                   required
                   autoFocus
                   minLength={8}

@@ -1,5 +1,6 @@
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +8,7 @@ import { serverSideTranslations } from '../../lib/i18nServer';
 
 type InvitationInfo = {
   valid: boolean;
+  reason?: 'missing' | 'not_found' | 'used' | 'expired';
   email?: string;
   studentName?: string;
   tutorBusinessName?: string;
@@ -22,6 +24,27 @@ export default function ParentAccept() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  // Chrome / 1Password autofill events don't always fire onChange. Poll the
+  // refs once after mount + on focus/blur so the controlled state catches up
+  // with whatever the password manager actually filled in. Without this the
+  // submit button stays disabled even though the inputs visually look filled.
+  useEffect(() => {
+    function syncFromAutofill() {
+      const n = nameRef.current?.value ?? '';
+      const p = passwordRef.current?.value ?? '';
+      if (n && n !== name) setName(n);
+      if (p && p !== password) setPassword(p);
+    }
+    const t = setTimeout(syncFromAutofill, 250);
+    window.addEventListener('focus', syncFromAutofill);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('focus', syncFromAutofill);
+    };
+  }, [name, password]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -71,6 +94,9 @@ export default function ParentAccept() {
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
+      <Head>
+        <title>Accept invitation · Crestio</title>
+      </Head>
       <div className="px-6 md:px-12 py-6">
         <Link href="/" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>
@@ -87,7 +113,11 @@ export default function ParentAccept() {
             <>
               <h1 className="font-display text-3xl tracking-tightest mb-4">{t('accept.invalid_heading')}</h1>
               <p className="text-sm text-ink-muted leading-relaxed mb-6">
-                {info.error ?? t('accept.invalid_default')}{t('accept.invalid_body_suffix')}
+                {info.reason === 'expired'
+                  ? t('accept.invalid_expired')
+                  : info.reason === 'not_found' || info.reason === 'missing'
+                  ? t('accept.invalid_not_found')
+                  : `${info.error ?? t('accept.invalid_default')}${t('accept.invalid_body_suffix')}`}
               </p>
               <Link href="/" className="btn-ghost text-sm">{t('accept.back_home')}</Link>
             </>
@@ -102,21 +132,26 @@ export default function ParentAccept() {
 
               <form onSubmit={onSubmit} className="space-y-5">
                 <div>
-                  <label className="label">{t('accept.email_label')}</label>
-                  <input type="email" disabled value={info.email ?? ''} className="input bg-ink-soft/10" />
+                  <label htmlFor="accept-email" className="label">{t('accept.email_label')}</label>
+                  <input id="accept-email" type="email" name="email" autoComplete="email"
+                    disabled value={info.email ?? ''} className="input bg-ink-soft/10" />
                   <div className="text-2xs text-ink-soft mt-1.5">
                     {t('accept.email_hint')}
                   </div>
                 </div>
                 <div>
-                  <label className="label">{t('accept.name_label')}</label>
-                  <input type="text" value={name}
+                  <label htmlFor="accept-name" className="label">{t('accept.name_label')}</label>
+                  <input id="accept-name" ref={nameRef} type="text"
+                    name="name" autoComplete="name"
+                    value={name}
                     onChange={(e) => setName(e.target.value)} className="input"
                     placeholder={t('accept.name_placeholder')} />
                 </div>
                 <div>
-                  <label className="label">{t('accept.password_label')}</label>
-                  <input type="password" required minLength={8} value={password}
+                  <label htmlFor="accept-password" className="label">{t('accept.password_label')}</label>
+                  <input id="accept-password" ref={passwordRef} type="password"
+                    name="new-password" autoComplete="new-password"
+                    required minLength={8} value={password}
                     onChange={(e) => setPassword(e.target.value)} className="input" />
                   <div className="text-2xs text-ink-soft mt-1.5">{t('accept.password_min')}</div>
                 </div>

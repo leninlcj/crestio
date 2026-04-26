@@ -4,9 +4,11 @@ import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
 import { serverSideTranslations } from '../lib/i18nServer';
+import { useIsSignedIn } from '../lib/useIsSignedIn';
 
 export default function Contact() {
   const { t } = useTranslation('marketing');
+  const signedIn = useIsSignedIn();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -28,12 +30,12 @@ export default function Contact() {
         .filter(Boolean)
         .join('\n')
     );
-    window.location.href = `mailto:hello@crestio.ai?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:support@crestio.ai?subject=${subject}&body=${body}`;
   }
 
   async function copyEmail() {
     try {
-      await navigator.clipboard.writeText('hello@crestio.ai');
+      await navigator.clipboard.writeText('support@crestio.ai');
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -51,9 +53,15 @@ export default function Contact() {
           <Link href="/" className="font-display text-2xl tracking-tightest">
             crest<span className="italic text-forest">io</span>
           </Link>
-          <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">
-            {t('nav.sign_in')}
-          </Link>
+          {signedIn ? (
+            <Link href="/app" className="text-sm text-ink-muted hover:text-ink">
+              {t('nav.go_to_dashboard')}
+            </Link>
+          ) : (
+            <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">
+              {t('nav.sign_in')}
+            </Link>
+          )}
         </nav>
 
         <div className="max-w-xl mx-auto px-6 md:px-12 py-16 md:py-24">
@@ -66,7 +74,7 @@ export default function Contact() {
           <div className="card p-6 mb-8 flex items-center justify-between gap-4">
             <div>
               <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('contact.email_label')}</div>
-              <div className="font-mono text-sm text-ink">hello@crestio.ai</div>
+              <div className="font-mono text-sm text-ink">support@crestio.ai</div>
             </div>
             <button onClick={copyEmail} className="btn-secondary text-xs">
               {copied ? t('contact.copied') : t('contact.copy')}
@@ -78,18 +86,24 @@ export default function Contact() {
               {t('contact.or_send_via_mail')}
             </div>
             <div>
-              <label className="label">{t('contact.name_label')}</label>
+              <label htmlFor="contact-name" className="label">{t('contact.name_label')}</label>
               <input
+                id="contact-name"
                 type="text"
+                name="name"
+                autoComplete="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="input"
               />
             </div>
             <div>
-              <label className="label">{t('contact.email_field_label')}</label>
+              <label htmlFor="contact-email" className="label">{t('contact.email_field_label')}</label>
               <input
+                id="contact-email"
                 type="email"
+                name="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="input"
@@ -99,8 +113,10 @@ export default function Contact() {
               </div>
             </div>
             <div>
-              <label className="label">{t('contact.message_label')}</label>
+              <label htmlFor="contact-message" className="label">{t('contact.message_label')}</label>
               <textarea
+                id="contact-message"
+                name="message"
                 required
                 rows={6}
                 value={message}
@@ -125,7 +141,11 @@ export default function Contact() {
               <Link href="/privacy" className="hover:text-ink">{t('footer.privacy')}</Link>
               <Link href="/terms" className="hover:text-ink">{t('footer.terms')}</Link>
               <Link href="/contact" className="hover:text-ink">{t('contact.eyebrow')}</Link>
-              <Link href="/auth/signin" className="hover:text-ink">{t('nav.sign_in')}</Link>
+              {signedIn ? (
+                <Link href="/app" className="hover:text-ink">{t('nav.go_to_dashboard')}</Link>
+              ) : (
+                <Link href="/auth/signin" className="hover:text-ink">{t('nav.sign_in')}</Link>
+              )}
             </div>
           </div>
         </footer>

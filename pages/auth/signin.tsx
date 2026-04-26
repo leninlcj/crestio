@@ -1,5 +1,6 @@
 import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +49,14 @@ export default function SignIn() {
     const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
     if (signInErr) {
       setLoading(false);
-      setError(signInErr.message);
+      // Translate Supabase's raw "Invalid login credentials" into a humanized
+      // message. Keep ambiguous about whether email or password was wrong.
+      const msg = signInErr.message ?? '';
+      if (/invalid login credentials/i.test(msg)) {
+        setError(t('signin.invalid_credentials'));
+      } else {
+        setError(msg || t('signin.invalid_credentials'));
+      }
       return;
     }
     const { data: aal, error: aalErr } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
@@ -118,6 +126,9 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
+      <Head>
+        <title>{t('signin.page_title')}</title>
+      </Head>
       <div className="px-6 md:px-12 py-6">
         <Link href="/" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>
@@ -146,9 +157,12 @@ export default function SignIn() {
 
               <form onSubmit={onPasswordSubmit} className="space-y-5">
                 <div>
-                  <label className="label">{t('signin.email')}</label>
+                  <label htmlFor="signin-email" className="label">{t('signin.email')}</label>
                   <input
+                    id="signin-email"
                     type="email"
+                    name="email"
+                    autoComplete="email"
                     required
                     autoFocus
                     value={email}
@@ -157,9 +171,12 @@ export default function SignIn() {
                   />
                 </div>
                 <div>
-                  <label className="label">{t('signin.password')}</label>
+                  <label htmlFor="signin-password" className="label">{t('signin.password')}</label>
                   <input
+                    id="signin-password"
                     type="password"
+                    name="current-password"
+                    autoComplete="current-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
