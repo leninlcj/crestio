@@ -183,14 +183,24 @@ export default function Home() {
 
           {/* Pain */}
           <section className="px-6 md:px-12 py-16 md:py-24 max-w-3xl mx-auto">
-            <h2 className="font-display text-3xl md:text-4xl tracking-tightest text-ink mb-10 md:mb-14 text-balance">
+            <h2 className="font-display text-3xl md:text-4xl tracking-tightest text-ink mb-12 md:mb-16 text-balance">
               {t('pain.heading')}
             </h2>
-            <div className="space-y-5 text-base md:text-lg text-ink-muted leading-relaxed">
-              <p>{t('pain.line_1')}</p>
-              <p>{t('pain.line_2')}</p>
-              <p>{t('pain.line_3')}</p>
-              <p>{t('pain.line_4')}</p>
+            <div className="divide-y divide-ruleSoft border-y border-ruleSoft">
+              {[1, 2, 3, 4].map((n) => (
+                <div
+                  key={n}
+                  className="flex items-start gap-5 md:gap-7 py-6 md:py-7"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="mt-2 md:mt-3 block w-px h-5 md:h-6 bg-forest/50 shrink-0"
+                  />
+                  <p className="text-base md:text-lg text-ink-muted leading-relaxed">
+                    {t(`pain.line_${n}`)}
+                  </p>
+                </div>
+              ))}
             </div>
           </section>
 
