@@ -406,7 +406,10 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
       ) : (
         <div className="space-y-2">
           {files.map((f) => (
-            <div key={f.id} className="card p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div
+              key={f.id}
+              className="group card p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30"
+            >
               <div className="flex items-start gap-3 min-w-0 flex-1">
                 <span className="text-ink-muted mt-0.5 shrink-0"><FileTypeIcon mime={f.mime_type} /></span>
                 <div className="min-w-0">
@@ -425,7 +428,7 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
                   ) : (
                     <Link
                       href={`/files/${f.id}`}
-                      className="text-sm text-ink hover:text-forest underline-offset-2 hover:underline truncate block"
+                      className="text-sm text-ink hover:text-forest underline-offset-2 hover:underline truncate block transition-colors duration-200"
                     >
                       {f.display_name}
                     </Link>
@@ -438,7 +441,7 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
                         <button
                           type="button"
                           onClick={() => setExpandedAnalytics((id) => (id === f.id ? null : f.id))}
-                          className="underline underline-offset-2 hover:text-ink"
+                          className="underline underline-offset-2 hover:text-ink transition-colors duration-200"
                         >
                           {t('viewed_count', { count: f.view_count ?? 0 })}
                         </button>
@@ -464,21 +467,25 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
                   />
                   {t('toggle.allow_printing')}
                 </label>
-                <button type="button" onClick={() => startRename(f)} className="btn-ghost text-2xs">
-                  {t('actions.rename')}
-                </button>
-                {students.length > 0 && !f.is_org_library && (
-                  <button
-                    type="button"
-                    onClick={() => { setMoveId(f.id); setMoveTarget(f.student_id ?? ''); }}
-                    className="btn-ghost text-2xs"
-                  >
-                    {t('actions.move')}
+                {/* Hover-revealed actions on desktop. Always visible on touch
+                    so iOS/Android users still have access without a hover. */}
+                <div className="flex items-center gap-1 transition-opacity duration-200 ease-out md:opacity-0 md:group-hover:opacity-100 md:focus-within:opacity-100">
+                  <button type="button" onClick={() => startRename(f)} className="btn-ghost text-2xs">
+                    {t('actions.rename')}
                   </button>
-                )}
-                <button type="button" onClick={() => deleteFile(f.id)} className="btn-ghost text-2xs text-claret">
-                  {t('actions.delete')}
-                </button>
+                  {students.length > 0 && !f.is_org_library && (
+                    <button
+                      type="button"
+                      onClick={() => { setMoveId(f.id); setMoveTarget(f.student_id ?? ''); }}
+                      className="btn-ghost text-2xs"
+                    >
+                      {t('actions.move')}
+                    </button>
+                  )}
+                  <button type="button" onClick={() => deleteFile(f.id)} className="btn-ghost text-2xs text-claret">
+                    {t('actions.delete')}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
