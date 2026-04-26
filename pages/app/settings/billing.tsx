@@ -109,7 +109,7 @@ function BillingInner() {
 
   if (loading && !status) {
     return (
-      <Layout subtitle={t('tabs.billing')} title={t('page_title')}>
+      <Layout pageTitle={`${t('tabs.billing')} · ${t('page_title')}`} subtitle={t('tabs.billing')} title={t('page_title')}>
         <SettingsTabs />
         <div className="max-w-2xl">
           <div className="card p-8 animate-pulse space-y-3">
@@ -178,7 +178,7 @@ function BillingInner() {
   const intervalLabel = billingInterval === 'monthly' ? t('billing.interval_monthly') : t('billing.interval_annual');
 
   return (
-    <Layout subtitle={t('tabs.billing')} title={t('page_title')}>
+    <Layout pageTitle={`${t('tabs.billing')} · ${t('page_title')}`} subtitle={t('tabs.billing')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
         {toast?.show && (

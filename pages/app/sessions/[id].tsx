@@ -498,6 +498,7 @@ function SessionDetailInner() {
 
   return (
     <Layout
+      pageTitle={t('sessions:subtitle_session')}
       subtitle={t('sessions:subtitle_session')}
       title={session.student?.name ?? t('sessions:subtitle_session')}
       actions={

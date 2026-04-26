@@ -66,7 +66,7 @@ function Inner() {
   }
 
   return (
-    <Layout subtitle={t('tabs.notifications')} title={t('page_title')}>
+    <Layout pageTitle={`${t('tabs.notifications')} · ${t('page_title')}`} subtitle={t('tabs.notifications')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl">
         <div className="card p-8 space-y-5">

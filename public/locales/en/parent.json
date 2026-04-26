@@ -1,5 +1,6 @@
 {
   "dashboard": {
+    "page_title_fallback": "Crestio",
     "kicker": "Welcome",
     "greeting": "Hi {{name}}",
     "greeting_fallback": "Your dashboard",
@@ -11,12 +12,15 @@
     "at_a_glance": "At a glance",
     "stats": {
       "sessions_this_month": "Sessions this month",
+      "sessions_completed_this_year": "Completed sessions this year",
       "sessions_this_year": "Sessions this year",
       "paid": "Paid",
       "outstanding": "Outstanding"
     },
-    "no_access": "You don't have access.",
-    "change_requested": "Change requested"
+    "no_access": "You don't have access to that page.",
+    "no_access_banner": "You don't have access to that page.",
+    "change_requested": "Change requested",
+    "banner_dismiss": "Dismiss"
   },
   "nav": {
     "calendar": "Calendar",
@@ -114,6 +118,7 @@
     "heading": "Your notifications"
   },
   "signin": {
+    "page_title": "Parent sign in · Crestio",
     "kicker": "Parent portal",
     "heading": "Sign in",
     "email_label": "Email",
@@ -123,9 +128,13 @@
     "submitting": "Signing in…",
     "error_generic": "Sign-in failed.",
     "error_not_parent": "This sign-in is for parents only. If you're a tutor, sign in at /auth/signin.",
+    "invalid_credentials": "The email or password you entered is incorrect.",
     "forgot_need_email": "Enter your email first, then tap Forgot password.",
     "forgot_sent": "Check your email for a reset link.",
-    "invitation_hint": "Haven't received an invitation from your tutor yet? Ask them to send one."
+    "invitation_hint": "Haven't received an invitation from your tutor yet? Ask them to send one.",
+    "banner_just_created": "Account created. Sign in to access your child's portal.",
+    "banner_session_expired": "You've been signed out.",
+    "banner_dismiss": "Dismiss"
   },
   "settings_page": {
     "kicker": "Account",
@@ -194,6 +203,8 @@
     "verify_failed": "Could not verify invitation. Please try again later.",
     "invalid_heading": "Invitation unavailable",
     "invalid_default": "This invitation link is no longer valid.",
+    "invalid_expired": "This invitation link has expired. Ask your tutor to send a new one.",
+    "invalid_not_found": "This invitation link is invalid. Ask your tutor for a new link.",
     "invalid_body_suffix": " If this is a mistake, ask your tutor to send a new invitation.",
     "back_home": "Back to home",
     "accept_heading": "Accept your invitation",

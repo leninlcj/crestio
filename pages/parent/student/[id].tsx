@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { activeLocale } from '../../../lib/utils';
@@ -218,6 +219,9 @@ function ParentStudentInner() {
 
   return (
     <div className="min-h-screen bg-cream text-ink">
+      <Head>
+        <title>{student?.name ? `${student.name} · Crestio` : 'Crestio'}</title>
+      </Head>
       <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
         <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
           crest<span className="italic text-forest">io</span>

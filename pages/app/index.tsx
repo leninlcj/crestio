@@ -77,7 +77,7 @@ function DashboardInner() {
     : 'greeting_evening';
 
   return (
-    <Layout>
+    <Layout pageTitle={t('page_title')}>
       <div className="max-w-[800px] mx-auto">
         <header className="mb-6 md:mb-8">
           <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('kicker')}</div>

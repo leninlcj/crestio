@@ -109,7 +109,7 @@ function ReferralsInner() {
 
   if (loading || !me) {
     return (
-      <Layout subtitle={t('referrals_page.page.subtitle')} title={t('referrals_page.page.title')}>
+      <Layout pageTitle={`${t('tabs.referrals')} · ${t('page_title')}`} subtitle={t('referrals_page.page.subtitle')} title={t('referrals_page.page.title')}>
         <SettingsTabs />
         <div className="card p-6 text-sm text-ink-muted">{t('referrals_page.loading')}</div>
       </Layout>
@@ -120,7 +120,7 @@ function ReferralsInner() {
   const atCap = me.referrals_remaining_this_year <= 0;
 
   return (
-    <Layout subtitle={t('referrals_page.page.subtitle')} title={t('referrals_page.page.title')}>
+    <Layout pageTitle={`${t('tabs.referrals')} · ${t('page_title')}`} subtitle={t('referrals_page.page.subtitle')} title={t('referrals_page.page.title')}>
       <SettingsTabs />
 
       <div className="max-w-3xl space-y-6">

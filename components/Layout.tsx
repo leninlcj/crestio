@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabase';
 import { useOrganization } from '../lib/organizationContext';
@@ -22,9 +23,13 @@ interface Props {
   title?: string;
   subtitle?: string;
   actions?: ReactNode;
+  // Sets the browser tab title. Defaults to `title` when omitted, then falls
+  // back to "Crestio". Always suffixed with " · Crestio" except when the value
+  // already contains "Crestio".
+  pageTitle?: string;
 }
 
-type NavItem = { href: string; labelKey: string; match: (p: string) => boolean; requires?: 'multi_tutor' | 'households' | 'files_library' };
+type NavItem = { href: string; labelKey: string; match: (p: string) => boolean; requires?: 'multi_tutor' | 'households' };
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/app', labelKey: 'nav.overview', match: (p) => p === '/app' },
@@ -34,13 +39,18 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/app/households', labelKey: 'nav.households', match: (p) => p.startsWith('/app/households'), requires: 'households' },
   { href: '/app/messages', labelKey: 'nav.messages', match: (p) => p.startsWith('/app/messages') },
   { href: '/app/lesson-plans', labelKey: 'nav.lesson_plans', match: (p) => p.startsWith('/app/lesson-plans') },
-  { href: '/app/files', labelKey: 'nav.files', match: (p) => p.startsWith('/app/files'), requires: 'files_library' },
+  // Files entry visible for everyone. On Solo, /app/files renders the
+  // Team-upgrade prompt (existing behaviour); on Team, it shows the org file
+  // index. The plan check below only hides the link, but tutors and Solo
+  // owners still find the page via student detail — having a sidebar entry
+  // is the discoverable path (P2-2.1).
+  { href: '/app/files', labelKey: 'nav.files', match: (p) => p.startsWith('/app/files') },
   { href: '/app/invoices', labelKey: 'nav.invoices', match: (p) => p.startsWith('/app/invoices') },
   { href: '/app/tutors', labelKey: 'nav.tutors', match: (p) => p.startsWith('/app/tutors'), requires: 'multi_tutor' },
   { href: '/app/payouts', labelKey: 'nav.payouts', match: (p) => p.startsWith('/app/payouts'), requires: 'multi_tutor' },
 ];
 
-export default function Layout({ children, title, subtitle, actions }: Props) {
+export default function Layout({ children, title, subtitle, actions, pageTitle }: Props) {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { organization } = useOrganization();
@@ -57,11 +67,6 @@ export default function Layout({ children, title, subtitle, actions }: Props) {
     }
     // Households nav entry: hidden on Solo plan.
     if (item.requires === 'households') {
-      return planTier !== 'solo';
-    }
-    // /app/files nav entry: Team-only (Solo gets the inline Files tab on
-    // student detail; the org-wide page is a Team feature).
-    if (item.requires === 'files_library') {
       return planTier !== 'solo';
     }
     return true;
@@ -134,11 +139,19 @@ export default function Layout({ children, title, subtitle, actions }: Props) {
 
   const avatar = (userEmail[0] ?? 'U').toUpperCase();
 
+  const browserTitleBase = pageTitle ?? title;
+  const browserTitle = browserTitleBase
+    ? (browserTitleBase.includes('Crestio') ? browserTitleBase : `${browserTitleBase} · Crestio`)
+    : 'Crestio';
+
   return (
     <div
       data-assistant-open={assistantOpen ? 'true' : 'false'}
       className="min-h-screen bg-cream flex flex-col"
     >
+      <Head>
+        <title>{browserTitle}</title>
+      </Head>
       <TestAccountBanner />
       <div className="flex flex-1 min-h-0">
       {/* ================= DESKTOP SIDEBAR (nav only) ================= */}

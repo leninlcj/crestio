@@ -51,7 +51,7 @@ function PreferencesInner() {
   }
 
   return (
-    <Layout subtitle={t('tabs.preferences')} title={t('page_title')}>
+    <Layout pageTitle={`${t('tabs.preferences')} · ${t('page_title')}`} subtitle={t('tabs.preferences')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
         <form onSubmit={save} className="card p-8 space-y-5">

@@ -116,7 +116,7 @@ function TeamInner() {
   if (!multiTutorAllowed) {
     const teamPrice = formatMoney(59 * 100, 'AUD', { maximumFractionDigits: 0 });
     return (
-      <Layout subtitle={t('tabs.team')} title={t('page_title')}>
+      <Layout pageTitle={`${t('tabs.team')} · ${t('page_title')}`} subtitle={t('tabs.team')} title={t('page_title')}>
         <SettingsTabs />
         <div className="max-w-2xl">
           <div className="card p-10 text-center">
@@ -137,7 +137,7 @@ function TeamInner() {
   const tutorCount = team?.members.filter((m) => m.role === 'tutor').length ?? 0;
 
   return (
-    <Layout subtitle={t('tabs.team')} title={t('page_title')}>
+    <Layout pageTitle={`${t('tabs.team')} · ${t('page_title')}`} subtitle={t('tabs.team')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
         {team && (

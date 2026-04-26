@@ -12,7 +12,7 @@ function SettingsRedirect() {
     router.replace('/app/settings/account');
   }, [router]);
   return (
-    <Layout title={t('page_title')} subtitle={t('tabs.account')}>
+    <Layout pageTitle={t('page_title')} title={t('page_title')} subtitle={t('tabs.account')}>
       <div className="text-sm text-ink-muted">{t('common.redirecting')}</div>
     </Layout>
   );

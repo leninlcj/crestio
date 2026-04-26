@@ -189,7 +189,7 @@ function AccountInner() {
 
   if (!form) {
     return (
-      <Layout subtitle={t('tabs.account')} title={t('page_title')}>
+      <Layout pageTitle={`${t('tabs.account')} · ${t('page_title')}`} subtitle={t('tabs.account')} title={t('page_title')}>
         <SettingsTabs />
         <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
       </Layout>
@@ -199,7 +199,7 @@ function AccountInner() {
   const deleteKeyword = t('account.delete_confirm_keyword');
 
   return (
-    <Layout subtitle={t('tabs.account')} title={t('page_title')}>
+    <Layout pageTitle={`${t('tabs.account')} · ${t('page_title')}`} subtitle={t('tabs.account')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
         {isTutor && (

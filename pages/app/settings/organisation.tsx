@@ -52,7 +52,7 @@ function OrganisationInner() {
   }
 
   return (
-    <Layout subtitle={t('tabs.organisation')} title={t('page_title')}>
+    <Layout pageTitle={`${t('tabs.organisation')} · ${t('page_title')}`} subtitle={t('tabs.organisation')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl">
         {!organization ? (
