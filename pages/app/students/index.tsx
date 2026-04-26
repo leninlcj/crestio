@@ -7,6 +7,7 @@ import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconUsers, IconArchive } from '../../../components/design/icons';
 import { TableSkeleton } from '../../../components/design/Skeleton';
+import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Student } from '../../../lib/types';
@@ -97,9 +98,15 @@ function StudentsInner() {
       subtitle={t('students:subtitle')}
       title={t('students:title_list')}
       actions={
-        isTutor ? undefined : <Link href="/app/students/new" className="btn-primary">{t('students:actions.add')}</Link>
+        isTutor ? undefined : (
+          <div className="flex items-center gap-2">
+            <Link href="/app/students/import" className="btn-secondary text-xs">Import CSV</Link>
+            <Link href="/app/students/new" className="btn-primary">{t('students:actions.add')}</Link>
+          </div>
+        )
       }
     >
+      <div className="mb-4"><SampleDataBanner /></div>
       {homeworkFilter && (
         <div className="mb-4 flex items-center justify-between gap-3 p-3 rounded bg-forest-soft border border-forest/20 text-sm">
           <span className="text-forest-ink">{t('students:filter_banner.homework_pending')}</span>
