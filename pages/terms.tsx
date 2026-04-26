@@ -1,4 +1,6 @@
+import type { GetStaticProps } from 'next';
 import LegalPage from '../components/LegalPage';
+import { serverSideTranslations } from '../lib/i18nServer';
 
 const TOC = [
   { id: 'agreement', label: 'Agreement' },
@@ -135,3 +137,9 @@ export default function Terms() {
     </LegalPage>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...serverSideTranslations(locale, ['legal']),
+  },
+});

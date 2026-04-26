@@ -1,8 +1,10 @@
 import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
+import { serverSideTranslations } from '../../lib/i18nServer';
 
 export default function ParentSignIn() {
   const { t } = useTranslation('parent');
@@ -114,3 +116,9 @@ export default function ParentSignIn() {
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...serverSideTranslations(locale, ['parent']),
+  },
+});

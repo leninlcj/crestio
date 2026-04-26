@@ -3,9 +3,41 @@
 
 import fs from 'fs';
 import path from 'path';
-import { isSupportedLocale } from './i18n';
+import type { ResourceLanguage } from 'i18next';
+import { isSupportedLocale, type I18nResources } from './i18n';
 
 const FALLBACK = 'en';
+
+function loadNamespace(locale: string, namespace: string): ResourceLanguage[string] {
+  try {
+    const p = path.join(process.cwd(), 'public', 'locales', locale, `${namespace}.json`);
+    return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+// Used by getStaticProps/getServerSideProps to ship pre-loaded translation
+// bundles to the client. Spread the result into props so _app.tsx finds it as
+// pageProps._i18n and inits i18next synchronously before first render — no
+// raw keys ever ship in SSR HTML, and no flicker on hydration.
+//
+// Always includes the English fallback alongside the requested locale so any
+// missing key still renders cleanly via i18next's fallbackLng chain.
+export function serverSideTranslations(
+  locale: string | undefined,
+  namespaces: readonly string[],
+): { _i18n: { locale: string; resources: I18nResources } } {
+  const lng = isSupportedLocale(locale) ? locale : FALLBACK;
+  const langs = lng === FALLBACK ? [FALLBACK] : [lng, FALLBACK];
+  const resources: I18nResources = {};
+  for (const l of langs) {
+    const bundle: ResourceLanguage = {};
+    for (const n of namespaces) bundle[n] = loadNamespace(l, n);
+    resources[l] = bundle;
+  }
+  return { _i18n: { locale: lng, resources } };
+}
 
 // Returns a fixed-locale t() for the given namespace. Loads the matching
 // /public/locales/<lng>/<ns>.json synchronously; falls back to English per key.

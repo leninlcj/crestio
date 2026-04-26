@@ -1,24 +1,16 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import type { GetStaticProps } from 'next';
 import FaqItem from '../components/marketing/FaqItem';
 import { PLAN_CATALOGUE, type BillingInterval } from '../lib/plans';
 import { useLocaleFormatters } from '../lib/useLocaleFormatters';
-import { useLocale } from '../lib/localeContext';
 import { paymentLinkUrl, isPayablePlan } from '../lib/stripe/payment-links';
+import { serverSideTranslations } from '../lib/i18nServer';
 
-// LocaleProvider initialises i18next inside a useEffect; calling useTranslation
-// before that fires returns the keys verbatim. Gate the inner page on isReady
-// so every translation call sees a live instance and we never paint raw keys.
 export default function Home() {
-  const { isReady } = useLocale();
-  if (!isReady) return <div className="min-h-screen bg-cream" aria-hidden />;
-  return <HomeInner />;
-}
-
-function HomeInner() {
   const router = useRouter();
   const { t } = useTranslation('marketing');
   const [showDeleted, setShowDeleted] = useState(false);
@@ -333,8 +325,6 @@ function MarketingPricing() {
   const { t } = useTranslation('marketing');
   const [interval, setInterval] = useState<BillingInterval>('monthly');
 
-  const mobileOrder = useMemo<MarketingTier[]>(() => [TIER_BASE[1], TIER_BASE[0], TIER_BASE[2]], []);
-
   return (
     <section
       id="pricing"
@@ -380,15 +370,9 @@ function MarketingPricing() {
         </div>
       </div>
 
-      {/* Mobile (Team-first) */}
-      <div className="md:hidden grid gap-5">
-        {mobileOrder.map((tier) => (
-          <TierCard key={tier.tier} tier={tier} interval={interval} mobile />
-        ))}
-      </div>
-
-      {/* Desktop (Solo · Team · Growth, with Team elevated) */}
-      <div className="hidden md:grid md:grid-cols-3 md:gap-6 md:items-start">
+      {/* One grid for all viewports — mobile stacks (1 col, Team first via
+          per-card order classes); desktop is 3 cols Solo · Team · Growth. */}
+      <div className="grid gap-5 md:grid-cols-3 md:gap-6 md:items-start">
         {TIER_BASE.map((tier) => (
           <TierCard key={tier.tier} tier={tier} interval={interval} />
         ))}
@@ -401,14 +385,20 @@ function MarketingPricing() {
   );
 }
 
+// Mobile order: Team, Solo, Growth (recommended tier first). Desktop: source
+// order Solo, Team, Growth. CSS `order` resets at md+ via md:order-none.
+const TIER_MOBILE_ORDER: Record<TierKey, string> = {
+  team: 'order-1 md:order-none',
+  solo: 'order-2 md:order-none',
+  growth: 'order-3 md:order-none',
+};
+
 function TierCard({
   tier,
   interval,
-  mobile = false,
 }: {
   tier: MarketingTier;
   interval: BillingInterval;
-  mobile?: boolean;
 }) {
   const { t } = useTranslation('marketing');
   const { formatMoney } = useLocaleFormatters();
@@ -425,11 +415,10 @@ function TierCard({
   const baseCard = [
     'flex flex-col relative overflow-hidden',
     'rounded-md',
+    TIER_MOBILE_ORDER[tier.tier],
     highlight
-      ? 'border-2 border-forest bg-forest/[0.06]'
+      ? 'border-2 border-forest bg-forest/[0.06] md:-translate-y-4 md:shadow-lift'
       : 'border border-rule bg-surface',
-    !mobile && highlight ? 'md:-translate-y-4' : '',
-    !mobile && highlight ? 'md:shadow-lift' : '',
   ].filter(Boolean).join(' ');
 
   const priceSize = highlight
@@ -557,3 +546,9 @@ function StickyMobileCTA() {
 // ---------------------------------------------------------------------------
 
 const FEATURE_KEYS = ['session_log', 'polish', 'invoices', 'parent_portal'] as const;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...serverSideTranslations(locale, ['marketing']),
+  },
+});

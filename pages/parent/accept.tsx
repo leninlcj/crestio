@@ -1,7 +1,9 @@
 import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
+import { serverSideTranslations } from '../../lib/i18nServer';
 
 type InvitationInfo = {
   valid: boolean;
@@ -133,3 +135,9 @@ export default function ParentAccept() {
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...serverSideTranslations(locale, ['parent']),
+  },
+});
