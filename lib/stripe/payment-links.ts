@@ -23,8 +23,8 @@ const PAYMENT_LINKS_RAW: Record<StripeMode, ModeConfig> = {
     team: { monthly: 'https://buy.stripe.com/test_4gM14pfkz3LN8uO1kq0ZW02', annual: 'https://buy.stripe.com/test_00w5kFa0faab8uO1kq0ZW03' },
   },
   live: {
-    solo: { monthly: '', annual: '' },
-    team: { monthly: '', annual: '' },
+    solo: { monthly: 'https://buy.stripe.com/8x2cN42zteLw3zZbumdjO01', annual: 'https://buy.stripe.com/aFa6oGeibcDo3zZ2XQdjO03' },
+    team: { monthly: 'https://buy.stripe.com/bJe4gy2ztbzkb2r8iadjO02', annual: 'https://buy.stripe.com/00wdR80rl9rc8Uj0PIdjO00' },
   },
 };
 // --- END payment-links ---
