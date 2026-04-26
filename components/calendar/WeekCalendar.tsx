@@ -2,14 +2,14 @@ import { useMemo } from 'react';
 import type { CalendarSession } from './types';
 import { activeLocale } from '../../lib/utils';
 
-// Week view grid: 7 day-columns × (6am-10pm = 16 rows). Sessions render
+// Week view grid: 7 day-columns × (5am-11pm = 18 rows). Sessions render
 // as absolutely-positioned blocks inside their day column.
 //
 // The `daysToShow` prop lets callers render a 1-day (mobile) or 7-day view
-// from the same component. Time range is fixed at 06:00-22:00.
+// from the same component. Time range is fixed at 05:00-23:00.
 
-const HOUR_START = 6;
-const HOUR_END = 22; // exclusive (so 16 hour rows)
+const HOUR_START = 5;
+const HOUR_END = 23; // exclusive (so 18 hour rows)
 const HOURS = HOUR_END - HOUR_START;
 const ROW_HEIGHT_PX = 44; // each hour = 44px
 const DAY_LABEL_FMT: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric' };
