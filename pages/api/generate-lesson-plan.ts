@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { LESSON_PLAN_DAILY_LIMIT } from '../../lib/rateLimits';
 import { getOrganizationIdForUser } from '../../lib/organization';
 import { getMembershipForUser } from '../../lib/membership';
 import { isOrgBillingOk } from '../../lib/billing';
 import { checkRateLimit, LIMITS } from '../../lib/rateLimit';
+import { callAI } from '../../lib/ai/router';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -152,18 +152,17 @@ One homework task, specific and assignable.
 Keep it concrete, avoid filler. Write the entire plan in ${aiLanguageName}, using natural phrasing for that language — section headings translated too. Do not include meta-commentary or explain what you are doing — just produce the plan.`;
 
   try {
-    const client = new Anthropic({ apiKey });
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
+    const aiResult = await callAI({
+      task: 'lesson_plan',
+      userPrompt: prompt,
+      maxTokens: 2000,
+      userId,
+      organizationId,
     });
-
-    const textBlock = response.content.find((b) => b.type === 'text');
-    const plan = textBlock && textBlock.type === 'text' ? textBlock.text : '';
+    const plan = aiResult.text;
 
     if (!plan) {
-      console.error('Empty response from Anthropic; stop_reason=', response.stop_reason);
+      console.error('Empty response from AI router (lesson plan)');
       return res.status(502).json({ error: 'Empty response from model.' });
     }
 

@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { LESSON_NOTES_POLISH_DAILY_LIMIT } from '../../lib/rateLimits';
 import { getOrganizationIdForUser } from '../../lib/organization';
@@ -7,6 +6,7 @@ import { getMembershipForUser } from '../../lib/membership';
 import { isOrgBillingOk } from '../../lib/billing';
 import { checkRateLimit, LIMITS } from '../../lib/rateLimit';
 import { LOCALE_AI_NAME, isSupportedLocale } from '../../lib/i18n';
+import { callAI } from '../../lib/ai/router';
 
 const WINDOW_MS = 24 * 60 * 60 * 1000;
 
@@ -173,17 +173,16 @@ ${rawNotes}
 Output only the polished notes. No preamble.`;
 
   try {
-    const client = new Anthropic({ apiKey });
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 800,
-      messages: [{ role: 'user', content: systemPrompt }],
+    const aiResult = await callAI({
+      task: 'polish',
+      userPrompt: systemPrompt,
+      maxTokens: 800,
+      userId,
+      organizationId,
     });
-
-    const textBlock = response.content.find((b) => b.type === 'text');
-    const polishedNotes = textBlock && textBlock.type === 'text' ? textBlock.text.trim() : '';
+    const polishedNotes = aiResult.text;
     if (!polishedNotes) {
-      console.error('polish-session-notes: empty response; stop_reason=', response.stop_reason);
+      console.error('polish-session-notes: empty response from router');
       return res.status(502).json({ error: 'Empty response from model.' });
     }
 

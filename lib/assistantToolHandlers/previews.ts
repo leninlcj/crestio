@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { callAI } from '../ai/router';
 import type {
   LogSessionInput,
   PolishNotesInput,
@@ -151,7 +151,6 @@ function parseDurationMinutes(raw: number | undefined): number {
 export async function previewPolishNotes(
   ctx: ToolCallerContext,
   input: PolishNotesInput,
-  anthropicKey: string,
 ): Promise<Result<PolishNotesPreview>> {
   const { client, membership } = ctx;
   const ref = (input.session_reference ?? '').trim();
@@ -202,12 +201,13 @@ export async function previewPolishNotes(
   }
 
   const polished = await callPolishLLM({
-    anthropicKey,
     rawNotes: raw,
     studentFirstName: studentFirst,
     yearLevel: student?.year_level ?? null,
     subject: sessionRow.subject ?? null,
     durationMinutes: sessionRow.duration_minutes ?? 60,
+    userId: membership.user_id,
+    organizationId: membership.organization_id,
   });
   if (!polished.ok || !polished.polishedNotes) {
     return { kind: 'failure', message: polished.error ?? 'The polish step failed. Try again in a moment.' };
@@ -235,14 +235,15 @@ export async function previewPolishNotes(
 }
 
 async function callPolishLLM(args: {
-  anthropicKey: string;
   rawNotes: string;
   studentFirstName: string;
   yearLevel: string | null;
   subject: string | null;
   durationMinutes: number;
+  userId: string;
+  organizationId: string;
 }): Promise<{ ok: boolean; polishedNotes?: string; error?: string }> {
-  const { anthropicKey, rawNotes, studentFirstName, yearLevel, subject, durationMinutes } = args;
+  const { rawNotes, studentFirstName, yearLevel, subject, durationMinutes, userId, organizationId } = args;
   const studentLine = [
     `Student: ${studentFirstName}`,
     yearLevel ? `Year ${yearLevel}` : '',
@@ -276,15 +277,15 @@ ${rawNotes}
 Output only the polished notes. No preamble.`;
 
   try {
-    const client = new Anthropic({ apiKey: anthropicKey });
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 800,
-      messages: [{ role: 'user', content: prompt }],
+    const result = await callAI({
+      task: 'polish',
+      userPrompt: prompt,
+      maxTokens: 800,
+      userId,
+      organizationId,
     });
-    const text = (response.content.find((b) => b.type === 'text') as any)?.text?.trim();
-    if (!text) return { ok: false, error: 'Empty response from polish model.' };
-    return { ok: true, polishedNotes: text };
+    if (!result.text) return { ok: false, error: 'Empty response from polish model.' };
+    return { ok: true, polishedNotes: result.text };
   } catch (e: any) {
     return { ok: false, error: e?.message ?? 'Polish call failed.' };
   }
@@ -688,7 +689,6 @@ export async function previewMarkInvoicePaid(
 export async function previewSendParentUpdate(
   ctx: ToolCallerContext,
   input: SendParentUpdateInput,
-  anthropicKey: string,
 ): Promise<Result<SendParentUpdatePreview>> {
   const { client, membership } = ctx;
 
@@ -736,7 +736,6 @@ export async function previewSendParentUpdate(
   }
 
   const draft = await draftParentUpdate({
-    anthropicKey,
     studentFirstName: firstName(student.name) || 'your child',
     yearLevel: student.year_level,
     tone,
@@ -747,6 +746,8 @@ export async function previewSendParentUpdate(
       notes: s.notes_parent_facing || s.notes_internal || '',
       duration: s.duration_minutes,
     })),
+    userId: membership.user_id,
+    organizationId: membership.organization_id,
   });
   if (!draft.ok || !draft.content) {
     return { kind: 'failure', message: draft.error ?? 'Could not draft the update.' };
@@ -768,13 +769,14 @@ export async function previewSendParentUpdate(
 }
 
 async function draftParentUpdate(args: {
-  anthropicKey: string;
   studentFirstName: string;
   yearLevel: string | null;
   tone: 'warm' | 'brief' | 'detailed';
   sessions: Array<{ date: string; subject: string | null; topic: string | null; notes: string; duration: number }>;
+  userId: string;
+  organizationId: string;
 }): Promise<{ ok: boolean; content?: string; error?: string }> {
-  const { anthropicKey, studentFirstName, yearLevel, tone, sessions } = args;
+  const { studentFirstName, yearLevel, tone, sessions, userId, organizationId } = args;
 
   const toneGuide = {
     warm: 'Warm and personal. Two short paragraphs. Reference one or two specifics.',
@@ -798,15 +800,15 @@ ${sessionsBlock}
 Output only the update body. No preamble.`;
 
   try {
-    const client = new Anthropic({ apiKey: anthropicKey });
-    const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 600,
-      messages: [{ role: 'user', content: prompt }],
+    const result = await callAI({
+      task: 'session_summary',
+      userPrompt: prompt,
+      maxTokens: 600,
+      userId,
+      organizationId,
     });
-    const text = (response.content.find((b) => b.type === 'text') as any)?.text?.trim();
-    if (!text) return { ok: false, error: 'Empty response.' };
-    return { ok: true, content: text };
+    if (!result.text) return { ok: false, error: 'Empty response.' };
+    return { ok: true, content: result.text };
   } catch (e: any) {
     return { ok: false, error: e?.message ?? 'Draft call failed.' };
   }

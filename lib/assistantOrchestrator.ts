@@ -75,6 +75,8 @@ import {
   previewCreateBatchInvoices,
 } from './assistantToolHandlers/previews';
 import { ToolCallerContext } from './assistantToolHandlers/shared';
+import { classifyAssistantQuery, getModelForTask } from './ai/router';
+import { createClient } from '@supabase/supabase-js';
 
 type AnthropicMessage = Anthropic.Messages.MessageParam;
 
@@ -252,10 +254,19 @@ export async function runAssistantTurn(args: {
     const history = await loadHistory(userClient, conversationId);
     const messages = rehydrateForClaude(history);
 
+    // Pick model from the latest user input. Iterations after a tool call
+    // stay on whatever the first iteration picked — once Claude is in the
+    // middle of using tools, switching models mid-conversation is a non-goal.
+    const lastUserText = extractLastUserText(history);
+    const taskType = iteration === 0
+      ? classifyAssistantQuery(lastUserText ?? '')
+      : 'assistant_complex';
+    const modelForTurn = getModelForTask(taskType);
+
     let response;
     try {
       response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
+        model: modelForTurn,
         max_tokens: 1024,
         system: systemPrompt,
         tools: effectiveTools as any,
@@ -265,6 +276,15 @@ export async function runAssistantTurn(args: {
       console.error('[assistant] Anthropic call failed:', e);
       return { new_messages: collected, error: 'Assistant is unavailable right now. Try again in a moment.' };
     }
+
+    // Log call cost (best-effort; doesn't affect response).
+    void logAssistantCall({
+      userId: membership.user_id,
+      organizationId: membership.organization_id,
+      taskType,
+      model: modelForTurn,
+      usage: response.usage as any,
+    });
 
     const contentBlocks = response.content as any[];
     const textBlocks = contentBlocks.filter((b) => b.type === 'text');
@@ -355,7 +375,6 @@ export async function runAssistantTurn(args: {
         ctx,
         toolUseBlock.name as ToolName,
         toolUseBlock.input,
-        anthropicKey,
       );
 
       if (previewResult.kind === 'failure') {
@@ -437,7 +456,6 @@ async function runWritePreview(
   ctx: ToolCallerContext,
   name: ToolName,
   input: unknown,
-  anthropicKey: string,
 ): Promise<PreviewResult> {
   const wrap = <T extends AnyPreview>(r: { kind: 'success'; value: T } | { kind: 'failure'; message: string }): PreviewResult => {
     if (r.kind === 'success') return { kind: 'success', preview: r.value };
@@ -448,7 +466,7 @@ async function runWritePreview(
     case 'log_session':
       return wrap(await previewLogSession(ctx, input as LogSessionInput));
     case 'polish_notes':
-      return wrap(await previewPolishNotes(ctx, input as PolishNotesInput, anthropicKey));
+      return wrap(await previewPolishNotes(ctx, input as PolishNotesInput));
     case 'create_student':
       return wrap(await previewCreateStudent(ctx, input as CreateStudentInput));
     case 'update_student':
@@ -460,7 +478,7 @@ async function runWritePreview(
     case 'mark_invoice_paid':
       return wrap(await previewMarkInvoicePaid(ctx, input as MarkInvoicePaidInput));
     case 'send_parent_update':
-      return wrap(await previewSendParentUpdate(ctx, input as SendParentUpdateInput, anthropicKey));
+      return wrap(await previewSendParentUpdate(ctx, input as SendParentUpdateInput));
     case 'send_message':
       return wrap(await previewSendMessage(ctx, input as SendMessageInput));
     case 'mark_notifications_read':
@@ -524,4 +542,56 @@ export async function persistUserText(
     role: 'user',
     content: { text: args.text },
   });
+}
+
+function extractLastUserText(history: DbMessageRow[]): string | null {
+  for (let i = history.length - 1; i >= 0; i--) {
+    const row = history[i];
+    if (row.role !== 'user') continue;
+    const text = row.content?.text;
+    if (typeof text === 'string' && text.trim()) return text;
+  }
+  return null;
+}
+
+const HAIKU_MODEL_ID = 'claude-haiku-4-5-20251001';
+const SONNET_MODEL_ID = 'claude-sonnet-4-6';
+const PRICING_USD_PER_MTOK: Record<string, { input: number; output: number }> = {
+  [HAIKU_MODEL_ID]: { input: 1, output: 5 },
+  [SONNET_MODEL_ID]: { input: 3, output: 15 },
+};
+
+async function logAssistantCall(args: {
+  userId: string;
+  organizationId: string;
+  taskType: 'assistant_simple' | 'assistant_complex';
+  model: string;
+  usage: { input_tokens?: number; output_tokens?: number } | null | undefined;
+}): Promise<void> {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) return;
+    const admin = createClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+    const inputTokens = args.usage?.input_tokens ?? 0;
+    const outputTokens = args.usage?.output_tokens ?? 0;
+    const p = PRICING_USD_PER_MTOK[args.model];
+    const cost = p
+      ? Math.round(((inputTokens * p.input + outputTokens * p.output) / 1_000_000) * 1_000_000) / 1_000_000
+      : 0;
+    await admin.from('ai_call_logs').insert({
+      user_id: args.userId,
+      organization_id: args.organizationId,
+      task_type: args.taskType,
+      model: args.model,
+      input_tokens: inputTokens,
+      output_tokens: outputTokens,
+      cost_usd: cost,
+      escalated: false,
+    });
+  } catch (err) {
+    console.error('[assistant] ai_call_logs insert failed (non-fatal)', err);
+  }
 }
