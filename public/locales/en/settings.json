@@ -122,7 +122,7 @@
     "voice_usage_line": "{{count}} of {{max_count}} transcriptions used · {{minutes}} of {{max_minutes}} minutes",
     "voice_resets": "Resets at midnight Sydney time.",
     "voice_load_fail": "Couldn't load usage.",
-    "voice_privacy": "Voice uses OpenAI Whisper. Your audio is sent only when you use the microphone, is not stored after transcription, and is never used to train models.",
+    "voice_privacy": "Voice transcription is processed by an AI service provider. Your audio is sent only when you use the microphone, is not stored after transcription, and is never used to train models.",
     "danger_eyebrow": "Danger zone",
     "delete_heading": "Delete account",
     "delete_body_prefix": "This permanently deletes your account, all your students, sessions, invoices, and lesson plans. This cannot be undone. Type ",
