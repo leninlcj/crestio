@@ -1,6 +1,7 @@
 import { activeLocale } from '../../lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../lib/supabase';
 import type { ThreadSummary, Viewer } from './types';
 
@@ -28,6 +29,7 @@ function relativeTime(iso: string | null): string {
 }
 
 export function ThreadList({ basePath, allowArchiveToggle }: Props) {
+  const { t } = useTranslation('messages');
   const [threads, setThreads] = useState<ThreadSummary[] | null>(null);
   const [viewer, setViewer] = useState<Viewer | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,6 +37,11 @@ export function ThreadList({ basePath, allowArchiveToggle }: Props) {
   const [query, setQuery] = useState('');
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
+
+  // basePath is the source of truth for POV — works even before the threads
+  // API responds, so the empty state copy doesn't briefly render the wrong
+  // perspective (P1-2.1).
+  const isTutorView = basePath === '/app/messages';
 
   useEffect(() => {
     (async () => {
@@ -105,11 +112,9 @@ export function ThreadList({ basePath, allowArchiveToggle }: Props) {
         <div className="card p-6 text-sm text-claret">{error}</div>
       ) : filtered.length === 0 ? (
         <div className="card p-8 text-center">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">No messages yet</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('empty.kicker')}</div>
           <p className="text-sm text-ink-muted">
-            {viewer === 'tutor'
-              ? "Parents can message you about their child's sessions — they'll appear here."
-              : "Messages with your tutor will appear here."}
+            {isTutorView ? t('empty.body_tutor') : t('empty.body_parent')}
           </p>
         </div>
       ) : (

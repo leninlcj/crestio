@@ -5,7 +5,10 @@
   "loading": "Loading…",
   "empty": {
     "no_threads": "No messages yet.",
-    "no_messages": "No messages in this thread yet."
+    "no_messages": "No messages in this thread yet.",
+    "kicker": "No messages yet",
+    "body_tutor": "Messages from your students' parents will appear here.",
+    "body_parent": "Messages with your tutor will appear here."
   },
   "compose": {
     "placeholder": "Type a message…",
