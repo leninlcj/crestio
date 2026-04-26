@@ -16,6 +16,10 @@
     {
       "path": "/api/cron/homework-overdue",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/generate-template-sessions",
+      "schedule": "0 2 * * *"
     }
   ]
 }

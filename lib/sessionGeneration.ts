@@ -27,7 +27,23 @@ export type SessionTemplate = {
   effective_from: string;
   effective_until: string | null;
   cancelled_at: string | null;
+  notes_template: string | null;
+  generated_through_date: string | null;
 };
+
+// Substitute {student_name} {date} {subject} placeholders in a notes template.
+// Used by the cron + sessions/create flow when a template has notes_template
+// configured. Anything that isn't a known placeholder is left untouched so
+// users can use literal braces if they want.
+export function applyNotesTemplate(
+  template: string,
+  vars: { studentName: string; dateIso: string; subject: string | null },
+): string {
+  return template
+    .replace(/\{student_name\}/g, vars.studentName)
+    .replace(/\{date\}/g, vars.dateIso)
+    .replace(/\{subject\}/g, vars.subject ?? '');
+}
 
 // Return the list of local-date YYYY-MM-DD occurrences for a template over
 // [fromDate, toDate]. Handles weekly/fortnightly/monthly.
@@ -88,26 +104,59 @@ export async function generateSessionsForTemplate(
     .lte('scheduled_at', scheduledAtList[scheduledAtList.length - 1]);
   const existingSet = new Set(((existing ?? []) as Array<{ scheduled_at: string }>).map((r) => r.scheduled_at));
 
-  const toInsert = scheduledAtList
-    .filter((iso) => !existingSet.has(iso))
-    .map((scheduled_at) => ({
+  // Resolve the student name once for notes_template substitution.
+  let studentName = '';
+  if (template.notes_template) {
+    const { data: stu } = await admin
+      .from('students').select('name').eq('id', template.student_id).maybeSingle();
+    studentName = (stu?.name as string | undefined) ?? '';
+  }
+
+  const newPairs = scheduledAtList
+    .map((iso, i) => ({ iso, dateIso: occurrences[i] }))
+    .filter((p) => !existingSet.has(p.iso));
+
+  const toInsert = newPairs.map(({ iso, dateIso }) => {
+    const notes = template.notes_template
+      ? applyNotesTemplate(template.notes_template, {
+          studentName,
+          dateIso,
+          subject: template.subject,
+        })
+      : null;
+    return {
       organization_id: template.organization_id,
       owner_id: template.created_by_user_id,
       student_id: template.student_id,
       tutor_user_id: template.tutor_user_id,
       session_template_id: template.id,
       subject: template.subject,
-      scheduled_at,
+      scheduled_at: iso,
       duration_minutes: template.duration_minutes,
       status: 'scheduled',
-    }));
-  if (toInsert.length === 0) return 0;
+      notes_internal: notes,
+    };
+  });
 
-  const { error } = await admin.from('sessions').insert(toInsert);
-  if (error) {
-    console.error('[sessionGeneration] insert failed', error);
-    return 0;
+  if (toInsert.length > 0) {
+    const { error } = await admin.from('sessions').insert(toInsert);
+    if (error) {
+      console.error('[sessionGeneration] insert failed', error);
+      return 0;
+    }
   }
+
+  // Bump the generated_through_date watermark even if nothing new was
+  // inserted (templates with no future occurrences still get marked so the
+  // cron skips them next run).
+  const lastDate = occurrences[occurrences.length - 1];
+  if (lastDate && (!template.generated_through_date || lastDate > template.generated_through_date)) {
+    await admin
+      .from('session_templates')
+      .update({ generated_through_date: lastDate })
+      .eq('id', template.id);
+  }
+
   return toInsert.length;
 }
 

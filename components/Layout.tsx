@@ -35,6 +35,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/app', labelKey: 'nav.overview', match: (p) => p === '/app' },
   { href: '/app/calendar', labelKey: 'nav.calendar', match: (p) => p.startsWith('/app/calendar') },
   { href: '/app/sessions', labelKey: 'nav.sessions', match: (p) => p.startsWith('/app/sessions') },
+  { href: '/app/templates', labelKey: 'nav.templates', match: (p) => p.startsWith('/app/templates') },
   { href: '/app/students', labelKey: 'nav.students', match: (p) => p.startsWith('/app/students') },
   { href: '/app/households', labelKey: 'nav.households', match: (p) => p.startsWith('/app/households'), requires: 'households' },
   { href: '/app/messages', labelKey: 'nav.messages', match: (p) => p.startsWith('/app/messages') },
