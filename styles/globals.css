@@ -99,7 +99,17 @@
     @apply w-full;
   }
   .table th {
-    @apply text-left text-2xs uppercase tracking-widest text-ink-muted font-medium px-5 py-3.5 border-b border-rule bg-ruleSoft/40 whitespace-nowrap;
+    @apply text-left text-2xs uppercase tracking-widest text-ink-muted font-medium px-5 py-3.5 border-b border-rule bg-ruleSoft whitespace-nowrap;
+  }
+  /* Sticky table headers on desktop. Offset accounts for the 56px sticky
+     top bar in Layout. On mobile we typically convert to card layouts so
+     stickiness isn't needed. */
+  @media (min-width: 768px) {
+    .table thead th {
+      position: sticky;
+      top: 56px;
+      z-index: 5;
+    }
   }
   .table td {
     @apply px-5 py-4 text-sm border-b border-ruleSoft;
@@ -107,8 +117,14 @@
   .table tr:last-child td {
     @apply border-b-0;
   }
+  .table tbody tr {
+    @apply transition-colors duration-150 ease-out;
+  }
   .table tr.row-link {
-    @apply cursor-pointer transition-colors hover:bg-ruleSoft/60 active:bg-ruleSoft/80;
+    @apply cursor-pointer hover:bg-ruleSoft/60 active:bg-ruleSoft/80;
+  }
+  .table tbody tr:not(.row-link):hover {
+    @apply bg-ruleSoft/30;
   }
 
   .badge {
