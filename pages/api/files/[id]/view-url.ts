@@ -10,7 +10,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import { checkRateLimit, LIMITS } from '../../../../lib/rateLimit';
-import { getPlanLimits, watermarkFor, deriveViewerRole } from '../../../../lib/files';
+import { watermarkFor, deriveViewerRole } from '../../../../lib/files';
 import type { PlanTier } from '../../../../lib/billing';
 
 const SIGNED_DOWNLOAD_TTL = 60;
@@ -107,11 +107,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: 'Could not prepare view URL.' });
   }
 
-  // Resolve plan tier for watermark gating.
+  // Resolve plan tier for watermark text (Solo: brand only; Team/Growth: org
+  // name prefix). Watermarks render for every viewer now (P1-3.1).
   const { data: org } = await admin
     .from('organizations').select('plan_tier, name').eq('id', file.organization_id).maybeSingle();
   const planTier = (org?.plan_tier ?? 'solo') as PlanTier;
-  const limits = getPlanLimits(planTier);
 
   // Audit row — server-side guarantee.
   const ipHeader = (req.headers['x-forwarded-for'] as string | undefined) ?? '';
@@ -123,13 +123,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     isParent: viewerRoleHint === 'parent',
   });
 
-  await admin.from('file_views').insert({
-    file_id: fileId,
-    viewer_user_id: userId,
-    viewer_role: viewerRole,
-    ip_address: ipAddress,
-    user_agent: userAgent ? userAgent.slice(0, 500) : null,
-  });
+  // Dedupe within a 5-minute window (P2-3.2). Casual back-and-forth from one
+  // viewer would otherwise log multiple rows; we collapse those into a single
+  // event with viewed_at bumped on each return.
+  const dedupeWindowMs = 5 * 60 * 1000;
+  const sinceIso = new Date(Date.now() - dedupeWindowMs).toISOString();
+  const { data: recentView } = await admin
+    .from('file_views')
+    .select('id')
+    .eq('file_id', fileId)
+    .eq('viewer_user_id', userId)
+    .gte('viewed_at', sinceIso)
+    .order('viewed_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (recentView?.id) {
+    await admin
+      .from('file_views')
+      .update({ viewed_at: new Date().toISOString() })
+      .eq('id', recentView.id);
+  } else {
+    await admin.from('file_views').insert({
+      file_id: fileId,
+      viewer_user_id: userId,
+      viewer_role: viewerRole,
+      ip_address: ipAddress,
+      user_agent: userAgent ? userAgent.slice(0, 500) : null,
+    });
+  }
 
   const expiresAt = new Date(Date.now() + SIGNED_DOWNLOAD_TTL * 1000).toISOString();
 
@@ -137,7 +159,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     signed_url: signed.signedUrl,
     expires_at: expiresAt,
     mime_type: file.mime_type,
-    watermark_text: limits.watermark ? watermarkFor(org?.name) : null,
+    watermark_text: watermarkFor(org?.name, planTier),
     allow_printing: file.allow_printing === true,
   });
 }
