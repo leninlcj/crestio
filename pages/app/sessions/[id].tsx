@@ -118,6 +118,17 @@ function SessionDetailInner() {
   const [polishing, setPolishing] = useState(false);
   const [polishError, setPolishError] = useState<string | null>(null);
   const [editingShared, setEditingShared] = useState(false);
+  const [sendModalOpen, setSendModalOpen] = useState(false);
+  const [sendDraftContent, setSendDraftContent] = useState('');
+  const [sendSaveAsOfficial, setSendSaveAsOfficial] = useState(false);
+  const [sendingPolish, setSendingPolish] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [sendToast, setSendToast] = useState<null | {
+    parentName: string | null;
+    parentEmail: string;
+    sentAt: number;
+    canUndo: boolean;
+  }>(null);
   const [saveStatus, setSaveStatus] = useState<null | 'saving' | 'saved_remote' | 'saved_local'>(null);
   const [pendingRecovery, setPendingRecovery] = useState<SessionDraft | null>(null);
   const [pendingRecoveryAt, setPendingRecoveryAt] = useState<string | null>(null);
@@ -130,6 +141,60 @@ function SessionDetailInner() {
   } | null>(null);
   const mountedFormSnapshotRef = useRef<string>('');
   const lastDraftSnapshotRef = useRef<string>('');
+
+  const parentEmailForSession = session?.student?.parent_email ?? null;
+  const parentNameForSession = session?.student?.parent_name ?? null;
+
+  async function sendPolishToParent() {
+    if (!session?.id) return;
+    if (!sendDraftContent.trim()) { setSendError('Message cannot be empty.'); return; }
+    setSendingPolish(true);
+    setSendError(null);
+    try {
+      const { data: { session: auth } } = await supabase.auth.getSession();
+      if (!auth?.access_token) { setSendError('Not signed in.'); return; }
+      const res = await fetch(`/api/sessions/${session.id}/send-polish-to-parent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.access_token}` },
+        body: JSON.stringify({
+          content: sendDraftContent.trim(),
+          save_as_official: sendSaveAsOfficial,
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) { setSendError(json?.error ?? 'Could not send.'); return; }
+      setSendModalOpen(false);
+      const sentAt = Date.now();
+      setSendToast({
+        parentName: json.parent_name ?? null,
+        parentEmail: json.parent_email,
+        sentAt,
+        canUndo: true,
+      });
+      // Reflect locally so the UI shows the green check + suppresses the
+      // Send button until the user explicitly clears the flag.
+      setSession((s) => (s ? ({ ...(s as any), parent_notified_at: new Date(sentAt).toISOString() } as any) : s));
+      if (sendSaveAsOfficial) {
+        setForm((f: any) => ({ ...f, notes_parent_facing: sendDraftContent.trim() }));
+      }
+      // Auto-close the toast after 8s; flip canUndo so it becomes "mark as not sent".
+      window.setTimeout(() => {
+        setSendToast((curr) => (curr && curr.sentAt === sentAt ? { ...curr, canUndo: false } : curr));
+      }, 8000);
+    } finally { setSendingPolish(false); }
+  }
+
+  async function clearParentNotified() {
+    if (!session?.id) return;
+    const { data: { session: auth } } = await supabase.auth.getSession();
+    if (!auth?.access_token) return;
+    await fetch(`/api/sessions/${session.id}/send-polish-to-parent`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${auth.access_token}` },
+    });
+    setSession((s) => (s ? ({ ...(s as any), parent_notified_at: null } as any) : s));
+    setSendToast(null);
+  }
 
   async function polishNotes() {
     if (!form?.notes_internal || form.notes_internal.trim().length < 10) return;
@@ -504,6 +569,73 @@ function SessionDetailInner() {
       actions={
         !editing ? (
           <>
+            {sendModalOpen && (
+              <div
+                className="fixed inset-0 z-50 bg-ink/40 flex items-center justify-center px-4"
+                onClick={() => !sendingPolish && setSendModalOpen(false)}
+              >
+                <div
+                  className="card p-6 w-full max-w-xl bg-cream"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h3 className="font-display text-2xl tracking-tightest text-ink mb-1">
+                    Send to {parentNameForSession || 'parent'}
+                  </h3>
+                  <div className="text-2xs text-ink-muted mb-4">
+                    {parentEmailForSession}
+                  </div>
+                  <textarea
+                    rows={10}
+                    value={sendDraftContent}
+                    onChange={(e) => setSendDraftContent(e.target.value)}
+                    className="input mb-3"
+                  />
+                  <label className="flex items-center gap-2 text-sm text-ink-muted mb-4">
+                    <input
+                      type="checkbox"
+                      checked={sendSaveAsOfficial}
+                      onChange={(e) => setSendSaveAsOfficial(e.target.checked)}
+                    />
+                    Also save this as the official session note
+                  </label>
+                  {sendError && <div className="text-sm text-claret mb-3">{sendError}</div>}
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      disabled={sendingPolish || !sendDraftContent.trim()}
+                      onClick={sendPolishToParent}
+                      className="btn-primary"
+                    >
+                      {sendingPolish ? 'Sending…' : 'Send'}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={sendingPolish}
+                      onClick={() => setSendModalOpen(false)}
+                      className="btn-ghost"
+                    >Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {sendToast && (
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 card px-4 py-3 bg-forest text-cream shadow-lg flex items-center gap-4 text-sm">
+                <span>Sent to {sendToast.parentName || sendToast.parentEmail}.</span>
+                <button
+                  type="button"
+                  onClick={clearParentNotified}
+                  className="underline underline-offset-2 text-cream/90 hover:text-cream text-xs"
+                >
+                  {sendToast.canUndo ? 'Undo' : 'Mark as not sent'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSendToast(null)}
+                  className="text-cream/70 hover:text-cream text-xs ml-2"
+                  aria-label="Dismiss"
+                >×</button>
+              </div>
+            )}
             <button onClick={() => setEditing(true)} className="btn-secondary">{t('sessions:actions.edit')}</button>
             {session.status === 'scheduled' && (
               <button onClick={() => setStatus('completed')} className="btn-primary">
@@ -678,18 +810,37 @@ function SessionDetailInner() {
                 <p className="text-sm text-forest-ink leading-relaxed whitespace-pre-wrap mb-4">
                   {form.notes_parent_facing}
                 </p>
-                <div className="flex items-center justify-between pt-3 border-t border-forest/20">
+                <div className="flex items-center justify-between pt-3 border-t border-forest/20 gap-3 flex-wrap">
                   <div className="text-2xs text-forest-ink/80 inline-flex items-center gap-1.5">
                     <span aria-hidden="true">✓</span>
                     {t('sessions:fields.shared_with_parent')}
+                    {(session as any)?.parent_notified_at && (
+                      <span className="ml-2 text-2xs text-forest-ink/60">· emailed to parent</span>
+                    )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setEditingShared(true)}
-                    className="text-2xs text-forest-ink/80 underline underline-offset-2 hover:text-forest-ink"
-                  >
-                    {t('sessions:actions.edit_shared')}
-                  </button>
+                  <div className="flex items-center gap-3">
+                    {parentEmailForSession && !(session as any)?.parent_notified_at && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSendDraftContent(form.notes_parent_facing ?? '');
+                          setSendSaveAsOfficial(false);
+                          setSendError(null);
+                          setSendModalOpen(true);
+                        }}
+                        className="text-2xs text-forest underline underline-offset-2 hover:text-forest-ink"
+                      >
+                        Send to {parentNameForSession || 'parent'} →
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setEditingShared(true)}
+                      className="text-2xs text-forest-ink/80 underline underline-offset-2 hover:text-forest-ink"
+                    >
+                      {t('sessions:actions.edit_shared')}
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -830,6 +981,20 @@ function SessionDetailInner() {
               </button>
             )}
             <Link href={`/app/students/${session.student_id}`} className="btn-ghost text-xs">{t('sessions:actions.view_student')}</Link>
+            <Link
+              href={{
+                pathname: '/app/templates/new',
+                query: {
+                  student_id: session.student_id,
+                  subject: session.subject ?? '',
+                  duration: session.duration_minutes,
+                  scheduled_at: session.scheduled_at,
+                },
+              }}
+              className="btn-ghost text-xs"
+            >
+              Make recurring
+            </Link>
           </div>
 
           <div className="card p-6 mb-4">

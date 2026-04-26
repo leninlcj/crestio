@@ -7,6 +7,7 @@ import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconCalendar, IconCoin, IconClock, IconArchive } from '../../../components/design/icons';
 import { TableSkeleton } from '../../../components/design/Skeleton';
+import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Session, Student, Tutor } from '../../../lib/types';
@@ -102,6 +103,7 @@ function SessionsInner() {
       title={t('sessions:title_list')}
       actions={<Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link>}
     >
+      <div className="mb-4"><SampleDataBanner /></div>
       {drafts.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-3">
@@ -245,7 +247,16 @@ function SessionsInner() {
                   <tr key={s.id} className="row-link"
                     onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
                     <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
-                    <td className="text-ink font-medium">{s.student?.name ?? '—'}</td>
+                    <td className="text-ink font-medium">
+                      {s.student?.name ?? '—'}
+                      {(s as any).parent_notified_at && (
+                        <span
+                          className="ml-1.5 text-forest"
+                          title="Parent emailed"
+                          aria-label="Parent emailed"
+                        >✓</span>
+                      )}
+                    </td>
                     <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}</td>
                     <td className="text-ink-muted">{s.tutor?.name ?? <span className="text-ink-soft">{t('sessions:fields.tutor_self')}</span>}</td>
                     <td>
