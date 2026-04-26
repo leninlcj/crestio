@@ -400,7 +400,17 @@ export function FilesPanel({ scope, showSearch = false, students = [], className
       )}
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted animate-pulse">{t('loading')}</div>
+        <div className="space-y-2">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i} className="card p-4 flex items-center gap-3">
+              <div className="skeleton-shimmer rounded h-9 w-9 shrink-0" />
+              <div className="flex-1">
+                <div className="skeleton-shimmer rounded h-3.5 w-1/2 mb-2" />
+                <div className="skeleton-shimmer rounded h-3 w-1/3" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : files.length === 0 ? (
         <FilesEmptyState message={emptyState} />
       ) : (

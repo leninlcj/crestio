@@ -6,6 +6,7 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconCalendar, IconCoin, IconClock, IconArchive } from '../../../components/design/icons';
+import { TableSkeleton } from '../../../components/design/Skeleton';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Session, Student, Tutor } from '../../../lib/types';
@@ -148,7 +149,17 @@ function SessionsInner() {
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
+        <TableSkeleton
+          rows={6}
+          columns={[
+            { width: 'w-32' },
+            { width: 'w-28' },
+            { width: 'w-40' },
+            { width: 'w-24' },
+            { width: 'w-16' },
+            { width: 'w-20' },
+          ]}
+        />
       ) : sessions.length === 0 ? (
         <EmptyState
           icon={

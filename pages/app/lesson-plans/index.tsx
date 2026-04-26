@@ -5,6 +5,7 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconBook } from '../../../components/design/icons';
+import { Skeleton } from '../../../components/design/Skeleton';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { LessonPlan, Student } from '../../../lib/types';
@@ -42,7 +43,16 @@ function LessonPlansInner() {
       actions={<Link href="/app/lesson-plans/new" className="btn-primary">{t('actions.new')}</Link>}
     >
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
+        <div className="grid md:grid-cols-2 gap-4">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i} className="card p-6">
+              <Skeleton className="h-3 w-24 mb-3" />
+              <Skeleton className="h-5 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-1/2 mb-5" />
+              <Skeleton className="h-3 w-2/3" />
+            </div>
+          ))}
+        </div>
       ) : plans.length === 0 ? (
         <EmptyState
           icon={<IconBook />}

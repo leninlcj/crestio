@@ -7,6 +7,7 @@ import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconInvoice } from '../../../components/design/icons';
+import { TableSkeleton } from '../../../components/design/Skeleton';
 import { supabase } from '../../../lib/supabase';
 import { Invoice, Student } from '../../../lib/types';
 import { formatCents, formatDate, cx } from '../../../lib/utils';
@@ -91,7 +92,7 @@ function InvoicesInner() {
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">{t('common:actions.loading')}</div>
+        <TableSkeleton rows={5} columns={[{ width: 'w-24' }, { width: 'w-40' }, { width: 'w-28' }, { width: 'w-20' }, { width: 'w-16' }]} />
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<IconInvoice />}

@@ -6,6 +6,7 @@ import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconUsers } from '../../../components/design/icons';
+import { TableSkeleton } from '../../../components/design/Skeleton';
 import { supabase } from '../../../lib/supabase';
 import { Tutor } from '../../../lib/types';
 import { initials, startOfMonth } from '../../../lib/utils';
@@ -86,7 +87,7 @@ function TutorsInner() {
       actions={<Link href="/app/tutors/new" className="btn-primary">{t('actions.add')}</Link>}
     >
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
+        <TableSkeleton rows={4} columns={[{ width: 'w-40' }, { width: 'w-44' }, { width: 'w-16' }, { width: 'w-20' }]} />
       ) : tutors.length === 0 ? (
         <EmptyState
           icon={<IconUsers />}
