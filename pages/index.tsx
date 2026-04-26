@@ -381,7 +381,7 @@ function MarketingPricing() {
             type="button"
             onClick={() => setInterval('monthly')}
             className={[
-              'px-4 py-2 text-sm rounded transition-colors',
+              'px-4 py-2 text-sm rounded transition-colors duration-200',
               interval === 'monthly'
                 ? 'bg-forest text-cream'
                 : 'text-ink-muted hover:text-ink',
@@ -393,14 +393,23 @@ function MarketingPricing() {
             type="button"
             onClick={() => setInterval('annual')}
             className={[
-              'px-4 py-2 text-sm rounded transition-colors',
+              'px-4 py-2 text-sm rounded transition-colors duration-200 inline-flex items-center gap-2',
               interval === 'annual'
                 ? 'bg-forest text-cream'
                 : 'text-ink-muted hover:text-ink',
             ].join(' ')}
           >
             {t('pricing.annual')}
-            <span className="text-2xs ml-1 opacity-80">{t('pricing.annual_save_note')}</span>
+            <span
+              className={[
+                'inline-flex items-center px-1.5 py-px rounded text-[10px] uppercase tracking-widest font-medium transition-colors duration-200',
+                interval === 'annual'
+                  ? 'bg-cream/15 text-cream'
+                  : 'bg-amber-soft text-amber-ink',
+              ].join(' ')}
+            >
+              {t('pricing.annual_save_short')}
+            </span>
           </button>
         </div>
       </div>
@@ -446,29 +455,31 @@ function TierCard({
     interval === 'monthly'
       ? t('pricing.period_monthly')
       : t('pricing.period_annual', { monthly_equivalent: monthlyEquivalent });
+  const annualSavings = tier.monthlyDollars * 12 - tier.annualDollars;
+  const annualSavingsLabel = formatMoney(annualSavings * 100, 'AUD', { maximumFractionDigits: 0 });
 
   const baseCard = [
     'flex flex-col relative overflow-hidden',
-    'rounded-md',
+    'rounded-md transition-all duration-300 ease-out',
     TIER_MOBILE_ORDER[tier.tier],
     highlight
-      ? 'border-2 border-forest bg-forest/[0.06] md:-translate-y-4 md:shadow-lift'
+      ? 'border-2 border-forest bg-forest/[0.05] md:-translate-y-6 md:shadow-lift md:scale-[1.02]'
       : 'border border-rule bg-surface',
   ].filter(Boolean).join(' ');
 
   const priceSize = highlight
-    ? 'font-display text-5xl md:text-6xl tracking-tightest'
+    ? 'font-display text-5xl md:text-[4rem] tracking-tightest'
     : 'font-display text-4xl md:text-[2.75rem] tracking-tightest';
 
   return (
     <article className={baseCard}>
       {highlight && (
-        <div className="bg-forest text-cream text-center py-2 px-4 font-display uppercase tracking-widest text-2xs">
+        <div className="bg-forest text-cream text-center py-2.5 px-4 font-display uppercase tracking-[0.2em] text-2xs font-medium">
           {t('pricing.recommended_banner')}
         </div>
       )}
 
-      <div className="p-7 flex flex-col flex-1">
+      <div className={highlight ? 'p-7 md:p-8 flex flex-col flex-1' : 'p-7 flex flex-col flex-1'}>
         <h3
           className={[
             'font-display text-2xl tracking-tightest mb-1',
@@ -482,6 +493,11 @@ function TierCard({
         <div className="mb-6">
           <div className={['text-ink', priceSize].join(' ')}>{displayPrice}</div>
           <div className="text-xs text-ink-muted mt-1">{periodLine}</div>
+          {interval === 'annual' && annualSavings > 0 && (
+            <div className="mt-3 inline-flex items-center gap-1.5 px-2 py-1 rounded bg-amber-soft text-amber-ink text-2xs uppercase tracking-widest font-medium">
+              {t('pricing.save_per_year', { amount: annualSavingsLabel })}
+            </div>
+          )}
         </div>
 
         <ul className="space-y-2.5 mb-7 text-sm text-ink-muted flex-1">
@@ -496,7 +512,7 @@ function TierCard({
         {tier.isContactSales ? (
           <a
             href="mailto:support@crestio.ai?subject=Crestio%20Growth%20plan"
-            className="text-sm text-forest hover:text-forest-ink underline underline-offset-4 py-3 w-full text-center min-h-[44px] flex items-center justify-center"
+            className="text-sm text-forest hover:text-forest-ink underline underline-offset-4 py-3 w-full text-center min-h-[44px] flex items-center justify-center transition-colors duration-200"
           >
             {t(`tiers.${tier.tier}.cta`)} →
           </a>
@@ -505,8 +521,8 @@ function TierCard({
             <Link
               href={`/auth/signup?plan=${tier.tier}&interval=${interval}`}
               className={[
-                'w-full block text-center min-h-[44px] flex items-center justify-center',
-                highlight ? 'btn-primary text-base' : 'btn-secondary text-sm',
+                'w-full block text-center min-h-[44px] flex items-center justify-center transition-all duration-200 ease-out',
+                highlight ? 'btn-primary text-base hover:shadow-lift' : 'btn-secondary text-sm',
               ].join(' ')}
             >
               {t(`tiers.${tier.tier}.cta`)}
@@ -517,7 +533,7 @@ function TierCard({
               return (
                 <a
                   href={url}
-                  className="block text-center text-xs text-ink-soft hover:text-ink mt-3 underline underline-offset-4 decoration-ink-soft/30 hover:decoration-ink"
+                  className="block text-center text-xs text-ink-soft hover:text-ink mt-3 underline underline-offset-4 decoration-ink-soft/30 hover:decoration-ink transition-colors duration-200"
                 >
                   {t('pricing.pay_now_secondary')}
                 </a>

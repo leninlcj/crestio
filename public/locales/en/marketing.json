@@ -64,6 +64,8 @@
     "monthly": "Monthly",
     "annual": "Annual",
     "annual_save_note": "(save 2 months)",
+    "annual_save_short": "−2 months",
+    "save_per_year": "Save {{amount}}/year",
     "period_monthly": "AUD per month",
     "period_annual": "per year — about {{monthly_equivalent}}/month billed annually",
     "recommended_banner": "Recommended for most tutors",
