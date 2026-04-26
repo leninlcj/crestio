@@ -16,6 +16,17 @@ import {
   cx,
 } from '../../../lib/utils';
 
+type InvoicePayment = {
+  payment_token: string | null;
+  stripe_payment_intent_id: string | null;
+  payment_method_brand: string | null;
+  payment_method_last4: string | null;
+  paid_at: string | null;
+  platform_fee_amount: number | null;
+  stripe_fee_amount: number | null;
+  net_amount_to_org: number | null;
+};
+
 type HouseholdLineItem = {
   id: string;
   session_id: string;
@@ -48,6 +59,13 @@ function InvoiceDetailInner() {
   const [householdContext, setHouseholdContext] = useState<HouseholdContext | null>(null);
   const [householdLineItems, setHouseholdLineItems] = useState<HouseholdLineItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [payment, setPayment] = useState<InvoicePayment | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [refundAmount, setRefundAmount] = useState('');
+  const [refundReason, setRefundReason] = useState('');
+  const [refundBusy, setRefundBusy] = useState(false);
+  const [refundError, setRefundError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -56,14 +74,20 @@ function InvoiceDetailInner() {
       const { data: { session: auth } } = await supabase.auth.getSession();
       if (!auth) return;
 
-      const [invRes, profileRes] = await Promise.all([
+      const [invRes, profileRes, payRes] = await Promise.all([
         supabase.from('invoices').select('*').eq('id', id).single(),
         supabase.from('profiles').select('*').eq('id', auth.user.id).single(),
+        supabase
+          .from('invoices')
+          .select('payment_token, stripe_payment_intent_id, payment_method_brand, payment_method_last4, paid_at, platform_fee_amount, stripe_fee_amount, net_amount_to_org')
+          .eq('id', id)
+          .maybeSingle(),
       ]);
 
       const inv = invRes.data;
       setInvoice(inv);
       setProfile(profileRes.data);
+      setPayment((payRes.data as InvoicePayment | null) ?? null);
 
       if (inv) {
         if (inv.household_id) {
@@ -165,6 +189,48 @@ function InvoiceDetailInner() {
     setInvoice({ ...invoice, ...patch });
   }
 
+  async function copyPayLink() {
+    if (!payment?.payment_token) return;
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://crestio.ai';
+    const url = `${baseUrl}/pay/${encodeURIComponent(payment.payment_token)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2500);
+    } catch {
+      window.prompt('Copy this pay link:', url);
+    }
+  }
+
+  async function submitRefund() {
+    if (!invoice) return;
+    setRefundBusy(true);
+    setRefundError(null);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) { setRefundError('Sign in required.'); return; }
+      const dollars = refundAmount.trim();
+      if (dollars && (!Number.isFinite(Number(dollars)) || Number(dollars) <= 0)) {
+        setRefundError('Enter a valid dollar amount.'); return;
+      }
+      const amountCents = dollars ? Math.round(Number(dollars) * 100) : null;
+      const res = await fetch(`/api/invoices/${invoice.id}/refund`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({ amount: amountCents ?? undefined, reason: refundReason.trim() || 'requested_by_customer' }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) { setRefundError(payload?.error ?? 'Refund failed.'); return; }
+      setRefundOpen(false);
+      setRefundAmount('');
+      setRefundReason('');
+      // Hard reload — webhook will flip status; refresh from server to see changes.
+      router.replace(router.asPath);
+    } finally {
+      setRefundBusy(false);
+    }
+  }
+
   async function deleteInvoice() {
     if (!invoice) return;
     if (!window.confirm(`Delete invoice ${invoice.number}? Sessions will be unlinked, not deleted.`)) return;
@@ -194,17 +260,17 @@ function InvoiceDetailInner() {
           {invoice.status === 'draft' && (
             <button onClick={() => setStatus('sent')} className="btn-secondary">Mark sent</button>
           )}
-          {invoice.status !== 'paid' && invoice.status !== 'void' && (
-            <button onClick={() => setStatus('paid')} className="btn-primary">Mark paid</button>
+          {invoice.status !== 'paid' && invoice.status !== 'void' && payment?.payment_token && (
+            <button onClick={copyPayLink} className="btn-primary">
+              {linkCopied ? 'Link copied' : 'Copy pay link'}
+            </button>
           )}
-          <button
-            type="button"
-            disabled
-            title="Coming soon"
-            className="btn-secondary disabled:opacity-40"
-          >
-            Email to parent
-          </button>
+          {invoice.status !== 'paid' && invoice.status !== 'void' && (
+            <button onClick={() => setStatus('paid')} className="btn-secondary">Mark paid</button>
+          )}
+          {invoice.status === 'paid' && payment?.stripe_payment_intent_id && (
+            <button onClick={() => setRefundOpen(true)} className="btn-secondary">Refund</button>
+          )}
           <button onClick={() => window.print()} className="btn-ghost">Download PDF</button>
         </>
       }
@@ -242,6 +308,13 @@ function InvoiceDetailInner() {
             )}>
               {invoice.status}
             </span>
+            {payment?.stripe_payment_intent_id && (
+              <div className="mt-2 text-2xs text-ink-soft">
+                {payment.payment_method_brand
+                  ? `${payment.payment_method_brand.toUpperCase()} ····${payment.payment_method_last4}`
+                  : 'Card payment'}
+              </div>
+            )}
           </div>
         </div>
 
@@ -394,9 +467,89 @@ function InvoiceDetailInner() {
         </div>
       </div>
 
+      {payment?.stripe_payment_intent_id && (
+        <div className="max-w-3xl mx-auto mt-6 print-hide">
+          <div className="card p-5">
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Payment</div>
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+              <dt className="text-ink-muted">Status</dt>
+              <dd className="text-ink">{invoice.status === 'paid' ? 'Paid' : invoice.status}</dd>
+              <dt className="text-ink-muted">Paid on</dt>
+              <dd className="text-ink">{payment.paid_at ? formatDate(payment.paid_at) : '—'}</dd>
+              <dt className="text-ink-muted">Card</dt>
+              <dd className="text-ink">
+                {payment.payment_method_brand
+                  ? `${payment.payment_method_brand.toUpperCase()} ····${payment.payment_method_last4}`
+                  : '—'}
+              </dd>
+              <dt className="text-ink-muted">Platform fee</dt>
+              <dd className="text-ink font-mono">
+                {payment.platform_fee_amount != null ? formatCents(payment.platform_fee_amount, currency) : '—'}
+              </dd>
+              <dt className="text-ink-muted">Stripe fee</dt>
+              <dd className="text-ink font-mono">
+                {payment.stripe_fee_amount != null ? formatCents(payment.stripe_fee_amount, currency) : '—'}
+              </dd>
+              <dt className="text-ink-muted">Net to you</dt>
+              <dd className="text-ink font-mono">
+                {payment.net_amount_to_org != null ? formatCents(payment.net_amount_to_org, currency, { showZero: true }) : '—'}
+              </dd>
+              <dt className="text-ink-muted">PaymentIntent</dt>
+              <dd className="font-mono text-2xs text-ink-soft truncate">{payment.stripe_payment_intent_id}</dd>
+            </dl>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-3xl mx-auto mt-6 flex justify-end print-hide">
         <button onClick={deleteInvoice} className="btn-danger text-xs">Delete invoice</button>
       </div>
+
+      {refundOpen && invoice && (
+        <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50 print-hide" onClick={() => !refundBusy && setRefundOpen(false)}>
+          <div className="bg-cream rounded-t-lg md:rounded-lg p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <h2 className="font-display text-xl tracking-tightest mb-2">Refund payment</h2>
+            <p className="text-sm text-ink-muted mb-4">
+              Refunds the parent and reverses the platform fee. Stripe's processing fee is not refunded.
+            </p>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-2xs uppercase tracking-widest text-ink-muted mb-1">
+                  Amount (leave blank for full refund of {formatCents(invoice.total_cents, currency, { showZero: true })})
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  className="input w-full"
+                  value={refundAmount}
+                  onChange={(e) => setRefundAmount(e.target.value)}
+                  placeholder="Full"
+                />
+              </div>
+              <div>
+                <label className="block text-2xs uppercase tracking-widest text-ink-muted mb-1">Reason</label>
+                <input
+                  type="text"
+                  className="input w-full"
+                  value={refundReason}
+                  onChange={(e) => setRefundReason(e.target.value)}
+                  placeholder="Customer requested"
+                />
+              </div>
+              {refundError && <div className="text-sm text-claret">{refundError}</div>}
+              <div className="flex gap-2 justify-end pt-2">
+                <button type="button" className="btn-ghost" disabled={refundBusy} onClick={() => setRefundOpen(false)}>
+                  Cancel
+                </button>
+                <button type="button" className="btn-primary" disabled={refundBusy} onClick={submitRefund}>
+                  {refundBusy ? 'Processing…' : 'Issue refund'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

@@ -287,6 +287,20 @@ function BillingInner() {
           )}
         </div>
 
+        <div className="card p-8 space-y-3">
+          <div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Parent payments</div>
+            <h2 className="font-display text-xl tracking-tightest">Take card payments from parents</h2>
+          </div>
+          <p className="text-sm text-ink-muted">
+            Parents pay invoices directly with a card; payouts arrive in your bank in ~2 days.
+            Crestio takes 1% on top of Stripe's per-transaction fee.
+          </p>
+          <Link href="/app/owner/payouts" className="btn-secondary text-sm self-start">
+            Manage payment account
+          </Link>
+        </div>
+
         <div className="text-2xs text-ink-soft pt-1">
           {t('billing.gst_note')}
         </div>

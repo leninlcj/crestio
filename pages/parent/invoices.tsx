@@ -77,8 +77,15 @@ function InvoicesInner() {
           <>
             {unpaidTotal > 0 && (
               <div className="card p-5 mb-6 bg-claret/5 border-claret/30">
-                <div className="text-2xs uppercase tracking-widest text-claret/80 mb-1">{t('invoices_page.outstanding_eyebrow')}</div>
-                <div className="font-display text-3xl tracking-tightest text-claret">{formatAud(unpaidTotal)}</div>
+                <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                  <div>
+                    <div className="text-2xs uppercase tracking-widest text-claret/80 mb-1">{t('invoices_page.outstanding_eyebrow')}</div>
+                    <div className="font-display text-3xl tracking-tightest text-claret">{formatAud(unpaidTotal)}</div>
+                  </div>
+                  <Link href="/parent/pay" className="btn-primary text-sm">
+                    Pay invoices
+                  </Link>
+                </div>
                 <div className="text-2xs text-ink-soft mt-2">
                   {t('invoices_page.outstanding_note')}
                 </div>
