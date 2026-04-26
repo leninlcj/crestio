@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocale } from '../lib/localeContext';
+import { useIsSignedIn } from '../lib/useIsSignedIn';
 
 type Props = {
   title: string;
@@ -15,6 +16,7 @@ type Props = {
 export function LegalPage({ title, kicker = 'Legal', lastUpdated, toc, children }: Props) {
   const { t } = useTranslation('legal');
   const { locale } = useLocale();
+  const signedIn = useIsSignedIn();
   const showEnglishNotice = locale !== 'en';
 
   return (
@@ -27,7 +29,11 @@ export function LegalPage({ title, kicker = 'Legal', lastUpdated, toc, children 
           <Link href="/" className="font-display text-2xl tracking-tightest">
             crest<span className="italic text-forest">io</span>
           </Link>
-          <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">{t('nav.sign_in')}</Link>
+          {signedIn ? (
+            <Link href="/app" className="text-sm text-ink-muted hover:text-ink">{t('nav.go_to_dashboard')}</Link>
+          ) : (
+            <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">{t('nav.sign_in')}</Link>
+          )}
         </nav>
 
         <article className="max-w-2xl mx-auto px-6 md:px-12 py-16 md:py-24">

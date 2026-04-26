@@ -57,7 +57,20 @@ export function BillingProvider({ children }: { children: ReactNode }) {
   const statusRef = useRef<BillingStatus | null>(null);
   statusRef.current = status;
 
+  // Routes that don't need billing status. Marketing/legal/auth/parent — none
+  // of these read billing, and skipping the fetch removes a dozen+ calls per
+  // marketing page load (P1-1.1, P1-1.2). The signed-in user nav still works
+  // because pages use the lighter useIsSignedIn() hook directly.
+  function pathNeedsBilling(p: string | undefined): boolean {
+    if (!p) return false;
+    return p.startsWith('/app') || p.startsWith('/welcome');
+  }
+
   const fetchStatus = useCallback(async (): Promise<BillingStatus | null> => {
+    if (typeof window !== 'undefined' && !pathNeedsBilling(window.location.pathname)) {
+      setStatus(null);
+      return null;
+    }
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) {
       setStatus(null);
@@ -68,6 +81,8 @@ export function BillingProvider({ children }: { children: ReactNode }) {
       cache: 'no-store',
     });
     if (res.status === 401 && typeof window !== 'undefined') {
+      // Billing only runs on /app routes (see pathNeedsBilling above), so a
+      // session_expired redirect always belongs on the tutor signin page.
       if (!window.location.pathname.startsWith('/auth/signin')) {
         window.location.href = '/auth/signin?reason=session_expired';
       }
@@ -89,6 +104,10 @@ export function BillingProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const refresh = useCallback(async () => {
+    if (typeof window !== 'undefined' && !pathNeedsBilling(window.location.pathname)) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       await fetchStatus();
@@ -112,6 +131,18 @@ export function BillingProvider({ children }: { children: ReactNode }) {
     });
     return () => subscription.unsubscribe();
   }, [refresh]);
+
+  // When the user crosses into a billing-needing route (e.g. marketing → /app),
+  // pull billing status in. Without this the /app dashboard would render with
+  // status=null until a focus event or reload.
+  useEffect(() => {
+    function onRouteChange(url: string) {
+      const path = url.split('?')[0];
+      if (pathNeedsBilling(path) && !statusRef.current) refresh();
+    }
+    router.events.on('routeChangeComplete', onRouteChange);
+    return () => router.events.off('routeChangeComplete', onRouteChange);
+  }, [router.events, refresh]);
 
   // Refetch when the tab regains focus — handles the case where the user
   // subscribed in another tab (Stripe Checkout) and came back.

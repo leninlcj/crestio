@@ -5,7 +5,8 @@
     "view_english": "View English version"
   },
   "nav": {
-    "sign_in": "Sign in"
+    "sign_in": "Sign in",
+    "go_to_dashboard": "Go to dashboard"
   },
   "last_updated": "Last updated: {{date}}",
   "contents": "Contents",

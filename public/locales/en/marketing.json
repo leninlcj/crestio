@@ -8,6 +8,7 @@
     "pricing": "Pricing",
     "sign_in": "Sign in",
     "start_trial": "Start free trial",
+    "go_to_dashboard": "Go to dashboard",
     "open_menu": "Open menu",
     "close_menu": "Close menu"
   },
@@ -130,7 +131,7 @@
     "questions_part2": "."
   },
   "footer": {
-    "made_in": "Made in Australia · 2026",
+    "made_in": "crestio · Made in Sydney · 2026",
     "sign_in": "Sign in",
     "privacy": "Privacy",
     "terms": "Terms",
@@ -151,7 +152,7 @@
     "message_placeholder": "What's on your mind?",
     "submit": "Open in Mail",
     "submit_note": "This opens your default email app with the message drafted. Nothing is sent until you send it yourself.",
-    "footer_location": "crestio · Sydney · 2026",
+    "footer_location": "crestio · Made in Sydney · 2026",
     "subject_named": "Message from {{name}}",
     "subject_anonymous": "Message from Crestio website",
     "body_from": "From: {{name}}",

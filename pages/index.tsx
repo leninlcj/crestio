@@ -9,6 +9,7 @@ import { PLAN_CATALOGUE, type BillingInterval } from '../lib/plans';
 import { useLocaleFormatters } from '../lib/useLocaleFormatters';
 import { paymentLinkUrl, isPayablePlan } from '../lib/stripe/payment-links';
 import { serverSideTranslations } from '../lib/i18nServer';
+import { useIsSignedIn } from '../lib/useIsSignedIn';
 
 export default function Home() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function Home() {
   const [showDeleted, setShowDeleted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { formatMoney } = useLocaleFormatters();
+  const signedIn = useIsSignedIn();
 
   useEffect(() => {
     if (router.query.deleted === 'true') setShowDeleted(true);
@@ -64,15 +66,26 @@ export default function Home() {
             <a href="#pricing" className="text-sm text-ink-muted hover:text-ink">
               {t('nav.pricing')}
             </a>
-            <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">
-              {t('nav.sign_in')}
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="btn-primary text-xs px-4 py-2 min-h-[auto]"
-            >
-              {t('nav.start_trial')}
-            </Link>
+            {signedIn ? (
+              <Link
+                href="/app"
+                className="btn-primary text-xs px-4 py-2 min-h-[auto]"
+              >
+                {t('nav.go_to_dashboard')}
+              </Link>
+            ) : (
+              <>
+                <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">
+                  {t('nav.sign_in')}
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="btn-primary text-xs px-4 py-2 min-h-[auto]"
+                >
+                  {t('nav.start_trial')}
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile hamburger */}
@@ -106,20 +119,32 @@ export default function Home() {
               >
                 {t('nav.pricing')}
               </a>
-              <Link
-                href="/auth/signin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-base text-ink py-1"
-              >
-                {t('nav.sign_in')}
-              </Link>
-              <Link
-                href="/auth/signup"
-                onClick={() => setMobileMenuOpen(false)}
-                className="btn-primary w-full text-base py-3"
-              >
-                {t('nav.start_trial')}
-              </Link>
+              {signedIn ? (
+                <Link
+                  href="/app"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn-primary w-full text-base py-3"
+                >
+                  {t('nav.go_to_dashboard')}
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/signin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-base text-ink py-1"
+                  >
+                    {t('nav.sign_in')}
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="btn-primary w-full text-base py-3"
+                  >
+                    {t('nav.start_trial')}
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
