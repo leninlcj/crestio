@@ -8,6 +8,7 @@ import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconInvoice } from '../../../components/design/icons';
 import { TableSkeleton } from '../../../components/design/Skeleton';
+import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { Invoice, Student } from '../../../lib/types';
 import { formatCents, formatDate, cx } from '../../../lib/utils';
@@ -69,6 +70,7 @@ function InvoicesInner() {
         </div>
       }
     >
+      <div className="mb-4"><SampleDataBanner /></div>
       {showBatchToast && (
         <div className="mb-4 card p-3 bg-forest-soft/60 border-forest/20 text-sm text-forest-ink">
           {t('invoices:batch_toast_created')}

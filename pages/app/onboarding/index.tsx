@@ -97,11 +97,24 @@ function OnboardingInner() {
       .update({ name: trimmedBusiness })
       .eq('owner_user_id', session.user.id);
 
-    setLoading(false);
     if (orgErr) {
+      setLoading(false);
       setError(orgErr.message);
       return;
     }
+
+    // Seed trial sample data so the dashboard isn't empty on first arrival.
+    // Best-effort — never block onboarding completion on this.
+    try {
+      await fetch('/api/onboarding/seed-sample-data', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+    } catch (err) {
+      console.error('[onboarding] seed-sample-data failed (non-fatal)', err);
+    }
+
+    setLoading(false);
     router.push('/app');
   }
 

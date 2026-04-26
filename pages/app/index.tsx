@@ -8,6 +8,7 @@ import { supabase } from '../../lib/supabase';
 import { useBilling } from '../../lib/billingContext';
 import { timeOfDayPeriod, DEFAULT_DASHBOARD_TZ } from '../../lib/formatTime';
 import { useLocaleFormatters } from '../../lib/useLocaleFormatters';
+import SampleDataBanner from '../../components/SampleDataBanner';
 import {
   NextUpCard, PolishQueueCard, InvoicingCard, RescheduleRequestsCard,
   WeekAheadCard, EmptyStateCard, TodaySkeleton, HomeworkStatusCard,
@@ -92,6 +93,7 @@ function DashboardInner() {
         </header>
 
         <TrialBanner />
+        <div className="mb-4"><SampleDataBanner /></div>
 
         {loading && !data ? (
           <TodaySkeleton />
