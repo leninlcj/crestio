@@ -29,7 +29,8 @@
     "line_4": "You're spending two hours on admin for every five hours of actual tutoring."
   },
   "how": {
-    "heading": "How Crestio works"
+    "heading": "How Crestio works",
+    "preview_label": "Preview"
   },
   "features": {
     "session_log": {

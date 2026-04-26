@@ -210,33 +210,33 @@ export default function Home() {
               {t('how.heading')}
             </h2>
 
-            <div className="space-y-20 md:space-y-28">
+            <div className="space-y-24 md:space-y-32">
               {FEATURE_KEYS.map((key, idx) => (
                 <article
                   key={key}
-                  className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center ${
+                  className={`grid md:grid-cols-2 gap-10 md:gap-16 items-center ${
                     idx % 2 === 1 ? 'md:[&>*:first-child]:order-2' : ''
                   }`}
                 >
                   <div>
-                    <div className="text-2xs uppercase tracking-widest text-ink-soft font-mono mb-4">
-                      {String(idx + 1).padStart(2, '0')}
+                    <div className="text-2xs uppercase tracking-[0.2em] text-forest font-mono mb-5">
+                      {String(idx + 1).padStart(2, '0')} <span className="text-ink-soft">/ 04</span>
                     </div>
-                    <h3 className="font-display text-2xl md:text-3xl tracking-tightest mb-4 text-balance">
+                    <h3 className="font-display text-2xl md:text-3xl tracking-tightest mb-5 text-balance">
                       {t(`features.${key}.title`)}
                     </h3>
                     <p className="text-base text-ink-muted leading-relaxed max-w-prose">
                       {t(`features.${key}.body`)}
                     </p>
                   </div>
-                  <div className="rounded-lg border border-rule bg-surface shadow-card overflow-hidden">
-                    <div className="aspect-[16/10] bg-ruleSoft flex items-center justify-center px-6">
-                      <div className="text-center">
-                        <div className="font-display text-xl md:text-2xl tracking-tightest text-ink mb-2 text-balance">
+                  <div className="rounded-md border border-rule bg-surface overflow-hidden">
+                    <div className="aspect-[16/10] bg-ruleSoft/60 relative">
+                      <div className="absolute top-4 left-4 text-2xs uppercase tracking-[0.2em] text-ink-soft font-mono">
+                        {t('how.preview_label')}
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center px-6">
+                        <div className="font-display text-xl md:text-2xl tracking-tightest text-ink-muted text-balance text-center">
                           {t(`features.${key}.title`)}
-                        </div>
-                        <div className="text-2xs uppercase tracking-widest text-ink-soft">
-                          Screenshot coming soon
                         </div>
                       </div>
                     </div>
