@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       hasServiceRole: !!serviceKey,
     });
     return res.status(500).json({
-      error: 'Server misconfigured: Supabase env vars are missing. Contact hello@crestio.ai.',
+      error: 'Server misconfigured: Supabase env vars are missing. Contact support@crestio.ai.',
     });
   }
 
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (error) {
       console.error(`delete-account: failed at step ${step.name}`, error);
       return res.status(500).json({
-        error: `Account partially deleted. Failed while removing ${step.name}: ${error.message ?? 'unknown error'}. Contact hello@crestio.ai to finish deletion.`,
+        error: `Account partially deleted. Failed while removing ${step.name}: ${error.message ?? 'unknown error'}. Contact support@crestio.ai to finish deletion.`,
       });
     }
   }
@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (authDeleteErr) {
     console.error('delete-account: failed to delete auth user', authDeleteErr);
     return res.status(500).json({
-      error: `Your data was removed but the login record could not be deleted: ${authDeleteErr.message}. Contact hello@crestio.ai.`,
+      error: `Your data was removed but the login record could not be deleted: ${authDeleteErr.message}. Contact support@crestio.ai.`,
     });
   }
 

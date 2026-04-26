@@ -18,7 +18,7 @@ export default function ServerError() {
             Something on our end broke.
           </h1>
           <p className="text-ink-muted mb-8">
-            Not you. Refresh in a minute — if it keeps happening, email <a href="mailto:hello@crestio.ai" className="text-forest underline underline-offset-2">hello@crestio.ai</a>.
+            Not you. Refresh in a minute — if it keeps happening, email <a href="mailto:support@crestio.ai" className="text-forest underline underline-offset-2">support@crestio.ai</a>.
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link href="/" className="btn-secondary">Go home</Link>

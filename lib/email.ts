@@ -38,12 +38,12 @@ export async function sendEmail({
 
   try {
     const result = await resend.emails.send({
-      from: 'Crestio <hello@crestio.ai>',
+      from: 'Crestio <support@crestio.ai>',
       to: [to],
       subject,
       html,
       text,
-      replyTo: replyTo || 'hello@crestio.ai',
+      replyTo: replyTo || 'support@crestio.ai',
     });
 
     if (result.error) {
