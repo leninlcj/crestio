@@ -196,13 +196,22 @@ export default function Layout({ children, title, subtitle, actions, pageTitle }
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={active ? 'page' : undefined}
                 className={cx(
-                  'flex items-center justify-between px-3 py-2 text-sm transition-colors rounded',
+                  'group relative flex items-center justify-between pl-3.5 pr-3 py-2 text-sm rounded transition-all duration-200 ease-out',
                   active
-                    ? 'bg-surface text-ink border border-rule shadow-card'
-                    : 'text-ink-muted hover:text-ink hover:bg-ruleSoft border border-transparent'
+                    ? 'bg-surface text-ink font-medium shadow-card'
+                    : 'text-ink-muted hover:text-ink hover:bg-ruleSoft/70',
                 )}
               >
+                {/* Subtle left accent on the active link */}
+                <span
+                  aria-hidden="true"
+                  className={cx(
+                    'absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-forest transition-opacity duration-200 ease-out',
+                    active ? 'opacity-100' : 'opacity-0',
+                  )}
+                />
                 <span>{t(item.labelKey)}</span>
                 {showBadge && (
                   <span
