@@ -132,17 +132,46 @@ function DashboardInner() {
       <Head>
         <title>{browserTitle}</title>
       </Head>
-      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
-        <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-        <div className="flex items-center gap-4 text-sm">
-          <Link href="/parent/calendar" className="text-ink-muted hover:text-ink">{t('nav.calendar')}</Link>
-          <Link href="/parent/messages" className="text-ink-muted hover:text-ink">{t('nav.messages')}</Link>
-          <Link href="/parent/invoices" className="text-ink-muted hover:text-ink">{t('nav.invoices')}</Link>
-          <Link href="/parent/settings" className="text-ink-muted hover:text-ink">{t('nav.settings')}</Link>
-          <NotificationBell mode="parent" />
-          <button onClick={signOut} className="text-claret hover:text-claret/80">{t('nav.sign_out')}</button>
+      <nav className="px-4 md:px-12 py-4 md:py-6 border-b border-rule">
+        <div className="flex items-center justify-between gap-3">
+          <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
+            crest<span className="italic text-forest">io</span>
+          </Link>
+          {/* Desktop: full inline nav */}
+          <div className="hidden md:flex items-center gap-4 text-sm">
+            <Link href="/parent/calendar" className="text-ink-muted hover:text-ink transition-colors duration-200">{t('nav.calendar')}</Link>
+            <Link href="/parent/messages" className="text-ink-muted hover:text-ink transition-colors duration-200">{t('nav.messages')}</Link>
+            <Link href="/parent/invoices" className="text-ink-muted hover:text-ink transition-colors duration-200">{t('nav.invoices')}</Link>
+            <Link href="/parent/settings" className="text-ink-muted hover:text-ink transition-colors duration-200">{t('nav.settings')}</Link>
+            <NotificationBell mode="parent" />
+            <button onClick={signOut} className="text-claret hover:text-claret/80 transition-colors duration-200">{t('nav.sign_out')}</button>
+          </div>
+          {/* Mobile: only bell + signout in the top row */}
+          <div className="md:hidden flex items-center gap-2">
+            <NotificationBell mode="parent" />
+            <button onClick={signOut} className="text-claret hover:text-claret/80 transition-colors duration-200 text-xs">
+              {t('nav.sign_out')}
+            </button>
+          </div>
+        </div>
+        {/* Mobile: scrollable chip nav row */}
+        <div className="mt-3 -mx-4 md:hidden overflow-x-auto scrollbar-thin">
+          <div className="flex gap-1.5 px-4">
+            {[
+              { href: '/parent/calendar', label: t('nav.calendar') },
+              { href: '/parent/messages', label: t('nav.messages') },
+              { href: '/parent/invoices', label: t('nav.invoices') },
+              { href: '/parent/settings', label: t('nav.settings') },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="text-xs px-3 py-1.5 rounded-full border border-rule text-ink-muted hover:text-ink hover:bg-ruleSoft transition-colors duration-200 whitespace-nowrap shrink-0"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </nav>
 

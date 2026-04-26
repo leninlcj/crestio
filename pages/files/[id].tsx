@@ -205,6 +205,11 @@ function FileViewerInner() {
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
+                style={{
+                  WebkitTouchCallout: 'none',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                }}
               />
             </div>
           )}

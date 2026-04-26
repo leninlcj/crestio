@@ -14,13 +14,23 @@ function ParentCalendarInner() {
   const router = useRouter();
   const { formatDate } = useLocaleFormatters();
   const [weekStart, setWeekStart] = useState<Date>(() => mondayOfWeek(new Date()));
+  const [dayStart, setDayStart] = useState<Date>(() => {
+    const d = new Date(); d.setHours(0, 0, 0, 0); return d;
+  });
+  const [view, setView] = useState<'week' | 'day'>(() => {
+    if (typeof window === 'undefined') return 'week';
+    return window.matchMedia('(max-width: 767px)').matches ? 'day' : 'week';
+  });
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<CalendarSession[]>([]);
   const [detailSession, setDetailSession] = useState<CalendarSession | null>(null);
 
+  const rangeStart = view === 'week' ? weekStart : dayStart;
   const rangeEnd = useMemo(() => {
-    const d = new Date(weekStart); d.setDate(d.getDate() + 7); return d;
-  }, [weekStart]);
+    const d = new Date(rangeStart);
+    d.setDate(d.getDate() + (view === 'week' ? 7 : 1));
+    return d;
+  }, [rangeStart, view]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -39,7 +49,7 @@ function ParentCalendarInner() {
       .from('sessions')
       .select('id, student_id, subject, scheduled_at, duration_minutes, status, proposed_change_by, proposed_new_start_time, student:students!inner(id, name)')
       .in('student_id', studentIds)
-      .gte('scheduled_at', weekStart.toISOString())
+      .gte('scheduled_at', rangeStart.toISOString())
       .lt('scheduled_at', rangeEnd.toISOString())
       .order('scheduled_at', { ascending: true });
 
@@ -59,14 +69,26 @@ function ParentCalendarInner() {
 
   useEffect(() => { load(); }, [load]);
 
-  function shiftWeek(days: number) {
-    const d = new Date(weekStart); d.setDate(d.getDate() + days); setWeekStart(d);
+  function shiftRange(days: number) {
+    const step = view === 'week' ? days : (days < 0 ? -1 : 1);
+    if (view === 'week') {
+      const d = new Date(weekStart); d.setDate(d.getDate() + step); setWeekStart(d);
+    } else {
+      const d = new Date(dayStart); d.setDate(d.getDate() + step); setDayStart(d);
+    }
+  }
+  function goToday() {
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    setWeekStart(mondayOfWeek(t));
+    setDayStart(t);
   }
 
-  const weekRange = t('calendar.week_range', {
-    start: formatDate(weekStart, { day: 'numeric', month: 'short' }),
-    end: formatDate(new Date(weekStart.getTime() + 6 * 86_400_000), { day: 'numeric', month: 'short', year: 'numeric' }),
-  });
+  const weekRange = view === 'week'
+    ? t('calendar.week_range', {
+        start: formatDate(weekStart, { day: 'numeric', month: 'short' }),
+        end: formatDate(new Date(weekStart.getTime() + 6 * 86_400_000), { day: 'numeric', month: 'short', year: 'numeric' }),
+      })
+    : formatDate(dayStart, { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
     <div className="min-h-screen bg-cream text-ink">
@@ -83,20 +105,33 @@ function ParentCalendarInner() {
           <h1 className="font-display text-3xl md:text-4xl tracking-tightest">{t('calendar.heading')}</h1>
         </div>
 
-        <div className="flex items-center gap-2 mb-4">
-          <button onClick={() => shiftWeek(-7)} className="btn-ghost text-xs">‹</button>
-          <button onClick={() => setWeekStart(mondayOfWeek(new Date()))} className="btn-ghost text-xs">{t('calendar.today')}</button>
-          <button onClick={() => shiftWeek(7)} className="btn-ghost text-xs">›</button>
-          <span className="text-sm text-ink ml-2">
-            {weekRange}
-          </span>
+        <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
+            <button onClick={() => shiftRange(-7)} className="btn-ghost text-xs">‹</button>
+            <button onClick={goToday} className="btn-ghost text-xs">{t('calendar.today')}</button>
+            <button onClick={() => shiftRange(7)} className="btn-ghost text-xs">›</button>
+            <span className="text-sm text-ink ml-2">{weekRange}</span>
+          </div>
+          <div className="inline-flex border border-rule rounded bg-surface p-1 gap-1">
+            <button onClick={() => setView('week')}
+              className={[
+                'px-3 py-1 text-xs rounded transition-colors duration-200',
+                view === 'week' ? 'bg-forest text-cream' : 'text-ink-muted hover:text-ink',
+              ].join(' ')}>{t('calendar.view_week', { defaultValue: 'Week' })}</button>
+            <button onClick={() => setView('day')}
+              className={[
+                'px-3 py-1 text-xs rounded transition-colors duration-200',
+                view === 'day' ? 'bg-forest text-cream' : 'text-ink-muted hover:text-ink',
+              ].join(' ')}>{t('calendar.view_day', { defaultValue: 'Day' })}</button>
+          </div>
         </div>
 
         {loading ? (
           <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
         ) : (
           <WeekCalendar
-            weekStart={weekStart}
+            weekStart={rangeStart}
+            daysToShow={view === 'week' ? 7 : 1}
             sessions={sessions}
             onClickSession={(s) => setDetailSession(s)}
             readOnly
