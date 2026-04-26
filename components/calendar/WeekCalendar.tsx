@@ -130,10 +130,11 @@ export function WeekCalendar({
                 key={h}
                 onClick={() => handleSlotClick(dayIdx, HOUR_START + h)}
                 className={[
-                  'border-b border-ruleSoft',
-                  readOnly ? '' : 'cursor-pointer hover:bg-ruleSoft/50',
+                  'border-b border-ruleSoft transition-colors duration-150 ease-out',
+                  readOnly ? '' : 'cursor-pointer hover:bg-forest/[0.04]',
                 ].join(' ')}
                 style={{ height: `${ROW_HEIGHT_PX}px` }}
+                aria-label={readOnly ? undefined : `Create session ${formatHour(HOUR_START + h)}`}
               />
             ))}
             {/* Session blocks */}
@@ -151,23 +152,26 @@ export function WeekCalendar({
                   type="button"
                   onClick={(e) => { e.stopPropagation(); onClickSession?.(s); }}
                   className={[
-                    'absolute left-1 right-1 rounded text-left px-1.5 py-1 text-[11px] text-white overflow-hidden',
-                    'shadow-sm',
+                    'absolute left-1 right-1 text-left px-2 py-1 text-[11px] text-white overflow-hidden',
+                    'transition-all duration-200 ease-out hover:brightness-110 hover:shadow-md',
+                    'focus:outline-none focus:ring-2 focus:ring-cream/60 focus:ring-offset-1 focus:ring-offset-surface',
                     isCancelled ? 'opacity-50 line-through' : '',
-                    isPending ? 'ring-2 ring-amber' : '',
+                    isPending ? 'ring-1 ring-amber' : '',
                   ].join(' ')}
                   style={{
                     top: `${top}px`,
                     height: `${height}px`,
                     background: bg,
+                    borderRadius: 5,
+                    boxShadow: '0 1px 2px 0 rgba(26, 24, 21, 0.08)',
                   }}
                   title={`${s.student_name}${s.subject ? ' · ' + s.subject : ''} · ${start.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })}`}
                 >
-                  <div className="font-medium truncate">{s.student_name}</div>
+                  <div className="font-semibold truncate leading-tight">{s.student_name}</div>
                   {s.subject && height > 32 && (
-                    <div className="truncate opacity-90">{s.subject}</div>
+                    <div className="truncate opacity-85 leading-tight">{s.subject}</div>
                   )}
-                  <div className="opacity-80 text-[10px] tabular-nums">
+                  <div className="opacity-75 text-[10px] tabular-nums leading-tight mt-0.5">
                     {start.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })}
                   </div>
                 </button>
