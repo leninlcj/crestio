@@ -83,6 +83,14 @@
     @apply bg-surface border border-rule;
     border-radius: 6px;
   }
+  /* Subtle hover lift for cards that benefit from tactile feedback. Apply to
+     dashboard cards and other "interactive" surfaces. 200ms ease-out. */
+  .card-hover {
+    @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-card hover:border-rule/80;
+  }
+  .card-clickable {
+    @apply cursor-pointer card-hover hover:shadow-lift active:translate-y-0;
+  }
 
   .table-wrap {
     @apply card overflow-x-auto;

@@ -102,7 +102,7 @@ export function NextUpCard({ session }: { session: NextSession }) {
     <Card
       padding="none"
       className={[
-        'p-5 md:p-6',
+        'p-5 md:p-6 card-hover',
         soon ? 'border-amber bg-amber-soft/40 next-up-pulse' : '',
       ].filter(Boolean).join(' ')}
     >
@@ -147,7 +147,7 @@ export function PolishQueueCard({ items }: { items: PolishItem[] }) {
   const { formatRelativeDay } = useLocaleFormatters();
   const count = items.length;
   return (
-    <Card padding="none" className="p-5 md:p-6">
+    <Card padding="none" className="p-5 md:p-6 card-hover">
       <Kicker>{t('sections.polish.kicker')}</Kicker>
       <h2 className="font-display text-xl md:text-2xl tracking-tightest mb-1">
         {t('sections.polish.title', { count })}
@@ -190,7 +190,7 @@ export function InvoicingCard({
   const href = '/app/invoices/batch';
 
   return (
-    <Card padding="none" className="p-5 md:p-6">
+    <Card padding="none" className="p-5 md:p-6 card-hover">
       <Kicker>{t('sections.invoicing.kicker')}</Kicker>
       <h2 className="font-display text-xl md:text-2xl tracking-tightest mb-1">
         {t('sections.invoicing.title', { count: entries.length })}
@@ -248,7 +248,7 @@ export function HomeworkStatusCard({ items }: { items: HomeworkPendingItem[] }) 
   const studentCount = byStudent.size;
 
   return (
-    <Card padding="none" className="p-5 md:p-6">
+    <Card padding="none" className="p-5 md:p-6 card-hover">
       <HomeworkInner rows={rows} studentCount={studentCount} />
     </Card>
   );
@@ -319,7 +319,7 @@ export function RescheduleRequestsCard({
 }: { requests: RescheduleRequest[]; onChanged: () => void }) {
   const { t } = useTranslation('dashboard');
   return (
-    <Card padding="none" className="p-5 md:p-6 border-amber/50">
+    <Card padding="none" className="p-5 md:p-6 border-amber/50 card-hover">
       <Kicker tone="warning">{t('sections.reschedules.kicker')}</Kicker>
       <h2 className="font-display text-xl md:text-2xl tracking-tightest mb-4">
         {t('sections.reschedules.title', { count: requests.length })}
@@ -427,7 +427,7 @@ export function WeekAheadCard({
   }
 
   return (
-    <Card padding="none" className="p-5 md:p-6">
+    <Card padding="none" className="p-5 md:p-6 card-hover">
       <Kicker>{t('sections.week_ahead.kicker')}</Kicker>
       <h2 className="font-display text-xl md:text-2xl tracking-tightest mb-4">
         {t('sections.week_ahead.title', { count: filtered.length })}
