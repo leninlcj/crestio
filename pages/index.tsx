@@ -269,21 +269,21 @@ export default function Home() {
           </section>
 
           {/* Final CTA */}
-          <section className="px-6 md:px-12 py-20 md:py-28 max-w-2xl mx-auto text-center">
-            <p className="font-display text-3xl md:text-4xl tracking-tightest text-ink mb-8 text-balance leading-tight">
+          <section className="px-6 md:px-12 py-16 md:py-20 max-w-2xl mx-auto text-center">
+            <p className="font-display text-3xl md:text-4xl tracking-tightest text-ink mb-7 text-balance leading-tight">
               {t('final_cta.headline')}
             </p>
             <Link
               href="/auth/signup"
-              className="btn-primary text-base px-6 py-3 inline-block"
+              className="btn-primary text-base px-7 py-3 inline-flex items-center justify-center transition-all duration-200 ease-out hover:shadow-lift"
             >
               {t('final_cta.button')}
             </Link>
-            <div className="text-sm text-ink-muted mt-6">
+            <div className="text-sm text-ink-muted mt-5">
               {t('final_cta.questions_part1')}
               <a
                 href="mailto:support@crestio.ai"
-                className="underline underline-offset-2 hover:text-ink"
+                className="underline underline-offset-2 hover:text-ink transition-colors duration-200"
               >
                 support@crestio.ai
               </a>
@@ -294,24 +294,36 @@ export default function Home() {
 
         <StickyMobileCTA />
 
-        <footer className="px-6 md:px-12 py-12 border-t border-rule text-sm text-ink-muted">
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
+        <footer className="px-6 md:px-12 py-14 md:py-16 border-t border-rule text-sm text-ink-muted">
+          <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
+            <div className="col-span-2 md:col-span-1">
               <div className="font-display text-2xl tracking-tightest text-ink mb-2">
                 crest<span className="italic text-forest">io</span>
               </div>
-              <div className="text-2xs text-ink-soft">{t('footer.made_in')}</div>
+              <div className="text-2xs text-ink-soft leading-relaxed">{t('footer.made_in')}</div>
             </div>
-            <div className="flex flex-col gap-2">
-              <Link href="/auth/signin" className="hover:text-ink">{t('footer.sign_in')}</Link>
-              <Link href="/privacy" className="hover:text-ink">{t('footer.privacy')}</Link>
-              <Link href="/terms" className="hover:text-ink">{t('footer.terms')}</Link>
-              <a href="mailto:support@crestio.ai" className="hover:text-ink">{t('footer.support')}</a>
+            <div className="flex flex-col gap-2.5">
+              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">
+                {t('footer.heading_product')}
+              </div>
+              <a href="#pricing" className="hover:text-ink transition-colors duration-200">{t('nav.pricing')}</a>
+              <Link href="/changelog" className="hover:text-ink transition-colors duration-200">{t('footer.changelog')}</Link>
+              <Link href="/auth/signin" className="hover:text-ink transition-colors duration-200">{t('footer.sign_in')}</Link>
             </div>
-            <div className="md:text-right">
-              <a href="mailto:support@crestio.ai" className="hover:text-ink">
-                support@crestio.ai
-              </a>
+            <div className="flex flex-col gap-2.5">
+              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">
+                {t('footer.heading_company')}
+              </div>
+              <Link href="/about" className="hover:text-ink transition-colors duration-200">{t('footer.about')}</Link>
+              <Link href="/contact" className="hover:text-ink transition-colors duration-200">{t('footer.contact')}</Link>
+              <a href="mailto:support@crestio.ai" className="hover:text-ink transition-colors duration-200">{t('footer.support')}</a>
+            </div>
+            <div className="flex flex-col gap-2.5">
+              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">
+                {t('footer.heading_legal')}
+              </div>
+              <Link href="/privacy" className="hover:text-ink transition-colors duration-200">{t('footer.privacy')}</Link>
+              <Link href="/terms" className="hover:text-ink transition-colors duration-200">{t('footer.terms')}</Link>
             </div>
           </div>
         </footer>

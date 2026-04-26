@@ -138,7 +138,48 @@
     "sign_in": "Sign in",
     "privacy": "Privacy",
     "terms": "Terms",
-    "support": "Support"
+    "support": "Support",
+    "about": "About",
+    "contact": "Contact",
+    "changelog": "Changelog",
+    "heading_product": "Product",
+    "heading_company": "Company",
+    "heading_legal": "Legal"
+  },
+  "about": {
+    "meta_title": "About · Crestio",
+    "meta_description": "Crestio is built by a small team in Australia for tutors who value their time.",
+    "kicker": "About us",
+    "heading": "Built by people who believe tutoring deserves better software.",
+    "body_1": "Crestio is built by a small team based in Sydney. We started it because tutors we knew were running thoughtful, careful practices on top of tools that weren't designed for them — calendar apps, spreadsheets, half a dozen browser tabs.",
+    "body_2": "We think the work tutors do — actually paying attention to one student, planning the next session, writing notes a parent can read — is the part that should get your time. The admin around it shouldn't.",
+    "body_3": "So Crestio is opinionated. It does the boring parts well, gets out of the way for the rest, and gives you something quiet and well-made to use every day.",
+    "contact_intro": "Questions, feedback, ideas? We read every message."
+  },
+  "changelog": {
+    "meta_title": "Changelog · Crestio",
+    "meta_description": "What's new in Crestio.",
+    "kicker": "What's new",
+    "heading": "Changelog",
+    "intro": "Notable changes, shipped quietly. Email support@crestio.ai if something here is broken or unclear.",
+    "entries": {
+      "april_polish": {
+        "title": "Presentation polish across the app",
+        "b1": "Refined micro-interactions: 200–300ms ease-out hover and expand transitions throughout.",
+        "b2": "Empty states across every page now have a clear next action.",
+        "b3": "Mobile pass: tables become cards, week calendar becomes day, sidebars collapse to bottom tabs."
+      },
+      "april_files": {
+        "title": "File viewer audit log + watermark",
+        "b1": "Files opened from the parent portal now log a single audit event per view (no double-counting).",
+        "b2": "Watermark renders for everyone viewing a file, including the owner."
+      },
+      "april_ai": {
+        "title": "AI Assistant improvements",
+        "b1": "Faster note polish with better awareness of student context.",
+        "b2": "Daily usage counter so you can see your assist budget at a glance."
+      }
+    }
   },
   "contact": {
     "eyebrow": "Get in touch",
