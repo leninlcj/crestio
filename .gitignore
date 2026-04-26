@@ -44,3 +44,4 @@ public/locales/.cache/
 .env.production
 .env.staging
 .claude/
+.claude/
