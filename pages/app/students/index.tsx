@@ -152,55 +152,97 @@ function StudentsInner() {
           action={!showArchived && !isTutor ? <Link href="/app/students/new" className="btn-primary">{t('students:empty.add_first')}</Link> : undefined}
         />
       ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>{t('students:columns.name')}</th>
-                <th>{t('students:columns.year')}</th>
-                <th>{t('students:columns.subjects')}</th>
-                {!isTutor && <th>{t('students:columns.parent')}</th>}
-                {!isTutor && <th className="text-right">{t('students:columns.rate')}</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((s) => (
-                <tr
-                  key={s.id}
-                  className="row-link"
-                  onClick={() => window.location.assign(`/app/students/${s.id}`)}
-                >
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium">
-                        {initials(s.name)}
+        <>
+          {/* Mobile: card layout */}
+          <div className="md:hidden space-y-2">
+            {filtered.map((s) => (
+              <Link
+                key={s.id}
+                href={`/app/students/${s.id}`}
+                className="card p-4 block transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30 active:bg-ruleSoft/40"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="h-9 w-9 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-xs font-mono font-medium shrink-0">
+                    {initials(s.name)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className="text-sm text-ink font-medium truncate">
+                        {s.name}
+                        {(s as any).is_test_record && (
+                          <span className="ml-2 badge-neutral text-2xs">{t('students:test_pill')}</span>
+                        )}
                       </div>
-                      <div>
-                        <div className="text-ink font-medium">
-                          {s.name}
-                          {(s as any).is_test_record && (
-                            <span className="ml-2 badge-neutral text-2xs">{t('students:test_pill')}</span>
-                          )}
+                      {!isTutor && (
+                        <div className="text-2xs text-ink-muted font-mono num shrink-0">
+                          {formatCents(s.hourly_rate_cents, currency)}/hr
                         </div>
-                        {s.school && <div className="text-2xs text-ink-soft">{s.school}</div>}
-                      </div>
+                      )}
                     </div>
-                  </td>
-                  <td className="text-ink-muted">{s.year_level ?? '—'}</td>
-                  <td className="text-ink-muted">
-                    {s.subjects && s.subjects.length > 0 ? s.subjects.join(', ') : '—'}
-                  </td>
-                  {!isTutor && <td className="text-ink-muted">{s.parent_name ?? '—'}</td>}
-                  {!isTutor && (
-                    <td className="text-right font-mono text-sm num">
-                      {formatCents(s.hourly_rate_cents, currency)}
-                    </td>
-                  )}
+                    {s.school && <div className="text-2xs text-ink-soft">{s.school}</div>}
+                    <div className="text-2xs text-ink-muted mt-1.5 truncate">
+                      {[s.year_level, s.subjects && s.subjects.length > 0 ? s.subjects.join(', ') : null]
+                        .filter(Boolean).join(' · ') || '—'}
+                    </div>
+                    {!isTutor && s.parent_name && (
+                      <div className="text-2xs text-ink-soft mt-0.5 truncate">{s.parent_name}</div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {/* Desktop: table */}
+          <div className="hidden md:block table-wrap">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>{t('students:columns.name')}</th>
+                  <th>{t('students:columns.year')}</th>
+                  <th>{t('students:columns.subjects')}</th>
+                  {!isTutor && <th>{t('students:columns.parent')}</th>}
+                  {!isTutor && <th className="text-right">{t('students:columns.rate')}</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filtered.map((s) => (
+                  <tr
+                    key={s.id}
+                    className="row-link"
+                    onClick={() => window.location.assign(`/app/students/${s.id}`)}
+                  >
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium">
+                          {initials(s.name)}
+                        </div>
+                        <div>
+                          <div className="text-ink font-medium">
+                            {s.name}
+                            {(s as any).is_test_record && (
+                              <span className="ml-2 badge-neutral text-2xs">{t('students:test_pill')}</span>
+                            )}
+                          </div>
+                          {s.school && <div className="text-2xs text-ink-soft">{s.school}</div>}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="text-ink-muted">{s.year_level ?? '—'}</td>
+                    <td className="text-ink-muted">
+                      {s.subjects && s.subjects.length > 0 ? s.subjects.join(', ') : '—'}
+                    </td>
+                    {!isTutor && <td className="text-ink-muted">{s.parent_name ?? '—'}</td>}
+                    {!isTutor && (
+                      <td className="text-right font-mono text-sm num">
+                        {formatCents(s.hourly_rate_cents, currency)}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </Layout>
   );

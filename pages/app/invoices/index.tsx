@@ -101,35 +101,33 @@ function InvoicesInner() {
           action={<Link href="/app/invoices/batch" className="btn-primary">{t('invoices:empty.cta_batch')}</Link>}
         />
       ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>{t('invoices:columns.number')}</th>
-                <th>{t('invoices:columns.billed_to')}</th>
-                <th>{t('invoices:columns.issued')}</th>
-                <th>{t('invoices:columns.due')}</th>
-                <th>{t('invoices:columns.status')}</th>
-                <th className="text-right">{t('invoices:columns.total')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((i) => (
-                <tr key={i.id} className="row-link"
-                  onClick={() => window.location.assign(`/app/invoices/${i.id}`)}>
-                  <td className="font-mono text-sm">
-                    {i.number}
-                    {i.is_batch_generated && (
-                      <span className="ml-2 badge-neutral text-2xs">{t('invoices:batch_pill', { defaultValue: 'BATCH' })}</span>
-                    )}
-                  </td>
-                  <td className="text-ink font-medium">
-                    {i.household?.display_name ?? i.student?.name ?? '—'}
-                  </td>
-                  <td className="text-ink-muted">{formatDate(i.issued_on)}</td>
-                  <td className="text-ink-muted">{formatDate(i.due_on)}</td>
-                  <td>
+        <>
+          {/* Mobile: card layout */}
+          <div className="md:hidden space-y-2">
+            {filtered.map((i) => (
+              <Link
+                key={i.id}
+                href={`/app/invoices/${i.id}`}
+                className="card p-4 block transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30 active:bg-ruleSoft/40"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-sm text-ink font-medium truncate">
+                      {i.household?.display_name ?? i.student?.name ?? '—'}
+                    </div>
+                    <div className="text-2xs text-ink-soft font-mono mt-0.5 truncate">
+                      {i.number}
+                      {i.is_batch_generated && (
+                        <span className="ml-2 badge-neutral text-2xs">{t('invoices:batch_pill', { defaultValue: 'BATCH' })}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <div className="font-mono num text-sm text-ink">
+                      {formatCents(i.total_cents, currency, { showZero: true })}
+                    </div>
                     <span className={cx(
+                      'mt-1 inline-block',
                       i.status === 'paid' && 'badge-forest',
                       i.status === 'overdue' && 'badge-claret',
                       i.status === 'sent' && 'badge-rust',
@@ -138,15 +136,62 @@ function InvoicesInner() {
                     )}>
                       {t(`common:status.${i.status}` as any)}
                     </span>
-                  </td>
-                  <td className="text-right font-mono num text-sm">
-                    {formatCents(i.total_cents, currency, { showZero: true })}
-                  </td>
+                  </div>
+                </div>
+                <div className="mt-2 pt-2 border-t border-ruleSoft text-2xs text-ink-muted">
+                  {t('invoices:columns.issued')}: {formatDate(i.issued_on)} · {t('invoices:columns.due')}: {formatDate(i.due_on)}
+                </div>
+              </Link>
+            ))}
+          </div>
+          {/* Desktop: table */}
+          <div className="hidden md:block table-wrap">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>{t('invoices:columns.number')}</th>
+                  <th>{t('invoices:columns.billed_to')}</th>
+                  <th>{t('invoices:columns.issued')}</th>
+                  <th>{t('invoices:columns.due')}</th>
+                  <th>{t('invoices:columns.status')}</th>
+                  <th className="text-right">{t('invoices:columns.total')}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filtered.map((i) => (
+                  <tr key={i.id} className="row-link"
+                    onClick={() => window.location.assign(`/app/invoices/${i.id}`)}>
+                    <td className="font-mono text-sm">
+                      {i.number}
+                      {i.is_batch_generated && (
+                        <span className="ml-2 badge-neutral text-2xs">{t('invoices:batch_pill', { defaultValue: 'BATCH' })}</span>
+                      )}
+                    </td>
+                    <td className="text-ink font-medium">
+                      {i.household?.display_name ?? i.student?.name ?? '—'}
+                    </td>
+                    <td className="text-ink-muted">{formatDate(i.issued_on)}</td>
+                    <td className="text-ink-muted">{formatDate(i.due_on)}</td>
+                    <td>
+                      <span className={cx(
+                        i.status === 'paid' && 'badge-forest',
+                        i.status === 'overdue' && 'badge-claret',
+                        i.status === 'sent' && 'badge-rust',
+                        i.status === 'draft' && 'badge-neutral',
+                        i.status === 'void' && 'badge-neutral'
+                      )}>
+                        {t(`common:status.${i.status}` as any)}
+                      </span>
+                    </td>
+                    <td className="text-right font-mono num text-sm">
+                      {formatCents(i.total_cents, currency, { showZero: true })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </Layout>
   );

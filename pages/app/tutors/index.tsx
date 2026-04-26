@@ -96,52 +96,89 @@ function TutorsInner() {
           action={<Link href="/app/tutors/new" className="btn-primary">{t('actions.add_one')}</Link>}
         />
       ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>{t('table.name')}</th>
-                <th>{t('table.subjects')}</th>
-                <th>{t('table.linked_login')}</th>
-                <th className="text-right">{t('table.students')}</th>
-                <th className="text-right">{t('table.pay_rate')}</th>
-                <th className="text-right">{t('table.this_month')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tutors.map((tu) => (
-                <tr key={tu.id} className="row-link"
-                  onClick={() => window.location.assign(`/app/tutors/${tu.id}`)}>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-forest text-cream grid place-items-center text-2xs font-mono font-medium">
-                        {initials(tu.name)}
+        <>
+          {/* Mobile: card layout */}
+          <div className="md:hidden space-y-2">
+            {tutors.map((tu) => (
+              <Link
+                key={tu.id}
+                href={`/app/tutors/${tu.id}`}
+                className="card p-4 block transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30 active:bg-ruleSoft/40"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="h-9 w-9 rounded-full bg-forest text-cream grid place-items-center text-xs font-mono font-medium shrink-0">
+                    {initials(tu.name)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className="text-sm text-ink font-medium truncate">{tu.name}</div>
+                      <div className="text-2xs font-mono num text-ink shrink-0">
+                        {formatAmount(tu.pay_rate_cents)}
                       </div>
-                      <div className="text-ink font-medium">{tu.name}</div>
                     </div>
-                  </td>
-                  <td className="text-ink-muted">
-                    {tu.subjects && tu.subjects.length > 0 ? tu.subjects.join(', ') : t('table.em_dash')}
-                  </td>
-                  <td>
-                    {tu.auth_user_id
-                      ? <span className="text-2xs uppercase tracking-widest text-forest">{t('table.linked_yes')}</span>
-                      : <span className="text-2xs uppercase tracking-widest text-ink-soft">{t('table.linked_no')}</span>}
-                  </td>
-                  <td className="text-right font-mono num text-sm text-ink-muted">
-                    {tu.assigned_student_count}
-                  </td>
-                  <td className="text-right font-mono num text-sm">
-                    {formatAmount(tu.pay_rate_cents)}
-                  </td>
-                  <td className="text-right font-mono num text-sm">
-                    {tu.auth_user_id ? formatAmount(tu.month_payout_cents, true) : t('table.em_dash')}
-                  </td>
+                    <div className="text-2xs text-ink-muted mt-0.5 truncate">
+                      {tu.subjects && tu.subjects.length > 0 ? tu.subjects.join(', ') : t('table.em_dash')}
+                    </div>
+                    <div className="text-2xs text-ink-soft mt-1.5 flex items-center gap-2">
+                      <span>{t('table.students')}: {tu.assigned_student_count}</span>
+                      <span>·</span>
+                      <span>
+                        {tu.auth_user_id ? <span className="text-forest">{t('table.linked_yes')}</span> : t('table.linked_no')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {/* Desktop: table */}
+          <div className="hidden md:block table-wrap">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>{t('table.name')}</th>
+                  <th>{t('table.subjects')}</th>
+                  <th>{t('table.linked_login')}</th>
+                  <th className="text-right">{t('table.students')}</th>
+                  <th className="text-right">{t('table.pay_rate')}</th>
+                  <th className="text-right">{t('table.this_month')}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {tutors.map((tu) => (
+                  <tr key={tu.id} className="row-link"
+                    onClick={() => window.location.assign(`/app/tutors/${tu.id}`)}>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-forest text-cream grid place-items-center text-2xs font-mono font-medium">
+                          {initials(tu.name)}
+                        </div>
+                        <div className="text-ink font-medium">{tu.name}</div>
+                      </div>
+                    </td>
+                    <td className="text-ink-muted">
+                      {tu.subjects && tu.subjects.length > 0 ? tu.subjects.join(', ') : t('table.em_dash')}
+                    </td>
+                    <td>
+                      {tu.auth_user_id
+                        ? <span className="text-2xs uppercase tracking-widest text-forest">{t('table.linked_yes')}</span>
+                        : <span className="text-2xs uppercase tracking-widest text-ink-soft">{t('table.linked_no')}</span>}
+                    </td>
+                    <td className="text-right font-mono num text-sm text-ink-muted">
+                      {tu.assigned_student_count}
+                    </td>
+                    <td className="text-right font-mono num text-sm">
+                      {formatAmount(tu.pay_rate_cents)}
+                    </td>
+                    <td className="text-right font-mono num text-sm">
+                      {tu.auth_user_id ? formatAmount(tu.month_payout_cents, true) : t('table.em_dash')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </Layout>
   );

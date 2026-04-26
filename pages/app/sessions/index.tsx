@@ -186,46 +186,89 @@ function SessionsInner() {
           }
         />
       ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>{t('sessions:columns.when')}</th>
-                <th>{t('sessions:columns.student')}</th>
-                <th>{t('sessions:columns.subject_topic')}</th>
-                <th>{t('sessions:columns.tutor')}</th>
-                <th>{t('sessions:columns.status')}</th>
-                <th className="text-right">{t('sessions:columns.amount')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sessions.map((s) => (
-                <tr key={s.id} className="row-link"
-                  onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
-                  <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
-                  <td className="text-ink font-medium">{s.student?.name ?? '—'}</td>
-                  <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}</td>
-                  <td className="text-ink-muted">{s.tutor?.name ?? <span className="text-ink-soft">{t('sessions:fields.tutor_self')}</span>}</td>
-                  <td>
-                    <span className={cx(
-                      s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),
-                      s.status === 'cancelled' && 'badge-neutral',
-                      s.status === 'no_show' && 'badge-claret',
-                      s.status === 'scheduled' && 'badge-neutral'
-                    )}>
-                      {s.status === 'completed'
-                        ? (s.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
-                        : t(`sessions:status.${s.status}` as any)}
-                    </span>
-                  </td>
-                  <td className="text-right font-mono num text-sm">
-                    {formatCents(sessionAmount(s), currency)}
-                  </td>
+        <>
+          {/* Mobile: card layout */}
+          <div className="md:hidden space-y-2">
+            {sessions.map((s) => {
+              const statusLabel = s.status === 'completed'
+                ? (s.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
+                : t(`sessions:status.${s.status}` as any);
+              const statusClass = cx(
+                s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),
+                s.status === 'cancelled' && 'badge-neutral',
+                s.status === 'no_show' && 'badge-claret',
+                s.status === 'scheduled' && 'badge-neutral'
+              );
+              return (
+                <Link
+                  key={s.id}
+                  href={`/app/sessions/${s.id}`}
+                  className="card p-4 block transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30 active:bg-ruleSoft/40"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-ink truncate">{s.student?.name ?? '—'}</div>
+                      <div className="text-2xs text-ink-muted mt-0.5">{formatDateTime(s.scheduled_at)}</div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="font-mono num text-sm text-ink">{formatCents(sessionAmount(s), currency)}</div>
+                      <span className={cx('mt-1 inline-block', statusClass)}>{statusLabel}</span>
+                    </div>
+                  </div>
+                  {(s.subject || s.topic || s.tutor?.name) && (
+                    <div className="mt-2 pt-2 border-t border-ruleSoft text-2xs text-ink-muted truncate">
+                      {[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}
+                      {s.tutor?.name && (
+                        <span className="text-ink-soft"> · {s.tutor.name}</span>
+                      )}
+                    </div>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+          {/* Desktop: table */}
+          <div className="hidden md:block table-wrap">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>{t('sessions:columns.when')}</th>
+                  <th>{t('sessions:columns.student')}</th>
+                  <th>{t('sessions:columns.subject_topic')}</th>
+                  <th>{t('sessions:columns.tutor')}</th>
+                  <th>{t('sessions:columns.status')}</th>
+                  <th className="text-right">{t('sessions:columns.amount')}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {sessions.map((s) => (
+                  <tr key={s.id} className="row-link"
+                    onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
+                    <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
+                    <td className="text-ink font-medium">{s.student?.name ?? '—'}</td>
+                    <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}</td>
+                    <td className="text-ink-muted">{s.tutor?.name ?? <span className="text-ink-soft">{t('sessions:fields.tutor_self')}</span>}</td>
+                    <td>
+                      <span className={cx(
+                        s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),
+                        s.status === 'cancelled' && 'badge-neutral',
+                        s.status === 'no_show' && 'badge-claret',
+                        s.status === 'scheduled' && 'badge-neutral'
+                      )}>
+                        {s.status === 'completed'
+                          ? (s.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
+                          : t(`sessions:status.${s.status}` as any)}
+                      </span>
+                    </td>
+                    <td className="text-right font-mono num text-sm">
+                      {formatCents(sessionAmount(s), currency)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </Layout>
   );
