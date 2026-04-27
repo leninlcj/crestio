@@ -29,3 +29,18 @@ export type { StatusOption } from './EditableStatusPill';
 export { RouteProgressBar } from './RouteProgressBar';
 export { SavedViewsMenu } from './SavedViewsMenu';
 export { KeyboardShortcutsOverlay } from './KeyboardShortcutsOverlay';
+// Phase 3 primitives
+export { Avatar } from './Avatar';
+export { AvatarGroup } from './AvatarGroup';
+export { Tooltip } from './Tooltip';
+export { KbdHint } from './KbdHint';
+export { ContextMenu } from './ContextMenu';
+export type { ContextMenuItem } from './ContextMenu';
+export { Stepper } from './Stepper';
+export type { Step } from './Stepper';
+export { MiniBarChart } from './MiniBarChart';
+export { HealthIndicator, classifyHealth } from './HealthIndicator';
+export type { HealthState } from './HealthIndicator';
+export { UsageBar } from './UsageBar';
+export { Diff } from './Diff';
+export { RichEditor } from './RichEditor';

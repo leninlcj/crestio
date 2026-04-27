@@ -20,12 +20,11 @@
     line-height: 1.5;
   }
 
-  /* Typography — single source of truth.
-     Display = page hero numbers (40 / 600 / tabular).
-     H1 = page title (24 / 600).
-     H2 = section (16 / 600).
-     Body = 14 / 400 / 1.5.
-     Heading tracking is -0.02em.                                       */
+  /* Typography rhythm — single source of truth.
+     - h1 24px / 1.2 / -0.02em / 600
+     - h2 16px / 1.4 / -0.02em / 600
+     - body 14 / 1.5 / 400
+     - 13 / 1.5  ·  12 / 1.45  ·  11 / 1.4 */
   h1, h2, h3, h4 {
     @apply font-display tracking-tighter text-ink;
     font-weight: 600;
@@ -54,12 +53,31 @@
     -webkit-box-shadow: 0 0 0 30px #FFFFFF inset !important;
     -webkit-text-fill-color: #0F1714 !important;
   }
+
+  /* Selection — forest green at 18% opacity. */
+  ::selection {
+    background-color: rgba(31, 58, 46, 0.18);
+    color: inherit;
+  }
+
+  /* Single global focus ring — only on keyboard focus, not mouse clicks. */
+  :focus-visible {
+    outline: 2px solid #1F3A2E;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  /* Inputs already render their own ring via .input:focus; suppress here. */
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+  }
 }
 
 @layer components {
   /* Buttons — 40px tall, 8px radius, single transition. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 text-sm font-medium transition-colors duration-100 disabled:opacity-40 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-4 text-sm font-medium transition-colors duration-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer;
     border-radius: 8px;
     height: 40px;
     min-height: 40px;
@@ -130,11 +148,12 @@
     @apply cursor-pointer bg-ruleSoft/40;
   }
 
-  /* Status pills — 11px text, tinted bg at 8% opacity, full color text. */
+  /* Status pills — 11px text, 4px / 8px padding, 999px radius, 500 weight. */
   .pill {
-    @apply inline-flex items-center text-2xs font-semibold whitespace-nowrap;
+    @apply inline-flex items-center text-2xs font-medium whitespace-nowrap;
     border-radius: 999px;
     padding: 4px 8px;
+    line-height: 1.2;
   }
   .pill-neutral { @apply pill bg-ruleSoft text-ink-muted; }
   .pill-forest  { @apply pill text-forest-ink; background-color: rgba(31, 58, 46, 0.08); }
@@ -214,6 +233,49 @@
   border-radius: 8px;
 }
 
+/* Phase 3 — soft pulse on a green status border for "in session" rows. */
+@keyframes session-now-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+.session-now-pulse {
+  animation: session-now-pulse 2s ease-in-out infinite;
+}
+
+/* Phase 3 — subtle dot pulse for overdue invoices. */
+@keyframes overdue-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.25); opacity: 1; }
+}
+.overdue-dot-pulse {
+  animation: overdue-dot-pulse 1.6s ease-in-out infinite;
+}
+
+/* Phase 3 — list row insert/remove. Used opt-in via .row-enter / .row-exit. */
+@keyframes row-enter {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes row-exit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-4px); }
+}
+.row-enter { animation: row-enter 200ms ease-out both; }
+.row-exit  { animation: row-exit 200ms ease-in both; }
+
+/* Phase 3 — RichEditor placeholder. */
+.rich-editor:empty::before,
+.rich-editor[data-empty='true']::before {
+  content: attr(data-placeholder);
+  color: #A0A39E;
+  pointer-events: none;
+}
+.rich-editor ul { list-style: disc; padding-left: 1.25rem; margin: 0.25rem 0; }
+.rich-editor ol { list-style: decimal; padding-left: 1.25rem; margin: 0.25rem 0; }
+.rich-editor li { margin: 0.125rem 0; }
+.rich-editor strong { font-weight: 600; }
+.rich-editor em { font-style: italic; }
+
 /* Assistant typing dots — kept; small inline animation. */
 @keyframes assistant-dot-pulse {
   0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
@@ -239,11 +301,35 @@
   }
 }
 
-/* Print styles — used when saving an invoice to PDF. */
+/* -------------------------------------------------------------------- */
+/* Reduced motion — kill non-essential animation, keep opacity crossfades. */
+/* -------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .skeleton-shimmer,
+  .session-now-pulse,
+  .overdue-dot-pulse,
+  .assistant-dot {
+    animation: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------- */
+/* Print — used when saving an invoice to PDF, or printing a detail pane. */
+/* -------------------------------------------------------------------- */
 @media print {
   aside, nav, header, footer,
-  [data-print-hide], .print-hide { display: none !important; }
-  .fixed { display: none !important; }
+  [data-print-hide], .print-hide,
+  /* Hide the floating UI when printing. */
+  [role='dialog'][aria-label='Command palette'],
+  .fixed:not(.print-keep) {
+    display: none !important;
+  }
   .print-show { display: block !important; }
   html, body, #__next, main {
     background: white !important;
@@ -251,7 +337,30 @@
     margin: 0 !important;
     padding: 0 !important;
   }
+  body {
+    font-size: 11pt;
+    line-height: 1.4;
+  }
   @page { margin: 14mm; size: A4 portrait; }
-  .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #DDD !important;
+    background: white !important;
+  }
   .print-invoice { max-width: none !important; padding: 0 !important; margin: 0 !important; }
+  /* Detail-pane print mode: when [data-printing-pane] is set on body,
+     hide everything except the pane content. */
+  body[data-printing-pane='true'] > div > * { display: none !important; }
+  body[data-printing-pane='true'] [data-pane-print='true'] {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  /* Drop any hover/transition flicker. */
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

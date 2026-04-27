@@ -6,6 +6,7 @@ import Layout from '../../components/Layout';
 import { supabase } from '../../lib/supabase';
 import { Skeleton } from '../../components/design/Skeleton';
 import { StatusPill } from '../../components/design/StatusPill';
+import { Sparkline } from '../../components/design/Sparkline';
 import EmptyState from '../../components/EmptyState';
 import { IconCoin } from '../../components/design/icons';
 
@@ -49,19 +50,11 @@ function PayoutsReceivedInner() {
           <Skeleton className="h-12 w-full" />
         </div>
       ) : !data || !data.has_account || !data.payouts_enabled ? (
-        <EmptyState
-          icon={<IconCoin />}
-          title="Parent payments aren't on yet."
-          description="Once parent payments are turned on, your payouts from Stripe will show here."
-          action={
-            <Link href="/app/settings/billing" className="btn-primary">
-              Set up parent payments
-            </Link>
-          }
-        />
+        <PreSetupExplainer />
       ) : (
         <div className="space-y-4">
           <BalancePill balance={data.balance} />
+          <DepositChart payouts={data.payouts} />
           <div className="card overflow-hidden">
             {data.payouts.length === 0 ? (
               <div className="p-6 text-center text-sm text-ink-soft">No payouts yet.</div>
@@ -118,6 +111,87 @@ function BalancePill({ balance }: { balance: Status['balance'] }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function PreSetupExplainer() {
+  return (
+    <div className="card p-6 max-w-2xl">
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-10 rounded-full bg-forest-soft text-forest-ink grid place-items-center shrink-0">
+          <IconCoin />
+        </div>
+        <div className="flex-1">
+          <h2 className="text-base font-display font-semibold tracking-tighter mb-2 m-0">
+            Take payments directly from parents.
+          </h2>
+          <ul className="text-sm text-ink-muted space-y-1.5 mb-4">
+            <li className="flex items-start gap-2">
+              <Bullet />
+              <span>No card details needed for the parent — they pay with one tap.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Bullet />
+              <span>1% Crestio fee. Stripe processing on top, paid by you.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Bullet />
+              <span>Funds land in your bank account in about 2 days.</span>
+            </li>
+          </ul>
+          <div className="flex items-center gap-2">
+            <Link href="/app/owner/payouts" className="btn-primary">
+              Set up parent payments
+            </Link>
+            <Link href="/app/settings/billing" className="btn-ghost text-xs">
+              Manage billing →
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Bullet() {
+  return (
+    <span aria-hidden="true" className="mt-2 inline-block w-1 h-1 rounded-full bg-forest shrink-0" />
+  );
+}
+
+function DepositChart({ payouts }: { payouts: Status['payouts'] }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = 30;
+  const buckets = new Array(days).fill(0);
+  for (const p of payouts) {
+    if (p.status !== 'paid') continue;
+    const arrival = new Date(p.arrival_date * 1000);
+    arrival.setHours(0, 0, 0, 0);
+    const diff = Math.floor((today.getTime() - arrival.getTime()) / 86_400_000);
+    if (diff >= 0 && diff < days) buckets[days - 1 - diff] += p.amount;
+  }
+  const total = buckets.reduce((a, b) => a + b, 0);
+  if (total === 0) return null;
+  const last = buckets[buckets.length - 1];
+  const currency = (payouts[0]?.currency ?? 'aud').toUpperCase();
+  return (
+    <div className="card p-4">
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium">
+          Last 30 days · {currency}
+        </div>
+        <div className="text-2xs text-ink-soft num tabular">
+          Total {formatStripeAmount(total, currency.toLowerCase())}
+        </div>
+      </div>
+      <div className="relative">
+        <Sparkline data={buckets} width={400} height={48} stroke="#1F3A2E" fill />
+        <div className="absolute right-0 top-0 text-xs num tabular text-ink font-medium bg-cream/80 px-1.5 rounded">
+          {formatStripeAmount(last, currency.toLowerCase())}
+        </div>
+      </div>
     </div>
   );
 }

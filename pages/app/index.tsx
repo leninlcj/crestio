@@ -17,6 +17,9 @@ import { TimelineRow } from '../../components/design/TimelineRow';
 import { Skeleton } from '../../components/design/Skeleton';
 import { StatusPill } from '../../components/design/StatusPill';
 import { NowLine, useNowMinute } from '../../components/design/NowLine';
+import { Avatar } from '../../components/design/Avatar';
+import { MiniBarChart } from '../../components/design/MiniBarChart';
+import { formatRelativeDate, formatMoney } from '../../lib/format';
 
 // ---------------------------------------------------------------------------
 // Dashboard — morning briefing layout.
@@ -48,6 +51,8 @@ type InvoicingEntry = {
   first_session_id: string;
 };
 
+type Series = { series?: number[]; previous_series?: number[] };
+
 type TodayPayload = {
   role: 'owner' | 'tutor';
   currency: string;
@@ -65,10 +70,11 @@ type TodayPayload = {
   week_ahead: WeekItem[];
   invoicing_queue: InvoicingEntry[];
   homework_pending: any[];
-  today: { count: number; minutes: number; sessions: WeekItem[]; series?: number[] };
-  week: { scheduled_count: number; series?: number[] };
-  polish?: { series?: number[] };
-  unpaid_invoices: { count: number; total_cents: number; oldest_overdue_days: number; series?: number[] };
+  today: { count: number; minutes: number; sessions: WeekItem[]; series?: number[]; previous_series?: number[] };
+  week: { scheduled_count: number; series?: number[]; previous_series?: number[] };
+  polish?: Series;
+  unpaid_invoices: { count: number; total_cents: number; oldest_overdue_days: number; series?: number[]; previous_series?: number[] };
+  team_breakdown?: Array<{ tutor_id: string; tutor_name: string; sessions: number }> | null;
 };
 
 const DISMISSED_NUDGES_KEY = 'crestio.dashboard.dismissed_nudges.v1';
@@ -296,6 +302,8 @@ function DashboardBody({
           sub={todayNextSub}
           href="/app/sessions?tab=today"
           series={payload.today?.series}
+          previousSeries={payload.today?.previous_series}
+          deltaUnit="sessions"
         />
         <StatCard
           label="This week"
@@ -303,6 +311,8 @@ function DashboardBody({
           sub={weekScheduled === 0 ? 'No sessions scheduled' : 'Scheduled'}
           href="/app/sessions?tab=upcoming"
           series={payload.week?.series}
+          previousSeries={payload.week?.previous_series}
+          deltaUnit="sessions"
         />
         <StatCard
           label="Polish queue"
@@ -311,10 +321,12 @@ function DashboardBody({
           tone={polishCount > 0 ? 'amber' : 'default'}
           href="/app/sessions?tab=polish-queue"
           series={payload.polish?.series}
+          previousSeries={payload.polish?.previous_series}
         />
         <StatCard
           label="Unpaid invoices"
           value={unpaid.count > 0 ? compactCurrency(unpaid.total_cents, currency) : 0}
+          numericValue={unpaid.count}
           sub={
             unpaid.count === 0
               ? 'All paid'
@@ -325,26 +337,28 @@ function DashboardBody({
           tone={unpaid.oldest_overdue_days > 7 ? 'claret' : unpaid.count > 0 ? 'amber' : 'default'}
           href="/app/invoices"
           series={payload.unpaid_invoices?.series}
+          previousSeries={payload.unpaid_invoices?.previous_series}
         />
         {showTeamCard && teamSummary && (
-          <StatCard
-            label="Team this week"
-            value={teamSummary.sessions}
-            sub={`${teamSummary.hours_billed}h billed · ${teamSummary.awaiting_notes} awaiting notes`}
-            tone={teamSummary.awaiting_notes > 0 ? 'amber' : 'default'}
-            href="/app/tutors"
+          <OwnerTeamCard
+            sessions={teamSummary.sessions}
+            hoursBilled={teamSummary.hours_billed}
+            awaitingNotes={teamSummary.awaiting_notes}
+            breakdown={payload.team_breakdown ?? null}
           />
         )}
       </div>
 
       {/* Two-column body — 60/40 on desktop. */}
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 md:gap-8">
-        {/* Today timeline */}
+        {/* Today timeline + Tomorrow at a glance */}
         <section>
           <h2 className="text-[15px] font-display font-semibold tracking-tighter mb-3">Today</h2>
           <div className="card p-3 md:p-4">
             <TodayTimeline sessions={payload.today?.sessions ?? []} nextId={next?.id ?? null} />
           </div>
+          <TomorrowAtAGlance weekAhead={payload.week_ahead} />
+          <WhatChangedFeed currency={payload.currency} />
         </section>
 
         {/* Needs attention */}
@@ -465,6 +479,7 @@ function TimelineSessionRow({ session: s, now, nextId }: { session: WeekItem; no
 
   const isFuture = state === 'future';
   const isPast = state === 'past';
+  const isCurrent = state === 'current';
 
   const actions = (
     <>
@@ -488,15 +503,325 @@ function TimelineSessionRow({ session: s, now, nextId }: { session: WeekItem; no
   );
 
   return (
-    <TimelineRow
-      href={`/app/sessions/${s.id}`}
-      time={formatTimeOfDay(s.scheduled_at)}
-      title={s.student_name}
-      subtitle={[s.subject, `${s.duration_minutes} min`].filter(Boolean).join(' · ')}
-      state={state}
-      status={<StatusPill tone={pill.tone}>{pill.label}</StatusPill>}
-      actions={actions}
-    />
+    <div className={isCurrent ? 'relative' : undefined}>
+      {isCurrent && (
+        <span
+          aria-hidden="true"
+          className="absolute left-0 top-1 bottom-1 w-0.5 bg-forest rounded session-now-pulse"
+        />
+      )}
+      <TimelineRow
+        href={`/app/sessions/${s.id}`}
+        time={formatTimeOfDay(s.scheduled_at)}
+        title={
+          <span className="inline-flex items-center gap-2">
+            <Avatar name={s.student_name} size={20} />
+            <span>{s.student_name}</span>
+          </span>
+        }
+        subtitle={[s.subject, `${s.duration_minutes} min`].filter(Boolean).join(' · ')}
+        state={state}
+        status={<StatusPill tone={pill.tone}>{pill.label}</StatusPill>}
+        actions={actions}
+      />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tomorrow at a glance — collapsed by default; expandable.
+// Hidden on weekends or when nothing is scheduled tomorrow.
+// ---------------------------------------------------------------------------
+
+function TomorrowAtAGlance({ weekAhead }: { weekAhead: WeekItem[] }) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  const dayAfter = new Date(tomorrow);
+  dayAfter.setDate(dayAfter.getDate() + 1);
+  const dow = tomorrow.getDay();
+  const isWeekend = dow === 0 || dow === 6;
+  const tomorrowSessions = weekAhead.filter((s) => {
+    const t = new Date(s.scheduled_at).getTime();
+    return t >= tomorrow.getTime() && t < dayAfter.getTime();
+  });
+  const [expanded, setExpanded] = useState(false);
+  if (isWeekend || tomorrowSessions.length === 0) return null;
+
+  const preview = tomorrowSessions.slice(0, 3);
+  const more = tomorrowSessions.length - preview.length;
+  const label = `Tomorrow · ${tomorrowSessions.length} ${tomorrowSessions.length === 1 ? 'session' : 'sessions'}`;
+  const first = tomorrowSessions[0];
+  const firstName = first ? first.student_name : null;
+
+  return (
+    <div className="mt-4">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2 rounded border border-rule bg-surface hover:bg-ruleSoft/40 transition-colors duration-100 text-left"
+        aria-expanded={expanded}
+      >
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span className="text-xs uppercase tracking-widest text-ink-muted font-medium shrink-0">{label}</span>
+          {!expanded && firstName && (
+            <span className="text-xs text-ink-muted truncate">
+              First: {firstName} at {formatTimeOfDay(first.scheduled_at)}
+            </span>
+          )}
+        </div>
+        <span className="text-ink-soft text-xs shrink-0">
+          {expanded ? '–' : '+'}
+        </span>
+      </button>
+      {expanded && (
+        <div className="mt-2 card p-3 space-y-1">
+          {preview.map((s) => (
+            <Link
+              key={s.id}
+              href={`/app/sessions/${s.id}`}
+              className="flex items-center gap-3 px-2 py-1.5 rounded hover:bg-ruleSoft/40 transition-colors duration-100"
+            >
+              <span className="text-xs text-ink-muted num tabular shrink-0 w-12">{formatTimeOfDay(s.scheduled_at)}</span>
+              <Avatar name={s.student_name} size={20} />
+              <span className="text-sm text-ink truncate flex-1">{s.student_name}</span>
+              <span className="text-xs text-ink-soft num tabular">{s.duration_minutes} min</span>
+            </Link>
+          ))}
+          {more > 0 && (
+            <Link
+              href="/app/sessions?tab=upcoming"
+              className="block text-2xs text-forest hover:underline pl-2 pt-1"
+            >
+              +{more} more
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// What changed — feed of recent material events with filter chips.
+// Pulls a small slice of recent sessions, invoices, and reschedules in the
+// browser; renders a small list with parent-initiated events promoted.
+// ---------------------------------------------------------------------------
+
+type ChangeEvent = {
+  id: string;
+  kind: 'parent' | 'money' | 'session';
+  initiator: 'parent' | 'tutor' | 'system';
+  icon: 'envelope' | 'dollar' | 'calendar' | 'reply' | 'sparkle';
+  title: string;
+  subtitle?: string;
+  href: string;
+  at: number;
+};
+
+function WhatChangedFeed({ currency }: { currency: string }) {
+  const [events, setEvents] = useState<ChangeEvent[] | null>(null);
+  const [filter, setFilter] = useState<'all' | 'parents' | 'money' | 'sessions'>('all');
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) return;
+        const headers = { Authorization: `Bearer ${session.access_token}` };
+        // Best-effort parallel fetches; degrade quietly when an endpoint is missing.
+        const [sessionsRes, invoicesRes] = await Promise.allSettled([
+          fetch('/api/sessions?limit=8&order=updated', { headers }),
+          fetch('/api/invoices?limit=8&order=updated', { headers }),
+        ]);
+        const list: ChangeEvent[] = [];
+        if (sessionsRes.status === 'fulfilled' && sessionsRes.value.ok) {
+          const arr = await sessionsRes.value.json();
+          for (const s of (Array.isArray(arr) ? arr : arr.sessions ?? []).slice(0, 5)) {
+            const at = new Date(s.updated_at ?? s.scheduled_at).getTime();
+            if (s.notes_parent_facing) {
+              list.push({
+                id: `s-polished-${s.id}`,
+                kind: 'session',
+                initiator: 'tutor',
+                icon: 'sparkle',
+                title: `Polished notes for ${s.student?.name ?? 'session'}`,
+                subtitle: 'Sent to parent',
+                href: `/app/sessions/${s.id}`,
+                at,
+              });
+            } else if (s.status === 'pending_change' && s.proposed_change_by === 'parent') {
+              list.push({
+                id: `s-resched-${s.id}`,
+                kind: 'parent',
+                initiator: 'parent',
+                icon: 'calendar',
+                title: `Parent proposed reschedule`,
+                subtitle: s.student?.name,
+                href: `/app/sessions/${s.id}`,
+                at,
+              });
+            }
+          }
+        }
+        if (invoicesRes.status === 'fulfilled' && invoicesRes.value.ok) {
+          const arr = await invoicesRes.value.json();
+          for (const i of (Array.isArray(arr) ? arr : arr.invoices ?? []).slice(0, 5)) {
+            const at = new Date(i.updated_at ?? i.issued_on).getTime();
+            if (i.status === 'paid') {
+              list.push({
+                id: `i-paid-${i.id}`,
+                kind: 'money',
+                initiator: 'parent',
+                icon: 'dollar',
+                title: `Invoice ${i.number} paid`,
+                subtitle: formatMoney(i.total_cents, currency),
+                href: `/app/invoices/${i.id}`,
+                at,
+              });
+            } else if (i.status === 'sent') {
+              list.push({
+                id: `i-sent-${i.id}`,
+                kind: 'money',
+                initiator: 'tutor',
+                icon: 'envelope',
+                title: `Sent invoice ${i.number}`,
+                subtitle: formatMoney(i.total_cents, currency),
+                href: `/app/invoices/${i.id}`,
+                at,
+              });
+            }
+          }
+        }
+        list.sort((a, b) => b.at - a.at);
+        if (!cancelled) setEvents(list.slice(0, 10));
+      } catch {
+        if (!cancelled) setEvents([]);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [currency]);
+
+  if (events === null) return null;
+
+  const filtered = events.filter((e) => {
+    if (filter === 'all') return true;
+    if (filter === 'parents') return e.initiator === 'parent';
+    if (filter === 'money') return e.kind === 'money';
+    if (filter === 'sessions') return e.kind === 'session';
+    return true;
+  });
+
+  return (
+    <div className="mt-6">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-[15px] font-display font-semibold tracking-tighter m-0">What changed</h2>
+        <div className="flex items-center gap-1 text-2xs">
+          {(['all', 'parents', 'money', 'sessions'] as const).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setFilter(k)}
+              className={[
+                'px-2 py-1 rounded transition-colors duration-100 capitalize',
+                filter === k ? 'bg-forest-soft text-forest-ink font-medium' : 'text-ink-muted hover:text-ink hover:bg-ruleSoft',
+              ].join(' ')}
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+      </div>
+      {filtered.length === 0 ? (
+        <div className="card p-4 text-xs text-ink-muted">Nothing recent here.</div>
+      ) : (
+        <div className="card p-1">
+          {filtered.map((e) => (
+            <Link
+              key={e.id}
+              href={e.href}
+              className={[
+                'flex items-center gap-3 px-3 py-2 rounded transition-colors duration-100 hover:bg-ruleSoft/40',
+                e.initiator === 'parent' ? 'bg-forest-soft/20' : '',
+              ].join(' ')}
+            >
+              <ChangeIcon kind={e.icon} />
+              <div className="flex-1 min-w-0">
+                <div className="text-sm text-ink truncate">{e.title}</div>
+                {e.subtitle && <div className="text-xs text-ink-muted truncate">{e.subtitle}</div>}
+              </div>
+              <span className="text-2xs text-ink-soft num tabular shrink-0">
+                {formatRelativeDate(new Date(e.at))}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ChangeIcon({ kind }: { kind: ChangeEvent['icon'] }) {
+  const cls = 'shrink-0 text-ink-muted';
+  if (kind === 'envelope') return (
+    <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7l9-7"/></svg>
+  );
+  if (kind === 'dollar') return (
+    <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg>
+  );
+  if (kind === 'calendar') return (
+    <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+  );
+  if (kind === 'sparkle') return (
+    <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v4M12 17v4M5 12H1M23 12h-4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg>
+  );
+  return (
+    <svg className={cls} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a8 8 0 0 1-11.3 7.3L4 21l1.7-5.7A8 8 0 1 1 21 12z"/></svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Owner team card — shares the StatCard footprint, but adds a stacked-bar
+// breakdown across tutors at the bottom.
+// ---------------------------------------------------------------------------
+
+function OwnerTeamCard({
+  sessions, hoursBilled, awaitingNotes, breakdown,
+}: {
+  sessions: number;
+  hoursBilled: number;
+  awaitingNotes: number;
+  breakdown: Array<{ tutor_id: string; tutor_name: string; sessions: number }> | null;
+}) {
+  const tone = awaitingNotes > 0 ? 'amber-ink' : 'ink';
+  const palette = ['#1F3A2E', '#2F7D4F', '#B8860B', '#7A2233', '#8B4A1F', '#0F1714'];
+  const data = (breakdown ?? []).map((t, i) => ({
+    label: t.tutor_name,
+    value: t.sessions,
+    color: palette[i % palette.length],
+  }));
+
+  return (
+    <Link
+      href="/app/tutors"
+      className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 rounded-[8px]"
+    >
+      <div className="card p-6 h-full flex flex-col gap-3 transition-colors duration-100 hover:bg-ruleSoft/40">
+        <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium">
+          Team this week
+        </div>
+        <div className={`display-num num text-${tone}`}>{sessions}</div>
+        <div className="text-xs text-ink-muted truncate leading-snug">
+          {hoursBilled}h billed · {awaitingNotes} awaiting notes
+        </div>
+        {data.length > 0 && (
+          <div className="mt-1">
+            <MiniBarChart data={data} variant="stacked" width={140} height={20} />
+          </div>
+        )}
+      </div>
+    </Link>
   );
 }
 

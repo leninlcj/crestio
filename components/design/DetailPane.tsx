@@ -90,14 +90,7 @@ export function DetailPane({
             {title}
           </div>
           {headerActions && <div className="shrink-0 flex items-center gap-1">{headerActions}</div>}
-          {fullPageHref && (
-            <Link
-              href={fullPageHref}
-              className="text-2xs text-ink-muted hover:text-ink underline-offset-2 hover:underline shrink-0"
-            >
-              Open full page
-            </Link>
-          )}
+          <PaneMenu fullPageHref={fullPageHref} />
           <button
             type="button"
             onClick={onClose}
@@ -115,6 +108,53 @@ export function DetailPane({
       </aside>
     </div>,
     document.body,
+  );
+}
+
+function PaneMenu({ fullPageHref }: { fullPageHref?: string }) {
+  const [open, setOpen] = useState(false);
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href);
+    setOpen(false);
+  }
+  function print() {
+    document.body.dataset.printingPane = 'true';
+    setOpen(false);
+    window.requestAnimationFrame(() => {
+      window.print();
+      window.setTimeout(() => { delete document.body.dataset.printingPane; }, 500);
+    });
+  }
+  return (
+    <div className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="More"
+        className="h-8 w-8 grid place-items-center text-ink-muted hover:text-ink hover:bg-ruleSoft rounded transition-colors duration-100"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>
+        </svg>
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
+          <div
+            role="menu"
+            className="absolute right-0 top-full mt-1 z-50 bg-surface border border-rule rounded shadow-lift py-1 min-w-[160px] text-sm"
+          >
+            <button type="button" onClick={copyLink} className="w-full text-left px-3 py-1.5 hover:bg-ruleSoft">Copy link</button>
+            {fullPageHref && (
+              <Link href={fullPageHref} className="block px-3 py-1.5 hover:bg-ruleSoft" onClick={() => setOpen(false)}>
+                Open full page
+              </Link>
+            )}
+            <button type="button" onClick={print} className="w-full text-left px-3 py-1.5 hover:bg-ruleSoft">Print</button>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

@@ -298,3 +298,192 @@ read as factual.
 
 Pages that only got token cleanup: `/app/files`, `/app/tutors`,
 `/app/payouts`, `/app/templates`, `/app/households`, `/app/settings/*`.
+
+---
+
+## Phase 3 — depth, taste, micro-details (2026-04-27)
+
+Phase 3 is a craft pass on top of phase 2. No new top-level destinations; no
+schema or API contract changes (one additive field on
+`/api/dashboard/today`). Goal: every screen one layer deeper, plus the small
+invisible things that distinguish a $24/mo tool from a $9 one.
+
+### Format helpers (lib/format.ts)
+
+Single source of truth for user-facing strings. Older callers keep working
+through `lib/utils` and `lib/currency`; new code imports from here.
+
+| Helper                | Output                                              |
+|-----------------------|-----------------------------------------------------|
+| `formatMoney`         | `$50` for whole amounts, `$50.50` for fractional    |
+| `formatMoneyCompact`  | `$1.2k`, `$14k`, `$1.4M` (≥ $1000)                  |
+| `formatDuration`      | `45m`, `1h`, `1h 30m`, `2h`                         |
+| `formatRelativeDate`  | `Today`, `Yesterday`, `3 days ago`, `last week`     |
+| `formatTime`          | locale-aware (12h US, 24h elsewhere)                |
+| `formatPhone`         | E.164 prettified for US/AU; raw fallback elsewhere  |
+| `formatList`          | Locale-aware list join via `Intl.ListFormat`        |
+| `formatCount`         | `1,234` with locale grouping                        |
+| `pluralize`           | `1 session` / `12 sessions`                         |
+
+### Focus rings
+
+Single global ring via `:focus-visible` (mouse clicks don't trigger it):
+2px forest green, 2px outset, 6px radius. Inputs render their own 2px ring
+inside the border via `box-shadow`.
+
+### Motion budget
+
+| Surface                      | Duration | Easing       |
+|------------------------------|----------|--------------|
+| Page transitions             | 100ms    | fade         |
+| DetailPane open              | 180ms    | ease-out     |
+| Hover bg color               | 80–100ms | ease         |
+| Toast in                     | 200ms    | ease-out     |
+| Toast out                    | 150ms    | ease-in      |
+| Skeleton shimmer             | 1.4s     | ease-in-out  |
+| Status pill change           | 100ms    | crossfade    |
+| Stat-card count up           | 400ms    | ease-out     |
+| Session "in session" pulse   | 2s       | ease-in-out  |
+| Overdue dot pulse            | 1.6s     | ease-in-out  |
+
+`prefers-reduced-motion: reduce` collapses every animation/transition to
+1ms (kept for paint-stability), and disables shimmer / pulse keyframes.
+
+### Status palette
+
+Pills only — never used as background fills elsewhere. 11px text, 4px / 8px
+padding, 999px radius, **500 weight** (down from semibold; reads more grown
+up at small sizes).
+
+| Tone     | Text         | Background tint           |
+|----------|--------------|---------------------------|
+| neutral  | `ink-muted`  | `ruleSoft`                |
+| forest   | `forest-ink` | `rgba(31, 58, 46, 0.08)`  |
+| success  | `success-ink`| `rgba(47, 125, 79, 0.10)` |
+| amber    | `amber-ink`  | `rgba(184, 134, 11, 0.10)`|
+| claret   | `claret`     | `rgba(122, 34, 51, 0.08)` |
+| rust     | `rust`       | `rgba(139, 74, 31, 0.08)` |
+
+Forest green stays accent only. Success is its own green for "logged".
+
+### Print stylesheet
+
+Global rules in `styles/globals.css`. Hides nav / sidebar / top bar; expands
+`main` to full width; removes shadows and hover state; `font-size: 11pt`,
+`line-height: 1.4`. The DetailPane "..." menu's Print option sets
+`document.body.dataset.printingPane = 'true'` so only the pane content
+prints (everything else is hidden via `body[data-printing-pane='true']`
+selectors).
+
+### Selection color
+
+Forest green at 18% opacity for `::selection`.
+
+### Avatar generation
+
+Deterministic. Hue is `hash(name) % 360`; saturation 60%, lightness 42%;
+white text on top. Initials are first letter of full_name + first letter of
+last word. Component: `components/design/Avatar.tsx`. Use `<Avatar
+name={...} size={20|24|28|32|40|48} />` everywhere a person appears.
+
+### Tooltip rules
+
+`components/design/Tooltip.tsx` — 11px text, 6/10 padding, 6px radius, dark
+on white via portal so it escapes overflow:hidden parents. 200ms show
+delay, 0ms hide. Used on icon-only buttons, pipeline glyphs, kbd shortcuts,
+truncated text.
+
+### New primitives (phase 3)
+
+| File                                  | What                                                |
+|---------------------------------------|-----------------------------------------------------|
+| `Avatar.tsx`                          | Deterministic colored avatar (hue from name hash)   |
+| `AvatarGroup.tsx`                     | Overlapping circles with `+N` overflow              |
+| `Tooltip.tsx`                         | Portal tooltip with show delay                      |
+| `KbdHint.tsx`                         | One or more `<kbd>` chips for shortcuts             |
+| `ContextMenu.tsx`                     | Right-click menu with arrow-key navigation          |
+| `Stepper.tsx`                         | Pipeline dots (done / current / todo) for panes     |
+| `MiniBarChart.tsx`                    | Tiny bars or stacked-bar for cards & strips         |
+| `HealthIndicator.tsx`                 | Strong / Cooling / At risk visual on student panes  |
+| `UsageBar.tsx`                        | Plan-quota progress bar (Settings → Billing)        |
+| `Diff.tsx`                            | Word-level diff (LCS) for the polish preview       |
+| `RichEditor.tsx`                      | Minimal contenteditable: bold / italic / lists      |
+| `lib/useCountUp.ts`                   | Animate numeric stat values over 400ms ease-out     |
+
+### Per-screen depth
+
+- **Dashboard**: stat cards now render delta vs. previous week, end-dot on
+  the sparkline, and a hover tooltip showing current + previous totals.
+  Today timeline rows show student avatars; the "in-session" row pulses
+  the green left border. New "Tomorrow at a glance" collapsed row appears
+  on weekdays. New "What changed" feed surfaces parent-initiated events
+  with a forest-tinted background and offers `All / Parents / Money /
+  Sessions` chips. Owner team card adds a stacked-bar by tutor.
+- **Sessions**: row carries a 5-dot pipeline glyph (scheduled · drafted ·
+  polished · sent · invoiced); right-click opens a context menu (open,
+  polish, send, reschedule, mark cancelled, duplicate, copy link, delete);
+  Past tab adds a "billed" indicator next to status pill; bulk action bar
+  detects same-household selections and surfaces a single-invoice CTA.
+  Today tab gets a left-edge "now" pill with current time.
+- **Polish queue**: top-of-page slim 2px progress bar during "Polish all";
+  cancellable; per-card diff view (additions highlighted, removals
+  strikethrough) once polished returns.
+- **Templates**: real card grid (3-up), next 3 occurrences inline, end-template
+  link.
+- **Sessions DetailPane**: pipeline `Stepper` at the top; notes editor is
+  the new RichEditor (auto-saves every 2s with status indicator).
+- **Students cards**: deterministic Avatar; status dot (active / cooling
+  / new) replaces the heavier pill; "Next: Tue 4pm" line; 28-day activity
+  strip via MiniBarChart.
+- **Student DetailPane**: header avatar; 4 mini stats with hover tooltips;
+  HealthIndicator row; new **Plan** sub-tab (templates + 12-week sparkline);
+  Files sub-tab is a real drag-drop zone; Notes sub-tab uses RichEditor.
+- **Households**: existing tab unchanged.
+- **Parents (new)**: `/app/parents` row list. Avatar, household link, copy
+  on email, invitation status pill, bulk "Send invite to selected" via
+  BulkActionBar.
+- **Invoices**: invoice-number search; URL filter wiring extended to
+  `draft / sent / paid`; hover quick actions Send · Mark paid · Copy link;
+  bulk Send button; pulsing red dot next to overdue rows.
+- **Invoice DetailPane**: Timeline subsection (created → sent → paid →
+  voided), each event with timestamp + actor.
+- **Payouts received**: pre-14F page is now a 3-bullet explainer card with
+  a primary CTA to Stripe Connect onboarding; post-14F adds a 30-day
+  deposit sparkline at the top with the latest value pinned.
+- **Files**: tabbed /app/files now has a 240px left folder tree (By
+  student auto-grouped, By date buckets) selecting from which updates the
+  right `FilesPanel`.
+- **Lesson plans**: difficulty pill (Beginner / Intermediate / Advanced)
+  inferred from year level; "Use in session" modal creates the session +
+  attaches the plan in one flow.
+- **Messages**: thread row gets an avatar and a hover Snooze button
+  (Tomorrow morning · This evening · Next week); snoozed threads
+  disappear and reappear automatically.
+- **Settings → Billing**: `UsagePanel` shows AI calls / storage / voice
+  transcription against plan limits via `UsageBar`.
+- **Settings → Notifications**: regrouped into **Sessions / Money / Parents**;
+  each row exposes Email + Push toggles (Push disabled with a tooltip).
+
+### Performance pass
+
+- Detail panes (Session / Student / Invoice) are loaded via `next/dynamic`
+  with `ssr: false`. They no longer ship in the page chunk.
+- Stat-card count-up via `requestAnimationFrame`; suppressed under
+  reduced motion.
+- Toast viewport caps at 3 visible; older non-error toasts are dropped to
+  make room for newer ones.
+- Tooltip portal mounts only when shown; auto-hides on scroll.
+
+### Deferred (not in this phase)
+
+- Onboarding split into 3 routes (`/app/onboarding/about|work|sample`).
+- Drag-to-reschedule on the Today timeline (the current Today view is a
+  flat list, not a slot timeline). Reschedule is reachable through the
+  row context menu instead.
+- Team Tutors detail pane; payout-preview modal.
+- Households row-list with sort by unpaid balance (current grid kept).
+- Virtualization for >100-row lists (current lists cap query at ≤500
+  rows; not yet hot enough to warrant a windowing dependency).
+- Tiptap / Lexical-based rich editor — phase 3 ships a minimal
+  `contentEditable` editor with the same surface area (bold, italic,
+  bullet, ordered list).

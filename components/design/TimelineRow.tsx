@@ -3,7 +3,7 @@ import { ReactNode, MouseEvent } from 'react';
 
 type Props = {
   time: string;             // formatted time, left column
-  title: string;            // student name etc.
+  title: ReactNode;         // student name etc. (string or composed nodes)
   subtitle?: string;        // subject + duration
   status?: ReactNode;       // status pill
   href?: string;

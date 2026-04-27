@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
+import { Diff } from '../../../components/design/Diff';
 import { supabase } from '../../../lib/supabase';
 import { activeLocale } from '../../../lib/utils';
 
@@ -91,15 +92,34 @@ function PolishQueueInner() {
     if (polished) setOpenId(id);
   }
 
+  // Slim progress for "Polish all" — emitted as a 0-100% via the bar at the
+  // top of the page; cancellable any time via the X button.
+  const [batchProgress, setBatchProgress] = useState<{ done: number; total: number } | null>(null);
+  const [batchCancel, setBatchCancel] = useState(false);
+
   async function polishNextN(n: number) {
+    const queue = rows.filter((r) => !r.polished && !r.polishing).slice(0, n);
+    if (queue.length === 0) return;
     setBatchBusy(true);
+    setBatchCancel(false);
+    setBatchProgress({ done: 0, total: queue.length });
     try {
-      const queue = rows.filter((r) => !r.polished && !r.polishing).slice(0, n);
-      // Run in parallel — polish endpoint has its own rate limit.
-      await Promise.all(queue.map((r) => polishRow(r.id)));
+      // Sequential to keep the progress bar honest (and to be friendlier to
+      // the polish endpoint's rate limit).
+      for (let i = 0; i < queue.length; i++) {
+        if (batchCancel) break;
+        await polishRow(queue[i].id);
+        setBatchProgress({ done: i + 1, total: queue.length });
+      }
     } finally {
       setBatchBusy(false);
+      setBatchProgress(null);
+      setBatchCancel(false);
     }
+  }
+
+  function cancelBatch() {
+    setBatchCancel(true);
   }
 
   async function approve(id: string, editedText: string) {
@@ -150,6 +170,26 @@ function PolishQueueInner() {
         </>
       }
     >
+      {/* Slim progress bar at the top of the page during "Polish all". */}
+      {batchProgress && (
+        <div className="fixed top-14 left-0 right-0 z-40 h-0.5 bg-ruleSoft pointer-events-none">
+          <div
+            className="h-full bg-forest transition-[width] duration-200 ease-out"
+            style={{ width: `${(batchProgress.done / batchProgress.total) * 100}%` }}
+          />
+          <button
+            type="button"
+            onClick={cancelBatch}
+            className="pointer-events-auto absolute right-3 top-1.5 text-2xs text-ink-muted hover:text-ink underline underline-offset-2"
+          >
+            Cancel
+          </button>
+          <div className="absolute left-3 top-1.5 text-2xs text-ink-muted num tabular">
+            Polished {batchProgress.done} of {batchProgress.total}
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <p className="text-sm text-ink-muted">
           Completed sessions from the last {LOOKBACK_DAYS} days with internal notes but no parent-facing notes.
@@ -226,6 +266,14 @@ function PolishQueueInner() {
                         {r.polish_error && <div className="text-2xs text-claret mt-1">{r.polish_error}</div>}
                       </div>
                     </div>
+                    {r.polished && (
+                      <div>
+                        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">What changed</div>
+                        <div className="bg-cream/60 rounded p-3 border border-rule">
+                          <Diff before={r.notes_internal} after={r.polished} />
+                        </div>
+                      </div>
+                    )}
                     <div className="flex gap-2">
                       {r.polish_skipped ? (
                         <button type="button" onClick={() => unskip(r.id)} className="btn-ghost text-xs">Un-skip</button>

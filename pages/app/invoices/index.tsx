@@ -13,7 +13,13 @@ import { SavedViewsMenu } from '../../../components/design/SavedViewsMenu';
 import { BulkActionBar } from '../../../components/design/BulkActionBar';
 import { StatusPill } from '../../../components/design/StatusPill';
 import { useDetailParam } from '../../../components/design/DetailPane';
-import { InvoiceDetailPane } from '../../../components/invoices/InvoiceDetailPane';
+import dynamic from 'next/dynamic';
+const InvoiceDetailPane = dynamic(
+  () => import('../../../components/invoices/InvoiceDetailPane').then((m) => m.InvoiceDetailPane),
+  { ssr: false },
+);
+import { Tooltip } from '../../../components/design/Tooltip';
+import { useToast } from '../../../components/design/Toast';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { Invoice, Student } from '../../../lib/types';
@@ -42,16 +48,19 @@ function InvoicesInner() {
   const detailId = detail.value && detail.value.startsWith('invoice:')
     ? detail.value.slice('invoice:'.length) : null;
 
-  // ?filter=overdue compatibility from older nudges → translate into ?status=.
+  // ?filter=overdue/unbilled/draft compatibility — translate into ?status=.
   useEffect(() => {
     const filter = router.query.filter;
-    if (filter === 'overdue' || filter === 'unbilled') {
+    if (filter === 'overdue' || filter === 'unbilled' || filter === 'draft' || filter === 'sent' || filter === 'paid') {
       const url = new URL(window.location.href);
       url.searchParams.set('status', filter as string);
       url.searchParams.delete('filter');
       router.replace(url.pathname + url.search);
     }
   }, [router.query.filter, router]);
+
+  // Free-text search.
+  const [search, setSearch] = useState('');
 
   const statusParam = (router.query.status as string) ?? '';
   const statusValues = statusParam ? statusParam.split(',') : [];
@@ -87,9 +96,18 @@ function InvoicesInner() {
   useEffect(() => { load(); }, []);
 
   const filtered = useMemo(() => {
-    if (effectiveStatusValues.length === 0) return invoices;
-    return invoices.filter((i) => effectiveStatusValues.includes(i.status));
-  }, [invoices, effectiveStatusValues]);
+    let list = effectiveStatusValues.length === 0
+      ? invoices
+      : invoices.filter((i) => effectiveStatusValues.includes(i.status));
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      list = list.filter((i) =>
+        [i.number, i.student?.name, i.household?.display_name]
+          .filter(Boolean).join(' ').toLowerCase().includes(q),
+      );
+    }
+    return list;
+  }, [invoices, effectiveStatusValues, search]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -127,6 +145,13 @@ function InvoicesInner() {
       <div className="mb-4"><SampleDataBanner /></div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <input
+          type="search"
+          placeholder="Search by number, student, household…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="input md:max-w-xs flex-1 min-w-[200px]"
+        />
         <FilterChips
           ariaLabel="Status"
           multi
@@ -186,6 +211,13 @@ function InvoicesInner() {
       )}
 
       <BulkActionBar count={selected.size} onClear={clearSelected}>
+        <button
+          type="button"
+          onClick={() => bulkSend(Array.from(selected), invoices, load, clearSelected)}
+          className="text-xs font-medium bg-cream text-forest-ink px-2.5 py-1 rounded-full hover:bg-cream/90 transition-colors duration-100"
+        >
+          Send selected ({selected.size})
+        </button>
         <button type="button" onClick={bulkMarkPaid} className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100">
           Mark paid
         </button>
@@ -212,6 +244,7 @@ function InvoiceRow({
   onOpen: () => void;
   onChanged: () => void;
 }) {
+  const toast = useToast();
   const tone =
     invoice.status === 'paid' ? 'success'
     : invoice.status === 'overdue' ? 'claret'
@@ -221,7 +254,28 @@ function InvoiceRow({
   async function markPaid(e: React.MouseEvent) {
     e.stopPropagation();
     await supabase.from('invoices').update({ status: 'paid', paid_at: new Date().toISOString() }).eq('id', invoice.id);
+    toast.show({ message: 'Marked paid.', tone: 'success' });
     onChanged();
+  }
+  async function send(e: React.MouseEvent) {
+    e.stopPropagation();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return;
+    const res = await fetch(`/api/invoices/${invoice.id}/send`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+    if (res.ok) {
+      toast.show({ message: 'Sent to parent.', tone: 'success' });
+      onChanged();
+    } else {
+      toast.show({ message: 'Send failed.', tone: 'error' });
+    }
+  }
+  function copyLink(e: React.MouseEvent) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(`${window.location.origin}/pay/${invoice.id}`);
+    toast.show({ message: 'Pay link copied.', tone: 'success' });
   }
 
   return (
@@ -250,20 +304,30 @@ function InvoiceRow({
           </svg>
         )}
       </button>
-      <div className="font-mono text-2xs text-ink-muted shrink-0 w-20 truncate">{invoice.number}</div>
+      <div className="font-mono text-2xs text-ink-muted shrink-0 w-20 truncate num tabular">{invoice.number}</div>
       <div className="flex-1 min-w-0">
         <div className="text-[13px] text-ink truncate">
           {invoice.household?.display_name ?? invoice.student?.name ?? '—'}
         </div>
-        <div className="text-2xs text-ink-soft truncate">
+        <div className="text-2xs text-ink-soft truncate num tabular">
           Issued {formatDate(invoice.issued_on)}
           {invoice.due_on && <> · Due {formatDate(invoice.due_on)}</>}
         </div>
       </div>
       <div className="hidden md:flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-100 shrink-0">
-        {invoice.status !== 'paid' && invoice.status !== 'void' && (
-          <button type="button" onClick={markPaid} className="btn-ghost text-2xs px-2 py-1">Mark paid</button>
+        {invoice.status === 'draft' && (
+          <Tooltip label="Send to parent">
+            <button type="button" onClick={send} className="btn-ghost text-2xs px-2 py-1">Send</button>
+          </Tooltip>
         )}
+        {invoice.status !== 'paid' && invoice.status !== 'void' && (
+          <Tooltip label="Mark as paid">
+            <button type="button" onClick={markPaid} className="btn-ghost text-2xs px-2 py-1">Mark paid</button>
+          </Tooltip>
+        )}
+        <Tooltip label="Copy payment link">
+          <button type="button" onClick={copyLink} className="btn-ghost text-2xs px-2 py-1">Copy link</button>
+        </Tooltip>
         <Link
           href={`/app/invoices/${invoice.id}`}
           onClick={(e) => e.stopPropagation()}
@@ -272,12 +336,43 @@ function InvoiceRow({
           Open
         </Link>
       </div>
-      <StatusPill tone={tone as any}>{invoice.status}</StatusPill>
-      <div className="w-20 shrink-0 text-right text-[13px] tabular text-ink">
+      <span className="inline-flex items-center gap-1.5 shrink-0">
+        {invoice.status === 'overdue' && (
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-claret overdue-dot-pulse" aria-hidden="true" />
+        )}
+        <StatusPill tone={tone as any}>{invoice.status}</StatusPill>
+      </span>
+      <div className="w-20 shrink-0 text-right text-[13px] num tabular text-ink">
         {formatCents(invoice.total_cents, currency, { showZero: true })}
       </div>
     </li>
   );
+}
+
+async function bulkSend(
+  ids: string[],
+  invoices: InvoiceRow[],
+  reload: () => void,
+  clear: () => void,
+) {
+  const targets = invoices.filter((i) => ids.includes(i.id) && i.status === 'draft');
+  if (targets.length === 0) return;
+  const recipients = Array.from(new Set(targets.map((i) =>
+    i.household?.display_name ?? i.student?.name ?? 'Unknown',
+  ))).slice(0, 8).join(', ');
+  if (!window.confirm(`Send ${targets.length} draft invoice(s) to: ${recipients}?`)) return;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.access_token) return;
+  let ok = 0;
+  for (const t of targets) {
+    const res = await fetch(`/api/invoices/${t.id}/send`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+    if (res.ok) ok++;
+  }
+  clear();
+  reload();
 }
 
 export default function InvoicesPage() {

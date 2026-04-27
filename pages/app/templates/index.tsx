@@ -87,34 +87,42 @@ function TemplatesInner() {
             action={!showEnded ? <Link href="/app/templates/new" className="btn-primary">Create your first</Link> : undefined}
           />
         ) : (
-          <div className="space-y-3">
-            {filtered.map((t) => (
-              <Link
-                key={t.id}
-                href={`/app/templates/${t.id}`}
-                className="card p-5 block transition-colors hover:border-rule/80"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filtered.map((t) => {
+              const next3 = nextOccurrences(t, 3);
+              return (
+                <div
+                  key={t.id}
+                  className="card p-4 flex flex-col gap-2 hover:bg-ruleSoft/40 transition-colors duration-100"
+                >
+                  <Link href={`/app/templates/${t.id}`} className="block">
                     <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">
                       {t.cancelled_at ? 'Ended' : 'Active'}
                     </div>
-                    <h2 className="font-display text-xl tracking-tightest text-ink">
-                      {t.student?.name ?? 'Student'} — {DAY_LABELS[t.day_of_week]}s at {formatTime(t.start_time_local)}
-                    </h2>
-                    <div className="text-sm text-ink-muted mt-1">
-                      {RULE_LABELS[t.recurrence_rule]} · {t.duration_minutes} min
-                      {t.subject ? ` · ${t.subject}` : ''}
+                    <div className="font-display text-base tracking-tighter text-ink leading-tight">
+                      {t.student?.name ?? 'Student'}
                     </div>
-                    {t.generated_through_date && (
-                      <div className="text-2xs text-ink-soft mt-2">
-                        Sessions generated through {formatDate(t.generated_through_date)}
-                      </div>
+                    <div className="text-xs text-ink-muted mt-1">
+                      {DAY_LABELS[t.day_of_week]}s · {formatTime(t.start_time_local)} · {t.duration_minutes}m
+                    </div>
+                    <div className="text-2xs text-ink-soft mt-0.5">
+                      {RULE_LABELS[t.recurrence_rule]}{t.subject ? ` · ${t.subject}` : ''}
+                    </div>
+                  </Link>
+                  {next3.length > 0 && (
+                    <div className="text-2xs text-ink-soft pt-2 border-t border-ruleSoft mt-1 num tabular">
+                      Next: {next3.map((d) => formatShortDate(d)).join(' · ')}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1 pt-1 mt-auto">
+                    <Link href={`/app/templates/${t.id}`} className="btn-ghost text-2xs px-2 py-1">Edit</Link>
+                    {!t.cancelled_at && (
+                      <Link href={`/app/templates/${t.id}#end`} className="btn-ghost text-2xs px-2 py-1 text-claret hover:text-claret">End template</Link>
                     )}
                   </div>
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -132,6 +140,31 @@ function formatDate(iso: string): string {
   return new Date(iso + 'T00:00:00').toLocaleDateString(activeLocale(), {
     day: 'numeric', month: 'short', year: 'numeric',
   });
+}
+
+function formatShortDate(d: Date): string {
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' });
+}
+
+// Compute the next N occurrence dates for a template by walking forward from
+// today and picking dates that fall on the configured day-of-week, respecting
+// the recurrence rule.
+function nextOccurrences(t: Template, n: number): Date[] {
+  const out: Date[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let cursor = new Date(today);
+  while (cursor.getDay() !== t.day_of_week) {
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  const stepDays =
+    t.recurrence_rule === 'fortnightly' ? 14 :
+    t.recurrence_rule === 'monthly' ? 28 : 7;
+  for (let i = 0; i < n; i++) {
+    out.push(new Date(cursor));
+    cursor.setDate(cursor.getDate() + stepDays);
+  }
+  return out;
 }
 
 export default function Page() {

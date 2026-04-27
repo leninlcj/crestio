@@ -143,48 +143,78 @@ export function CommandPalette() {
       const recents = loadRecents();
       return [...recents, ...staticItems];
     }
-    const q = query.trim().toLowerCase();
-    const filteredStatic = staticItems.filter((i) =>
-      i.label.toLowerCase().includes(q) || (i.hint?.toLowerCase().includes(q) ?? false)
-    );
+
+    // Power-user prefix: ":s diego" → only Students. ":i" → only Invoices.
+    // Supported prefixes: :s student, :se sessions, :i invoices, :l lesson plans.
+    const trimmed = query.trim();
+    let typeFilter: 'students' | 'sessions' | 'invoices' | 'lesson_plans' | null = null;
+    let q = trimmed.toLowerCase();
+    if (trimmed.startsWith(':')) {
+      const m = /^:(\w+)\s*(.*)$/.exec(trimmed);
+      if (m) {
+        const prefix = m[1].toLowerCase();
+        if (prefix.startsWith('se')) typeFilter = 'sessions';
+        else if (prefix.startsWith('s')) typeFilter = 'students';
+        else if (prefix.startsWith('i')) typeFilter = 'invoices';
+        else if (prefix.startsWith('l') || prefix.startsWith('lp')) typeFilter = 'lesson_plans';
+        q = (m[2] ?? '').trim().toLowerCase();
+      }
+    }
+
+    const filteredStatic = typeFilter
+      ? []
+      : staticItems.filter((i) =>
+          i.label.toLowerCase().includes(q) || (i.hint?.toLowerCase().includes(q) ?? false),
+        );
 
     const searchItems: Item[] = [];
-    results.students.forEach((s) => {
-      searchItems.push({
-        id: `s-${s.id}`,
-        group: 'Students',
-        label: s.name,
-        hint: [s.year_level ? `Year ${s.year_level}` : null, s.subject].filter(Boolean).join(' · '),
-        href: `/app/students/${s.id}`,
+    if (typeFilter && q.length === 0) {
+      return [...filteredStatic, { id: 'hint', group: 'Type to filter', label: 'Keep typing to search…' } as Item];
+    }
+    if (!typeFilter || typeFilter === 'students') {
+      results.students.forEach((s) => {
+        searchItems.push({
+          id: `s-${s.id}`,
+          group: 'Students',
+          label: s.name,
+          hint: [s.year_level ? `Year ${s.year_level}` : null, s.subject].filter(Boolean).join(' · '),
+          href: `/app/students/${s.id}`,
+        });
       });
-    });
-    results.sessions.forEach((s) => {
-      searchItems.push({
-        id: `ss-${s.id}`,
-        group: 'Sessions',
-        label: `${s.student_name} · ${new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`,
-        hint: [s.subject, s.topic].filter(Boolean).join(' · ') || s.status,
-        href: `/app/sessions/${s.id}`,
+    }
+    if (!typeFilter || typeFilter === 'sessions') {
+      results.sessions.forEach((s) => {
+        searchItems.push({
+          id: `ss-${s.id}`,
+          group: 'Sessions',
+          label: `${s.student_name} · ${new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`,
+          hint: [s.subject, s.topic].filter(Boolean).join(' · ') || s.status,
+          href: `/app/sessions/${s.id}`,
+        });
       });
-    });
-    results.invoices.forEach((i) => {
-      searchItems.push({
-        id: `i-${i.id}`,
-        group: 'Invoices',
-        label: `${i.number} · ${i.student_name}`,
-        hint: `${formatCents(i.total_cents)} · ${i.status}`,
-        href: `/app/invoices/${i.id}`,
+    }
+    if (!typeFilter || typeFilter === 'invoices') {
+      results.invoices.forEach((i) => {
+        searchItems.push({
+          id: `i-${i.id}`,
+          group: 'Invoices',
+          label: `${i.number} · ${i.student_name}`,
+          hint: `${formatCents(i.total_cents)} · ${i.status}`,
+          href: `/app/invoices/${i.id}`,
+        });
       });
-    });
-    results.lesson_plans.forEach((p) => {
-      searchItems.push({
-        id: `lp-${p.id}`,
-        group: 'Lesson plans',
-        label: `${p.subject} · ${p.topic}`,
-        hint: [p.student_name, p.year_level ? `Year ${p.year_level}` : null].filter(Boolean).join(' · '),
-        href: `/app/lesson-plans`,
+    }
+    if (!typeFilter || typeFilter === 'lesson_plans') {
+      results.lesson_plans.forEach((p) => {
+        searchItems.push({
+          id: `lp-${p.id}`,
+          group: 'Lesson plans',
+          label: `${p.subject} · ${p.topic}`,
+          hint: [p.student_name, p.year_level ? `Year ${p.year_level}` : null].filter(Boolean).join(' · '),
+          href: `/app/lesson-plans`,
+        });
       });
-    });
+    }
 
     return [...filteredStatic, ...searchItems];
   }, [query, results, staticItems]);
@@ -306,12 +336,18 @@ export function CommandPalette() {
           )}
         </div>
 
-        <div className="border-t border-rule px-4 py-2 text-2xs text-ink-soft flex items-center justify-between">
+        <div className="border-t border-rule px-4 py-2 text-2xs text-ink-soft flex items-center justify-between gap-3 flex-wrap">
           <span className="flex items-center gap-3">
-            <span><kbd className="font-mono">↑↓</kbd> navigate</span>
-            <span><kbd className="font-mono">↵</kbd> select</span>
+            <span><kbd className="font-mono border border-rule rounded px-1">↑↓</kbd> to navigate</span>
+            <span><kbd className="font-mono border border-rule rounded px-1">↵</kbd> to open</span>
+            <span><kbd className="font-mono border border-rule rounded px-1">⎋</kbd> to close</span>
           </span>
-          <span><kbd className="font-mono">⌘K</kbd> anywhere</span>
+          <span className="hidden md:inline">
+            <span className="text-ink-muted">tip:</span>{' '}
+            type <kbd className="font-mono border border-rule rounded px-1">:s</kbd> students,{' '}
+            <kbd className="font-mono border border-rule rounded px-1">:i</kbd> invoices,{' '}
+            <kbd className="font-mono border border-rule rounded px-1">:se</kbd> sessions
+          </span>
         </div>
       </div>
     </div>

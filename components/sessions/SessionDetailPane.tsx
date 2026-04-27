@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '../../lib/supabase';
 import { DetailPane } from '../design/DetailPane';
 import { StatusPill } from '../design/StatusPill';
 import { Skeleton } from '../design/Skeleton';
+import { Stepper, type Step } from '../design/Stepper';
+import { RichEditor } from '../design/RichEditor';
+import { useToast } from '../design/Toast';
 import { formatDate, formatTime, formatCents, sessionAmount } from '../../lib/utils';
 
 type Props = {
@@ -35,6 +38,15 @@ type Detail = {
 export function SessionDetailPane({ open, sessionId, onClose, currency, onChanged }: Props) {
   const [data, setData] = useState<Detail | null>(null);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
+
+  const notesSectionRef = useRef<HTMLDivElement | null>(null);
+  const polishedSectionRef = useRef<HTMLDivElement | null>(null);
+  const sentSectionRef = useRef<HTMLDivElement | null>(null);
+  const billedSectionRef = useRef<HTMLDivElement | null>(null);
+
+  // Local state for inline-editable notes (auto-save).
+  const [internalDraft, setInternalDraft] = useState<string>('');
 
   useEffect(() => {
     if (!open || !sessionId) { setData(null); return; }
@@ -48,11 +60,32 @@ export function SessionDetailPane({ open, sessionId, onClose, currency, onChange
         .maybeSingle();
       if (!cancelled) {
         setData(row as any);
+        setInternalDraft((row as any)?.notes_internal ?? '');
         setLoading(false);
       }
     })();
     return () => { cancelled = true; };
   }, [open, sessionId]);
+
+  async function saveInternalNotes() {
+    if (!sessionId) return;
+    const { error } = await supabase
+      .from('sessions')
+      .update({ notes_internal: internalDraft })
+      .eq('id', sessionId);
+    if (error) {
+      toast.show({ message: 'Couldn’t save notes.', tone: 'error' });
+      throw error;
+    }
+    onChanged?.();
+  }
+
+  const steps: Step[] = data ? buildSteps(data, {
+    notes: notesSectionRef,
+    polished: polishedSectionRef,
+    sent: sentSectionRef,
+    billed: billedSectionRef,
+  }) : [];
 
   return (
     <DetailPane
@@ -72,21 +105,30 @@ export function SessionDetailPane({ open, sessionId, onClose, currency, onChange
           <Skeleton className="h-32 w-full" />
         </div>
       ) : (
-        <div className="p-5 space-y-5">
+        <div className="p-5 space-y-5" data-pane-print="true">
+          {/* Pipeline stepper at top of pane. */}
+          <div className="-mt-1 mb-1">
+            <Stepper steps={steps} />
+          </div>
+
           <SessionMeta data={data} currency={currency} />
 
-          <section>
+          <section ref={notesSectionRef}>
             <div className="text-2xs uppercase tracking-widest text-ink-soft font-medium mb-2">
               Tutor notes (internal)
             </div>
-            {data.notes_internal ? (
-              <p className="text-sm text-ink whitespace-pre-wrap leading-relaxed">{data.notes_internal}</p>
-            ) : (
-              <p className="text-sm text-ink-soft italic">No notes yet.</p>
-            )}
+            <RichEditor
+              value={internalDraft}
+              onChange={setInternalDraft}
+              placeholder="What happened in this session?"
+              autoSaveMs={2000}
+              onAutoSave={saveInternalNotes}
+              minHeight={140}
+              ariaLabel="Tutor notes"
+            />
           </section>
 
-          <section>
+          <section ref={polishedSectionRef}>
             <div className="flex items-center justify-between mb-2">
               <div className="text-2xs uppercase tracking-widest text-ink-soft font-medium">
                 Polished update for parent
@@ -110,6 +152,9 @@ export function SessionDetailPane({ open, sessionId, onClose, currency, onChange
             )}
           </section>
 
+          <section ref={sentSectionRef} className="hidden" aria-hidden="true" />
+          <section ref={billedSectionRef} className="hidden" aria-hidden="true" />
+
           <section className="pt-4 border-t border-rule flex items-center gap-2">
             <Link
               href={`/app/sessions/${data.id}`}
@@ -132,6 +177,30 @@ export function SessionDetailPane({ open, sessionId, onClose, currency, onChange
       )}
     </DetailPane>
   );
+}
+
+function buildSteps(d: Detail, refs: Record<string, React.RefObject<HTMLElement>>): Step[] {
+  const scheduledDone = d.status !== 'cancelled' && d.status !== 'no_show';
+  const loggedDone = d.status === 'completed';
+  const polishedDone = !!d.notes_parent_facing;
+  const sentDone = !!d.parent_notified_at;
+  const invoicedDone = !!d.invoice_id;
+  const paidDone = !!d.paid;
+
+  function go(ref?: React.RefObject<HTMLElement>) {
+    return ref?.current
+      ? () => ref.current!.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      : undefined;
+  }
+
+  return [
+    { key: 'sched',     label: 'Scheduled', state: scheduledDone ? 'done' : 'todo' },
+    { key: 'logged',    label: 'Logged',    state: loggedDone ? 'done' : (scheduledDone ? 'current' : 'todo'), onClick: go(refs.notes) },
+    { key: 'polished',  label: 'Polished',  state: polishedDone ? 'done' : (loggedDone ? 'current' : 'todo'), onClick: go(refs.polished) },
+    { key: 'sent',      label: 'Sent',      state: sentDone ? 'done' : (polishedDone ? 'current' : 'todo'), onClick: go(refs.sent) },
+    { key: 'invoiced',  label: 'Invoiced',  state: invoicedDone ? 'done' : (sentDone ? 'current' : 'todo'), onClick: go(refs.billed) },
+    { key: 'paid',      label: 'Paid',      state: paidDone ? 'done' : (invoicedDone ? 'current' : 'todo') },
+  ];
 }
 
 function SessionMeta({ data, currency }: { data: Detail; currency: string }) {

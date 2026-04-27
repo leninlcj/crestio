@@ -10,8 +10,23 @@ import ThreadView from '../../../components/messaging/ThreadView';
 import EmptyState from '../../../components/EmptyState';
 import { IconMessage } from '../../../components/design/icons';
 import { Skeleton } from '../../../components/design/Skeleton';
+import { Avatar } from '../../../components/design/Avatar';
+import { Tooltip } from '../../../components/design/Tooltip';
+import { useToast } from '../../../components/design/Toast';
 import { useKeyboard } from '../../../lib/useKeyboard';
 import { activeLocale, cx } from '../../../lib/utils';
+
+const SNOOZE_KEY = 'crestio.messages.snooze.v1';
+
+function loadSnooze(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try { return JSON.parse(window.localStorage.getItem(SNOOZE_KEY) ?? '{}'); }
+  catch { return {}; }
+}
+function saveSnooze(map: Record<string, number>) {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(SNOOZE_KEY, JSON.stringify(map)); } catch { /* ignore */ }
+}
 
 function MessagesInner() {
   const { t } = useTranslation('messages');
@@ -50,16 +65,33 @@ function MessagesInner() {
     return () => { cancelled = true; };
   }, [unreadOnly, showArchived]);
 
+  const [snoozed, setSnoozed] = useState<Record<string, number>>({});
+  useEffect(() => { setSnoozed(loadSnooze()); }, []);
+
   const filtered = useMemo(() => {
     if (!threads) return [];
-    if (!query.trim()) return threads;
+    const now = Date.now();
+    const visible = threads.filter((t) => !(snoozed[t.id] && snoozed[t.id] > now));
+    if (!query.trim()) return visible;
     const q = query.trim().toLowerCase();
-    return threads.filter((t) =>
+    return visible.filter((t) =>
       (t.student_name ?? '').toLowerCase().includes(q)
       || (t.parent_name ?? '').toLowerCase().includes(q)
       || (t.tutor_name ?? '').toLowerCase().includes(q),
     );
-  }, [threads, query]);
+  }, [threads, query, snoozed]);
+
+  function snoozeUntil(id: string, untilMs: number) {
+    const next = { ...snoozed, [id]: untilMs };
+    setSnoozed(next);
+    saveSnooze(next);
+  }
+  function unsnooze(id: string) {
+    const next = { ...snoozed };
+    delete next[id];
+    setSnoozed(next);
+    saveSnooze(next);
+  }
 
   const activeIdx = filtered.findIndex((t) => t.id === selectedId);
 
@@ -123,30 +155,33 @@ function MessagesInner() {
                 const isActive = selectedId === th.id;
                 return (
                   <li key={th.id}>
-                    <button
-                      type="button"
-                      onClick={() => selectThread(th.id)}
+                    <div
                       className={cx(
-                        'w-full text-left px-3 py-2.5 flex items-start gap-2 transition-colors duration-100',
+                        'group flex items-start gap-2 transition-colors duration-100 cursor-pointer',
                         isActive ? 'bg-forest-soft/40 border-l-2 border-forest' : 'hover:bg-ruleSoft/40 border-l-2 border-transparent',
                       )}
+                      onClick={() => selectThread(th.id)}
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-1.5">
-                          <div className={cx('text-[13px] truncate', th.unread_count > 0 ? 'font-medium text-ink' : 'text-ink')}>
-                            {th.student_name}
+                      <div className="px-3 py-2.5 flex items-start gap-2 flex-1 min-w-0">
+                        <Avatar name={other} size={24} className="mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-baseline gap-1.5">
+                            <div className={cx('text-[13px] truncate', th.unread_count > 0 ? 'font-medium text-ink' : 'text-ink')}>
+                              {th.student_name}
+                            </div>
+                            <div className="text-2xs text-ink-soft truncate">· {other}</div>
                           </div>
-                          <div className="text-2xs text-ink-soft truncate">· {other}</div>
+                          <div className="text-2xs text-ink-muted mt-0.5 line-clamp-1">
+                            {th.last_message_preview ?? 'No messages yet'}
+                          </div>
                         </div>
-                        <div className="text-2xs text-ink-muted mt-0.5 line-clamp-1">
-                          {th.last_message_preview ?? 'No messages yet'}
+                        <div className="flex flex-col items-end shrink-0 gap-0.5">
+                          <span className="text-2xs text-ink-soft num tabular">{relativeTime(th.last_message_at)}</span>
+                          {dotColor && <span className={`inline-block w-2 h-2 rounded-full ${dotColor}`} />}
                         </div>
                       </div>
-                      <div className="flex flex-col items-end shrink-0 gap-0.5">
-                        <span className="text-2xs text-ink-soft tabular">{relativeTime(th.last_message_at)}</span>
-                        {dotColor && <span className={`inline-block w-2 h-2 rounded-full ${dotColor}`} />}
-                      </div>
-                    </button>
+                      <SnoozeMenu onPick={(ms) => snoozeUntil(th.id, Date.now() + ms)} />
+                    </div>
                   </li>
                 );
               })
@@ -184,6 +219,72 @@ function MessagesInner() {
       </div>
     </Layout>
   );
+}
+
+function SnoozeMenu({ onPick }: { onPick: (ms: number) => void }) {
+  const [open, setOpen] = useState(false);
+  const presets: Array<{ label: string; ms: number }> = [
+    { label: 'Tomorrow morning', ms: msUntilTomorrowAt(8) },
+    { label: 'This evening', ms: msUntilTodayAt(18) },
+    { label: 'Next week', ms: msUntilNextMondayAt(8) },
+  ];
+  return (
+    <div className="relative shrink-0 self-center pr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100">
+      <Tooltip label="Snooze thread">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
+          aria-label="Snooze"
+          className="h-7 w-7 grid place-items-center rounded text-ink-soft hover:text-ink hover:bg-ruleSoft transition-colors duration-100"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M3 5l4-2M21 5l-4-2"/>
+          </svg>
+        </button>
+      </Tooltip>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setOpen(false); }} />
+          <div
+            className="absolute right-0 top-full mt-1 z-50 bg-surface border border-rule rounded shadow-lift py-1 w-48 text-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {presets.map((p) => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => { onPick(p.ms); setOpen(false); }}
+                className="w-full text-left px-3 py-1.5 hover:bg-ruleSoft transition-colors duration-100"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function msUntilTodayAt(hour: number): number {
+  const t = new Date();
+  t.setHours(hour, 0, 0, 0);
+  const ms = t.getTime() - Date.now();
+  return ms > 0 ? ms : ms + 86_400_000;
+}
+function msUntilTomorrowAt(hour: number): number {
+  const t = new Date();
+  t.setDate(t.getDate() + 1);
+  t.setHours(hour, 0, 0, 0);
+  return t.getTime() - Date.now();
+}
+function msUntilNextMondayAt(hour: number): number {
+  const t = new Date();
+  const dow = t.getDay();
+  const days = ((1 - dow) + 7) % 7 || 7;
+  t.setDate(t.getDate() + days);
+  t.setHours(hour, 0, 0, 0);
+  return t.getTime() - Date.now();
 }
 
 function relativeTime(iso: string | null): string {

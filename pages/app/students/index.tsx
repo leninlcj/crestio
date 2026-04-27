@@ -9,18 +9,28 @@ import { IconUsers, IconArchive } from '../../../components/design/icons';
 import { Skeleton } from '../../../components/design/Skeleton';
 import { FilterChips } from '../../../components/design/FilterChips';
 import { useDetailParam } from '../../../components/design/DetailPane';
-import { StudentDetailPane } from '../../../components/students/StudentDetailPane';
+import dynamic from 'next/dynamic';
+const StudentDetailPane = dynamic(
+  () => import('../../../components/students/StudentDetailPane').then((m) => m.StudentDetailPane),
+  { ssr: false },
+);
+import { Avatar } from '../../../components/design/Avatar';
+import { MiniBarChart } from '../../../components/design/MiniBarChart';
+import { Tooltip } from '../../../components/design/Tooltip';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Student } from '../../../lib/types';
 import { formatCents, initials, cx } from '../../../lib/utils';
+import { formatTime, formatRelativeDate } from '../../../lib/format';
 
 type StudentRow = Student & {
   _last_session_at?: string | null;
   _next_session_at?: string | null;
   _session_count?: number;
   _total_minutes?: number;
+  /** 28-day activity buckets (oldest → newest) for the bottom card strip. */
+  _activity_28d?: number[];
 };
 
 const VIEW_KEY = 'crestio.students.view';
@@ -94,6 +104,15 @@ function StudentsInner() {
           if (!byStudent.has(s.student_id)) byStudent.set(s.student_id, []);
           byStudent.get(s.student_id)!.push(s);
         }
+        // Build 28-day buckets (oldest → newest), one per day.
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dayKeys: string[] = Array.from({ length: 28 }, (_, i) => {
+          const d = new Date(today);
+          d.setDate(today.getDate() - (27 - i));
+          return d.toISOString().slice(0, 10);
+        });
+
         for (const stu of list) {
           const rows = byStudent.get(stu.id) ?? [];
           const completed = rows.filter((r) => r.status === 'completed');
@@ -109,6 +128,13 @@ function StudentsInner() {
           stu._next_session_at = future;
           stu._session_count = completed.length;
           stu._total_minutes = completed.reduce((acc, r) => acc + (r.duration_minutes ?? 0), 0);
+
+          const buckets = new Map<string, number>(dayKeys.map((k) => [k, 0]));
+          for (const r of completed) {
+            const k = (r.scheduled_at as string).slice(0, 10);
+            if (buckets.has(k)) buckets.set(k, (buckets.get(k) ?? 0) + 1);
+          }
+          stu._activity_28d = dayKeys.map((k) => buckets.get(k) ?? 0);
         }
       }
       setStudents(list);
@@ -315,6 +341,8 @@ function StudentCard({
     ? `Last ${relativeDays(student._last_session_at)}`
     : 'No sessions yet';
   const subjects = student.subjects ?? [];
+  const status = computeStudentStatus(student);
+  const next = student._next_session_at;
   return (
     <button
       type="button"
@@ -322,17 +350,24 @@ function StudentCard({
       className="card p-4 text-left transition-colors duration-100 hover:bg-ruleSoft/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 group block w-full"
     >
       <div className="flex items-start gap-3">
-        <div className="h-9 w-9 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium shrink-0">
-          {initials(student.name)}
-        </div>
+        <Avatar name={student.name} size={32} />
         <div className="flex-1 min-w-0">
-          <div className="text-sm text-ink font-medium truncate">{student.name}</div>
+          <div className="text-sm text-ink font-medium truncate flex items-center gap-1.5">
+            <Tooltip label={status.label}>
+              <span
+                className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ background: status.color }}
+                aria-label={status.label}
+              />
+            </Tooltip>
+            <span className="truncate">{student.name}</span>
+          </div>
           <div className="text-2xs text-ink-soft truncate mt-0.5">
             {[student.year_level, student.school].filter(Boolean).join(' · ') || '—'}
           </div>
         </div>
         {showRate && student.hourly_rate_cents && (
-          <div className="text-2xs text-ink-muted tabular shrink-0">
+          <div className="text-2xs text-ink-muted num tabular shrink-0">
             {formatCents(student.hourly_rate_cents, currency)}
           </div>
         )}
@@ -344,14 +379,38 @@ function StudentCard({
           ))}
         </div>
       )}
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-ruleSoft text-2xs text-ink-muted">
-        <span>{lastLabel}</span>
-        <span className="tabular">
-          {student._session_count ?? 0} sessions · {((student._total_minutes ?? 0) / 60).toFixed(1)}h
+      <div className="text-2xs text-ink-muted mt-3 truncate">
+        {next
+          ? <>Next: <span className="text-ink num tabular">{formatRelativeDate(next)} · {formatTime(next)}</span></>
+          : 'No upcoming session'}
+      </div>
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-ruleSoft text-2xs text-ink-muted gap-2">
+        <span className="truncate">{lastLabel}</span>
+        <span className="num tabular shrink-0">
+          {student._session_count ?? 0}{' · '}{((student._total_minutes ?? 0) / 60).toFixed(1)}h
         </span>
       </div>
+      {student._activity_28d && student._activity_28d.some((v) => v > 0) && (
+        <div className="mt-2">
+          <MiniBarChart
+            data={student._activity_28d.map((v, i) => ({ label: `Day ${i + 1}`, value: v }))}
+            variant="bars"
+            width={220}
+            height={20}
+          />
+        </div>
+      )}
     </button>
   );
+}
+
+function computeStudentStatus(s: StudentRow): { tone: 'active' | 'dormant' | 'new'; color: string; label: string } {
+  const isNew = Date.now() - new Date(s.created_at).getTime() < 14 * 86_400_000;
+  if (isNew) return { tone: 'new', color: '#1E40AF', label: 'New (added in the last 14 days)' };
+  if (s._last_session_at && Date.now() - new Date(s._last_session_at).getTime() < 21 * 86_400_000) {
+    return { tone: 'active', color: '#2F7D4F', label: 'Active (session in the last 3 weeks)' };
+  }
+  return { tone: 'dormant', color: '#A0A39E', label: 'Dormant (no session in the last 3 weeks)' };
 }
 
 function relativeDays(iso: string): string {

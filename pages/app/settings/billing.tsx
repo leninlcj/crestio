@@ -10,6 +10,7 @@ import { useOrganization } from '../../../lib/organizationContext';
 import { useMembership } from '../../../lib/membershipContext';
 import { useBilling } from '../../../lib/billingContext';
 import { Badge } from '../../../components/design/Badge';
+import { UsageBar } from '../../../components/design/UsageBar';
 import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
 const PLAN_PRICE_DOLLARS: Record<string, Record<string, number>> = {
@@ -17,6 +18,56 @@ const PLAN_PRICE_DOLLARS: Record<string, Record<string, number>> = {
   team: { monthly: 59, annual: 590 },
   growth: { monthly: 129, annual: 1290 },
 };
+
+// Pulls AI / storage / voice usage for the current month and renders three
+// usage bars. Falls back to nothing when the API isn't reachable.
+function UsagePanel() {
+  const [usage, setUsage] = useState<{
+    ai_calls?: { current: number; limit: number | null };
+    storage?: { current_bytes: number; limit_bytes: number | null };
+    voice_minutes?: { current: number; limit: number | null };
+  } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) return;
+        const res = await fetch('/api/owner/ai-costs', {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!cancelled) setUsage(json);
+      } catch {
+        /* no-op */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  if (!usage) return null;
+  const ai = usage.ai_calls;
+  const storage = usage.storage;
+  const voice = usage.voice_minutes;
+  return (
+    <div className="card p-5">
+      <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium mb-1">This month</div>
+      <div className="divide-y divide-ruleSoft">
+        {ai && <UsageBar label="AI calls" current={ai.current} limit={ai.limit} unit="calls" />}
+        {storage && (
+          <UsageBar
+            label="Storage"
+            current={Math.round(storage.current_bytes / (1024 * 1024))}
+            limit={storage.limit_bytes != null ? Math.round(storage.limit_bytes / (1024 * 1024)) : null}
+            unit="MB"
+          />
+        )}
+        {voice && <UsageBar label="Voice transcription" current={voice.current} limit={voice.limit} unit="min" />}
+      </div>
+    </div>
+  );
+}
 
 function BillingInner() {
   const { t } = useTranslation('settings');
@@ -181,6 +232,7 @@ function BillingInner() {
     <Layout pageTitle={`${t('tabs.billing')} · ${t('page_title')}`} subtitle={t('tabs.billing')} title={t('page_title')}>
       <SettingsTabs />
       <div className="max-w-2xl space-y-6">
+        <UsagePanel />
         {toast?.show && (
           <div
             className={['text-sm transition-opacity duration-500', toast.kind === 'success' ? 'text-forest' : 'text-ink-muted'].join(' ')}

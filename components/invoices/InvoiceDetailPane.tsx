@@ -151,6 +151,8 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
             </div>
           )}
 
+          <InvoiceTimeline data={data} />
+
           <div className="px-5 py-4 border-t border-rule flex items-center gap-2">
             <Link href={`/app/invoices/${data.id}`} className="btn-secondary text-xs" style={{ height: 32, minHeight: 32 }}>
               Open invoice
@@ -164,6 +166,35 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
         </div>
       )}
     </DetailPane>
+  );
+}
+
+// Timeline of every event for the invoice. Reads only what the invoices row
+// already exposes — created_at, sent_at, paid_at — and a void marker. No
+// new endpoint required.
+function InvoiceTimeline({ data }: { data: Detail }) {
+  const events: Array<{ at: string; label: string; actor?: string }> = [];
+  events.push({ at: data.issued_on, label: 'Created', actor: data.is_batch_generated ? 'Batch' : 'You' });
+  if (data.sent_at) events.push({ at: data.sent_at, label: 'Sent to parent', actor: 'You' });
+  if (data.paid_at) events.push({ at: data.paid_at, label: 'Paid', actor: 'Stripe' });
+  if (data.status === 'void') events.push({ at: data.issued_on, label: 'Voided', actor: 'You' });
+  events.sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
+  return (
+    <div className="px-5 pb-5">
+      <div className="text-2xs uppercase tracking-widest text-ink-soft font-medium mb-2">Timeline</div>
+      <ol className="space-y-2 relative pl-3 border-l border-rule">
+        {events.map((e, i) => (
+          <li key={`${e.label}-${i}`} className="relative">
+            <span className="absolute -left-[7px] top-1.5 w-2 h-2 rounded-full bg-forest" aria-hidden="true" />
+            <div className="text-sm text-ink">{e.label}</div>
+            <div className="text-2xs text-ink-soft num tabular">
+              {formatDate(e.at)}
+              {e.actor && <> · {e.actor}</>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 

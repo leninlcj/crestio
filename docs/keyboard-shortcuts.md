@@ -51,6 +51,37 @@ Messages thread list).
 | `⌘↩`   | Save |
 | `Tab`   | Next field |
 
+## Command palette (⌘K)
+
+| Shortcut | Action |
+|---------|--------|
+| `↑↓`    | Navigate results |
+| `↩`    | Open / run |
+| `⎋`    | Close |
+| `:s <q>`  | Filter to students only |
+| `:se <q>` | Filter to sessions only |
+| `:i <q>`  | Filter to invoices only |
+| `:l <q>`  | Filter to lesson plans only |
+
+## Right-click context menu
+
+Available on session list rows. Items: Open · Polish notes · Send to parent ·
+Reschedule · Mark cancelled · Duplicate · Copy link · Delete.
+
+## Messages snooze
+
+A snooze button on every thread (top-right of the row, on hover). Presets:
+Tomorrow morning · This evening · Next week. Snoozed threads disappear from
+the list and reappear automatically at the chosen time. Snooze state lives in
+`localStorage` (key: `crestio.messages.snooze.v1`).
+
+## Rich-editor shortcuts (notes, messages)
+
+| Shortcut | Action |
+|---------|--------|
+| `⌘B`   | Bold |
+| `⌘I`   | Italic |
+
 ## Adding a shortcut
 
 1. Add a `KeyBinding` to `SHORTCUTS` in `lib/keyboard.ts`.

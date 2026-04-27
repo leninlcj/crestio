@@ -20,6 +20,28 @@ import { useTranslation } from 'react-i18next';
 import { Breadcrumb, type Crumb } from './design/Breadcrumb';
 import { TabStrip, type Tab } from './design/TabStrip';
 import { FloatingActionButton } from './design/FloatingActionButton';
+import { Avatar } from './design/Avatar';
+
+// Stub changelog — bumped when something user-visible ships. Used by the
+// "what's new" beacon on the avatar.
+const LATEST_CHANGELOG_TAG = '2026-04-27-phase3';
+const LAST_SEEN_KEY = 'crestio.changelog.last_seen.v1';
+
+function useUnseenChangelog(): { unseen: boolean; markSeen: () => void } {
+  const [unseen, setUnseen] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const seen = window.localStorage.getItem(LAST_SEEN_KEY);
+    setUnseen(seen !== LATEST_CHANGELOG_TAG);
+  }, []);
+  function markSeen() {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(LAST_SEEN_KEY, LATEST_CHANGELOG_TAG);
+    }
+    setUnseen(false);
+  }
+  return { unseen, markSeen };
+}
 
 interface Props {
   children: ReactNode;
@@ -52,7 +74,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { href: '/app',              labelKey: 'nav.home',      match: (p) => p === '/app',                                       icon: IconHome },
   { href: '/app/sessions',     labelKey: 'nav.sessions',  match: (p) => p.startsWith('/app/sessions') || p.startsWith('/app/calendar') || p.startsWith('/app/templates'), icon: IconCalendar },
-  { href: '/app/students',     labelKey: 'nav.people',    match: (p) => p.startsWith('/app/students') || p.startsWith('/app/households') || p === '/app/people', icon: IconUsers },
+  { href: '/app/students',     labelKey: 'nav.people',    match: (p) => p.startsWith('/app/students') || p.startsWith('/app/households') || p.startsWith('/app/parents') || p === '/app/people', icon: IconUsers },
   { href: '/app/invoices',     labelKey: 'nav.money',     match: (p) => p.startsWith('/app/invoices') || p === '/app/payouts-received' || p === '/app/money', icon: IconCoin },
   { href: '/app/lesson-plans', labelKey: 'nav.resources', match: (p) => p.startsWith('/app/lesson-plans') || p.startsWith('/app/files') || p === '/app/resources', icon: IconBook },
   { href: '/app/messages',     labelKey: 'nav.messages',  match: (p) => p.startsWith('/app/messages'),                      icon: IconChat },
@@ -77,13 +99,14 @@ function tabsForPath(pathname: string, _query: Record<string, any>, _opts: { isO
     ];
   }
   // People: Students, Households (Households hidden on solo plan)
-  if (pathname.startsWith('/app/students') || pathname.startsWith('/app/households') || pathname === '/app/people') {
+  if (pathname.startsWith('/app/students') || pathname.startsWith('/app/households') || pathname.startsWith('/app/parents') || pathname === '/app/people') {
     const tabs: Tab[] = [
       { key: 'students',  label: 'Students',  href: '/app/students',  match: (p) => p.startsWith('/app/students') },
     ];
     if (_opts.hasHouseholds) {
       tabs.push({ key: 'households', label: 'Households', href: '/app/households', match: (p) => p.startsWith('/app/households') });
     }
+    tabs.push({ key: 'parents', label: 'Parents', href: '/app/parents', match: (p) => p.startsWith('/app/parents') });
     return tabs;
   }
   // Money: Invoices, Payouts received (parent → tutor's Stripe payouts)
@@ -120,6 +143,7 @@ function defaultPageTitle(pathname: string): string {
   if (pathname.startsWith('/app/calendar')) return 'Calendar';
   if (pathname.startsWith('/app/students')) return 'People';
   if (pathname.startsWith('/app/households')) return 'People';
+  if (pathname.startsWith('/app/parents')) return 'People';
   if (pathname.startsWith('/app/invoices')) return 'Money';
   if (pathname === '/app/payouts-received') return 'Money';
   if (pathname === '/app/payouts') return 'Team';
@@ -591,18 +615,27 @@ function AccountDropdown({
   signOut: () => void;
 }) {
   const { t } = useTranslation('common');
+  const { unseen, markSeen } = useUnseenChangelog();
+  function toggle() {
+    if (unseen && !open) markSeen();
+    setOpen(!open);
+  }
   return (
     <div className="relative">
       <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-1.5 py-1 rounded-md hover:bg-ruleSoft transition-colors duration-100"
+        onClick={toggle}
+        className="relative flex items-center gap-2 px-1.5 py-1 rounded-md hover:bg-ruleSoft transition-colors duration-100"
         aria-label="Account menu"
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <div className="h-8 w-8 bg-forest text-white rounded-full grid place-items-center text-xs font-medium font-mono">
-          {avatar}
-        </div>
+        <Avatar name={email || 'You'} size={32} />
+        {unseen && (
+          <span
+            aria-label="What's new"
+            className="absolute -top-0.5 -right-0.5 inline-block w-2 h-2 rounded-full bg-success ring-2 ring-cream"
+          />
+        )}
       </button>
       {open && (
         <>
