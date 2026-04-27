@@ -32,7 +32,9 @@ type Item = {
 };
 
 const RECENTS_KEY = 'crestio.cmdk.recents';
+const RECENT_CMDS_KEY = 'crestio.cmdk.recent_commands';
 const MAX_RECENTS = 5;
+const MAX_RECENT_CMDS = 6;
 
 function loadRecents(): Item[] {
   if (typeof window === 'undefined') return [];
@@ -53,6 +55,24 @@ function saveRecent(item: Item) {
   } catch {
     /* ignore */
   }
+}
+
+type RecentCmd = { label: string; href?: string; onId?: string };
+function loadRecentCmds(): RecentCmd[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(RECENT_CMDS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function saveRecentCmd(item: Item) {
+  if (typeof window === 'undefined') return;
+  if (!item.label.startsWith('Go to') && item.group !== 'Quick actions' && item.group !== 'Jump to') return;
+  try {
+    const existing = loadRecentCmds().filter((c) => c.label !== item.label);
+    const next: RecentCmd[] = [{ label: item.label, href: item.href }, ...existing].slice(0, MAX_RECENT_CMDS);
+    window.localStorage.setItem(RECENT_CMDS_KEY, JSON.stringify(next));
+  } catch { /* */ }
 }
 
 export function CommandPalette() {
@@ -120,21 +140,29 @@ export function CommandPalette() {
     }, 200);
   }, [query]);
 
-  // Static items: Quick actions + Jump to.
+  // Static items: Quick actions + Jump to + Go to (settings/help/etc).
   const staticItems: Item[] = useMemo(() => [
     // Quick actions
-    { id: 'qa-log',     group: 'Quick actions', label: 'Log session',           shortcut: 'L',  onSelect: () => router.push('/app/sessions/new?mode=quick') },
-    { id: 'qa-polish',  group: 'Quick actions', label: 'Polish last session',                  onSelect: () => router.push('/app/sessions?tab=polish-queue') },
-    { id: 'qa-student', group: 'Quick actions', label: 'Add student',                          onSelect: () => router.push('/app/students/new') },
-    { id: 'qa-invoice', group: 'Quick actions', label: 'Create invoice',                       onSelect: () => router.push('/app/invoices/new') },
-    { id: 'qa-send',    group: 'Quick actions', label: 'Send invoice to parent',               onSelect: () => router.push('/app/invoices') },
+    { id: 'qa-log',       group: 'Quick actions', label: 'Log session',           shortcut: 'N',  onSelect: () => window.dispatchEvent(new CustomEvent('crestio:open-inline-composer')) },
+    { id: 'qa-new',       group: 'Quick actions', label: 'New session (full form)', shortcut: '⌘⇧N', onSelect: () => router.push('/app/sessions/new') },
+    { id: 'qa-polish',    group: 'Quick actions', label: 'Polish last session',                  onSelect: () => router.push('/app/sessions/polish-queue') },
+    { id: 'qa-student',   group: 'Quick actions', label: 'Add student',                          onSelect: () => router.push('/app/students/new') },
+    { id: 'qa-invoice',   group: 'Quick actions', label: 'Create invoice',                       onSelect: () => router.push('/app/invoices/new') },
+    { id: 'qa-send',      group: 'Quick actions', label: 'Send invoice to parent',               onSelect: () => router.push('/app/invoices') },
 
     // Jump to
-    { id: 'j-today',     group: 'Jump to', label: "Today's sessions",        href: '/app/sessions?tab=today' },
-    { id: 'j-polish',    group: 'Jump to', label: 'Polish queue',            href: '/app/sessions?tab=polish-queue' },
-    { id: 'j-unbilled',  group: 'Jump to', label: 'Unbilled sessions',       href: '/app/money?tab=invoices&filter=unbilled' },
-    { id: 'j-overdue',   group: 'Jump to', label: 'Overdue invoices',        href: '/app/money?tab=invoices&filter=overdue' },
-    { id: 'j-billing',   group: 'Jump to', label: 'Settings → Billing',      href: '/app/settings/billing' },
+    { id: 'j-today',      group: 'Jump to', label: "Today's sessions",        href: '/app/sessions?tab=today' },
+    { id: 'j-polish',     group: 'Jump to', label: 'Polish queue',            href: '/app/sessions/polish-queue' },
+    { id: 'j-unbilled',   group: 'Jump to', label: 'Unbilled sessions',       href: '/app/money?tab=invoices&filter=unbilled' },
+    { id: 'j-overdue',    group: 'Jump to', label: 'Overdue invoices',        href: '/app/money?tab=invoices&filter=overdue' },
+    { id: 'j-billing',    group: 'Jump to', label: 'Settings → Billing',      href: '/app/settings/billing' },
+
+    // Go to
+    { id: 'g-settings',   group: 'Go to', label: 'Go to settings',            href: '/app/settings/account' },
+    { id: 'g-billing',    group: 'Go to', label: 'Go to billing',             href: '/app/settings/billing' },
+    { id: 'g-shortcuts',  group: 'Go to', label: 'Go to keyboard shortcuts',  onSelect: () => window.dispatchEvent(new CustomEvent('crestio:open-shortcuts')) },
+    { id: 'g-changelog',  group: 'Go to', label: 'Go to changelog',           href: '/changelog' },
+    { id: 'g-support',    group: 'Go to', label: 'Go to support',             onSelect: () => window.dispatchEvent(new CustomEvent('crestio:open-support')) },
   ], [router]);
 
   // Build full ordered list of items based on query.
@@ -144,10 +172,51 @@ export function CommandPalette() {
       return [...recents, ...staticItems];
     }
 
-    // Power-user prefix: ":s diego" → only Students. ":i" → only Invoices.
-    // Supported prefixes: :s student, :se sessions, :i invoices, :l lesson plans.
     const trimmed = query.trim();
+
+    // Math: "= 1 + 2" → calculator
+    if (trimmed.startsWith('=')) {
+      const expr = trimmed.slice(1).trim();
+      const evaled = evalSafe(expr);
+      if (evaled != null) {
+        return [{
+          id: 'math-result',
+          group: 'Math',
+          label: `${expr} = ${evaled}`,
+          hint: 'Press ↵ to copy',
+          onSelect: () => {
+            navigator.clipboard?.writeText(String(evaled)).catch(() => undefined);
+          },
+        }];
+      }
+      return [{
+        id: 'math-empty',
+        group: 'Math',
+        label: 'Type an expression after =',
+      } as Item];
+    }
+
+    // Natural language: "schedule diego tomorrow 4pm" → opens inline composer
+    if (/^(schedule|log|book|new|add)\s+/i.test(trimmed)) {
+      return [{
+        id: 'nl-schedule',
+        group: 'Quick action',
+        label: `Open composer with "${trimmed}"`,
+        onSelect: () => {
+          window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'));
+          // Best-effort: deliver the seed text to the composer via a follow-up event.
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('crestio:seed-inline-composer', { detail: trimmed }));
+          }, 80);
+        },
+      } as Item, ...staticItems.filter((s) => s.label.toLowerCase().includes('log session'))];
+    }
+
+    // Power-user prefix: ":s diego" → only Students. ":i" → only Invoices.
+    // Supported: :s students, :se sessions, :i invoices, :l lesson plans,
+    //            :h households, :f files, :m messages, :t templates, :p parents.
     let typeFilter: 'students' | 'sessions' | 'invoices' | 'lesson_plans' | null = null;
+    let altRoute: string | null = null;
     let q = trimmed.toLowerCase();
     if (trimmed.startsWith(':')) {
       const m = /^:(\w+)\s*(.*)$/.exec(trimmed);
@@ -157,8 +226,21 @@ export function CommandPalette() {
         else if (prefix.startsWith('s')) typeFilter = 'students';
         else if (prefix.startsWith('i')) typeFilter = 'invoices';
         else if (prefix.startsWith('l') || prefix.startsWith('lp')) typeFilter = 'lesson_plans';
+        else if (prefix.startsWith('h')) altRoute = '/app/households';
+        else if (prefix.startsWith('f')) altRoute = '/app/files';
+        else if (prefix.startsWith('m')) altRoute = '/app/messages';
+        else if (prefix.startsWith('t')) altRoute = '/app/templates';
+        else if (prefix.startsWith('p')) altRoute = '/app/parents';
         q = (m[2] ?? '').trim().toLowerCase();
       }
+    }
+    if (altRoute) {
+      return [{
+        id: 'altroute',
+        group: 'Jump to',
+        label: `Go to ${altRoute.replace('/app/', '')}`,
+        href: altRoute,
+      } as Item];
     }
 
     const filteredStatic = typeFilter
@@ -233,8 +315,20 @@ export function CommandPalette() {
     return order.map((g) => ({ group: g, entries: map.get(g)! }));
   }, [items]);
 
-  function runItem(item: Item) {
+  function runItem(item: Item, mode: 'open' | 'newTab' | 'copyLink' = 'open') {
     saveRecent(item);
+    saveRecentCmd(item);
+    if (mode === 'copyLink' && item.href) {
+      const fullHref = `${window.location.origin}${item.href}`;
+      navigator.clipboard?.writeText(fullHref).catch(() => undefined);
+      setOpen(false);
+      return;
+    }
+    if (mode === 'newTab' && item.href) {
+      window.open(item.href, '_blank');
+      setOpen(false);
+      return;
+    }
     setOpen(false);
     if (item.onSelect) {
       item.onSelect();
@@ -253,7 +347,10 @@ export function CommandPalette() {
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const target = items[active];
-      if (target) runItem(target);
+      if (target) {
+        const mode = (e.metaKey || e.ctrlKey) ? 'newTab' : (e.altKey ? 'copyLink' : 'open');
+        runItem(target, mode);
+      }
     }
   }
 
@@ -274,7 +371,7 @@ export function CommandPalette() {
         onClick={(e) => e.stopPropagation()}
         onKeyDown={onKeyDown}
       >
-        <div className="border-b border-rule px-4 py-3 flex items-center gap-3">
+        <div className="border-b border-rule px-4 py-3 flex items-center gap-3 relative cmdk-input-row">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-ink-soft shrink-0">
             <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
           </svg>
@@ -282,11 +379,16 @@ export function CommandPalette() {
             ref={inputRef}
             value={query}
             onChange={(e) => { setQuery(e.target.value); setActive(0); }}
-            placeholder="Search anything…"
+            placeholder="Search anything… (or type = for math)"
             className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-soft"
           />
           <kbd className="text-2xs font-mono text-ink-soft border border-rule rounded px-1.5 py-0.5">Esc</kbd>
+          {!loading && totalHits > 0 && query.trim().length > 0 && (
+            <span aria-hidden="true" className="absolute left-3 right-3 bottom-0 h-0.5 bg-forest cmdk-underline-anim origin-left" />
+          )}
         </div>
+
+        {query.trim().length === 0 && <RecentCommandsStrip onPick={(href) => { setOpen(false); router.push(href); }} />}
 
         <div className="max-h-[60vh] overflow-y-auto py-1">
           {totalHits === 0 ? (
@@ -324,7 +426,15 @@ export function CommandPalette() {
                             {item.shortcut && (
                               <kbd className="text-2xs font-mono border border-rule rounded px-1.5 py-0.5">{item.shortcut}</kbd>
                             )}
-                            <span aria-hidden="true">↵</span>
+                            {isActive ? (
+                              <span className="text-2xs font-mono">
+                                <span title="Open">↵</span>
+                                {item.href && <> · <span title="Open in new tab">⌘↵</span></>}
+                                {item.href && <> · <span title="Copy link">⌥↵</span></>}
+                              </span>
+                            ) : (
+                              <span aria-hidden="true">↵</span>
+                            )}
                           </span>
                         </button>
                       </li>
@@ -357,6 +467,39 @@ export function CommandPalette() {
 function formatCents(c: number): string {
   return new Intl.NumberFormat(activeLocale(), { style: 'currency', currency: 'AUD',
     maximumFractionDigits: c % 100 === 0 ? 0 : 2 }).format(c / 100);
+}
+
+// Safe expression evaluator. Allow only digits, operators, parens, decimal,
+// whitespace, and the % sign. Reject anything else.
+function evalSafe(expr: string): string | null {
+  if (!expr || !/^[\d+\-*/%() .]+$/.test(expr)) return null;
+  try {
+    // eslint-disable-next-line no-new-func
+    const result = Function(`"use strict"; return (${expr.replace(/%/g, '/100')})`)();
+    if (typeof result !== 'number' || !Number.isFinite(result)) return null;
+    // Round to 4 decimal places.
+    return String(Math.round(result * 10_000) / 10_000);
+  } catch { return null; }
+}
+
+function RecentCommandsStrip({ onPick }: { onPick: (href: string) => void }) {
+  const recents = loadRecentCmds();
+  if (recents.length === 0) return null;
+  return (
+    <div className="px-4 py-2 border-b border-rule flex items-center gap-1.5 flex-wrap">
+      <span className="text-2xs uppercase tracking-widest text-ink-soft mr-1">Recent</span>
+      {recents.map((r) => (
+        <button
+          key={r.label}
+          type="button"
+          onClick={() => r.href && onPick(r.href)}
+          className="text-[11px] px-2 py-0.5 rounded-full bg-ruleSoft text-ink-muted hover:bg-ruleSoft/80 hover:text-ink transition-colors duration-100"
+        >
+          {r.label.replace(/^Go to /, '')}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 export default CommandPalette;

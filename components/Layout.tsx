@@ -12,7 +12,7 @@ import AssistantPanel from './AssistantPanel';
 import AssistantLauncher from './AssistantLauncher';
 import SupportWidget from './SupportWidget';
 import CommandPalette from './CommandPalette';
-import NotificationBell from './notifications/NotificationBell';
+import { NotificationCenter as NotificationBell } from './design/NotificationCenter';
 import { TestAccountBanner, ExemptionOffPill } from './OwnerBanners';
 import { isPlatformOwner } from '../lib/owner';
 import LanguageSwitcherModal from './LanguageSwitcherModal';
@@ -179,6 +179,30 @@ export default function Layout({
   const [moreOpen, setMoreOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [messagesUnread, setMessagesUnread] = useState<{ total: number; hasUrgent: boolean }>({ total: 0, hasUrgent: false });
+  const [activeNow, setActiveNow] = useState(false);
+
+  // Tutor avatar shows a small green dot when at least one session is happening
+  // right now. Lightweight count query — runs every 60s while tab is focused.
+  useEffect(() => {
+    let cancelled = false;
+    async function tick() {
+      try {
+        const now = new Date();
+        const fifteenAgo = new Date(now.getTime() - 15 * 60_000);
+        const fifteenLater = new Date(now.getTime() + 15 * 60_000);
+        const { count } = await supabase
+          .from('sessions')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', 'scheduled')
+          .gte('scheduled_at', fifteenAgo.toISOString())
+          .lte('scheduled_at', fifteenLater.toISOString());
+        if (!cancelled) setActiveNow((count ?? 0) > 0);
+      } catch { /* */ }
+    }
+    tick();
+    const id = setInterval(tick, 60_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
 
   const nav = useMemo(() => NAV_ITEMS.filter((item) => {
     if (item.requires === 'team_tab') {
@@ -270,6 +294,12 @@ export default function Layout({
       <Head>
         <title>{browserTitle}</title>
       </Head>
+      <a
+        href="#crestio-main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-forest focus:text-cream focus:px-3 focus:py-2 focus:rounded focus:text-sm"
+      >
+        Skip to content
+      </a>
       <TestAccountBanner />
       <div className="flex flex-1 min-h-0">
         {/* ============== DESKTOP SIDEBAR (collapsed below xl) ============== */}
@@ -290,6 +320,7 @@ export default function Layout({
             {nav.map((item) => {
               const active = item.match(router.pathname);
               const showBadge = item.href === '/app/messages' && messagesUnread.total > 0;
+              const showHomeDot = item.href === '/app' && (messagesUnread.total > 0 || activeNow);
               const Icon = item.icon;
               return (
                 <Link
@@ -320,6 +351,9 @@ export default function Layout({
                     <Icon />
                   </span>
                   <span className="hidden xl:inline truncate">{t(item.labelKey)}</span>
+                  {showHomeDot && (
+                    <span className="ml-auto inline-block w-1.5 h-1.5 rounded-full bg-forest" aria-hidden="true" />
+                  )}
                   {showBadge && (
                     <span
                       className={cx(
@@ -379,6 +413,17 @@ export default function Layout({
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <ExemptionOffPill />
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'))}
+                aria-label="Quick log session"
+                className="p-2 rounded hover:bg-ruleSoft transition-colors text-ink"
+                title="N — quick log"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
               <NotificationBell mode="tutor" />
               <AccountDropdown
                 email={userEmail}
@@ -389,6 +434,7 @@ export default function Layout({
                 isPlatformOwner={isPlatformOwner(userEmail)}
                 onOpenLanguage={() => { setAccountOpen(false); setLanguageOpen(true); }}
                 signOut={signOut}
+                activeNow={activeNow}
               />
             </div>
           </header>
@@ -441,7 +487,7 @@ export default function Layout({
           )}
 
           {/* ============== MAIN CONTENT ============== */}
-          <main className="flex-1 min-w-0 pb-24 md:pb-0">
+          <main id="crestio-main" tabIndex={-1} className="flex-1 min-w-0 pb-24 md:pb-0">
             {title && (
               <div className="px-4 md:px-8 pt-6 md:pt-8 pb-2">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
@@ -604,6 +650,7 @@ function AccountDropdown({
   isPlatformOwner,
   onOpenLanguage,
   signOut,
+  activeNow,
 }: {
   email: string;
   avatar: string;
@@ -613,6 +660,7 @@ function AccountDropdown({
   isPlatformOwner: boolean;
   onOpenLanguage: () => void;
   signOut: () => void;
+  activeNow?: boolean;
 }) {
   const { t } = useTranslation('common');
   const { unseen, markSeen } = useUnseenChangelog();
@@ -630,7 +678,13 @@ function AccountDropdown({
         aria-expanded={open}
       >
         <Avatar name={email || 'You'} size={32} />
-        {unseen && (
+        {activeNow && (
+          <span
+            aria-label="In session right now"
+            className="absolute -bottom-0.5 -right-0.5 inline-block w-2.5 h-2.5 rounded-full bg-forest ring-2 ring-cream session-now-pulse"
+          />
+        )}
+        {unseen && !activeNow && (
           <span
             aria-label="What's new"
             className="absolute -top-0.5 -right-0.5 inline-block w-2 h-2 rounded-full bg-success ring-2 ring-cream"

@@ -5,6 +5,27 @@
 @tailwind utilities;
 
 @layer base {
+  /* CSS variable structure — single source of truth for color tokens. The
+     Tailwind config maps to literal hex values today; future dark-mode
+     support flips these vars at the :root[data-theme='dark'] level without
+     touching component code. */
+  :root {
+    --color-cream: #FAFAF8;
+    --color-surface: #FFFFFF;
+    --color-ink: #0F1714;
+    --color-ink-muted: #6B6F6A;
+    --color-ink-soft: #A0A39E;
+    --color-rule: #EAEAE6;
+    --color-rule-soft: #F4F4F0;
+    --color-forest: #1F3A2E;
+    --color-forest-soft: #E8EEE8;
+    --color-forest-ink: #12241C;
+    --color-success: #2F7D4F;
+    --color-amber: #B8860B;
+    --color-claret: #7A2233;
+    --color-rust: #8B4A1F;
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -251,6 +272,22 @@
   animation: overdue-dot-pulse 1.6s ease-in-out infinite;
 }
 
+/* Phase 4 — Cmd+K underline animation when results return. */
+@keyframes cmdk-underline {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.cmdk-underline-anim {
+  animation: cmdk-underline 180ms ease-out both;
+}
+
+/* Phase 4 — slide-up for bottom drawers. */
+@keyframes slide-up-kf {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slide-up-kf 200ms ease-out both; }
+
 /* Phase 3 — list row insert/remove. Used opt-in via .row-enter / .row-exit. */
 @keyframes row-enter {
   from { opacity: 0; transform: translateY(-4px); }
@@ -362,5 +399,26 @@
   *, *::before, *::after {
     transition: none !important;
     animation: none !important;
+  }
+
+  /* Phase 4 — session report print: clean output of polished notes only. */
+  body[data-printing-session='true'] > div > * { display: none !important; }
+  body[data-printing-session='true'] [data-print-session='true'] {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  body[data-printing-session='true'] [data-print-internal-only='true'] {
+    display: none !important;
+  }
+
+  /* Phase 4 — student summary print. */
+  body[data-printing-student='true'] > div > * { display: none !important; }
+  body[data-printing-student='true'] [data-print-student='true'] {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
   }
 }

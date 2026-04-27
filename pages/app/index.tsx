@@ -19,6 +19,7 @@ import { StatusPill } from '../../components/design/StatusPill';
 import { NowLine, useNowMinute } from '../../components/design/NowLine';
 import { Avatar } from '../../components/design/Avatar';
 import { MiniBarChart } from '../../components/design/MiniBarChart';
+import { Banner } from '../../components/design/Banner';
 import { formatRelativeDate, formatMoney } from '../../lib/format';
 
 // ---------------------------------------------------------------------------
@@ -53,10 +54,19 @@ type InvoicingEntry = {
 
 type Series = { series?: number[]; previous_series?: number[] };
 
+type OwnerBrief = {
+  yesterday_sessions: number;
+  yesterday_amount_cents: number;
+  yesterday_tutor_count: number;
+  notes_pending: number;
+  actions: Array<{ tutor_name: string; student_name: string; reason: string }>;
+};
+
 type TodayPayload = {
   role: 'owner' | 'tutor';
   currency: string;
   owner_name: string | null;
+  owner_brief?: OwnerBrief | null;
   next_session: {
     id: string;
     scheduled_at: string;
@@ -221,6 +231,7 @@ function DashboardInner() {
 
         <TrialBanner />
         <div className="mb-4"><SampleDataBanner /></div>
+        <StateOfTheAppBanners payload={data} />
 
         {loading && !data ? (
           <DashboardSkeleton />
@@ -294,6 +305,8 @@ function DashboardBody({
 
   return (
     <>
+      <OwnerBriefCard brief={payload.owner_brief ?? null} currency={currency} />
+
       {/* Stat row. */}
       <div className={`grid grid-cols-2 ${statColCx} gap-3 md:gap-4 mb-8 md:mb-10 stat-grid`}>
         <StatCard
@@ -900,6 +913,43 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
   return out;
 }
 
+function OwnerBriefCard({ brief, currency }: { brief: OwnerBrief | null; currency: string }) {
+  if (!brief || brief.yesterday_sessions === 0) return null;
+  // Only show during the morning briefing window (8-10am Sydney) — keep it
+  // out of the way for tutors who open the dashboard later in the day.
+  const now = new Date();
+  const tzNow = new Date(now.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+  const hour = tzNow.getHours();
+  if (hour < 8 || hour >= 10) return null;
+
+  return (
+    <div className="mb-8 card p-4 md:p-5 border-forest/15 bg-forest-soft/25">
+      <div className="text-2xs uppercase tracking-widest text-forest font-medium mb-1.5">Owner brief</div>
+      <div className="text-sm text-ink leading-relaxed">
+        Yesterday: <strong className="num tabular">{brief.yesterday_sessions}</strong> {brief.yesterday_sessions === 1 ? 'session' : 'sessions'}
+        {brief.yesterday_tutor_count > 1 && <> across <strong className="num tabular">{brief.yesterday_tutor_count}</strong> tutors</>}
+        {' · '}
+        <strong className="num tabular">{formatCents(brief.yesterday_amount_cents, currency)}</strong> earned.
+        {' · '}
+        Notes pending: <strong className="num tabular">{brief.notes_pending}</strong>
+        {brief.notes_pending > 0 && <> &gt; 48h</>}.
+      </div>
+      {brief.actions.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-forest/15">
+          <div className="text-2xs uppercase tracking-widest text-forest font-medium mb-1">Action needed</div>
+          <ul className="space-y-0.5">
+            {brief.actions.map((a, i) => (
+              <li key={i} className="text-xs text-ink">
+                <strong>{a.tutor_name}</strong> · {a.student_name} <span className="text-ink-muted">— {a.reason}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DotIcon() {
   return (
     <svg width="6" height="6" viewBox="0 0 6 6" aria-hidden="true">
@@ -957,6 +1007,41 @@ function DashboardSkeleton() {
       </div>
     </>
   );
+}
+
+// State-of-the-app banners on the dashboard: streak, cold-spell, first-win.
+// Computes lightly from the payload — no extra API calls.
+function StateOfTheAppBanners({ payload }: { payload: TodayPayload | null }) {
+  if (!payload) return null;
+  const banners: React.ReactNode[] = [];
+  const todaySeries = payload.today?.series ?? [];
+
+  // Streak — 7+ consecutive days of >=1 session ending today.
+  let streak = 0;
+  for (let i = todaySeries.length - 1; i >= 0; i--) {
+    if (todaySeries[i] > 0) streak++;
+    else break;
+  }
+  if (streak >= 7) {
+    const today = new Date().toISOString().slice(0, 10);
+    banners.push(
+      <Banner key="streak" id={`streak-${streak}-${today}`} tone="forest">
+        {streak}-day logging streak. Don't break it.
+      </Banner>,
+    );
+  }
+
+  // Cold spell — last 5+ days with no sessions on the series.
+  if (todaySeries.length === 7 && todaySeries.every((v) => v === 0)) {
+    banners.push(
+      <Banner key="cold" id="cold-welcome-back" tone="amber">
+        Welcome back. No sessions logged this week — schedule your next one.
+      </Banner>,
+    );
+  }
+
+  if (banners.length === 0) return null;
+  return <div className="mb-4 space-y-2">{banners}</div>;
 }
 
 function TrialBanner() {

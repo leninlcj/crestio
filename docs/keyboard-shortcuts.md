@@ -11,7 +11,9 @@ with `?`) is generated from the same registry, so it never drifts.
 |---------|--------|
 | `⌘K`    | Open command palette / search |
 | `?`     | Open this shortcuts overlay |
-| `⌘⇧N`  | New session |
+| `⌘⇧N`  | New session (full form) |
+| `N`     | Inline composer (slides down — natural-language quick log) |
+| `⌘↩`   | Save inline composer |
 
 ## Navigation (G-prefix sequences)
 
@@ -57,11 +59,20 @@ Messages thread list).
 |---------|--------|
 | `↑↓`    | Navigate results |
 | `↩`    | Open / run |
+| `⌘↩`   | Open in new tab (when target is a route) |
+| `⌥↩`   | Copy link to clipboard (when target is a route) |
 | `⎋`    | Close |
+| `= <expr>` | Calculator (digits, operators, parens, %) |
 | `:s <q>`  | Filter to students only |
 | `:se <q>` | Filter to sessions only |
 | `:i <q>`  | Filter to invoices only |
 | `:l <q>`  | Filter to lesson plans only |
+| `:h <q>`  | Jump to households |
+| `:f <q>`  | Jump to files |
+| `:m <q>`  | Jump to messages |
+| `:t <q>`  | Jump to templates |
+| `:p <q>`  | Jump to parents |
+| `schedule …` / `log …` / `book …` | Open inline composer with seed text |
 
 ## Right-click context menu
 
@@ -81,6 +92,20 @@ the list and reappear automatically at the chosen time. Snooze state lives in
 |---------|--------|
 | `⌘B`   | Bold |
 | `⌘I`   | Italic |
+
+Pasting URLs, phone numbers, emails, bullet lists, numbered lists, or
+fenced code into a rich editor auto-formats them via `lib/smartPaste.ts`.
+
+## Calendar (Today / Upcoming Day or Week view)
+
+| Action | How |
+|---------|--------|
+| Open session | Click block |
+| Reschedule | Drag block (snaps to 15-min) |
+| Resize | Drag bottom edge (15-min increments, 15–240 min) |
+| Cancel drag/resize | `Esc` |
+| Pre-fill new session at clicked time | Click empty grid slot |
+| Switch view | Day / Week toggle (persisted per tab) |
 
 ## Adding a shortcut
 

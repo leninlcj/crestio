@@ -13,6 +13,10 @@ import { BulkActionBar } from '../../../components/design/BulkActionBar';
 import { MiniCalendar } from '../../../components/design/MiniCalendar';
 import { StatusPill } from '../../../components/design/StatusPill';
 import { useDetailParam } from '../../../components/design/DetailPane';
+import { Calendar } from '../../../components/design/Calendar';
+import { Banner } from '../../../components/design/Banner';
+import { ConfirmDrawer } from '../../../components/design/ConfirmDrawer';
+import { ErrorState } from '../../../components/design/ErrorState';
 import dynamic from 'next/dynamic';
 const SessionDetailPane = dynamic(
   () => import('../../../components/sessions/SessionDetailPane').then((m) => m.SessionDetailPane),
@@ -23,6 +27,7 @@ import { Tooltip } from '../../../components/design/Tooltip';
 import { Avatar } from '../../../components/design/Avatar';
 import { useToast } from '../../../components/design/Toast';
 import { useNowMinute } from '../../../components/design/NowLine';
+import { useUndo } from '../../../lib/useUndo';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
@@ -42,11 +47,28 @@ type SessionRow = Session & { student: Student | null; tutor: Tutor | null };
 function startOfDay(d: Date) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
 function endOfDay(d: Date)   { const x = new Date(d); x.setHours(23,59,59,999); return x; }
 
+// Per-tab view preference (day/week) persisted in localStorage.
+const VIEW_KEY_PREFIX = 'crestio.sessions.view.';
+function loadViewPref(tab: 'today' | 'upcoming'): 'day' | 'week' {
+  if (typeof window === 'undefined') return tab === 'upcoming' ? 'week' : 'day';
+  try {
+    const v = window.localStorage.getItem(VIEW_KEY_PREFIX + tab);
+    if (v === 'day' || v === 'week') return v;
+  } catch { /* */ }
+  return tab === 'upcoming' ? 'week' : 'day';
+}
+function saveViewPref(tab: 'today' | 'upcoming', v: 'day' | 'week') {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(VIEW_KEY_PREFIX + tab, v); } catch { /* */ }
+}
+
 function SessionsInner() {
   const router = useRouter();
   const { t } = useTranslation(['sessions', 'common']);
   const { membership, loading: membershipLoading } = useMembership();
   const isTutor = membership?.role === 'tutor';
+  const toast = useToast();
+  const undo = useUndo();
 
   const tab: Tab = (() => {
     const q = router.query.tab;
@@ -58,11 +80,17 @@ function SessionsInner() {
 
   // Date for the Today tab — defaults to today, navigable.
   const [activeDate, setActiveDate] = useState<Date>(() => startOfDay(new Date()));
+  const [view, setView] = useState<'day' | 'week'>(() => loadViewPref('today'));
+  useEffect(() => {
+    setView(loadViewPref(tab === 'upcoming' ? 'upcoming' : 'today'));
+  }, [tab]);
 
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState<SessionRow[]>([]);
+  const [history, setHistory] = useState<{ scheduled_at: string }[]>([]);
   const [currency, setCurrency] = useState('AUD');
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkDrawer, setBulkDrawer] = useState<null | { kind: 'invoice' | 'invoice-combine' | 'polish' }>(null);
   const detail = useDetailParam();
   const detailId = detail.value && detail.value.startsWith('session:')
     ? detail.value.slice('session:'.length)
@@ -107,13 +135,43 @@ function SessionsInner() {
         .select('*, student:students(id,name), tutor:tutors(id,name)');
 
       if (tab === 'today') {
-        q = q.gte('scheduled_at', startOfDay(activeDate).toISOString())
-             .lte('scheduled_at', endOfDay(activeDate).toISOString())
-             .order('scheduled_at', { ascending: true });
+        if (view === 'week') {
+          // Whole week containing activeDate.
+          const monday = new Date(activeDate);
+          const dow = monday.getDay();
+          const offset = dow === 0 ? -6 : 1 - dow;
+          monday.setDate(monday.getDate() + offset);
+          monday.setHours(0, 0, 0, 0);
+          const sunday = new Date(monday);
+          sunday.setDate(monday.getDate() + 6);
+          sunday.setHours(23, 59, 59, 999);
+          q = q.gte('scheduled_at', monday.toISOString())
+               .lte('scheduled_at', sunday.toISOString())
+               .order('scheduled_at', { ascending: true });
+        } else {
+          q = q.gte('scheduled_at', startOfDay(activeDate).toISOString())
+               .lte('scheduled_at', endOfDay(activeDate).toISOString())
+               .order('scheduled_at', { ascending: true });
+        }
       } else if (tab === 'upcoming') {
-        q = q.gte('scheduled_at', nowIso)
-             .eq('status', 'scheduled')
-             .order('scheduled_at', { ascending: true });
+        if (view === 'week') {
+          const monday = new Date();
+          const dow = monday.getDay();
+          const offset = dow === 0 ? -6 : 1 - dow;
+          monday.setDate(monday.getDate() + offset);
+          monday.setHours(0, 0, 0, 0);
+          const sunday = new Date(monday);
+          sunday.setDate(monday.getDate() + 6);
+          sunday.setHours(23, 59, 59, 999);
+          q = q.gte('scheduled_at', monday.toISOString())
+               .lte('scheduled_at', sunday.toISOString())
+               .eq('status', 'scheduled')
+               .order('scheduled_at', { ascending: true });
+        } else {
+          q = q.gte('scheduled_at', nowIso)
+               .eq('status', 'scheduled')
+               .order('scheduled_at', { ascending: true });
+        }
       } else if (tab === 'past') {
         q = q.lt('scheduled_at', nowIso)
              .order('scheduled_at', { ascending: false });
@@ -133,7 +191,28 @@ function SessionsInner() {
       setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [tab, activeDate, billingFilter, membership, membershipLoading, isTutor, refreshTick]);
+  }, [tab, activeDate, billingFilter, view, membership, membershipLoading, isTutor, refreshTick]);
+
+  // Background-load history for the empty-hint inferred start hour.
+  useEffect(() => {
+    if (tab !== 'today') return;
+    let cancelled = false;
+    (async () => {
+      const since = new Date(Date.now() - 60 * 86_400_000).toISOString();
+      let q = supabase.from('sessions')
+        .select('scheduled_at')
+        .gte('scheduled_at', since)
+        .lt('scheduled_at', new Date().toISOString())
+        .limit(200);
+      if (isTutor) {
+        const { data: { session: s2 } } = await supabase.auth.getSession();
+        if (s2) q = q.eq('tutor_user_id', s2.user.id);
+      }
+      const { data } = await q;
+      if (!cancelled) setHistory((data ?? []) as { scheduled_at: string }[]);
+    })();
+    return () => { cancelled = true; };
+  }, [tab, isTutor]);
 
   // Keyboard list nav.
   const [activeIdx, setActiveIdx] = useState(0);
@@ -190,7 +269,7 @@ function SessionsInner() {
     { key: 'polish-queue',  label: 'Polish queue',  href: '/app/sessions/polish-queue' },
   ];
 
-  const upcomingGroups = useMemo(() => groupByDay(rows), [rows]);
+  void groupByDay; // kept for legacy upcoming list path; calendar replaces in day/week view
 
   return (
     <Layout
@@ -225,13 +304,25 @@ function SessionsInner() {
       </div>
 
       {tab === 'today' && (
-        <div className="card p-3 md:p-4 mb-4 relative">
-          <NowPill />
-          <MiniCalendar
-            value={activeDate}
-            marked={markedDays}
-            onChange={setActiveDate}
-          />
+        <div className="mb-4 space-y-2">
+          <div className="card p-3 md:p-4 relative">
+            <NowPill />
+            <DateStrip
+              activeDate={activeDate}
+              onChange={setActiveDate}
+              marked={markedDays}
+            />
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <ViewToggle value={view} onChange={(v) => { setView(v); saveViewPref('today', v); }} />
+            <DayEndStateBanner rows={rows} activeDate={activeDate} />
+          </div>
+        </div>
+      )}
+
+      {tab === 'upcoming' && (
+        <div className="mb-3 flex items-center justify-between">
+          <ViewToggle value={view} onChange={(v) => { setView(v); saveViewPref('upcoming', v); }} />
         </div>
       )}
 
@@ -261,42 +352,61 @@ function SessionsInner() {
 
       {loading ? (
         <SessionsListSkeleton />
+      ) : (tab === 'today' || tab === 'upcoming') ? (
+        isDayWrapped(rows, activeDate) && tab === 'today' && view === 'day' ? (
+          <DayWrappedCard rows={rows} activeDate={activeDate} currency={currency} />
+        ) : (
+          <Calendar
+            sessions={rows.map(toCalendarSession)}
+            date={activeDate}
+            view={view}
+            history={history}
+            onSessionOpen={(id) => detail.open(`session:${id}`)}
+            onSessionRescheduled={async (id, newStartIso) => {
+              try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session?.access_token) return;
+                const res = await fetch(`/api/sessions/${id}/reschedule`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+                  body: JSON.stringify({ new_start_time: newStartIso }),
+                });
+                if (!res.ok) throw new Error();
+                setRows((prev) => prev.map((r) => r.id === id ? { ...r, scheduled_at: newStartIso } : r));
+                toast.show({ message: 'Rescheduled.', tone: 'success' });
+              } catch {
+                toast.show({ message: 'Could not reschedule.', tone: 'error' });
+                window.dispatchEvent(new Event('crestio:sessions-refresh'));
+              }
+            }}
+            onSessionResized={async (id, newDuration) => {
+              try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session?.access_token) return;
+                const res = await fetch(`/api/sessions/${id}`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+                  body: JSON.stringify({ duration_minutes: newDuration }),
+                });
+                if (!res.ok) throw new Error();
+                setRows((prev) => prev.map((r) => r.id === id ? { ...r, duration_minutes: newDuration } : r));
+              } catch {
+                toast.show({ message: 'Could not update.', tone: 'error' });
+                window.dispatchEvent(new Event('crestio:sessions-refresh'));
+              }
+            }}
+            onSlotClick={(d) => {
+              const url = `/app/sessions/new?at=${encodeURIComponent(d.toISOString())}`;
+              router.push(url);
+            }}
+            pipelineFor={(s) => <CalendarPipelineDots row={rows.find((r) => r.id === s.id)!} />}
+          />
+        )
       ) : rows.length === 0 ? (
         <EmptyState
-          icon={tab === 'past' ? <IconArchive /> : tab === 'upcoming' ? <IconCalendar /> : <IconClock />}
-          title={
-            tab === 'today'
-              ? `No sessions on ${formatDate(activeDate.toISOString())}.`
-              : tab === 'past'
-              ? 'No past sessions.'
-              : 'No upcoming sessions.'
-          }
-          description={
-            tab === 'today'
-              ? 'Schedule one or pick a different day.'
-              : tab === 'past'
-              ? 'Once you log a session it lands here.'
-              : 'Schedule one to fill your week.'
-          }
-          action={tab !== 'past'
-            ? <Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link>
-            : undefined
-          }
-        />
-      ) : tab === 'upcoming' ? (
-        <UpcomingGroupedList
-          groups={upcomingGroups}
-          currency={currency}
-          activeIdx={activeIdx}
-          onOpen={(id) => detail.open(`session:${id}`)}
-          selected={selected}
-          onToggleSelect={(id) =>
-            setSelected((prev) => {
-              const n = new Set(prev);
-              if (n.has(id)) n.delete(id); else n.add(id);
-              return n;
-            })
-          }
+          icon={tab === 'past' ? <IconArchive /> : <IconClock />}
+          title="No past sessions."
+          description="Once you log a session it lands here."
         />
       ) : (
         <SessionsList
@@ -330,7 +440,7 @@ function SessionsInner() {
               {oneHousehold && (
                 <button
                   type="button"
-                  onClick={() => router.push(`/app/invoices/batch?session_ids=${Array.from(selected).join(',')}&combine=1`)}
+                  onClick={() => setBulkDrawer({ kind: 'invoice-combine' })}
                   className="text-xs font-medium bg-cream text-forest-ink px-2.5 py-1 rounded-full hover:bg-cream/90 transition-colors duration-100"
                 >
                   Create one invoice for these {selectedRows.length} sessions
@@ -338,14 +448,14 @@ function SessionsInner() {
               )}
               <button
                 type="button"
-                onClick={() => router.push(`/app/invoices/batch?session_ids=${Array.from(selected).join(',')}`)}
+                onClick={() => setBulkDrawer({ kind: 'invoice' })}
                 className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
               >
                 Create invoices
               </button>
               <button
                 type="button"
-                onClick={() => router.push('/app/sessions/polish-queue')}
+                onClick={() => setBulkDrawer({ kind: 'polish' })}
                 className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
               >
                 Polish all
@@ -354,6 +464,38 @@ function SessionsInner() {
           );
         })()}
       </BulkActionBar>
+
+      <ConfirmDrawer
+        open={!!bulkDrawer}
+        title={bulkDrawer?.kind === 'polish' ? 'Polish all selected'
+          : bulkDrawer?.kind === 'invoice-combine' ? 'Create one combined invoice'
+          : 'Create separate invoices'}
+        summary={bulkDrawer?.kind === 'polish'
+          ? `${selected.size} selected — each will be polished and ready to send.`
+          : bulkDrawer?.kind === 'invoice-combine'
+          ? `${selected.size} sessions will be billed in a single invoice.`
+          : `${selected.size} sessions will be billed individually.`}
+        items={rows.filter((r) => selected.has(r.id)).map((r) => ({
+          id: r.id,
+          label: r.student?.name ?? '—',
+          sublabel: formatDate(r.scheduled_at, { day: 'numeric', month: 'short' }),
+          warning: bulkDrawer?.kind?.startsWith('invoice') && !r.charge_rate_cents ? 'No rate set' : undefined,
+        }))}
+        confirmLabel={bulkDrawer?.kind === 'polish' ? 'Polish all' : 'Continue'}
+        onCancel={() => setBulkDrawer(null)}
+        onConfirm={() => {
+          if (!bulkDrawer) return;
+          const ids = Array.from(selected).join(',');
+          if (bulkDrawer.kind === 'polish') {
+            router.push('/app/sessions/polish-queue');
+          } else if (bulkDrawer.kind === 'invoice-combine') {
+            router.push(`/app/invoices/batch?session_ids=${ids}&combine=1`);
+          } else {
+            router.push(`/app/invoices/batch?session_ids=${ids}`);
+          }
+          setBulkDrawer(null);
+        }}
+      />
 
       <SessionDetailPane
         open={!!detailId}
@@ -702,6 +844,293 @@ function groupByDay(rows: SessionRow[]): { label: string; rows: SessionRow[] }[]
     else pushTo('Later', r);
   }
   return order.map((label) => ({ label, rows: buckets.get(label)! }));
+}
+
+// ---------------------------------------------------------------------------
+// View toggle (Day / Week)
+// ---------------------------------------------------------------------------
+
+function ViewToggle({ value, onChange }: { value: 'day' | 'week'; onChange: (v: 'day' | 'week') => void }) {
+  return (
+    <div className="inline-flex items-center bg-ruleSoft rounded-md p-0.5">
+      {(['day', 'week'] as const).map((v) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => onChange(v)}
+          aria-pressed={value === v}
+          className={cx(
+            'px-3 py-1 text-xs rounded transition-colors duration-100 capitalize',
+            value === v ? 'bg-surface text-ink font-medium shadow-sm' : 'text-ink-muted hover:text-ink',
+          )}
+        >
+          {v}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Date strip — 14-day pill row + prev/next + Today + month picker
+// ---------------------------------------------------------------------------
+
+function DateStrip({
+  activeDate, onChange, marked,
+}: {
+  activeDate: Date;
+  onChange: (d: Date) => void;
+  marked: Set<string>;
+}) {
+  const days = useMemo(() => {
+    const out: Date[] = [];
+    const start = new Date(activeDate);
+    start.setDate(start.getDate() - 7);
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      d.setHours(0, 0, 0, 0);
+      out.push(d);
+    }
+    return out;
+  }, [activeDate]);
+  const [monthOpen, setMonthOpen] = useState(false);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  return (
+    <div className="flex items-center gap-2 overflow-x-auto scrollbar-thin">
+      <button
+        type="button"
+        onClick={() => { const d = new Date(activeDate); d.setDate(d.getDate() - 1); onChange(d); }}
+        className="shrink-0 w-7 h-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
+        aria-label="Previous day"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange(new Date(today))}
+        className={cx(
+          'shrink-0 px-3 h-8 text-xs rounded-md transition-colors duration-100',
+          activeDate.getTime() === today.getTime()
+            ? 'bg-forest text-cream'
+            : 'bg-surface text-ink hover:bg-ruleSoft border border-rule',
+        )}
+      >
+        Today
+      </button>
+      <div className="flex items-center gap-1 shrink-0">
+        {days.map((d) => {
+          const isActive = d.getTime() === activeDate.getTime();
+          const isToday = d.getTime() === today.getTime();
+          const dayKey = d.toISOString().slice(0, 10);
+          const has = marked.has(dayKey);
+          return (
+            <button
+              key={d.toISOString()}
+              type="button"
+              onClick={() => onChange(new Date(d))}
+              className={cx(
+                'shrink-0 w-12 h-12 rounded-md text-2xs font-medium grid place-items-center transition-colors duration-100',
+                isActive
+                  ? 'bg-forest text-cream'
+                  : isToday
+                  ? 'bg-forest-soft text-forest-ink'
+                  : 'text-ink-muted hover:bg-ruleSoft',
+              )}
+              aria-label={d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
+              aria-pressed={isActive}
+            >
+              <span className="leading-none">
+                <span className="block uppercase tracking-widest opacity-70" style={{ fontSize: 9 }}>
+                  {d.toLocaleDateString(undefined, { weekday: 'short' })}
+                </span>
+                <span className="block text-sm num tabular mt-0.5">{d.getDate()}</span>
+                <span className={cx(
+                  'block w-1 h-1 mx-auto mt-0.5 rounded-full',
+                  has ? 'bg-current opacity-70' : 'bg-transparent',
+                )} />
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <button
+        type="button"
+        onClick={() => { const d = new Date(activeDate); d.setDate(d.getDate() + 1); onChange(d); }}
+        className="shrink-0 w-7 h-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
+        aria-label="Next day"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div className="relative shrink-0">
+        <button
+          type="button"
+          onClick={() => setMonthOpen((v) => !v)}
+          aria-label="Pick month"
+          className="w-7 h-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>
+          </svg>
+        </button>
+        {monthOpen && (
+          <div className="absolute right-0 top-full mt-1 z-30 bg-surface border border-rule rounded-md shadow-lift p-2">
+            <MiniCalendar value={activeDate} marked={marked} onChange={(d) => { onChange(d); setMonthOpen(false); }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Day-end-state — when all today's sessions are wrapped (logged + polished + sent)
+// the timeline becomes a single celebratory card with the next-day pointer.
+// ---------------------------------------------------------------------------
+
+function isDayWrapped(rows: SessionRow[], activeDate: Date): boolean {
+  if (rows.length === 0) return false;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  if (activeDate.getTime() !== today.getTime()) return false;
+  return rows.every((r) =>
+    (r.status === 'completed' || r.status === 'cancelled' || r.status === 'no_show')
+    && (r.status !== 'completed' || (!!r.notes_parent_facing && !!r.parent_notified_at)),
+  );
+}
+
+function DayWrappedCard({ rows, activeDate, currency }: { rows: SessionRow[]; activeDate: Date; currency: string }) {
+  const total = rows.filter((r) => r.status === 'completed').length;
+  const totalMins = rows.filter((r) => r.status === 'completed').reduce((a, r) => a + (r.duration_minutes ?? 0), 0);
+  const totalCents = rows.filter((r) => r.status === 'completed').reduce((a, r) => a + sessionAmount(r), 0);
+  const [tomorrow, setTomorrow] = useState<{ count: number; firstAt: string | null } | null>(null);
+  const [unbilledCount, setUnbilledCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const start = new Date(activeDate); start.setDate(start.getDate() + 1); start.setHours(0, 0, 0, 0);
+      const end = new Date(start); end.setHours(23, 59, 59, 999);
+      const tomQ = supabase
+        .from('sessions')
+        .select('scheduled_at')
+        .gte('scheduled_at', start.toISOString())
+        .lte('scheduled_at', end.toISOString())
+        .eq('status', 'scheduled')
+        .order('scheduled_at', { ascending: true });
+      const unbQ = supabase
+        .from('sessions')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'completed')
+        .is('invoice_id', null);
+      const [tomRes, unbRes] = await Promise.all([tomQ, unbQ]);
+      if (cancelled) return;
+      const tomRows = (tomRes.data ?? []) as Array<{ scheduled_at: string }>;
+      setTomorrow({
+        count: tomRows.length,
+        firstAt: tomRows[0]?.scheduled_at ?? null,
+      });
+      setUnbilledCount(unbRes.count ?? 0);
+    })();
+    return () => { cancelled = true; };
+  }, [activeDate]);
+
+  return (
+    <div className="card p-8 md:p-12 text-center animate-fade-in">
+      <div className="mx-auto mb-4 grid place-items-center w-12 h-12 rounded-full bg-forest-soft text-forest">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h2 className="font-display text-2xl tracking-tightest text-ink mb-2">Today is wrapped.</h2>
+      <p className="text-sm text-ink-muted mb-1 num tabular">
+        {total} {total === 1 ? 'session' : 'sessions'} · {Math.round(totalMins / 60 * 10) / 10} hours · {formatCents(totalCents, currency)} earned.
+      </p>
+      {tomorrow && tomorrow.count > 0 && tomorrow.firstAt && (
+        <p className="text-sm text-ink-muted mb-5">
+          Tomorrow has {tomorrow.count} {tomorrow.count === 1 ? 'session' : 'sessions'} starting at {formatTime(tomorrow.firstAt)}.
+        </p>
+      )}
+      <div className="flex items-center justify-center gap-2 flex-wrap">
+        <Link href="/app/sessions?tab=upcoming" className="btn-primary text-xs" style={{ height: 32, minHeight: 32 }}>
+          Plan tomorrow
+        </Link>
+        {unbilledCount && unbilledCount > 0 && (
+          <Link
+            href="/app/money?tab=invoices&filter=unbilled"
+            className="btn-secondary text-xs"
+            style={{ height: 32, minHeight: 32 }}
+          >
+            Catch up on billing ({unbilledCount})
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Calendar pipeline dots — tiny inline pipeline state for blocks > 56px tall
+// ---------------------------------------------------------------------------
+
+function CalendarPipelineDots({ row }: { row: SessionRow }) {
+  if (!row) return null;
+  const states = [
+    !!row.notes_internal,
+    !!row.notes_parent_facing,
+    !!row.parent_notified_at,
+    !!row.invoice_id,
+  ];
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      {states.map((on, i) => (
+        <span
+          key={i}
+          className={cx(
+            'w-1 h-1 rounded-full',
+            on ? 'bg-forest' : 'bg-ink-soft/30',
+          )}
+        />
+      ))}
+    </span>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Map a SessionRow into a CalendarSession.
+// ---------------------------------------------------------------------------
+
+function toCalendarSession(r: SessionRow) {
+  return {
+    id: r.id,
+    scheduled_at: r.scheduled_at,
+    duration_minutes: r.duration_minutes,
+    student_name: r.student?.name ?? 'Unknown',
+    subject: r.subject,
+    topic: r.topic,
+    status: r.status,
+    paid: r.paid,
+    notes_internal: r.notes_internal,
+    notes_parent_facing: r.notes_parent_facing,
+  };
+}
+
+// Day-end-state banner shown above the calendar once a day is partially wrapped.
+function DayEndStateBanner({ rows, activeDate }: { rows: SessionRow[]; activeDate: Date }) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  if (activeDate.getTime() !== today.getTime()) return null;
+  const completed = rows.filter((r) => r.status === 'completed').length;
+  const remaining = rows.filter((r) => r.status === 'scheduled').length;
+  if (rows.length === 0 || (completed === 0 && remaining === rows.length)) return null;
+  if (rows.every((r) =>
+    (r.status === 'completed' || r.status === 'cancelled' || r.status === 'no_show')
+    && (r.status !== 'completed' || (!!r.notes_parent_facing && !!r.parent_notified_at))
+  )) return null; // wrapped state takes over the canvas
+  return (
+    <span className="text-2xs text-ink-muted">
+      {completed} done{remaining > 0 ? ` · ${remaining} ahead` : ''}
+    </span>
+  );
 }
 
 export default function SessionsPage() {

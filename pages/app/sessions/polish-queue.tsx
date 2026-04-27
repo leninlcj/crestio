@@ -3,8 +3,12 @@ import Link from 'next/link';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { Diff } from '../../../components/design/Diff';
+import { PolishProgress } from '../../../components/design/PolishProgress';
+import { ErrorState } from '../../../components/design/ErrorState';
+import { useToast } from '../../../components/design/Toast';
+import { useUndo } from '../../../lib/useUndo';
 import { supabase } from '../../../lib/supabase';
-import { activeLocale } from '../../../lib/utils';
+import { activeLocale, cx } from '../../../lib/utils';
 
 type QueueRow = {
   id: string;
@@ -16,53 +20,98 @@ type QueueRow = {
   notes_internal: string;
   notes_parent_facing: string | null;
   polish_skipped: boolean;
-  polishing?: boolean;
-  polished?: string | null;
-  polish_error?: string | null;
+};
+
+type RowState = {
+  phase: 'idle' | 'polishing' | 'done' | 'editing' | 'sending' | 'sent';
+  polishedText: string | null;
+  editedText: string | null;
+  error: string | null;
+  startedAt?: number;
 };
 
 const LOOKBACK_DAYS = 14;
 const BATCH_SIZE = 5;
 
 function PolishQueueInner() {
+  const toast = useToast();
+  const undo = useUndo();
   const [showSkipped, setShowSkipped] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
+  const [state, setState] = useState<Map<string, RowState>>(new Map());
   const [loading, setLoading] = useState(true);
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [batchBusy, setBatchBusy] = useState(false);
+  const [polishedToday, setPolishedToday] = useState(0);
+  const [signaturePhrase, setSignaturePhrase] = useState<string | null>(null);
+  const [confettiOnce, setConfettiOnce] = useState(false);
+
+  const updateRow = useCallback((id: string, patch: Partial<RowState>) => {
+    setState((prev) => {
+      const next = new Map(prev);
+      const cur = next.get(id) ?? { phase: 'idle', polishedText: null, editedText: null, error: null };
+      next.set(id, { ...cur, ...patch });
+      return next;
+    });
+  }, []);
 
   const load = useCallback(async () => {
+    setLoadError(null);
     setLoading(true);
-    const since = new Date(Date.now() - LOOKBACK_DAYS * 86_400_000).toISOString();
-    const q = supabase
-      .from('sessions')
-      .select('id, student_id, scheduled_at, duration_minutes, subject, notes_internal, notes_parent_facing, polish_skipped, student:students!inner(id, name)')
-      .eq('status', 'completed')
-      .gte('scheduled_at', since)
-      .order('scheduled_at', { ascending: false });
-    const { data } = await q;
-    const filtered = ((data ?? []) as any[])
-      .filter((s) => s.notes_internal && s.notes_internal.trim().length >= 5)
-      .filter((s) => !s.notes_parent_facing)
-      .filter((s) => showSkipped ? true : !s.polish_skipped)
-      .map((s) => ({
-        id: s.id,
-        student_id: s.student_id,
-        student_name: s.student?.name ?? 'Unknown',
-        scheduled_at: s.scheduled_at,
-        duration_minutes: s.duration_minutes,
-        subject: s.subject,
-        notes_internal: s.notes_internal,
-        notes_parent_facing: s.notes_parent_facing,
-        polish_skipped: !!s.polish_skipped,
-      } as QueueRow));
-    setRows(filtered);
-    setLoading(false);
+    try {
+      const since = new Date(Date.now() - LOOKBACK_DAYS * 86_400_000).toISOString();
+      const q = supabase
+        .from('sessions')
+        .select('id, student_id, scheduled_at, duration_minutes, subject, notes_internal, notes_parent_facing, polish_skipped, student:students!inner(id, name)')
+        .eq('status', 'completed')
+        .gte('scheduled_at', since)
+        .order('scheduled_at', { ascending: false });
+      const { data, error } = await q;
+      if (error) { setLoadError(error.message); return; }
+      const filtered = ((data ?? []) as any[])
+        .filter((s) => s.notes_internal && s.notes_internal.trim().length >= 5)
+        .filter((s) => !s.notes_parent_facing)
+        .filter((s) => showSkipped ? true : !s.polish_skipped)
+        .map((s) => ({
+          id: s.id,
+          student_id: s.student_id,
+          student_name: s.student?.name ?? 'Unknown',
+          scheduled_at: s.scheduled_at,
+          duration_minutes: s.duration_minutes,
+          subject: s.subject,
+          notes_internal: s.notes_internal,
+          notes_parent_facing: s.notes_parent_facing,
+          polish_skipped: !!s.polish_skipped,
+        } as QueueRow));
+      setRows(filtered);
+    } finally {
+      setLoading(false);
+    }
   }, [showSkipped]);
 
   useEffect(() => { load(); }, [load]);
 
-  async function polishOne(row: QueueRow): Promise<string | null> {
+  // Compute most-used phrase among recently polished sessions for queue-cleared.
+  useEffect(() => {
+    if (rows.length > 0) return; // only when queue is empty
+    let cancelled = false;
+    (async () => {
+      const since = new Date(Date.now() - 30 * 86_400_000).toISOString();
+      const { data: recent } = await supabase
+        .from('sessions')
+        .select('notes_parent_facing')
+        .gte('scheduled_at', since)
+        .not('notes_parent_facing', 'is', null)
+        .limit(20);
+      if (cancelled) return;
+      const texts = ((recent ?? []) as any[]).map((r) => r.notes_parent_facing as string).filter(Boolean);
+      setPolishedToday(texts.length);
+      setSignaturePhrase(extractMostUsedPhrase(texts));
+    })();
+    return () => { cancelled = true; };
+  }, [rows.length]);
+
+  async function callPolishApi(row: QueueRow): Promise<string | null> {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return null;
     const res = await fetch('/api/polish-session-notes', {
@@ -73,8 +122,6 @@ function PolishQueueInner() {
         studentId: row.student_id,
         durationMinutes: row.duration_minutes,
         subject: row.subject || '',
-        // Intentionally NOT passing sessionId — we want the tutor to approve
-        // before we write notes_parent_facing.
       }),
     });
     const payload = await res.json().catch(() => ({} as any));
@@ -82,57 +129,91 @@ function PolishQueueInner() {
     return typeof payload.polishedNotes === 'string' ? payload.polishedNotes : null;
   }
 
-  async function polishRow(id: string) {
-    const row = rows.find((r) => r.id === id); if (!row) return;
-    setRows((prev) => prev.map((r) => r.id === id ? { ...r, polishing: true, polish_error: null } : r));
-    const polished = await polishOne(row);
-    setRows((prev) => prev.map((r) => r.id === id ? {
-      ...r, polishing: false, polished, polish_error: polished ? null : 'Could not polish — try again.',
-    } : r));
-    if (polished) setOpenId(id);
-  }
-
-  // Slim progress for "Polish all" — emitted as a 0-100% via the bar at the
-  // top of the page; cancellable any time via the X button.
-  const [batchProgress, setBatchProgress] = useState<{ done: number; total: number } | null>(null);
-  const [batchCancel, setBatchCancel] = useState(false);
-
-  async function polishNextN(n: number) {
-    const queue = rows.filter((r) => !r.polished && !r.polishing).slice(0, n);
-    if (queue.length === 0) return;
-    setBatchBusy(true);
-    setBatchCancel(false);
-    setBatchProgress({ done: 0, total: queue.length });
-    try {
-      // Sequential to keep the progress bar honest (and to be friendlier to
-      // the polish endpoint's rate limit).
-      for (let i = 0; i < queue.length; i++) {
-        if (batchCancel) break;
-        await polishRow(queue[i].id);
-        setBatchProgress({ done: i + 1, total: queue.length });
-      }
-    } finally {
-      setBatchBusy(false);
-      setBatchProgress(null);
-      setBatchCancel(false);
+  async function polishRow(row: QueueRow) {
+    updateRow(row.id, { phase: 'polishing', error: null, startedAt: Date.now() });
+    const polished = await callPolishApi(row);
+    if (polished) {
+      updateRow(row.id, { phase: 'done', polishedText: polished, editedText: polished });
+    } else {
+      updateRow(row.id, { phase: 'idle', error: 'Could not polish — try again.' });
     }
   }
 
-  function cancelBatch() {
-    setBatchCancel(true);
+  async function polishNextN(n: number) {
+    const queue = rows.filter((r) => {
+      const s = state.get(r.id);
+      return !s || s.phase === 'idle';
+    }).slice(0, n);
+    if (queue.length === 0) return;
+    setBatchBusy(true);
+    try {
+      for (const r of queue) {
+        await polishRow(r);
+      }
+    } finally {
+      setBatchBusy(false);
+    }
   }
 
-  async function approve(id: string, editedText: string) {
+  async function approveAndSend(row: QueueRow) {
+    const s = state.get(row.id);
+    const text = s?.editedText ?? s?.polishedText ?? '';
+    if (!text.trim()) return;
+
+    // Optimistic: mark row as sent, store via undo.
+    updateRow(row.id, { phase: 'sending' });
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return;
-    const { error } = await supabase
-      .from('sessions')
-      .update({ notes_parent_facing: editedText.trim(), notes_polished_by_ai: true })
-      .eq('id', id);
-    if (error) return;
-    setRows((prev) => prev.filter((r) => r.id !== id));
-    const next = rows.find((r) => r.id !== id && r.polished);
-    setOpenId(next?.id ?? null);
+
+    // First, persist as parent-facing notes.
+    await supabase.from('sessions').update({
+      notes_parent_facing: text.trim(),
+      notes_polished_by_ai: true,
+    }).eq('id', row.id);
+
+    // Queue the actual send. Five-second hold window — undo cancels send.
+    undo.queue({
+      id: `send-polish-${row.id}`,
+      label: 'Polish sent.',
+      holdMs: 5000,
+      commit: async () => {
+        try {
+          await fetch(`/api/sessions/${row.id}/send-polish-to-parent`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+            body: JSON.stringify({ content: text.trim(), save_as_official: true }),
+          });
+        } catch { /* */ }
+      },
+      onUndo: () => {
+        updateRow(row.id, { phase: 'done' });
+      },
+      inverseCommit: async () => {
+        // Roll back the parent-facing save too.
+        await supabase.from('sessions').update({
+          notes_parent_facing: null,
+          notes_polished_by_ai: false,
+        }).eq('id', row.id);
+      },
+    });
+
+    updateRow(row.id, { phase: 'sent' });
+    setRows((prev) => {
+      // First polish of the day → confetti
+      if (!confettiOnce) {
+        setConfettiOnce(true);
+        spawnConfetti();
+      }
+      // Animate the row off after a beat.
+      setTimeout(() => {
+        setRows((p2) => p2.filter((r) => r.id !== row.id));
+      }, 350);
+      return prev;
+    });
+  }
+
+  function discardPolish(row: QueueRow) {
+    updateRow(row.id, { phase: 'idle', polishedText: null, editedText: null, error: null });
   }
 
   async function skip(id: string) {
@@ -141,7 +222,6 @@ function PolishQueueInner() {
     setRows((prev) => showSkipped
       ? prev.map((r) => r.id === id ? { ...r, polish_skipped: true } : r)
       : prev.filter((r) => r.id !== id));
-    setOpenId(null);
   }
 
   async function unskip(id: string) {
@@ -170,26 +250,6 @@ function PolishQueueInner() {
         </>
       }
     >
-      {/* Slim progress bar at the top of the page during "Polish all". */}
-      {batchProgress && (
-        <div className="fixed top-14 left-0 right-0 z-40 h-0.5 bg-ruleSoft pointer-events-none">
-          <div
-            className="h-full bg-forest transition-[width] duration-200 ease-out"
-            style={{ width: `${(batchProgress.done / batchProgress.total) * 100}%` }}
-          />
-          <button
-            type="button"
-            onClick={cancelBatch}
-            className="pointer-events-auto absolute right-3 top-1.5 text-2xs text-ink-muted hover:text-ink underline underline-offset-2"
-          >
-            Cancel
-          </button>
-          <div className="absolute left-3 top-1.5 text-2xs text-ink-muted num tabular">
-            Polished {batchProgress.done} of {batchProgress.total}
-          </div>
-        </div>
-      )}
-
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <p className="text-sm text-ink-muted">
           Completed sessions from the last {LOOKBACK_DAYS} days with internal notes but no parent-facing notes.
@@ -206,88 +266,30 @@ function PolishQueueInner() {
       </div>
 
       {loading ? (
-        <div className="card p-6 text-sm text-ink-muted">Loading…</div>
+        <PolishQueueSkeleton />
+      ) : loadError ? (
+        <ErrorState thing="the polish queue" cause={loadError} onRetry={load} />
       ) : rows.length === 0 ? (
-        <div className="card p-10 text-center">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">Inbox zero</div>
-          <p className="text-sm text-ink-muted">No sessions waiting to be polished.</p>
-        </div>
+        <QueueClearedCard polishedToday={polishedToday} signaturePhrase={signaturePhrase} />
       ) : (
         <ul className="space-y-3 max-w-3xl">
           {rows.map((r) => (
-            <li key={r.id}>
-              <div className="card">
-                <button
-                  type="button"
-                  onClick={() => setOpenId((prev) => prev === r.id ? null : r.id)}
-                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-3"
-                >
-                  <div className="min-w-0">
-                    <div className="text-sm text-ink truncate">
-                      <strong>{r.student_name}</strong>
-                      {' · '}
-                      {new Date(r.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
-                      {r.subject ? ` · ${r.subject}` : ''}
-                    </div>
-                    <div className="text-2xs text-ink-muted truncate">
-                      {r.notes_internal.slice(0, 120)}{r.notes_internal.length > 120 ? '…' : ''}
-                    </div>
-                  </div>
-                  <div className="shrink-0 flex items-center gap-2">
-                    {r.polish_skipped && <span className="badge-neutral">Skipped</span>}
-                    {r.polished && <span className="badge-forest">Ready</span>}
-                    {r.polishing && <span className="text-2xs text-ink-soft">Polishing…</span>}
-                    <span className="text-ink-soft">{openId === r.id ? '▲' : '▼'}</span>
-                  </div>
-                </button>
-
-                {openId === r.id && (
-                  <div className="px-5 pb-5 space-y-4 border-t border-rule pt-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Original</div>
-                        <div className="text-sm text-ink-muted whitespace-pre-wrap bg-ruleSoft/40 rounded p-3 border border-rule">
-                          {r.notes_internal}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Polished</div>
-                        <InlineEditor
-                          initial={r.polished ?? ''}
-                          onApprove={(text) => approve(r.id, text)}
-                          disabled={!r.polished}
-                        />
-                        {!r.polished && !r.polishing && (
-                          <button type="button" onClick={() => polishRow(r.id)}
-                            className="btn-secondary text-xs w-full mt-2">
-                            Polish with AI
-                          </button>
-                        )}
-                        {r.polish_error && <div className="text-2xs text-claret mt-1">{r.polish_error}</div>}
-                      </div>
-                    </div>
-                    {r.polished && (
-                      <div>
-                        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">What changed</div>
-                        <div className="bg-cream/60 rounded p-3 border border-rule">
-                          <Diff before={r.notes_internal} after={r.polished} />
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex gap-2">
-                      {r.polish_skipped ? (
-                        <button type="button" onClick={() => unskip(r.id)} className="btn-ghost text-xs">Un-skip</button>
-                      ) : (
-                        <button type="button" onClick={() => skip(r.id)} className="btn-ghost text-xs">Skip</button>
-                      )}
-                      <Link href={`/app/sessions/${r.id}`} className="btn-ghost text-xs ml-auto">
-                        Open session →
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </li>
+            <QueueCard
+              key={r.id}
+              row={r}
+              state={state.get(r.id) ?? { phase: 'idle', polishedText: null, editedText: null, error: null }}
+              onPolish={() => polishRow(r)}
+              onApprove={() => approveAndSend(r)}
+              onEditChange={(text) => updateRow(r.id, { editedText: text })}
+              onEditToggle={() => {
+                const s = state.get(r.id);
+                if (s?.phase === 'editing') updateRow(r.id, { phase: 'done' });
+                else updateRow(r.id, { phase: 'editing' });
+              }}
+              onDiscard={() => discardPolish(r)}
+              onSkip={() => skip(r.id)}
+              onUnskip={() => unskip(r.id)}
+            />
           ))}
         </ul>
       )}
@@ -295,31 +297,246 @@ function PolishQueueInner() {
   );
 }
 
-function InlineEditor({
-  initial, onApprove, disabled,
-}: { initial: string; onApprove: (text: string) => void; disabled?: boolean }) {
-  const [value, setValue] = useState(initial);
-  useEffect(() => { setValue(initial); }, [initial]);
+// ---------------------------------------------------------------------------
+// Card — transforms in-place across phases
+// ---------------------------------------------------------------------------
+
+function QueueCard({
+  row, state,
+  onPolish, onApprove, onEditChange, onEditToggle, onDiscard, onSkip, onUnskip,
+}: {
+  row: QueueRow;
+  state: RowState;
+  onPolish: () => void;
+  onApprove: () => void;
+  onEditChange: (text: string) => void;
+  onEditToggle: () => void;
+  onDiscard: () => void;
+  onSkip: () => void;
+  onUnskip: () => void;
+}) {
+  const exiting = state.phase === 'sent';
   return (
-    <div>
-      <textarea
-        rows={6}
-        className="input text-sm"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        disabled={disabled}
-        placeholder={disabled ? 'Click "Polish with AI" first.' : ''}
-      />
-      <button
-        type="button"
-        onClick={() => onApprove(value)}
-        disabled={disabled || !value.trim()}
-        className="btn-primary text-xs w-full mt-2"
-      >
-        Use polished
-      </button>
+    <li
+      className={cx(
+        'transition-all duration-300 ease-out',
+        exiting ? 'opacity-0 -translate-y-2' : 'opacity-100',
+      )}
+    >
+      <div className={cx(
+        'card overflow-hidden transition-all duration-200',
+        state.phase === 'polishing' && 'ring-1 ring-forest/30 polish-pulse',
+      )}>
+        {/* Header */}
+        <div className="px-5 py-3 flex items-center justify-between gap-3 border-b border-rule">
+          <div className="min-w-0 flex-1">
+            <div className="text-sm text-ink truncate">
+              <strong>{row.student_name}</strong>
+              {' · '}
+              {new Date(row.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
+              {row.subject ? ` · ${row.subject}` : ''}
+            </div>
+            <div className="text-2xs text-ink-muted truncate">
+              {row.notes_internal.slice(0, 100)}{row.notes_internal.length > 100 ? '…' : ''}
+            </div>
+          </div>
+          <div className="shrink-0 flex items-center gap-2">
+            {row.polish_skipped && <span className="badge-neutral">Skipped</span>}
+            {state.phase === 'polishing' && (
+              <span className="text-2xs text-ink-muted flex items-center gap-1">
+                Polishing
+                <span className="assistant-dot" /><span className="assistant-dot" /><span className="assistant-dot" />
+              </span>
+            )}
+            {state.phase === 'done' && <span className="badge-forest">Ready</span>}
+            {state.phase === 'sent' && <span className="badge-forest">Sent ✓</span>}
+          </div>
+        </div>
+
+        {/* Body */}
+        {state.phase === 'idle' && (
+          <div className="px-5 py-4 flex items-center gap-2 flex-wrap">
+            <button type="button" onClick={onPolish} className="btn-primary text-xs" style={{ height: 32, minHeight: 32 }}>
+              Polish notes
+            </button>
+            {row.polish_skipped ? (
+              <button type="button" onClick={onUnskip} className="btn-ghost text-xs" style={{ height: 32, minHeight: 32 }}>Un-skip</button>
+            ) : (
+              <button type="button" onClick={onSkip} className="btn-ghost text-xs" style={{ height: 32, minHeight: 32 }}>Skip</button>
+            )}
+            {state.error && <span className="text-2xs text-claret">{state.error}</span>}
+            <Link href={`/app/sessions/${row.id}`} className="ml-auto text-2xs text-ink-muted hover:text-ink underline underline-offset-2">
+              Open session →
+            </Link>
+          </div>
+        )}
+
+        {state.phase === 'polishing' && (
+          <div className="px-5 py-4">
+            <PolishProgress busy done={false} />
+          </div>
+        )}
+
+        {(state.phase === 'done' || state.phase === 'editing' || state.phase === 'sending') && state.polishedText && (
+          <div className="px-5 py-4 space-y-4">
+            <div className="grid md:grid-cols-[40%_60%] gap-3">
+              <div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1.5">Original</div>
+                <div className="text-2xs text-ink-muted whitespace-pre-wrap bg-ruleSoft/40 rounded p-3 border border-rule leading-relaxed">
+                  {row.notes_internal}
+                </div>
+              </div>
+              <div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1.5">Polished</div>
+                {state.phase === 'editing' ? (
+                  <textarea
+                    rows={8}
+                    className="input text-sm leading-relaxed"
+                    value={state.editedText ?? state.polishedText}
+                    onChange={(e) => onEditChange(e.target.value)}
+                  />
+                ) : (
+                  <div className="text-sm text-ink whitespace-pre-wrap leading-relaxed bg-cream/50 rounded p-3 border border-rule">
+                    {state.editedText ?? state.polishedText}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {state.phase !== 'editing' && (
+              <div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">What changed</div>
+                <div className="bg-cream/60 rounded p-3 border border-rule">
+                  <Diff before={row.notes_internal} after={state.editedText ?? state.polishedText ?? ''} />
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 flex-wrap">
+              {state.phase !== 'editing' && (
+                <button type="button" onClick={onApprove} disabled={state.phase === 'sending'} className="btn-primary text-xs" style={{ height: 32, minHeight: 32 }}>
+                  {state.phase === 'sending' ? 'Sending…' : 'Approve and send'}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onEditToggle}
+                className="btn-secondary text-xs"
+                style={{ height: 32, minHeight: 32 }}
+              >
+                {state.phase === 'editing' ? 'Done editing' : 'Edit'}
+              </button>
+              <button type="button" onClick={onDiscard} className="btn-ghost text-xs" style={{ height: 32, minHeight: 32 }}>
+                Discard polish
+              </button>
+              <Link href={`/app/sessions/${row.id}`} className="ml-auto text-2xs text-ink-muted hover:text-ink underline underline-offset-2">
+                Open session →
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+      <style jsx>{`
+        @keyframes polish-pulse-kf {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(31, 58, 46, 0.18); }
+          50%      { box-shadow: 0 0 0 6px rgba(31, 58, 46, 0); }
+        }
+        :global(.polish-pulse) { animation: polish-pulse-kf 1.6s ease-in-out infinite; }
+      `}</style>
+    </li>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Queue cleared anticipation card
+// ---------------------------------------------------------------------------
+
+function QueueClearedCard({ polishedToday, signaturePhrase }: { polishedToday: number; signaturePhrase: string | null }) {
+  return (
+    <div className="card p-10 text-center max-w-2xl">
+      <div className="mx-auto mb-4 grid place-items-center w-12 h-12 rounded-full bg-forest-soft text-forest">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h2 className="font-display text-xl tracking-tightest text-ink mb-1">Queue cleared.</h2>
+      {polishedToday > 0 && (
+        <p className="text-sm text-ink-muted mb-1 num tabular">
+          {polishedToday} {polishedToday === 1 ? 'session' : 'sessions'} polished recently.
+        </p>
+      )}
+      {signaturePhrase && (
+        <p className="text-xs text-ink-muted italic">
+          Most-used phrase: "{signaturePhrase}"
+        </p>
+      )}
     </div>
   );
+}
+
+function PolishQueueSkeleton() {
+  return (
+    <ul className="space-y-3 max-w-3xl">
+      {Array.from({ length: 4 }, (_, i) => (
+        <li key={i} className="card p-5">
+          <div className="skeleton-shimmer h-3 w-48 mb-3 rounded" />
+          <div className="skeleton-shimmer h-2.5 w-2/3 mb-3 rounded" />
+          <div className="skeleton-shimmer h-7 w-32 rounded" />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function extractMostUsedPhrase(texts: string[]): string | null {
+  if (texts.length === 0) return null;
+  // Compute 3-5 word ngrams, count frequencies, pick the most common with
+  // length > 12 chars (so we don't return "the the the").
+  const counts = new Map<string, number>();
+  for (const t of texts) {
+    const tokens = t.toLowerCase().replace(/[^\w\s]/g, ' ').split(/\s+/).filter(Boolean);
+    for (let n = 5; n >= 3; n--) {
+      for (let i = 0; i + n <= tokens.length; i++) {
+        const phrase = tokens.slice(i, i + n).join(' ');
+        if (phrase.length < 12) continue;
+        if (/^\d|^and |^the |^to |^of |^in |^that /.test(phrase)) continue;
+        counts.set(phrase, (counts.get(phrase) ?? 0) + 1);
+      }
+    }
+  }
+  let best: string | null = null;
+  let bestN = 1;
+  for (const [p, n] of counts) {
+    if (n > bestN) { bestN = n; best = p; }
+  }
+  return bestN >= 2 ? best : null;
+}
+
+function spawnConfetti() {
+  if (typeof window === 'undefined') return;
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  const root = document.createElement('div');
+  root.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden;';
+  const colors = ['#1F3A2E', '#2F7D4F', '#B8860B'];
+  for (let i = 0; i < 24; i++) {
+    const piece = document.createElement('span');
+    const left = Math.random() * 100;
+    const delay = Math.random() * 200;
+    const duration = 500 + Math.random() * 300;
+    const color = colors[i % colors.length];
+    piece.style.cssText = `position:absolute;top:50%;left:${left}vw;width:6px;height:8px;background:${color};border-radius:1px;transform:translateY(0);transition:transform ${duration}ms ease-out, opacity ${duration}ms ease-out;opacity:1;`;
+    root.appendChild(piece);
+    setTimeout(() => {
+      piece.style.transform = `translate(${(Math.random() - 0.5) * 200}px, ${-150 - Math.random() * 100}px) rotate(${Math.random() * 360}deg)`;
+      piece.style.opacity = '0';
+    }, delay);
+  }
+  document.body.appendChild(root);
+  setTimeout(() => root.remove(), 900);
 }
 
 export default function Page() {

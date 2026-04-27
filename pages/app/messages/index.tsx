@@ -9,6 +9,7 @@ import type { ThreadSummary, Viewer } from '../../../components/messaging/types'
 import ThreadView from '../../../components/messaging/ThreadView';
 import EmptyState from '../../../components/EmptyState';
 import { IconMessage } from '../../../components/design/icons';
+import { AmbientInbox } from '../../../components/design/AmbientInbox';
 import { Skeleton } from '../../../components/design/Skeleton';
 import { Avatar } from '../../../components/design/Avatar';
 import { Tooltip } from '../../../components/design/Tooltip';
@@ -139,12 +140,18 @@ function MessagesInner() {
                 <li key={i} className="px-3 py-2.5"><Skeleton className="h-3 w-2/3 mb-1" /><Skeleton className="h-2.5 w-1/2" /></li>
               ))
             ) : filtered.length === 0 ? (
-              <li className="p-6">
-                <EmptyState
-                  icon={<IconMessage />}
-                  title="No messages."
-                  description={query ? 'Nothing matches that search.' : 'Threads will appear here once parents reach out.'}
-                />
+              <li>
+                {query ? (
+                  <div className="p-6">
+                    <EmptyState
+                      icon={<IconMessage />}
+                      title="No matches."
+                      description="Try a different search."
+                    />
+                  </div>
+                ) : (
+                  <AmbientInbox />
+                )}
               </li>
             ) : (
               filtered.map((th) => {

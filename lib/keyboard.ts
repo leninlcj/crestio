@@ -32,6 +32,8 @@ export const SHORTCUTS: KeyBinding[] = [
   { id: 'palette',     label: 'Search anything',       group: 'Global',     hint: '⌘K',     keys: ['mod+k'], allowInInput: true },
   { id: 'help',        label: 'Keyboard shortcuts',    group: 'Global',     hint: '?',      keys: ['?', 'shift+/'] },
   { id: 'newSession',  label: 'New session',           group: 'Global',     hint: '⌘⇧N',   keys: ['mod+shift+n'], allowInInput: true },
+  { id: 'inlineCompose', label: 'Inline composer',     group: 'Global',     hint: 'N',      keys: ['n'] },
+  { id: 'composerSave',  label: 'Save composer',       group: 'Global',     hint: '⌘↵',    keys: ['mod+enter'], allowInInput: true },
 
   // --- Navigation -------------------------------------------------------
   { id: 'goHome',      label: 'Go to Home',            group: 'Navigation', hint: 'G H',    sequence: ['g', 'h'] },

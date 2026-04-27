@@ -31,6 +31,8 @@ type StudentRow = Student & {
   _total_minutes?: number;
   /** 28-day activity buckets (oldest → newest) for the bottom card strip. */
   _activity_28d?: number[];
+  /** True when an active recurring template still exists for this student. */
+  _has_active_template?: boolean;
 };
 
 const VIEW_KEY = 'crestio.students.view';
@@ -136,6 +138,16 @@ function StudentsInner() {
           }
           stu._activity_28d = dayKeys.map((k) => buckets.get(k) ?? 0);
         }
+        // Look up active templates per student in one round-trip.
+        const { data: templates } = await supabase
+          .from('session_templates')
+          .select('student_id, paused_at')
+          .in('student_id', ids);
+        const activeBy = new Set<string>();
+        for (const t of (templates ?? []) as any[]) {
+          if (!t.paused_at) activeBy.add(t.student_id);
+        }
+        for (const stu of list) stu._has_active_template = activeBy.has(stu.id);
       }
       setStudents(list);
       setLoading(false);
@@ -400,7 +412,46 @@ function StudentCard({
           />
         </div>
       )}
+      <AtRiskStrip student={student} />
     </button>
+  );
+}
+
+function AtRiskStrip({ student }: { student: StudentRow }) {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+  if (!student._last_session_at) return null;
+  const days = Math.floor((Date.now() - new Date(student._last_session_at).getTime()) / 86_400_000);
+  if (days < 22) return null;
+  if (!student._has_active_template) return null;
+
+  return (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="mt-2 -mx-1 px-2 py-1.5 rounded-md bg-claret/8 border border-claret/20 flex items-center gap-2"
+    >
+      <span className="w-1 h-1 rounded-full bg-claret shrink-0" />
+      <span className="text-2xs text-claret flex-1 truncate">
+        Last session {days}d ago. Template still active.
+      </span>
+      <Link
+        href={`/app/sessions/new?student=${student.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="text-2xs text-claret font-medium underline underline-offset-2 shrink-0"
+      >
+        Schedule
+      </Link>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); e.preventDefault(); setDismissed(true); }}
+        aria-label="Dismiss"
+        className="text-claret/60 hover:text-claret shrink-0"
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M6 6l12 12M6 18L18 6" />
+        </svg>
+      </button>
+    </div>
   );
 }
 

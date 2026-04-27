@@ -83,6 +83,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         : 0;
   const subject = typeof body.subject === 'string' ? body.subject.trim() : '';
   const sessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : null;
+  const mode = typeof body.mode === 'string' ? body.mode : 'polish';
+
+  // mode=reply: short, friendly acknowledgement of an incoming parent message.
+  // No student/session lookups required — runs straight against the AI router.
+  if (mode === 'reply') {
+    const incoming = typeof body.incomingText === 'string' ? body.incomingText.trim() : '';
+    if (!incoming) return res.status(400).json({ error: 'incomingText required for reply mode.' });
+    const replyPrompt = `You are a tutor replying to a parent message. The parent wrote:\n"""\n${incoming}\n"""\n\nWrite a short, warm acknowledgement (1-2 sentences, max 200 chars). Confirm you've seen the message, and indicate next steps if the parent asked a question. No greeting like "Hi [name]" — go straight to the point. No sign-off.`;
+    try {
+      const aiResult = await callAI({
+        task: 'polish',
+        userPrompt: replyPrompt,
+        maxTokens: 200,
+        userId,
+        organizationId,
+      });
+      return res.status(200).json({ polishedNotes: (aiResult.text ?? '').trim() });
+    } catch (err: any) {
+      return res.status(500).json({ error: err?.message ?? 'reply failed' });
+    }
+  }
 
   if (!rawNotes || rawNotes.length < 5) {
     return res.status(400).json({ error: 'rawNotes is required and must be at least 5 characters.' });

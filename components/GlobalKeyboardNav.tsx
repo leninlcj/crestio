@@ -13,5 +13,9 @@ export default function GlobalKeyboardNav() {
   useKeyboard('goTeam',      () => router.push('/app/tutors'));
   useKeyboard('goNew',       () => router.push('/app/sessions/new'));
   useKeyboard('newSession',  () => router.push('/app/sessions/new'));
+  useKeyboard('inlineCompose', () => {
+    if (typeof window === 'undefined') return;
+    window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'));
+  });
   return null;
 }

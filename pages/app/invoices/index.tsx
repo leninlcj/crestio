@@ -20,6 +20,9 @@ const InvoiceDetailPane = dynamic(
 );
 import { Tooltip } from '../../../components/design/Tooltip';
 import { useToast } from '../../../components/design/Toast';
+import { ConfirmDrawer } from '../../../components/design/ConfirmDrawer';
+import { Banner } from '../../../components/design/Banner';
+import { useUndo } from '../../../lib/useUndo';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { Invoice, Student } from '../../../lib/types';
@@ -37,13 +40,24 @@ const STATUS_OPTIONS = [
   { value: 'overdue', label: 'Overdue' },
 ];
 
+type UnbilledSuggestion = {
+  household_name: string;
+  household_id: string | null;
+  count: number;
+  total_cents: number;
+  intervalDays: number;
+};
+
 function InvoicesInner() {
   const router = useRouter();
   const { t } = useTranslation(['invoices', 'common']);
+  const undo = useUndo();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
   const [currency, setCurrency] = useState('AUD');
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [suggestion, setSuggestion] = useState<UnbilledSuggestion | null>(null);
+  const [bulkDrawer, setBulkDrawer] = useState<null | 'send' | 'paid'>(null);
   const detail = useDetailParam();
   const detailId = detail.value && detail.value.startsWith('invoice:')
     ? detail.value.slice('invoice:'.length) : null;
@@ -95,6 +109,72 @@ function InvoicesInner() {
 
   useEffect(() => { load(); }, []);
 
+  // Suggest creating an invoice when a single household has 3+ unbilled
+  // sessions. Only show one suggestion at a time.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const since = new Date(Date.now() - 60 * 86_400_000).toISOString();
+      const { data } = await supabase
+        .from('sessions')
+        .select('id, duration_minutes, scheduled_at, student:students!inner(household_id, hourly_rate_cents, household:households(id, display_name))')
+        .eq('status', 'completed')
+        .is('invoice_id', null)
+        .gte('scheduled_at', since);
+      if (cancelled) return;
+      const byHh = new Map<string, { name: string; count: number; total: number; first?: string }>();
+      for (const s of (data ?? []) as any[]) {
+        const hh = s.student?.household;
+        if (!hh) continue;
+        const cur = byHh.get(hh.id) ?? { name: hh.display_name, count: 0, total: 0 };
+        cur.count++;
+        cur.total += Math.round(((s.student?.hourly_rate_cents ?? 0) * (s.duration_minutes ?? 0)) / 60);
+        byHh.set(hh.id, cur);
+      }
+      let topHhId: string | null = null;
+      let top: { name: string; count: number; total: number } | null = null;
+      for (const [hhId, v] of byHh) {
+        if (v.count >= 3 && (!top || v.total > top.total)) {
+          top = v;
+          topHhId = hhId;
+        }
+      }
+      if (!top || !topHhId) { setSuggestion(null); return; }
+
+      // Compute typical interval from past invoices for this household.
+      const { data: past } = await supabase
+        .from('invoices')
+        .select('issued_on, household_id')
+        .eq('household_id', topHhId)
+        .order('issued_on', { ascending: false })
+        .limit(6);
+      const issued = ((past ?? []) as any[]).map((i) => new Date(i.issued_on).getTime()).sort((a, b) => b - a);
+      let interval = 14;
+      if (issued.length >= 2) {
+        const diffs: number[] = [];
+        for (let i = 0; i < issued.length - 1; i++) {
+          diffs.push(Math.round((issued[i] - issued[i + 1]) / 86_400_000));
+        }
+        diffs.sort((a, b) => a - b);
+        interval = diffs[Math.floor(diffs.length / 2)] ?? 14;
+      }
+
+      // Snooze check.
+      const snoozedKey = `crestio.invoice-suggestion.snoozed.${topHhId}`;
+      const snoozedTs = typeof window !== 'undefined' ? Number(window.localStorage.getItem(snoozedKey) ?? 0) : 0;
+      if (snoozedTs && Date.now() - snoozedTs < 7 * 86_400_000) { setSuggestion(null); return; }
+
+      setSuggestion({
+        household_name: top.name,
+        household_id: topHhId,
+        count: top.count,
+        total_cents: top.total,
+        intervalDays: interval,
+      });
+    })();
+    return () => { cancelled = true; };
+  }, [invoices]);
+
   const filtered = useMemo(() => {
     let list = effectiveStatusValues.length === 0
       ? invoices
@@ -143,6 +223,40 @@ function InvoicesInner() {
       }
     >
       <div className="mb-4"><SampleDataBanner /></div>
+
+      <PaydayBanner invoices={invoices} currency={currency} />
+
+      {suggestion && (
+        <div className="mb-4 card p-3 md:p-4 border-amber/40 bg-amber-soft/30 flex items-center gap-3 flex-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-ink shrink-0">
+            <path d="M12 2v4M12 18v4M5 12H1M23 12h-4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>
+          </svg>
+          <div className="flex-1 min-w-0 text-sm leading-snug">
+            <strong>{suggestion.count} unbilled sessions</strong> for <strong>{suggestion.household_name}</strong> worth {formatCents(suggestion.total_cents, currency)}.{' '}
+            <span className="text-ink-muted">Most tutors invoice this group every {suggestion.intervalDays} days.</span>
+          </div>
+          <Link
+            href={`/app/invoices/batch?household_id=${suggestion.household_id}&combine=1`}
+            className="btn-primary text-xs"
+            style={{ height: 32, minHeight: 32 }}
+          >
+            Create invoice
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined' && suggestion.household_id) {
+                window.localStorage.setItem(`crestio.invoice-suggestion.snoozed.${suggestion.household_id}`, String(Date.now()));
+              }
+              setSuggestion(null);
+            }}
+            className="btn-ghost text-xs"
+            style={{ height: 32, minHeight: 32 }}
+          >
+            Snooze
+          </button>
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <input
@@ -213,15 +327,58 @@ function InvoicesInner() {
       <BulkActionBar count={selected.size} onClear={clearSelected}>
         <button
           type="button"
-          onClick={() => bulkSend(Array.from(selected), invoices, load, clearSelected)}
+          onClick={() => setBulkDrawer('send')}
           className="text-xs font-medium bg-cream text-forest-ink px-2.5 py-1 rounded-full hover:bg-cream/90 transition-colors duration-100"
         >
           Send selected ({selected.size})
         </button>
-        <button type="button" onClick={bulkMarkPaid} className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100">
+        <button type="button" onClick={() => setBulkDrawer('paid')} className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100">
           Mark paid
         </button>
       </BulkActionBar>
+
+      <ConfirmDrawer
+        open={!!bulkDrawer}
+        title={bulkDrawer === 'send' ? 'Send selected invoices' : 'Mark selected as paid'}
+        summary={
+          bulkDrawer === 'send'
+            ? `${selected.size} invoices will be emailed to their parents.`
+            : `${selected.size} invoices will be marked paid.`
+        }
+        items={invoices.filter((i) => selected.has(i.id)).map((i) => ({
+          id: i.id,
+          label: `${i.number} · ${i.household?.display_name ?? i.student?.name ?? '—'}`,
+          sublabel: formatCents(i.total_cents, currency),
+          warning: bulkDrawer === 'send' && i.status === 'paid' ? 'Already paid' : undefined,
+        }))}
+        confirmLabel={bulkDrawer === 'send' ? `Send ${selected.size}` : `Mark ${selected.size} paid`}
+        onCancel={() => setBulkDrawer(null)}
+        onConfirm={async () => {
+          const ids = Array.from(selected);
+          if (bulkDrawer === 'send') {
+            await bulkSend(ids, invoices, load, clearSelected);
+            undo.queue({
+              id: `bulk-send-${Date.now()}`,
+              label: `${ids.length} ${ids.length === 1 ? 'invoice' : 'invoices'} sent.`,
+              holdMs: 5000,
+              commit: async () => null,
+            });
+          } else {
+            await bulkMarkPaid();
+            undo.queue({
+              id: `bulk-paid-${Date.now()}`,
+              label: `${ids.length} marked paid.`,
+              holdMs: 5000,
+              commit: async () => null,
+              inverseCommit: async () => {
+                await supabase.from('invoices').update({ status: 'sent', paid_at: null }).in('id', ids);
+                load();
+              },
+            });
+          }
+          setBulkDrawer(null);
+        }}
+      />
 
       <InvoiceDetailPane
         open={!!detailId}
@@ -373,6 +530,46 @@ async function bulkSend(
   }
   clear();
   reload();
+}
+
+// State-of-the-app banner for invoices: payday + month-end variants. Reads
+// the current invoice list to compute total unbilled.
+function PaydayBanner({ invoices, currency }: { invoices: InvoiceRow[]; currency: string }) {
+  const now = new Date();
+  const dow = now.getDay();
+  const dom = now.getDate();
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const daysUntilEom = lastDay - dom;
+  const drafts = invoices.filter((i) => i.status === 'draft');
+  const draftTotal = drafts.reduce((a, i) => a + (i.total_cents ?? 0), 0);
+
+  // Friday (5) afternoon (after 12pm) — payday cue.
+  if (dow === 5 && now.getHours() >= 12 && drafts.length > 0) {
+    return (
+      <div className="mb-4">
+        <Banner id={`payday-${now.toISOString().slice(0, 10)}`} tone="forest">
+          It's Friday — {drafts.length} draft {drafts.length === 1 ? 'invoice' : 'invoices'} ready ({formatCents(draftTotal, currency)}).{' '}
+          <Link className="underline underline-offset-2" href="/app/invoices?status=draft">
+            Review and send
+          </Link>
+        </Banner>
+      </div>
+    );
+  }
+
+  if (daysUntilEom <= 3 && drafts.length > 0) {
+    return (
+      <div className="mb-4">
+        <Banner id={`eom-${now.getFullYear()}-${now.getMonth()}`} tone="amber">
+          Month closes in {daysUntilEom} {daysUntilEom === 1 ? 'day' : 'days'}. {drafts.length} unbilled.{' '}
+          <Link className="underline underline-offset-2" href="/app/invoices?status=draft">
+            Review
+          </Link>
+        </Banner>
+      </div>
+    );
+  }
+  return null;
 }
 
 export default function InvoicesPage() {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { smartPaste } from '../../lib/smartPaste';
 
 type Props = {
   /** HTML string. Empty string for blank. */
@@ -75,6 +76,20 @@ export function RichEditor({
     }
   }
 
+  function onPaste(e: React.ClipboardEvent<HTMLDivElement>) {
+    const text = e.clipboardData.getData('text/plain');
+    if (!text) return;
+    const parsed = smartPaste(text);
+    if (!parsed) return;
+    e.preventDefault();
+    if ('html' in parsed) {
+      document.execCommand('insertHTML', false, parsed.html);
+    } else {
+      document.execCommand('insertText', false, parsed.text);
+    }
+    emit();
+  }
+
   return (
     <div
       data-status={status}
@@ -111,6 +126,7 @@ export function RichEditor({
         onInput={emit}
         onBlur={emit}
         onKeyDown={onKeyDown}
+        onPaste={onPaste}
         data-placeholder={placeholder ?? ''}
         className="rich-editor px-3 py-2 text-sm leading-relaxed text-ink outline-none whitespace-pre-wrap"
         style={{ minHeight }}

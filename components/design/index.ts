@@ -44,3 +44,15 @@ export type { HealthState } from './HealthIndicator';
 export { UsageBar } from './UsageBar';
 export { Diff } from './Diff';
 export { RichEditor } from './RichEditor';
+// Phase 4 primitives
+export { ErrorState } from './ErrorState';
+export { Banner } from './Banner';
+export { ConfirmDrawer } from './ConfirmDrawer';
+export { UndoToast } from './UndoToast';
+export { PolishProgress } from './PolishProgress';
+export { AmbientInbox } from './AmbientInbox';
+export { Calendar } from './Calendar';
+export { CalendarBlock } from './CalendarBlock';
+export type { CalendarSession } from './CalendarBlock';
+export { InlineComposer } from './InlineComposer';
+export { NotificationCenter } from './NotificationCenter';

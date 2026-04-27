@@ -14,13 +14,17 @@ type Tab = {
 };
 
 const TABS: Tab[] = [
+  // Reordered for trust: Profile → Organisation → Schedule prefs → Notifications →
+  // Billing → Parent payments → Team → Referrals → API → Data
   { href: '/app/settings/account', i18nKey: 'account' },
   { href: '/app/settings/organisation', i18nKey: 'organisation', ownerOnly: true },
-  { href: '/app/settings/billing', i18nKey: 'billing', ownerOnly: true },
-  { href: '/app/settings/referrals', i18nKey: 'referrals', ownerOnly: true },
-  { href: '/app/settings/team', i18nKey: 'team', ownerOnly: true, requires: 'multi_tutor' },
   { href: '/app/settings/preferences', i18nKey: 'preferences' },
   { href: '/app/settings/notifications', i18nKey: 'notifications' },
+  { href: '/app/settings/billing', i18nKey: 'billing', ownerOnly: true },
+  { href: '/app/settings/team', i18nKey: 'team', ownerOnly: true, requires: 'multi_tutor' },
+  { href: '/app/settings/referrals', i18nKey: 'referrals', ownerOnly: true },
+  { href: '/app/settings/integrations', i18nKey: 'integrations' },
+  { href: '/app/settings/data', i18nKey: 'data' },
 ];
 
 export function SettingsTabs() {

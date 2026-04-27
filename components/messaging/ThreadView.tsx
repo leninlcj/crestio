@@ -251,6 +251,14 @@ export function ThreadView({ threadId, backHref, studentHref }: Props) {
 
       {/* Composer */}
       <div className="shrink-0 border border-rule rounded-b bg-surface px-3 py-3">
+        <SuggestedReply
+          messages={messages}
+          viewer={viewer}
+          onPick={(text) => {
+            setComposerValue(text);
+            setTimeout(() => composerRef.current?.focus(), 50);
+          }}
+        />
         <textarea
           ref={composerRef}
           rows={Math.min(6, Math.max(2, composerValue.split('\n').length))}
@@ -342,6 +350,37 @@ function MessageBubble({
         </div>
       </div>
     </div>
+  );
+}
+
+// Suggested reply pill — shown when the last incoming parent message is
+// unanswered for more than 24h. Click inserts a friendly acknowledgment
+// template (no AI call required for the stub).
+function SuggestedReply({
+  messages, viewer, onPick,
+}: {
+  messages: Message[];
+  viewer: Viewer | null;
+  onPick: (text: string) => void;
+}) {
+  if (viewer !== 'tutor') return null;
+  const last = messages[messages.length - 1];
+  if (!last || last.sender_type === 'tutor' || last.deleted) return null;
+  const ageHours = (Date.now() - new Date(last.created_at).getTime()) / 3_600_000;
+  if (ageHours < 24) return null;
+  const template = `Thanks for your note — got it. I'll follow up in our next session and let you know how it goes.`;
+  return (
+    <button
+      type="button"
+      onClick={() => onPick(template)}
+      className="mb-2 inline-flex items-center gap-1.5 px-2 py-1 text-2xs uppercase tracking-widest rounded-full bg-forest-soft text-forest-ink hover:bg-forest-soft/80 transition-colors duration-100"
+      aria-label="Insert suggested reply"
+    >
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+      Suggested reply
+    </button>
   );
 }
 

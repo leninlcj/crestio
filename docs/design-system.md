@@ -487,3 +487,173 @@ truncated text.
 - Tiptap / Lexical-based rich editor — phase 3 ships a minimal
   `contentEditable` editor with the same surface area (bold, italic,
   bullet, ordered list).
+
+---
+
+## Phase 4 — anticipation, calendar, undo, depth
+
+The product anticipates the next action; state changes have weight; empty
+is not blank. No new third-party libraries beyond what shipped before.
+
+### Anticipation patterns
+
+- **Day-end card** — the Sessions Today tab transforms into a single calm
+  card when every today's session is logged + polished + sent. Two CTAs
+  ("Plan tomorrow", "Catch up on billing") replace the timeline entirely.
+- **Queue-cleared card** — the polish queue surfaces session count + a
+  most-used phrase computed from the last 20 polished sessions when the
+  queue is empty.
+- **Suggestion card (invoices)** — when one household has 3+ unbilled
+  sessions, a soft amber card at the top shows the count, total, and the
+  household's typical invoice cadence (median of last 6 invoice gaps).
+  Snooze for 7 days via localStorage.
+- **At-risk strip (students)** — student card shows a soft red strip when
+  last session was 22+ days ago AND a recurring template still exists.
+  "Schedule" + "Pause template" + "Dismiss" inline.
+- **Suggested reply pill (messages)** — a forest-soft pill above the
+  composer when the last incoming message is 24+ hours unanswered. Click
+  inserts a friendly acknowledgment template.
+- **Owner brief** — dashboard 8-10am Sydney time only. Yesterday's
+  sessions, hours, money, notes pending > 48h, and 1-3 specific
+  tutor+student combos that need follow-up.
+
+### Calendar grid
+
+- 60px / hour, 30px / half-hour. Auto-extends MIN/MAX_HOUR if any session
+  falls outside the 6am-11pm default range.
+- Sessions render as positioned blocks: forest-tinted bg, 1px green left
+  border, status-tinted (success/claret/neutral). Lane assignment
+  side-by-sides overlapping sessions.
+- Drag the block to reschedule (15-min snap). Resize the bottom edge
+  (15-min increments, 15-240min clamp). Esc cancels mid-drag.
+- Now-line: horizontal forest line + green dot at left. Updates every
+  30s. On initial load the scroll container positions the now-line at
+  ~33% of the viewport.
+- Empty hint: dotted block at the tutor's most-likely start hour
+  (computed from the last 60 days of history). Click → opens new session
+  pre-filled.
+- Day picker: 14-day pill row, prev/next, "Today", and a calendar icon
+  that opens MiniCalendar for jumping months.
+- View toggle (Day / Week) persisted per tab in localStorage.
+
+### Inline composer
+
+- Press **N** anywhere (when not in an input). Slides down from the top
+  of the viewport. Single rich textarea + chips that show the parsed
+  student / time / duration / subject.
+- ⌘+Enter saves. Esc cancels.
+- After save, the composer slides up and the 5-second undo toast appears.
+- Reachable from: ⌘⇧N, the mobile FAB, ⌘K → "Log session", and the new
+  "+" button in the top bar.
+
+### Universal undo
+
+- Every destructive or send-now action goes through `useUndo().queue(...)`.
+- 5-second hold window for sends (commit fires after the timer; undo
+  before that cancels the call entirely).
+- For mutations that already happened (delete, archive), pass an
+  `inverseCommit` to restore.
+- Single bottom-centered toast with a draining ring around the timer
+  icon. Stacks if multiple actions queue back-to-back.
+
+### Confirm drawer
+
+- Bulk actions open a 200-300px tall drawer at the bottom of the
+  viewport. Lists every affected item with per-item warnings (e.g. "no
+  rate set", "no parent on file").
+- Esc cancels, Enter confirms.
+
+### State-of-the-app banners
+
+- Dismissible 32px banner at the top of the page content area. localStorage
+  tracks dismissed IDs for 7 days.
+- Variants: payday (Friday afternoon w/ drafts), end-of-month (last 3
+  days w/ unbilled), streak (7+ days of logged sessions), cold-spell
+  (no sessions in the last 5+ days).
+
+### Notification center
+
+- 400px popover, mobile becomes a bottom sheet. Sections: Today /
+  Earlier this week / Older (collapsed by default).
+- Per-row "Take action" link inferred from notification type ("View",
+  "Reply", "Review", "Send reminder").
+- Polls `/api/notifications/unread-count` every 60s when the tab is
+  focused; pauses when blurred or when the document is hidden.
+
+### Optimistic UI helper
+
+- `lib/useOptimistic.ts` exports a hook that takes `(currentState,
+  optimisticUpdate, mutation)` and returns `[optimisticState,
+  runMutation, { inFlight, reset }]`. Calls rollback on Response !ok or
+  thrown error.
+
+### Time-ago
+
+- `lib/useTimeAgo.ts` exports `useTimeAgo(iso)` and `TimeTickProvider`.
+  One global setInterval (30s) drives every "5 minutes ago" string in
+  the app via React context. Pauses when the document is hidden.
+
+### Smart paste
+
+- `lib/smartPaste.ts` detects URL / phone / email / bullet list /
+  numbered list / fenced code on paste and inserts pre-formatted HTML
+  into rich editors.
+
+### New primitives
+
+- `Calendar`, `CalendarBlock` — day/week grid + draggable session block
+- `InlineComposer` — N-shortcut composer
+- `ConfirmDrawer` — bulk action confirm
+- `UndoToast` — bottom-center undo toast with countdown ring
+- `PolishProgress` — three-bar progress for the AI polish call
+- `NotificationCenter` — rebuilt popover (replaces NotificationBell)
+- `Banner` — payday / streak / cold-spell variants
+- `ErrorState` — useful, never alarming
+- `AmbientInbox` — drifting-card empty state for messages
+- `useTimeAgo`, `useOptimistic`, `useNlpParse`, `useUndo`, `smartPaste`
+
+### Spotlight upgrades (⌘K)
+
+- `=` prefix → safe calculator (digits, operators, parens, %).
+- Natural-language schedule trigger: typing `schedule …`, `book …`,
+  `log …` opens the inline composer with the seed text.
+- Type prefixes: `:s` students, `:se` sessions, `:i` invoices,
+  `:l` lesson plans, `:h` households, `:f` files, `:m` messages,
+  `:t` templates, `:p` parents.
+- Recent commands strip below the input (up to 6 muted pills).
+- Result row hint: ↵ open · ⌘↵ open in new tab · ⌥↵ copy link.
+- 1px forest underline animates on results return (180ms ease-out).
+
+### Settings reorganization
+
+- Sidebar order: Profile · Organisation · Schedule · Notifications ·
+  Billing · Team · Referrals · API & integrations · Data.
+- "Account" → relabeled "Profile" in the tab strip (route stays
+  `/app/settings/account` for backward compatibility).
+- New stub pages: `/app/settings/integrations` (coming soon card),
+  `/app/settings/data` (CSV export + account deletion confirm).
+
+### Theme variables
+
+- All color tokens duplicated as CSS variables on `:root` in
+  `styles/globals.css`. Components still read Tailwind utilities
+  (which map to literal hex); the variable structure is the foundation
+  for future dark mode without touching component code.
+
+### Accessibility additions
+
+- Skip-to-content link mounted at the top of `Layout`. Visible on focus.
+- `<main id="crestio-main" tabIndex={-1}>` so the skip link can target
+  the main content region.
+
+### Deferred (not in this phase)
+
+- Voice-to-session and personalized polish AI (14G).
+- Calendar Google/Apple sync (14G).
+- Real illustrations beyond ambient inbox.
+- Dark mode (only the variable structure ships now).
+- Parent portal redesign (separate phase).
+- Marketing site updates.
+- SWR / React Query for request dedup + stale-while-revalidate
+  (no caching dep currently in `package.json`; revisit once one is
+  picked).

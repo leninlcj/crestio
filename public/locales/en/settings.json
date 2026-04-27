@@ -1,13 +1,15 @@
 {
   "page_title": "Settings",
   "tabs": {
-    "account": "Account",
+    "account": "Profile",
     "organisation": "Organisation",
     "billing": "Billing",
     "referrals": "Referrals",
     "team": "Team",
-    "preferences": "Preferences",
+    "preferences": "Schedule",
     "notifications": "Notifications",
+    "integrations": "API & integrations",
+    "data": "Data",
     "aria_label": "Settings sections"
   },
   "common": {

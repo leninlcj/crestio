@@ -372,10 +372,70 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .sort((a, b) => b.sessions - a.sessions);
   }
 
+  // Owner brief — only computed for owners. Yesterday's session count, money
+  // earned, notes outstanding > 48h, and 1-3 specific tutor+student pairs
+  // needing follow-up. Returned alongside the main payload.
+  let ownerBrief: {
+    yesterday_sessions: number;
+    yesterday_amount_cents: number;
+    yesterday_tutor_count: number;
+    notes_pending: number;
+    actions: Array<{ tutor_name: string; student_name: string; reason: string }>;
+  } | null = null;
+  if (!isTutor) {
+    const yStart = new Date();
+    yStart.setHours(0, 0, 0, 0);
+    yStart.setDate(yStart.getDate() - 1);
+    const yEnd = new Date(yStart);
+    yEnd.setHours(23, 59, 59, 999);
+    const ySessQ = userClient
+      .from('sessions')
+      .select('id, duration_minutes, charge_rate_cents, tutor_user_id, status, student:students(id, name, hourly_rate_cents), notes_internal, scheduled_at')
+      .eq('organization_id', orgId)
+      .eq('status', 'completed')
+      .gte('scheduled_at', yStart.toISOString())
+      .lte('scheduled_at', yEnd.toISOString());
+    const stalePivot = new Date(Date.now() - 48 * 3_600_000).toISOString();
+    const stalePendingQ = userClient
+      .from('sessions')
+      .select('id, scheduled_at, tutor_user_id, student:students(id, name)')
+      .eq('organization_id', orgId)
+      .eq('status', 'completed')
+      .is('notes_internal', null)
+      .lt('scheduled_at', stalePivot);
+    const [ySessRes, staleRes] = await Promise.all([ySessQ, stalePendingQ]);
+    const ySess = (ySessRes.data ?? []) as any[];
+    const stale = (staleRes.data ?? []) as any[];
+    const tutorIds = new Set(ySess.map((s) => s.tutor_user_id).filter(Boolean));
+    const yesterdayAmount = ySess.reduce((acc: number, s: any) =>
+      acc + Math.round(((s.charge_rate_cents ?? s.student?.hourly_rate_cents ?? 0) * (s.duration_minutes ?? 0)) / 60), 0);
+    // Resolve tutor names for the action list.
+    const actionTutorIds = Array.from(new Set(stale.map((s) => s.tutor_user_id).filter(Boolean))).slice(0, 6);
+    const tutorNameMap = new Map<string, string>();
+    if (actionTutorIds.length > 0) {
+      const { data: profs } = await userClient
+        .from('profiles').select('id, owner_name').in('id', actionTutorIds);
+      for (const p of (profs ?? []) as any[]) tutorNameMap.set(p.id, p.owner_name ?? 'Tutor');
+    }
+    const actions = stale.slice(0, 3).map((s: any) => ({
+      tutor_name: tutorNameMap.get(s.tutor_user_id) ?? 'Tutor',
+      student_name: s.student?.name ?? 'Student',
+      reason: 'Notes pending > 48h',
+    }));
+    ownerBrief = {
+      yesterday_sessions: ySess.length,
+      yesterday_amount_cents: yesterdayAmount,
+      yesterday_tutor_count: tutorIds.size,
+      notes_pending: stale.length,
+      actions,
+    };
+  }
+
   return res.status(200).json({
     role: membership.role,
     currency,
     owner_name: ownerName,
+    owner_brief: ownerBrief,
     next_session: nextSession
       ? { ...nextSession, tutor_name: nextSessionTutorName }
       : null,
