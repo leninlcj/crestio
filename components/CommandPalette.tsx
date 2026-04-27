@@ -337,6 +337,26 @@ export function CommandPalette() {
     }
   }
 
+  const [metaHeld, setMetaHeld] = useState(false);
+  useEffect(() => {
+    if (!open) { setMetaHeld(false); return; }
+    function down(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey) setMetaHeld(true);
+    }
+    function up(e: KeyboardEvent) {
+      if (!e.metaKey && !e.ctrlKey) setMetaHeld(false);
+    }
+    function blur() { setMetaHeld(false); }
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    window.addEventListener('blur', blur);
+    return () => {
+      window.removeEventListener('keydown', down);
+      window.removeEventListener('keyup', up);
+      window.removeEventListener('blur', blur);
+    };
+  }, [open]);
+
   function onKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -426,7 +446,13 @@ export function CommandPalette() {
                             {item.shortcut && (
                               <kbd className="text-2xs font-mono border border-rule rounded px-1.5 py-0.5">{item.shortcut}</kbd>
                             )}
-                            {isActive ? (
+                            {item.href && metaHeld ? (
+                              <span title="Open in new tab" aria-hidden className="text-forest">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M7 17 17 7M8 7h9v9" />
+                                </svg>
+                              </span>
+                            ) : isActive ? (
                               <span className="text-2xs font-mono">
                                 <span title="Open">↵</span>
                                 {item.href && <> · <span title="Open in new tab">⌘↵</span></>}

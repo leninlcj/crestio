@@ -21,6 +21,9 @@ import { Avatar } from '../../components/design/Avatar';
 import { MiniBarChart } from '../../components/design/MiniBarChart';
 import { Banner } from '../../components/design/Banner';
 import { formatRelativeDate, formatMoney } from '../../lib/format';
+import InsightsPanel from '../../components/dashboard/InsightsPanel';
+import StreakPill from '../../components/dashboard/StreakPill';
+import { pickGreeting, computeStreak } from '../../lib/dashboardGreeting';
 
 // ---------------------------------------------------------------------------
 // Dashboard — morning briefing layout.
@@ -200,22 +203,28 @@ function DashboardInner() {
   }, [isOwner]);
 
   const { formatFullDate } = useLocaleFormatters(DEFAULT_DASHBOARD_TZ);
-  const period = timeOfDayPeriod();
   const todayLabel = formatFullDate(new Date());
   const firstName = (data?.owner_name ?? '').trim().split(/\s+/)[0] || null;
-  const greeting = period === 'morning'
-    ? 'Good morning'
-    : period === 'afternoon'
-    ? 'Good afternoon'
-    : 'Good evening';
+  const greeting = pickGreeting(firstName);
+
+  const streakDays = useMemo(() => {
+    if (!data) return 0;
+    const dates: string[] = [];
+    for (const s of data.today?.sessions ?? []) dates.push(s.scheduled_at);
+    for (const s of data.week_ahead ?? []) dates.push(s.scheduled_at);
+    return computeStreak(dates);
+  }, [data]);
 
   return (
     <Layout pageTitle="Home">
       <div className="px-4 md:px-8 pt-6 md:pt-10 pb-8 md:pb-12 max-w-[1200px] mx-auto">
         <header className="mb-6 md:mb-8">
-          <h1 className="text-[28px] md:text-[32px] font-display font-semibold tracking-tighter leading-tight m-0">
-            {greeting}{firstName ? `, ${firstName}` : 'Welcome back'}.
-          </h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-[28px] md:text-[32px] font-display font-semibold tracking-tighter leading-tight m-0">
+              {greeting}
+            </h1>
+            {streakDays >= 3 && <StreakPill days={streakDays} />}
+          </div>
           <div className="text-sm text-ink-muted mt-1">
             {todayLabel}
             {data?.today && (
@@ -434,9 +443,59 @@ function DashboardBody({
             </div>
           )}
         </section>
+
+        <section className="mt-6">
+          <InsightsPanel insights={buildInsights(payload)} />
+        </section>
       </div>
     </>
   );
+}
+
+function buildInsights(p: TodayPayload): Array<{ label: string; value: string; trend?: 'up' | 'down' | 'flat'; hint?: string }> {
+  const out: Array<{ label: string; value: string; trend?: 'up' | 'down' | 'flat'; hint?: string }> = [];
+  const polishThis = (p.polish?.series ?? []).reduce((a, b) => a + b, 0);
+  const polishPrev = (p.polish?.previous_series ?? []).reduce((a, b) => a + b, 0);
+  if (polishThis > 0 || polishPrev > 0) {
+    out.push({
+      label: 'Polish this week',
+      value: String(polishThis),
+      trend: polishThis > polishPrev ? 'up' : polishThis < polishPrev ? 'down' : 'flat',
+      hint: polishPrev > 0 ? `Last week ${polishPrev}` : 'First week with polish',
+    });
+  }
+  const todayThis = (p.today?.series ?? []).reduce((a, b) => a + b, 0);
+  const todayPrev = (p.today?.previous_series ?? []).reduce((a, b) => a + b, 0);
+  if (todayThis > 0 || todayPrev > 0) {
+    out.push({
+      label: 'Sessions this week',
+      value: String(todayThis),
+      trend: todayThis > todayPrev ? 'up' : todayThis < todayPrev ? 'down' : 'flat',
+      hint: todayPrev > 0 ? `Last week ${todayPrev}` : 'New this week',
+    });
+  }
+  if (p.unpaid_invoices) {
+    const days = p.unpaid_invoices.oldest_overdue_days ?? 0;
+    if (days > 0) {
+      out.push({
+        label: 'Oldest overdue',
+        value: `${days} days`,
+        trend: days > 14 ? 'down' : 'flat',
+        hint: `${p.unpaid_invoices.count} unpaid invoice${p.unpaid_invoices.count === 1 ? '' : 's'}`,
+      });
+    }
+  }
+  if (p.team_breakdown && p.team_breakdown.length > 0) {
+    const top = [...p.team_breakdown].sort((a, b) => b.sessions - a.sessions)[0];
+    if (top && top.sessions > 0) {
+      out.push({
+        label: 'Top tutor this week',
+        value: top.tutor_name,
+        hint: `${top.sessions} session${top.sessions === 1 ? '' : 's'}`,
+      });
+    }
+  }
+  return out;
 }
 
 // ---------------------------------------------------------------------------

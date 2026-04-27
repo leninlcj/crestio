@@ -20,20 +20,26 @@ function escapeHtml(s: string): string {
     .replace(/'/g, '&#39;');
 }
 
+function tutorInitials(name: string): string {
+  return name.split(' ').map((p) => p[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || '·';
+}
+
 const FONT_DISPLAY = `'Fraunces', Georgia, 'Times New Roman', serif`;
 const FONT_BODY = `'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`;
-const CREAM = '#faf8f3';
-const INK = '#1a1a1a';
-const INK_MUTED = '#6b6b66';
-const FOREST = '#1a3a2a';
-const RULE = '#e8e3d8';
+const CREAM = '#FAFAF8';
+const SURFACE = '#FFFFFF';
+const INK = '#0F1714';
+const INK_MUTED = '#6B6F6A';
+const INK_SOFT = '#A0A39E';
+const FOREST = '#1F3A2E';
+const FOREST_SOFT = '#E8EEE8';
+const RULE = '#EAEAE6';
 
 export function buildSessionPolishUpdateEmail(args: Args): Built {
   const greeting = args.parentName ? `Hi ${args.parentName.split(' ')[0]},` : 'Hi,';
-  const subjectLine = `Session update — ${args.studentFirstName} — ${args.sessionDateLabel}`;
+  const subjectLine = `${args.studentFirstName}'s session notes — ${args.sessionDateLabel}`;
   const subjectSuffix = args.subject ? ` (${args.subject})` : '';
 
-  // Plaintext: keep ASCII to avoid Resend re-encoding the URL.
   const text =
     `${greeting}\n\n` +
     `Quick update from ${args.tutorName} at ${args.practiceName} on ${args.studentFirstName}'s session on ${args.sessionDateLabel}${subjectSuffix}:\n\n` +
@@ -42,19 +48,23 @@ export function buildSessionPolishUpdateEmail(args: Args): Built {
       ? `View all session notes for ${args.studentFirstName}:\n${args.parentPortalUrl}\n\n`
       : '') +
     `--\n` +
-    `${args.practiceName} via Crestio | https://crestio.ai\n`;
+    `${args.practiceName} · Sent via crestio.ai\n`;
 
-  const safeContent = escapeHtml(args.polishedContent).replace(/\n\n+/g, '</p><p style="margin:0 0 14px 0;">').replace(/\n/g, '<br>');
+  const safeContent = escapeHtml(args.polishedContent)
+    .replace(/\n\n+/g, '</p><p style="margin:0 0 14px 0;">')
+    .replace(/\n/g, '<br>');
   const safeStudent = escapeHtml(args.studentFirstName);
   const safeTutor = escapeHtml(args.tutorName);
   const safePractice = escapeHtml(args.practiceName);
   const safeDate = escapeHtml(args.sessionDateLabel);
   const safeSubject = args.subject ? escapeHtml(args.subject) : '';
+  const safeInitials = escapeHtml(tutorInitials(args.tutorName));
 
-  const portalRow = args.parentPortalUrl
-    ? `<tr><td style="padding:24px 0 0 0;">
-         <a href="${escapeHtml(args.parentPortalUrl)}" style="color:${FOREST};font-family:${FONT_BODY};font-size:13px;text-decoration:underline;">
-           View all session notes for ${safeStudent} →
+  const portalButton = args.parentPortalUrl
+    ? `<tr><td style="padding:28px 0 0 0;">
+         <a href="${escapeHtml(args.parentPortalUrl)}"
+            style="display:inline-block;background-color:${FOREST};color:${CREAM};font-family:${FONT_BODY};font-size:14px;font-weight:500;line-height:1;padding:12px 18px;border-radius:8px;text-decoration:none;">
+           View in portal →
          </a>
        </td></tr>`
     : '';
@@ -71,32 +81,48 @@ export function buildSessionPolishUpdateEmail(args: Args): Built {
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:${CREAM};">
     <tr>
       <td align="center" style="padding:32px 16px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;width:100%;background-color:${CREAM};">
-          <tr><td style="padding:0 0 12px 0;">
-            <div style="font-family:${FONT_BODY};font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${INK_MUTED};">${safePractice}</div>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" style="max-width:560px;width:100%;background-color:${SURFACE};border:1px solid ${RULE};border-radius:8px;">
+          <tr><td style="padding:24px 28px 18px 28px;border-bottom:1px solid ${RULE};">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td valign="middle" style="padding-right:14px;">
+                  <div style="width:40px;height:40px;border-radius:9999px;background-color:${FOREST_SOFT};color:${FOREST};font-family:${FONT_DISPLAY};font-weight:600;font-size:14px;line-height:40px;text-align:center;letter-spacing:-0.02em;">
+                    ${safeInitials}
+                  </div>
+                </td>
+                <td valign="middle">
+                  <div style="font-family:${FONT_BODY};font-size:14px;font-weight:500;color:${INK};line-height:1.3;">${safeTutor}</div>
+                  <div style="font-family:${FONT_BODY};font-size:12px;color:${INK_MUTED};line-height:1.3;margin-top:2px;">${safePractice}</div>
+                </td>
+              </tr>
+            </table>
           </td></tr>
-          <tr><td style="padding:0 0 18px 0;">
+
+          <tr><td style="padding:24px 28px 6px 28px;">
+            <div style="font-family:${FONT_BODY};font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${INK_SOFT};margin-bottom:10px;">
+              ${safeDate}${safeSubject ? ` · ${safeSubject}` : ''}
+            </div>
             <h1 style="margin:0;font-family:${FONT_DISPLAY};font-weight:600;font-size:24px;line-height:1.2;letter-spacing:-0.02em;color:${INK};">
-              ${safeStudent} — ${safeDate}${safeSubject ? ` · ${safeSubject}` : ''}
+              ${safeStudent}'s session notes
             </h1>
           </td></tr>
-          <tr><td style="padding:0 0 8px 0;">
+
+          <tr><td style="padding:18px 28px 0 28px;">
             <p style="margin:0 0 14px 0;font-family:${FONT_BODY};font-size:15px;line-height:1.65;color:${INK};">
               ${escapeHtml(greeting)}
             </p>
-            <p style="margin:0 0 14px 0;font-family:${FONT_BODY};font-size:15px;line-height:1.65;color:${INK};">
-              Quick update from ${safeTutor} on ${safeStudent}'s recent session.
-            </p>
-          </td></tr>
-          <tr><td style="padding:8px 0 0 0;">
             <div style="font-family:${FONT_BODY};font-size:15px;line-height:1.65;color:${INK};">
               <p style="margin:0 0 14px 0;">${safeContent}</p>
             </div>
+            ${portalButton}
           </td></tr>
-          ${portalRow}
-          <tr><td style="padding:32px 0 0 0;border-top:1px solid ${RULE};">
-            <p style="margin:24px 0 0 0;font-family:${FONT_BODY};font-size:12px;line-height:1.6;color:${INK_MUTED};">
-              ${safePractice} · sent via Crestio · <a href="https://crestio.ai" style="color:${INK_MUTED};text-decoration:underline;">crestio.ai</a>
+
+          <tr><td style="padding:28px 28px 24px 28px;border-top:1px solid ${RULE};">
+            <p style="margin:0 0 4px 0;font-family:${FONT_BODY};font-size:12px;line-height:1.5;color:${INK_MUTED};">
+              Reply to this email to message ${safeTutor} directly.
+            </p>
+            <p style="margin:0;font-family:${FONT_BODY};font-size:11px;line-height:1.5;color:${INK_SOFT};">
+              ${safePractice} · Sent via <a href="https://crestio.ai" style="color:${INK_SOFT};text-decoration:underline;">crestio.ai</a>
             </p>
           </td></tr>
         </table>

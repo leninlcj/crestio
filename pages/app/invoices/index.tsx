@@ -23,6 +23,7 @@ import { useToast } from '../../../components/design/Toast';
 import { ConfirmDrawer } from '../../../components/design/ConfirmDrawer';
 import { Banner } from '../../../components/design/Banner';
 import { useUndo } from '../../../lib/useUndo';
+import AgingChart, { bucketForDays } from '../../../components/money/AgingChart';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { Invoice, Student } from '../../../lib/types';
@@ -175,6 +176,20 @@ function InvoicesInner() {
     return () => { cancelled = true; };
   }, [invoices]);
 
+  const [agingBucket, setAgingBucket] = useState<'0-7' | '8-14' | '15-30' | '30+' | null>(null);
+
+  const aging = useMemo(() => {
+    const buckets: Record<'0-7' | '8-14' | '15-30' | '30+', number> = { '0-7': 0, '8-14': 0, '15-30': 0, '30+': 0 };
+    for (const i of invoices) {
+      if (i.status === 'paid' || i.status === 'void') continue;
+      if (!i.due_on) continue;
+      const days = Math.floor((Date.now() - new Date(i.due_on).getTime()) / 86_400_000);
+      if (days < 0) continue;
+      buckets[bucketForDays(days)] += i.total_cents ?? 0;
+    }
+    return buckets;
+  }, [invoices]);
+
   const filtered = useMemo(() => {
     let list = effectiveStatusValues.length === 0
       ? invoices
@@ -186,8 +201,17 @@ function InvoicesInner() {
           .filter(Boolean).join(' ').toLowerCase().includes(q),
       );
     }
+    if (agingBucket) {
+      list = list.filter((i) => {
+        if (i.status === 'paid' || i.status === 'void') return false;
+        if (!i.due_on) return false;
+        const days = Math.floor((Date.now() - new Date(i.due_on).getTime()) / 86_400_000);
+        if (days < 0) return false;
+        return bucketForDays(days) === agingBucket;
+      });
+    }
     return list;
-  }, [invoices, effectiveStatusValues, search]);
+  }, [invoices, effectiveStatusValues, search, agingBucket]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -257,6 +281,15 @@ function InvoicesInner() {
           </button>
         </div>
       )}
+
+      <div className="mb-4">
+        <AgingChart
+          buckets={aging}
+          currency={currency}
+          selected={agingBucket}
+          onSelect={(b) => setAgingBucket(b)}
+        />
+      </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <input

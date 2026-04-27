@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: file } = await admin
     .from('files')
-    .select('id, organization_id, student_id, is_org_library, storage_path, converted_pdf_path, mime_type, status, deleted_at, allow_printing')
+    .select('id, organization_id, student_id, is_org_library, storage_path, converted_pdf_path, mime_type, status, deleted_at, allow_printing, display_name, uploaded_by_user_id')
     .eq('id', fileId)
     .maybeSingle();
   if (!file) return res.status(404).json({ error: 'File not found.' });
@@ -155,11 +155,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const expiresAt = new Date(Date.now() + SIGNED_DOWNLOAD_TTL * 1000).toISOString();
 
+  // Tutor branding for the viewer header. Use the file's uploader as the
+  // "tutor"; fall back gracefully when the column / row is missing.
+  let tutorName: string | null = null;
+  if ((file as any).uploaded_by_user_id) {
+    const { data: uploader } = await admin
+      .from('profiles')
+      .select('owner_name')
+      .eq('id', (file as any).uploaded_by_user_id)
+      .maybeSingle();
+    tutorName = uploader?.owner_name ?? null;
+  }
+
   return res.status(200).json({
     signed_url: signed.signedUrl,
     expires_at: expiresAt,
     mime_type: file.mime_type,
     watermark_text: watermarkFor(org?.name, planTier),
     allow_printing: file.allow_printing === true,
+    display_name: (file as any).display_name ?? null,
+    organization_name: org?.name ?? null,
+    tutor_name: tutorName,
   });
 }
