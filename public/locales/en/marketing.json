@@ -1,37 +1,117 @@
 {
   "meta": {
-    "home_title": "Crestio — software for Australian tutors",
-    "home_description": "Manage students, log sessions, polish notes with AI, and share progress with parents — from one dashboard. From $24/month. 7-day free trial.",
-    "contact_title": "Contact · Crestio"
+    "home_title": "Crestio — software for tutors",
+    "home_description": "Run your tutoring like a real business. Log sessions in seconds, polish parent updates with AI, get paid by card. From $24/month. 7-day free trial.",
+    "contact_title": "Contact · Crestio",
+    "pricing_title": "Pricing · Crestio",
+    "pricing_description": "Solo $24/mo. Team $59/mo. Growth $129/mo. All plans include unlimited sessions, students, and parents. 7-day free trial.",
+    "changelog_title": "Changelog · Crestio",
+    "changelog_description": "What's new in Crestio.",
+    "about_title": "About · Crestio",
+    "about_description": "Built by a tutor for tutors who give a damn."
   },
+
   "nav": {
+    "primary_aria": "Primary",
+    "product": "Product",
+    "product_how": "How it works",
     "pricing": "Pricing",
+    "for_tutors": "For tutors",
+    "resources": "Resources",
     "sign_in": "Sign in",
     "start_trial": "Start free trial",
     "go_to_dashboard": "Go to dashboard",
     "open_menu": "Open menu",
-    "close_menu": "Close menu"
+    "close_menu": "Close menu",
+    "tutors_solo": "Solo tutors",
+    "tutors_solo_desc": "Independent tutors with a few students",
+    "tutors_practices": "Small practices",
+    "tutors_practices_desc": "Owners running 2–15 tutors",
+    "tutors_exam": "HSC / exam prep",
+    "tutors_exam_desc": "Built for high-stakes exam years",
+    "tutors_music": "Music teachers",
+    "tutors_music_desc": "Instrument tracking, recital prep",
+    "tutors_new": "New tutors",
+    "tutors_new_desc": "Just starting out",
+    "tutors_parents": "For parents",
+    "tutors_parents_desc": "What parents see",
+    "resources_changelog": "Changelog",
+    "resources_changelog_desc": "What's new",
+    "resources_about": "About",
+    "resources_about_desc": "Who we are",
+    "resources_contact": "Contact",
+    "resources_contact_desc": "Get in touch"
   },
+
   "deleted_banner": "Your account has been deleted. Sorry to see you go.",
+
   "hero": {
     "eyebrow": "For independent tutors and small teams",
     "heading": "The all-in-one tool for tutors who take their work seriously.",
+    "heading_v2": "Run your tutoring like a real business. Without the <u>spreadsheet hell</u>.",
     "subheading": "Stop spending Sundays on parent updates. Crestio handles sessions, notes, and invoicing — so you can teach.",
+    "subheading_v2": "Crestio is the calm operating system for independent tutors and small practices. Log sessions in seconds. AI polishes your notes into parent updates. Invoice with one tap. Get paid by card.",
     "cta": "Start free trial",
+    "cta_v2": "Start 7-day free trial",
+    "cta_secondary": "Watch 60-second tour",
     "price_note": "From {{price}}/month. 7-day free trial. Cancel anytime.",
-    "see_plans": "See all plans →"
+    "see_plans": "See all plans →",
+    "badge": "New — Parent payments via Stripe",
+    "micro_note": "No credit card · Cancel anytime · Australian-built.",
+    "trusted_by": "Trusted by tutors across {{count}} practices",
+    "hotspot_today": "Today",
+    "hotspot_polish": "Polish",
+    "hotspot_invoice": "Invoice",
+    "hotspot_pay": "Get paid"
   },
+
+  "social_proof": {
+    "line": "Built by a tutor. Used by tutors in {{count}} cities."
+  },
+
   "pain": {
+    "eyebrow": "The real problem",
     "heading": "Running a tutoring practice shouldn't feel like this.",
+    "heading_v2": "Tutoring is the easy part.",
     "line_1": "You taught six sessions this week and haven't invoiced for two of them.",
     "line_2": "You wrote notes on paper, typed them into a Google Doc, and will eventually summarise them for the parent.",
     "line_3": "Three parents texted you tonight asking the same question.",
-    "line_4": "You're spending two hours on admin for every five hours of actual tutoring."
+    "line_4": "You're spending two hours on admin for every five hours of actual tutoring.",
+    "line_v2_1": "You finish a session at 5pm. The notes don't write themselves.",
+    "line_v2_2": "Sunday night becomes a four-hour spreadsheet of who paid, who didn't, who's coming Tuesday.",
+    "line_v2_3": "The parent texts at 9pm: \"how's the kid going?\" You write a polite paragraph in your head before falling asleep.",
+    "line_v2_4": "You raise your rate by $5 and feel guilty for a week.",
+    "resolution": "Crestio is built for that night."
   },
+
   "how": {
     "heading": "How Crestio works",
     "preview_label": "Preview"
   },
+  "how_v2": {
+    "log": {
+      "title": "Log a session in 8 seconds.",
+      "body": "Open the inline composer, type the way you'd text yourself: \"Tue 4pm Hector 1h Macbeth\". Crestio parses the student, time, and topic. Add a note, hit Enter, done.",
+      "bullet_1": "Natural-language parsing — no calendar drilldown",
+      "bullet_2": "Works on phone, laptop, in 8 seconds flat",
+      "bullet_3": "Backfill last Tuesday with the same form"
+    },
+    "polish": {
+      "title": "AI polishes your notes into a parent update.",
+      "body": "Write the rough version while the session's still fresh. One tap and Crestio rewrites it into something a parent can read — short, warm, specific. You review and send. Your notes stay yours.",
+      "bullet_1": "Polish in your voice — calibrates over time",
+      "bullet_2": "You review every send. Edit or discard before it goes",
+      "bullet_3": "Internal notes stay internal. Always."
+    },
+    "invoice": {
+      "title": "Send the invoice. Get paid by card.",
+      "body": "Completed sessions become line items. One tap turns them into an invoice. Email it to the parent. They click a link and pay with their card. Funds settle in 2 days.",
+      "bullet_1": "1% Crestio fee on parent payments — no Stripe knowledge needed",
+      "bullet_2": "Auto-reconciles when the payment lands",
+      "bullet_3": "Bank transfer still works if you prefer"
+    }
+  },
+
   "features": {
     "session_log": {
       "title": "Log sessions in seconds",
@@ -58,6 +138,36 @@
       "caption": "The parent portal."
     }
   },
+
+  "features_v2": {
+    "eyebrow": "What's in the box",
+    "heading": "Six things you stop doing manually.",
+    "polish": {
+      "title": "AI session polish",
+      "body": "Rough notes in, parent-ready summaries out. Calibrates to your voice over weeks."
+    },
+    "payments": {
+      "title": "Stripe parent payments",
+      "body": "Parents pay invoices by card from email. Funds in your bank in two business days."
+    },
+    "calendar": {
+      "title": "Calendar with drag-to-reschedule",
+      "body": "Drag a session to move it. Recurring templates run themselves up to 8 weeks ahead."
+    },
+    "plans": {
+      "title": "Lesson plan generator",
+      "body": "Generate first drafts in seconds. Edit in a real rich editor. Save as templates."
+    },
+    "pdfs": {
+      "title": "Polished PDFs for parents",
+      "body": "Send watermarked PDFs of polished session summaries. View-only, never downloaded."
+    },
+    "team": {
+      "title": "Team mode for small practices",
+      "body": "Owner sees revenue and payouts; tutors see only their own students. Real role separation."
+    }
+  },
+
   "pricing": {
     "heading": "One tool. Three plans. Pick what fits.",
     "subheading": "Most Australian tutors start on Solo. Growing a team? Go Team.",
@@ -77,41 +187,174 @@
     "sticky_mobile_cta_priced": "Start free trial — {{price}}/mo",
     "sticky_mobile_dismiss": "Dismiss"
   },
+
+  "pricing_v2": {
+    "eyebrow": "Pricing",
+    "heading": "Simple pricing. Real margins.",
+    "subheading": "All plans include unlimited sessions, students, and parents. No per-seat tax for solo tutors.",
+    "toggle_label": "Billing interval",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save_short": "Save 17%",
+    "recommended": "Recommended",
+    "per_month": "/mo",
+    "billed_annually": "Billed {{total}}/year",
+    "per_month_billed_monthly": "Billed monthly. Cancel anytime.",
+    "pay_now": "Skip the trial — pay now →",
+    "show_compare": "See full feature comparison",
+    "hide_compare": "Hide comparison",
+    "solo_pitch": "Independent tutor with one or two students? Crestio Solo is built for you. Use it free for 7 days, no card.",
+    "enterprise_pitch": "10+ tutors? Talk to us:",
+    "footer_note": "Prices in AUD. Inclusive of GST where applicable. Cancel anytime."
+  },
+
   "tiers": {
+    "solo":   { "label": "Solo",   "subhead": "For one tutor and a list of students.", "cta": "Start 7-day free trial" },
+    "team":   { "label": "Team",   "subhead": "For owners running a small practice.",  "cta": "Start 14-day free trial" },
+    "growth": { "label": "Growth", "subhead": "For practices scaling past 5 tutors.",  "cta": "Talk to us" }
+  },
+
+  "tiers_v2": {
     "solo": {
-      "label": "Solo",
-      "subhead": "For one tutor, one student list.",
-      "features": {
-        "unlimited": "Unlimited students and sessions",
-        "polish": "AI-polished notes for parents",
-        "parent_portal": "Parent portal and invoicing",
-        "trial": "7-day free trial"
-      },
-      "cta": "Start 7-day free trial"
+      "unlimited": "Unlimited students, sessions, parents",
+      "polish": "AI session polish (~500/mo soft cap)",
+      "parent_portal": "Parent portal with messaging",
+      "invoicing": "Invoicing + Stripe parent payments",
+      "calendar": "Drag-to-reschedule calendar",
+      "plans": "Lesson plan generator",
+      "support": "Email support, 24h response",
+      "trial": "7-day free trial, no card"
     },
     "team": {
-      "label": "Team",
-      "subhead": "For owners with a small team of tutors.",
-      "features": {
-        "inherits": "Everything in Solo, plus:",
-        "up_to_5": "Up to 5 tutors with role-based access",
-        "payouts": "Per-tutor payouts and reporting",
-        "trial": "14-day free trial"
-      },
-      "cta": "Start 14-day free trial"
+      "inherits": "Everything in Solo, plus:",
+      "up_to_5": "Up to 5 tutors with role-based access",
+      "payouts": "Per-tutor payouts and reporting",
+      "roles": "Owner sees rev/payouts; tutors don't",
+      "owner_brief": "Owner Mondays brief",
+      "team_calendar": "Team-wide calendar view",
+      "trial": "14-day free trial, no card"
     },
     "growth": {
-      "label": "Growth",
-      "subhead": "For tutoring businesses scaling up.",
-      "features": {
-        "inherits": "Everything in Team, plus:",
-        "up_to_15": "Up to 15 tutors",
-        "priority": "Priority support",
-        "onboarding": "Custom onboarding"
-      },
-      "cta": "Contact us"
+      "inherits_team": "Everything in Team, plus:",
+      "up_to_15": "Up to 15 tutors",
+      "priority": "Priority support, 4h response",
+      "onboarding": "Custom onboarding call",
+      "advanced_reports": "Advanced reports + CSV export"
     }
   },
+
+  "compare": {
+    "feature": "Feature",
+    "section_sessions": "Sessions",
+    "section_students": "Students",
+    "section_ai": "AI",
+    "section_billing": "Billing",
+    "section_team": "Team",
+    "section_support": "Support",
+    "row": {
+      "unlimited_sessions": "Unlimited sessions",
+      "session_log": "Inline session logging",
+      "session_polish": "AI session polish",
+      "voice_capture": "Voice capture (coming)",
+      "unlimited_students": "Unlimited students",
+      "parent_portal": "Parent portal",
+      "pdf_summaries": "Watermarked PDFs",
+      "homework_tracking": "Homework tracking",
+      "polish_credits": "Polish per month",
+      "lesson_plans": "Lesson plan generator",
+      "assistant": "AI assistant",
+      "priority_models": "Priority AI models",
+      "invoices": "Invoices",
+      "parent_payments": "Stripe parent payments",
+      "platform_fee": "Crestio platform fee",
+      "refunds": "Refund flow",
+      "tutors_count": "Tutors included",
+      "roles": "Role-based access",
+      "owner_brief": "Owner Mondays brief",
+      "payouts_received": "Payouts received reporting",
+      "email_support": "Email support",
+      "priority_support": "Priority support",
+      "onboarding_call": "Onboarding call"
+    },
+    "values": {
+      "solo": {
+        "unlimited_sessions": "✓",
+        "session_log": "✓",
+        "session_polish": "✓",
+        "voice_capture": "-",
+        "unlimited_students": "✓",
+        "parent_portal": "✓",
+        "pdf_summaries": "✓",
+        "homework_tracking": "✓",
+        "polish_credits": "500/mo",
+        "lesson_plans": "✓",
+        "assistant": "✓",
+        "priority_models": "-",
+        "invoices": "✓",
+        "parent_payments": "✓",
+        "platform_fee": "1%",
+        "refunds": "✓",
+        "tutors_count": "1",
+        "roles": "-",
+        "owner_brief": "-",
+        "payouts_received": "-",
+        "email_support": "✓",
+        "priority_support": "-",
+        "onboarding_call": "-"
+      },
+      "team": {
+        "unlimited_sessions": "✓",
+        "session_log": "✓",
+        "session_polish": "✓",
+        "voice_capture": "-",
+        "unlimited_students": "✓",
+        "parent_portal": "✓",
+        "pdf_summaries": "✓",
+        "homework_tracking": "✓",
+        "polish_credits": "2,500/mo",
+        "lesson_plans": "✓",
+        "assistant": "✓",
+        "priority_models": "✓",
+        "invoices": "✓",
+        "parent_payments": "✓",
+        "platform_fee": "1%",
+        "refunds": "✓",
+        "tutors_count": "Up to 5",
+        "roles": "✓",
+        "owner_brief": "✓",
+        "payouts_received": "✓",
+        "email_support": "✓",
+        "priority_support": "-",
+        "onboarding_call": "-"
+      },
+      "growth": {
+        "unlimited_sessions": "✓",
+        "session_log": "✓",
+        "session_polish": "✓",
+        "voice_capture": "-",
+        "unlimited_students": "✓",
+        "parent_portal": "✓",
+        "pdf_summaries": "✓",
+        "homework_tracking": "✓",
+        "polish_credits": "Unlimited",
+        "lesson_plans": "✓",
+        "assistant": "✓",
+        "priority_models": "✓",
+        "invoices": "✓",
+        "parent_payments": "✓",
+        "platform_fee": "0.7%",
+        "refunds": "✓",
+        "tutors_count": "Up to 15",
+        "roles": "✓",
+        "owner_brief": "✓",
+        "payouts_received": "✓",
+        "email_support": "✓",
+        "priority_support": "✓",
+        "onboarding_call": "✓"
+      }
+    }
+  },
+
   "faq": {
     "heading": "Things tutors have asked",
     "q1": "Is my students' data safe?",
@@ -129,12 +372,35 @@
     "q6": "Who runs Crestio?",
     "a6": "The Crestio team. We're a small team based in Australia, building software for tutors who value their time. Questions or feedback? Email support@crestio.ai and a person reads every message."
   },
+
+  "faq_v2": {
+    "eyebrow": "FAQ",
+    "heading": "Questions tutors ask.",
+    "ai":            { "q": "How is the AI different from ChatGPT?",   "a": "Crestio's polish is calibrated to your tutor voice over time and never copies session-to-session — every polish is a fresh request. The model only sees what's needed to write that one update. ChatGPT is a general assistant; this is a specialised tool for tutoring notes." },
+    "wrong_polish":  { "q": "What if my AI polish sounds wrong?",       "a": "You review every send. Edit it inline before it goes, or discard the polish entirely and write the parent update yourself. Polish learns from your edits — by the third week, it sounds like you." },
+    "pay_optional":  { "q": "Is parent payment optional?",              "a": "Yes. You can keep using bank transfer or any other method. Crestio just makes Stripe parent payments easy if you want them — it's not required." },
+    "fees":          { "q": "What's the Stripe fee on top of Crestio?", "a": "On parent payments: 2.9% + 30c (Stripe) + 1% (Crestio). Charged to you, not the parent. So on a $100 invoice you keep about $96. No fees on bank-transfer invoices." },
+    "export":        { "q": "Can I export my data?",                    "a": "Yes. CSV export of students, sessions, invoices, and messages from Settings → Data. Anytime. No lock-in." },
+    "parent_account":{ "q": "Do parents need an account?",              "a": "No. Parents get a private link by email and pay with their card. They can optionally claim an account if they want a history view, but it's never required." },
+    "shutdown":      { "q": "What if Crestio shuts down?",              "a": "We commit to 12 months notice and a final export window. Your data stays exportable as CSV the entire time. If we ever do shut down, you'll have plenty of room to migrate." },
+    "data":          { "q": "Where is my data stored?",                  "a": "Supabase, hosted in Australia for AU customers (or auto-detected closest region for others). Encrypted at rest and in transit. Each organisation's data is isolated — no cross-tenant access at the database level." }
+  },
+
   "final_cta": {
     "headline": "Try Crestio for a week. See if it's for you.",
     "button": "Start free trial",
     "questions_part1": "Questions first? Email ",
     "questions_part2": "."
   },
+
+  "final_cta_v2": {
+    "heading": "Start your first session today.",
+    "sub": "Free for 7 days. No card. Australian support.",
+    "primary": "Start free trial",
+    "secondary": "Talk to the founder →",
+    "micro": "No credit card · Cancel anytime · Made in Sydney"
+  },
+
   "footer": {
     "made_in": "crestio · Made in Sydney · 2026",
     "sign_in": "Sign in",
@@ -148,22 +414,79 @@
     "heading_company": "Company",
     "heading_legal": "Legal"
   },
+
+  "footer_v2": {
+    "tagline": "The calm operating system for tutors. Built by a tutor in Sydney.",
+    "status_ok": "All systems operational",
+    "status_down": "Disruption — see status",
+    "col_product": "Product",
+    "col_for_tutors": "For tutors",
+    "col_company": "Company",
+    "col_resources": "Resources",
+    "product_pricing": "Pricing",
+    "product_changelog": "Changelog",
+    "product_security": "Security & privacy",
+    "for_solo": "Solo tutors",
+    "for_team": "Small practices",
+    "for_exam": "HSC / exam prep",
+    "for_music": "Music teachers",
+    "for_new": "New tutors",
+    "for_parents": "For parents",
+    "company_about": "About",
+    "company_contact": "Contact",
+    "company_privacy": "Privacy",
+    "company_terms": "Terms",
+    "company_signin": "Sign in",
+    "copyright": "© {{year}} Crestio · Made by tutors, in Sydney"
+  },
+
   "about": {
     "meta_title": "About · Crestio",
     "meta_description": "Crestio is built by a small team in Australia for tutors who value their time.",
-    "kicker": "About us",
-    "heading": "Built by people who believe tutoring deserves better software.",
-    "body_1": "Crestio is built by a small team based in Sydney. We started it because tutors we knew were running thoughtful, careful practices on top of tools that weren't designed for them — calendar apps, spreadsheets, half a dozen browser tabs.",
-    "body_2": "We think the work tutors do — actually paying attention to one student, planning the next session, writing notes a parent can read — is the part that should get your time. The admin around it shouldn't.",
-    "body_3": "So Crestio is opinionated. It does the boring parts well, gets out of the way for the rest, and gives you something quiet and well-made to use every day.",
-    "contact_intro": "Questions, feedback, ideas? We read every message."
+    "kicker": "About",
+    "heading": "Built by a tutor for tutors who give a damn.",
+    "founder_eyebrow": "Note from the founder",
+    "founder_p1": "I started tutoring HSC English in 2021. Within six months I had eight students, a Google Calendar that didn't sync to anything important, an inbox of unread parent texts, and a Sunday-night spreadsheet that took four hours to maintain.",
+    "founder_p2": "I tried every tutoring app I could find. They were either built for tuition centres with 200 students and 30 staff, or they were a calendar app pretending to be tutoring software. None of them were built for the actual hard part: the 9pm parent text, the rough notes that need to become a polite paragraph, the invoice that won't write itself.",
+    "founder_p3": "So I built the thing I needed. Crestio is opinionated about what matters: log a session in 8 seconds, polish your notes the way a parent will read them, get paid by card without learning what Stripe is. Nothing else. No bloat. No upsells. No surprise fees on the parent.",
+    "founder_p4": "If you tutor and you've ever spent a Sunday wishing the admin would do itself — this is for you. Email me directly: lenin@crestio.ai. I read every message.",
+    "founder_signature": "— Lenin, founder",
+    "values_eyebrow": "What we believe",
+    "values_heading": "Four things we're stubborn about.",
+    "values_calm_title": "Calm by default",
+    "values_calm_body": "No streaks, no badges, no notification bombs. The app is quiet so you can hear yourself think.",
+    "values_tutor_title": "Tutor-first",
+    "values_tutor_body": "We don't sell to schools or chains. Every product decision asks: would Sarah, eight students in Sydney, want this?",
+    "values_privacy_title": "Privacy is non-negotiable",
+    "values_privacy_body": "Parents see what you share, nothing more. AI never trains on your data. Tutors in a team can't see each other's rates.",
+    "values_built_title": "Built in public",
+    "values_built_body": "We ship the changelog. We email customers when something changes. We tell you what's broken before you find it.",
+    "why_eyebrow": "Why",
+    "why_heading": "Why we built Crestio.",
+    "why_p1": "Tutoring software is a graveyard of products built by people who never tutored. The tools that exist optimise for the tuition-centre owner with 50 staff, not the working tutor with eight students and a Sunday admin block.",
+    "why_p2": "We built Crestio because tutors deserve the same software craft that designers, developers, and writers get. Calm tools, sharp typography, fast keyboard shortcuts, real product care.",
+    "why_p3": "And because the work tutors do — paying attention to one kid, planning the next session, writing notes a parent will actually read — is worth doing well. The admin around it should never be the hard part.",
+    "roadmap_eyebrow": "Roadmap",
+    "roadmap_heading": "What's next.",
+    "roadmap_body": "We ship every week or two. The public changelog is the source of truth.",
+    "roadmap_link": "See changelog →",
+    "hiring_eyebrow": "Hiring",
+    "hiring_heading": "We don't have open roles right now.",
+    "hiring_body": "We will. When we do, they'll be listed here. No surprise listings, no \"send your CV anyway\" inbox.",
+    "contact_intro": "Questions, feedback, ideas? We read every message.",
+    "kicker_legacy": "About us",
+    "body_1": "Crestio is built by a small team based in Sydney.",
+    "body_2": "We think the work tutors do is the part that should get your time.",
+    "body_3": "So Crestio is opinionated. It does the boring parts well, gets out of the way for the rest, and gives you something quiet and well-made to use every day."
   },
+
   "changelog": {
     "meta_title": "Changelog · Crestio",
     "meta_description": "What's new in Crestio.",
     "kicker": "What's new",
     "heading": "Changelog",
     "intro": "Notable changes, shipped quietly. Email support@crestio.ai if something here is broken or unclear.",
+    "toc_label": "Versions",
     "entries": {
       "april_polish": {
         "title": "Presentation polish across the app",
@@ -183,10 +506,11 @@
       }
     }
   },
+
   "contact": {
     "eyebrow": "Get in touch",
     "heading": "Say hello",
-    "intro": "Questions, bug reports, feedback, praise, complaints — all welcome. One human reads these and writes back, usually within a day.",
+    "intro": "Questions, bug reports, feedback, praise, complaints — all welcome. Lenin reads these and writes back, usually within 4 business hours, Sydney time.",
     "email_label": "Email",
     "copy": "Copy",
     "copied": "Copied",
@@ -202,6 +526,205 @@
     "subject_named": "Message from {{name}}",
     "subject_anonymous": "Message from Crestio website",
     "body_from": "From: {{name}}",
-    "body_reply_to": "Reply to: {{email}}"
+    "body_reply_to": "Reply to: {{email}}",
+    "guarantee": "Most replies within 4 business hours, Sydney time.",
+    "alt_heading": "Other ways to reach us",
+    "alt_email": "Email directly",
+    "alt_x": "X / Twitter",
+    "alt_linkedin": "LinkedIn"
+  },
+
+  "time_saved": {
+    "heading": "Calculate your time saved.",
+    "sub": "Drag the sliders. The estimate updates as you type. All client-side — nothing's sent.",
+    "students": "Students you tutor",
+    "admin_hours": "Hours you spend on admin per week",
+    "hourly_rate": "Your hourly tutoring rate",
+    "unit_students": "students",
+    "unit_hours_per_week": "hr/week",
+    "unit_per_hour": "/hr",
+    "estimate": "Estimated savings",
+    "per_month": "saved per month",
+    "per_week": "Per week",
+    "value_per_month": "Value of saved time per month",
+    "disclaimer": "Based on a typical 60% reduction in admin time after a tutor's first month on Crestio. Your mileage may vary."
+  },
+
+  "pricing_faq": {
+    "eyebrow": "Pricing FAQ",
+    "heading": "Pricing questions, answered.",
+    "refunds":            { "q": "Can I get a refund?", "a": "Yes. Email support@crestio.ai within 7 days of your first paid month and we'll refund you, no questions. After that, you keep access until the end of the period you've paid for." },
+    "plan_changes":       { "q": "Can I switch plans?", "a": "Anytime. Upgrades take effect immediately and prorate. Downgrades take effect at the next billing cycle so you keep what you've paid for." },
+    "currency":           { "q": "What currencies are supported?", "a": "Crestio bills in AUD by default. We support local currency display for AUD, USD, GBP, INR, NZD, CAD, and EUR. Stripe handles the conversion for parent payments." },
+    "session_definition": { "q": "What counts as a session?", "a": "A session is one logged tutoring session for one student. Group sessions count as one session even if multiple students are present. There's no per-session fee — you can log unlimited sessions on every plan." }
+  },
+
+  "video_modal": {
+    "aria": "Product tour video",
+    "title": "60-second tour",
+    "close": "Close",
+    "placeholder_title": "Video coming soon",
+    "placeholder_body": "We're recording a proper 60-second tour now. Until it's ready, the homepage and product screenshots are the best preview of what Crestio looks like."
+  },
+
+  "for": {
+    "sydney": {
+      "meta_title": "Tutoring software for Sydney tutors · Crestio",
+      "meta_description": "HSC-aware tutoring software built for Sydney. Log sessions in seconds, polish parent updates with AI, get paid by card. From AU$24/month.",
+      "badge": "Built for Sydney HSC tutors",
+      "heading": "Run your Sydney tutoring like a real business.",
+      "sub": "From HSC English to Year 7 maths — Crestio handles sessions, polished parent updates, and invoicing in AUD. Built in Sydney, used by Sydney tutors.",
+      "micro": "AUD pricing · Australian-built · Sydney support",
+      "pain_heading": "Sundays in Sydney shouldn't look like this.",
+      "pain_1": "It's 9pm and you're still polishing notes from this afternoon's HSC English session.",
+      "pain_2": "Three parents have texted asking how their kid is going. Two of them are about the same kid.",
+      "pain_3": "Term 4 starts in three weeks and you haven't touched your spreadsheet of unbilled sessions.",
+      "pain_4": "You raise your rate by $5 and feel guilty for a week.",
+      "resolution": "Crestio is built by a Sydney HSC tutor for Sydney HSC tutors.",
+      "faq_1_q": "Does Crestio handle GST?",
+      "faq_1_a": "Yes. Set your GST inclusion in Settings — invoices show tax-inclusive totals where required. Pricing on this site is tax-inclusive.",
+      "faq_2_q": "Can parents pay in AUD?",
+      "faq_2_a": "Yes. All Stripe parent payments settle in AUD into your Australian bank account in 2 business days.",
+      "faq_3_q": "Is my data stored in Australia?",
+      "faq_3_a": "Yes. Supabase AU region for Australian customers."
+    },
+    "india": {
+      "meta_title": "Tutoring software for Indian tuition teachers · Crestio",
+      "meta_description": "Tutoring software built for Indian tuition teachers — board exam prep, batch tracking, polished parent updates. From ₹1,500/month equivalent.",
+      "badge": "For Indian tuition teachers",
+      "heading": "Tutoring software built for Indian tuition teachers.",
+      "sub": "CBSE, ICSE, state board, JEE, NEET — Crestio handles batches, polished parent updates, and invoicing in INR.",
+      "micro": "INR pricing · Built for Indian batches",
+      "pain_heading": "If you teach 30 kids across three boards, you know.",
+      "pain_1": "WhatsApp groups are full of parents asking the same question about their child's progress.",
+      "pain_2": "Your register has every batch, every student, every fee — and it lives in one notebook you carry everywhere.",
+      "pain_3": "Board exams are six weeks away and you don't know who's behind on which chapter.",
+      "pain_4": "Last quarter's collection took two weeks of WhatsApp follow-ups.",
+      "resolution": "Crestio replaces the register. Without losing what made the register work."
+    },
+    "uk": {
+      "meta_title": "UK tutor admin software · Crestio",
+      "meta_description": "Tutoring software for UK tutors — GCSE, A-level, 11+. Log sessions in seconds, polish parent updates, get paid by card. From £14/month.",
+      "badge": "For UK tutors",
+      "heading": "UK tutor admin, sorted.",
+      "sub": "GCSE, A-level, 11+, Common Entrance — Crestio handles sessions, polished parent updates, and invoicing in GBP.",
+      "micro": "GBP pricing · UK-friendly invoicing",
+      "pain_heading": "UK tutoring should not feel like a second job.",
+      "pain_1": "Half-term week becomes the week you finally chase that £400 of unpaid lessons.",
+      "pain_2": "You write the same \"how she's getting on\" email to four parents every Sunday.",
+      "pain_3": "Three parents ask if you can do an extra session before the GCSE — you can't keep all of them straight.",
+      "pain_4": "You meant to put your rate up in September. It's now January.",
+      "resolution": "Crestio handles the admin so you can teach."
+    },
+    "music_teachers": {
+      "meta_title": "Crestio for music teachers · piano, violin, guitar instructors",
+      "meta_description": "Tutoring software for music teachers — track instrument progress, recital prep, weekly practice goals. Polished parent updates and card payments included.",
+      "badge": "For music teachers",
+      "heading": "Tracking practice shouldn't take more time than the lessons.",
+      "sub": "Piano, violin, guitar, drums, voice — Crestio handles weekly practice goals, recital prep, and polished parent updates so parents see what their child played this week.",
+      "micro": "Built for instrument-based tutoring",
+      "pain_heading": "Music teaching has its own admin.",
+      "pain_1": "You set a practice goal on Monday and have no idea by Friday whether the kid did 10 minutes or 30.",
+      "pain_2": "Parents want to know what piece their child is on — you tell them, then forget you told them, then tell them again.",
+      "pain_3": "Recital season turns into a spreadsheet of who's playing what, who's bringing whose music, and who's late on fees.",
+      "pain_4": "Half your students are mid-grade and half are beginner — your notes mix together.",
+      "resolution": "Crestio's per-student progress notes and AI-polished updates keep instrument tracking calm.",
+      "faq_1_q": "Can I track practice goals weekly?",
+      "faq_1_a": "Yes. Set a homework target for each session and parents see whether it was completed at home. Parents tick it off in their portal.",
+      "faq_2_q": "Does Crestio handle recital prep?",
+      "faq_2_a": "Yes — use lesson plan templates for recital countdowns. Generate a 6-week prep plan with one click and edit from there.",
+      "faq_3_q": "Can I share sheet music PDFs with parents?",
+      "faq_3_a": "Yes. Watermarked PDFs go via the parent portal — view-only, never downloaded, audited per view."
+    },
+    "exam_prep": {
+      "meta_title": "Crestio for exam prep tutors · HSC, IB, A-level, SAT",
+      "meta_description": "Built for high-stakes exam years. HSC, IB, A-level, SAT, board exams. Log sessions in seconds, polish parent updates, track countdown to exam day.",
+      "badge": "For exam prep tutors",
+      "heading": "Built for exam years.",
+      "sub": "HSC, IB, A-level, SAT, GCSE, ATAR, JEE, NEET — Crestio handles the high-stakes year. Countdown timers, mock-exam tracking, polished parent updates, all in one place.",
+      "micro": "For high-stakes exam tutoring",
+      "pain_heading": "Exam-year tutoring is a different sport.",
+      "pain_1": "Eight months out feels like forever. Eight weeks out feels like five minutes.",
+      "pain_2": "Every parent has the same question: \"is she on track?\" — and you don't have a clean answer in front of you.",
+      "pain_3": "Mock exams pile up and you can't remember which kid scored what last fortnight.",
+      "pain_4": "You're rotating through past papers, essay plans, and content review — without a system that holds it together.",
+      "resolution": "Crestio's session timeline plus polish-for-parent gives you a clean weekly answer to every \"on track?\" question.",
+      "faq_1_q": "Can I track mock exam scores over time?",
+      "faq_1_a": "Yes — use the per-student progress tab to log mock scores and watch the trend. The polish AI references this when writing parent updates.",
+      "faq_2_q": "Does Crestio support past-paper sharing?",
+      "faq_2_a": "Yes. Upload PDFs of past papers as files attached to a student or session. Watermarked viewing, no downloads.",
+      "faq_3_q": "What about countdown to exam day?",
+      "faq_3_a": "Set the exam date in the student's profile and Crestio shows weeks-remaining everywhere. Lesson plan generator uses the countdown to scope the prep."
+    },
+    "large_practices": {
+      "meta_title": "Crestio for tutoring practices · 5–15 tutors",
+      "meta_description": "Owner Mondays brief, per-tutor payouts, role-based access. The tutoring back-office for owners running 5–15 tutors.",
+      "badge": "For 5–15 tutor practices",
+      "heading": "Run a tutoring practice without losing visibility.",
+      "sub": "Owner sees revenue, payouts, who's overdue. Tutors see only their own students. Real role separation, no per-seat tax, weekly owner brief on Monday morning.",
+      "micro": "Built for owners with multi-tutor teams",
+      "pain_heading": "Running a 5+ tutor practice is its own job.",
+      "pain_1": "Your tutors WhatsApp you screenshots of unpaid invoices and you have no system view.",
+      "pain_2": "You don't know on Sunday night which tutor is at full capacity and which has room.",
+      "pain_3": "Every payout cycle is a Sunday afternoon of bank-statement reconciliation.",
+      "pain_4": "Tutors keep asking what their hours are and you keep checking three places to answer.",
+      "resolution": "Crestio's Team plan is owner-first. The Monday brief gives you the week in 3 minutes.",
+      "faq_1_q": "Can tutors see other tutors' rates or payouts?",
+      "faq_1_a": "No. Role-based access at the database level. Tutors see only their own students, sessions, invoices, and payouts. Other tutors' data is invisible — not just hidden, never queried.",
+      "faq_2_q": "How does payouts work?",
+      "faq_2_a": "Payouts are tracked per tutor based on completed sessions in their bucket. You decide split rules (% of revenue, hourly rate, custom). Pay manually via bank transfer or in bulk.",
+      "faq_3_q": "What's the Monday brief?",
+      "faq_3_a": "Every Monday morning, owners get a 3-minute summary: revenue this week, hours billed, tutors at capacity, overdue invoices, payouts pending. No dashboard-spelunking."
+    },
+    "parents": {
+      "meta_title": "Crestio for parents · what the parent portal is",
+      "meta_description": "If you got an email from Crestio, this is what it is. Your child's tutor uses Crestio to manage sessions and notes. You don't need an account.",
+      "badge": "For parents",
+      "heading": "Why you got an email from Crestio.",
+      "sub": "Your child's tutor uses Crestio to manage sessions, notes, and invoices. You don't need to download anything or learn how Crestio works. Click the link your tutor sent you to see your child's notes or pay an invoice.",
+      "micro": "No account required",
+      "what_eyebrow": "What Crestio does",
+      "what_heading": "What Crestio does for your tutor.",
+      "what_p1": "Crestio is software your tutor uses to keep their tutoring practice organised. It's where they log every session, write notes, generate lesson plans, and send invoices.",
+      "what_p2": "When your tutor wants to share something with you — a polished session note, an invoice, a piece of homework — they send it to you through Crestio. Crestio handles the email and the link.",
+      "you_eyebrow": "What it means for you",
+      "you_heading": "What it means for you.",
+      "you_p1": "You don't need a Crestio account to use it. Most parents never sign in. They get an email when their child has a new session note, click the link, and see what their child did that week.",
+      "you_p2": "If you'd like a portal where you can see all your children's sessions, message your tutor, and pay invoices in one place — your tutor can invite you. It's optional.",
+      "privacy_eyebrow": "Privacy",
+      "privacy_heading": "Your privacy.",
+      "privacy_p1": "Your tutor controls what you see. Crestio doesn't sell or share your data, doesn't show ads, and never trains AI on your child's notes.",
+      "privacy_p2": "If your tutor stops using Crestio, your data goes with them — they can export everything as CSV. Crestio doesn't keep parent data after a tutor leaves the platform.",
+      "privacy_p3": "Questions about your data? Email support@crestio.ai or ask your tutor — they have full control.",
+      "cta_heading": "Looking for a session note or an invoice?",
+      "cta_body": "The link your tutor sent you in email goes straight to it. If you've lost the email, ask your tutor to resend it — they can do it in one tap from inside Crestio."
+    },
+    "new_tutors": {
+      "meta_title": "Just started tutoring? · Crestio",
+      "meta_description": "If you just started tutoring, don't build a spreadsheet. Skip three months of admin pain. Start with Crestio — free for 7 days, no card.",
+      "badge": "For new tutors",
+      "heading": "Just started tutoring? Don't build a spreadsheet.",
+      "sub": "Skip the part where everyone else wastes 3 months figuring out billing and notes. Start with Crestio. Free for 7 days, no card. Australian-built.",
+      "micro": "Honest, peer-to-peer advice — not marketing.",
+      "what_eyebrow": "Day one",
+      "what_heading": "What you actually need on day one.",
+      "what_1": "A way to log every session as it happens, with notes, in under 30 seconds.",
+      "what_2": "A way to send a polished update to the parent so they trust you're paying attention.",
+      "what_3": "A way to invoice once a week and actually get paid.",
+      "what_4": "Nothing else. Skip the calendar app. Skip the WhatsApp groups. Skip the spreadsheet.",
+      "skip_eyebrow": "Day one",
+      "skip_heading": "What you don't need yet.",
+      "skip_1": "A logo. Get students first. Logo can wait six months.",
+      "skip_2": "A website. Email is fine. Word of mouth is fine.",
+      "skip_3": "A booking system. Send a calendar invite. That's it.",
+      "skip_4": "A separate accountant. End-of-quarter you'll do it yourself with one CSV export.",
+      "mistakes_eyebrow": "Don't",
+      "mistakes_heading": "Common mistakes that cost you students.",
+      "mistakes_1": "Forgetting to send a session summary. Parents stop trusting you within two weeks.",
+      "mistakes_2": "Letting unpaid invoices pile up. Address them within a week or you'll never get paid.",
+      "mistakes_3": "Charging less than you should because you feel new. Set a fair rate, raise it once you have 5 students.",
+      "mistakes_4": "Doing all your notes in one Sunday block. Log as you go. Polish later.",
+      "cta_heading": "Try the thing tutors with eight students wish they'd had on day one."
+    }
   }
 }
