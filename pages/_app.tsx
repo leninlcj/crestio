@@ -17,6 +17,9 @@ import BillingRequiredModal from '../components/BillingRequiredModal';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ReferralCapture from '../components/ReferralCapture';
 import { ToastProvider } from '../components/design/Toast';
+import { RouteProgressBar } from '../components/design/RouteProgressBar';
+import { KeyboardShortcutsOverlay } from '../components/design/KeyboardShortcutsOverlay';
+import GlobalKeyboardNav from '../components/GlobalKeyboardNav';
 import '../styles/globals.css';
 
 type SsrI18n = { locale: string; resources: I18nResources };
@@ -56,6 +59,9 @@ export default function App({ Component, pageProps }: AppProps) {
                 <ErrorBoundary>
                   <AssistantConversationProvider>
                     <ToastProvider>
+                      <RouteProgressBar />
+                      <KeyboardShortcutsOverlay />
+                      <GlobalKeyboardNav />
                       <ReferralCapture />
                       <Component {...pageProps} />
                       <BillingRequiredModal />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -6,105 +6,175 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconCalendar, IconCoin, IconClock, IconArchive } from '../../../components/design/icons';
-import { TableSkeleton } from '../../../components/design/Skeleton';
+import { Skeleton } from '../../../components/design/Skeleton';
+import { FilterChips, type ChipOption } from '../../../components/design/FilterChips';
+import { SavedViewsMenu } from '../../../components/design/SavedViewsMenu';
+import { BulkActionBar } from '../../../components/design/BulkActionBar';
+import { MiniCalendar } from '../../../components/design/MiniCalendar';
+import { StatusPill } from '../../../components/design/StatusPill';
+import { useDetailParam } from '../../../components/design/DetailPane';
+import { SessionDetailPane } from '../../../components/sessions/SessionDetailPane';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Session, Student, Tutor } from '../../../lib/types';
-import { listDrafts, clearDraft, DraftIndexEntry } from '../../../lib/sessionDrafts';
+import { useKeyboard } from '../../../lib/useKeyboard';
 import {
   formatCents,
-  formatDateTime,
+  formatDate,
+  formatTime,
   sessionAmount,
   cx,
 } from '../../../lib/utils';
 
-function relativeTime(iso: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diffMs / 60_000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins} min ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hour${hrs === 1 ? '' : 's'} ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days} day${days === 1 ? '' : 's'} ago`;
-}
+type Tab = 'today' | 'upcoming' | 'past' | 'polish-queue';
+type SessionRow = Session & { student: Student | null; tutor: Tutor | null };
 
-type Filter = 'upcoming' | 'past' | 'unpaid' | 'all';
+function startOfDay(d: Date) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+function endOfDay(d: Date)   { const x = new Date(d); x.setHours(23,59,59,999); return x; }
 
 function SessionsInner() {
-  const { t } = useTranslation(['sessions', 'common']);
   const router = useRouter();
+  const { t } = useTranslation(['sessions', 'common']);
   const { membership, loading: membershipLoading } = useMembership();
   const isTutor = membership?.role === 'tutor';
+
+  const tab: Tab = (() => {
+    const q = router.query.tab;
+    if (q === 'past') return 'past';
+    if (q === 'upcoming') return 'upcoming';
+    if (q === 'polish-queue') return 'polish-queue';
+    return 'today';
+  })();
+
+  // Date for the Today tab — defaults to today, navigable.
+  const [activeDate, setActiveDate] = useState<Date>(() => startOfDay(new Date()));
+
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<Filter>('upcoming');
-
-  // Sync internal filter with the consolidated nav `?tab=` query param so
-  // tab clicks in the new TabStrip switch the visible list.
-  useEffect(() => {
-    const tab = router.query.tab;
-    if (tab === 'past') setFilter('past');
-    else if (tab === 'today' || tab === 'upcoming') setFilter('upcoming');
-    else if (tab === 'unpaid') setFilter('unpaid');
-  }, [router.query.tab]);
-  const [sessions, setSessions] = useState<(Session & { student: Student | null; tutor: Tutor | null })[]>([]);
+  const [rows, setRows] = useState<SessionRow[]>([]);
   const [currency, setCurrency] = useState('AUD');
-  const [userId, setUserId] = useState<string | null>(null);
-  const [drafts, setDrafts] = useState<DraftIndexEntry[]>([]);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const detail = useDetailParam();
+  const detailId = detail.value && detail.value.startsWith('session:')
+    ? detail.value.slice('session:'.length)
+    : null;
 
-  function refreshDrafts(uid: string) {
-    setDrafts(listDrafts(uid));
-  }
+  // Filter chips for past/upcoming.
+  const billingFilter = (router.query.status as string) ?? '';
+  const filterParam = (router.query.filter as string) ?? '';
 
-  function resumeDraft(entry: DraftIndexEntry) {
-    if (entry.type === 'new') {
-      router.push('/app/sessions/new?resume=true');
-    } else {
-      const sessionId = entry.key.replace(/^crestio-draft-session-/, '');
-      router.push(`/app/sessions/${sessionId}?resume=true`);
+  useEffect(() => {
+    // legacy ?filter=overdue compat for nudges (keeps the existing wiring).
+    if (filterParam === 'overdue') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('status', 'overdue');
+      url.searchParams.delete('filter');
+      router.replace(url.pathname + url.search);
     }
-  }
-
-  function discardDraft(entry: DraftIndexEntry) {
-    if (!userId) return;
-    if (!window.confirm('Delete this draft?')) return;
-    clearDraft(entry.key, userId);
-    refreshDrafts(userId);
-  }
+  }, [filterParam, router]);
 
   useEffect(() => {
     if (membershipLoading) return;
+    let cancelled = false;
     (async () => {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        setUserId(session.user.id);
-        refreshDrafts(session.user.id);
         const { data: p } = await supabase
           .from('profiles').select('currency').eq('id', session.user.id).single();
         if (p?.currency) setCurrency(p.currency);
       }
 
-      const now = new Date().toISOString();
+      const nowIso = new Date().toISOString();
       let q = supabase
         .from('sessions')
-        .select('*, student:students(id,name), tutor:tutors(id,name)')
-        .order('scheduled_at', { ascending: filter === 'upcoming' });
+        .select('*, student:students(id,name), tutor:tutors(id,name)');
 
-      if (filter === 'upcoming') q = q.gte('scheduled_at', now).eq('status', 'scheduled');
-      else if (filter === 'past') q = q.lt('scheduled_at', now);
-      else if (filter === 'unpaid') q = q.eq('status', 'completed').eq('paid', false);
-
-      if (isTutor && session) {
-        q = q.eq('tutor_user_id', session.user.id);
+      if (tab === 'today') {
+        q = q.gte('scheduled_at', startOfDay(activeDate).toISOString())
+             .lte('scheduled_at', endOfDay(activeDate).toISOString())
+             .order('scheduled_at', { ascending: true });
+      } else if (tab === 'upcoming') {
+        q = q.gte('scheduled_at', nowIso)
+             .eq('status', 'scheduled')
+             .order('scheduled_at', { ascending: true });
+      } else if (tab === 'past') {
+        q = q.lt('scheduled_at', nowIso)
+             .order('scheduled_at', { ascending: false });
+        if (billingFilter === 'unbilled') {
+          q = q.eq('status', 'completed').is('invoice_id', null);
+        } else if (billingFilter === 'invoiced') {
+          q = q.eq('status', 'completed').not('invoice_id', 'is', null).eq('paid', false);
+        } else if (billingFilter === 'paid') {
+          q = q.eq('status', 'completed').eq('paid', true);
+        }
       }
 
+      if (isTutor && session) q = q.eq('tutor_user_id', session.user.id);
       const { data } = await q.limit(200);
-      setSessions((data ?? []) as any);
+      if (cancelled) return;
+      setRows((data ?? []) as any);
       setLoading(false);
     })();
-  }, [filter, membership, membershipLoading, isTutor]);
+    return () => { cancelled = true; };
+  }, [tab, activeDate, billingFilter, membership, membershipLoading, isTutor]);
+
+  // Keyboard list nav.
+  const [activeIdx, setActiveIdx] = useState(0);
+  useKeyboard('listDown', () => setActiveIdx((i) => Math.min(rows.length - 1, i + 1)));
+  useKeyboard('listUp',   () => setActiveIdx((i) => Math.max(0, i - 1)));
+  useKeyboard('listOpen', () => {
+    const r = rows[activeIdx];
+    if (r) detail.open(`session:${r.id}`);
+  });
+  useKeyboard('listSelect', () => {
+    const r = rows[activeIdx];
+    if (!r) return;
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(r.id)) next.delete(r.id); else next.add(r.id);
+      return next;
+    });
+  });
+  useKeyboard('listSelectAll', () => {
+    setSelected(new Set(rows.map((r) => r.id)));
+  });
+
+  // Marked dates for the mini-calendar (today tab only).
+  const [markedDays, setMarkedDays] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    if (tab !== 'today') return;
+    let cancelled = false;
+    (async () => {
+      const start = new Date(activeDate); start.setDate(start.getDate() - 7);
+      const end = new Date(activeDate); end.setDate(end.getDate() + 7); end.setHours(23,59,59,999);
+      let q = supabase.from('sessions').select('scheduled_at')
+        .gte('scheduled_at', start.toISOString())
+        .lte('scheduled_at', end.toISOString())
+        .limit(500);
+      if (isTutor) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) q = q.eq('tutor_user_id', session.user.id);
+      }
+      const { data } = await q;
+      if (cancelled) return;
+      const set = new Set<string>();
+      for (const row of (data ?? []) as { scheduled_at: string }[]) {
+        set.add(row.scheduled_at.slice(0, 10));
+      }
+      setMarkedDays(set);
+    })();
+    return () => { cancelled = true; };
+  }, [tab, activeDate, isTutor]);
+
+  const tabs: Array<{ key: Tab; label: string; href: string }> = [
+    { key: 'today',         label: 'Today',         href: '/app/sessions?tab=today' },
+    { key: 'upcoming',      label: 'Upcoming',      href: '/app/sessions?tab=upcoming' },
+    { key: 'past',          label: 'Past',          href: '/app/sessions?tab=past' },
+    { key: 'polish-queue',  label: 'Polish queue',  href: '/app/sessions/polish-queue' },
+  ];
+
+  const upcomingGroups = useMemo(() => groupByDay(rows), [rows]);
 
   return (
     <Layout
@@ -113,185 +183,347 @@ function SessionsInner() {
       actions={<Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link>}
     >
       <div className="mb-4"><SampleDataBanner /></div>
-      {drafts.length > 0 && (
-        <section className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <h2 className="font-display text-xl tracking-tightest">{t('sessions:filter.drafts')}</h2>
-            <span className="text-2xs uppercase tracking-widest text-ink-muted bg-ruleSoft rounded-full px-2 py-0.5">
-              {drafts.length}
-            </span>
-          </div>
-          <div className="card divide-y divide-ruleSoft">
-            {drafts.map((d) => (
-              <div key={d.key} className="flex items-center gap-4 px-5 py-3">
-                <div className="flex-1 min-w-0">
-                  <div className="text-ink truncate text-sm">{d.label}</div>
-                  <div className="text-2xs text-ink-soft">{t('sessions:drafts.last_edited', { when: relativeTime(d.lastEditedAt) })}</div>
-                </div>
-                <div className="flex gap-2 shrink-0">
-                  <button type="button" onClick={() => resumeDraft(d)} className="btn-secondary text-xs">
-                    {t('common:actions.continue')}
-                  </button>
-                  <button type="button" onClick={() => discardDraft(d)} className="btn-ghost text-xs text-claret">
-                    {t('common:actions.discard')}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
-      <div className="flex items-center gap-1 mb-6 text-xs">
-        {(['upcoming', 'past', 'unpaid', 'all'] as Filter[]).map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
+      {/* Inner tabs (the nav-level TabStrip already exists; we render this for date + chips). */}
+      <div className="flex items-center gap-1 mb-4 -mt-2 overflow-x-auto scrollbar-thin">
+        {tabs.map((tt) => (
+          <Link
+            key={tt.key}
+            href={tt.href}
             className={cx(
-              'px-3 py-1.5 capitalize transition-colors rounded',
-              filter === f
-                ? 'bg-ink text-cream'
-                : 'text-ink-muted hover:text-ink hover:bg-ruleSoft'
+              'px-3 py-1.5 text-xs rounded-md transition-colors duration-100 whitespace-nowrap',
+              tab === tt.key
+                ? 'text-ink font-medium bg-ruleSoft/70'
+                : 'text-ink-muted hover:text-ink hover:bg-ruleSoft/40',
             )}
           >
-            {t(`sessions:filter.${f}`, { defaultValue: f })}
-          </button>
+            {tt.label}
+          </Link>
         ))}
+        <Link
+          href="/app/templates"
+          className="px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-ruleSoft/40 rounded-md whitespace-nowrap"
+        >
+          Templates
+        </Link>
       </div>
 
+      {tab === 'today' && (
+        <div className="card p-3 md:p-4 mb-4">
+          <MiniCalendar
+            value={activeDate}
+            marked={markedDays}
+            onChange={setActiveDate}
+          />
+        </div>
+      )}
+
+      {(tab === 'past' || tab === 'upcoming') && (
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          {tab === 'past' ? (
+            <FilterChips
+              ariaLabel="Billing status"
+              options={[
+                { value: '',         label: 'All' },
+                { value: 'unbilled', label: 'Unbilled' },
+                { value: 'invoiced', label: 'Invoiced' },
+                { value: 'paid',     label: 'Paid' },
+              ]}
+              value={billingFilter}
+              onChange={(next) => {
+                const url = new URL(window.location.href);
+                if (next) url.searchParams.set('status', next as string);
+                else url.searchParams.delete('status');
+                router.replace(url.pathname + url.search);
+              }}
+            />
+          ) : <div />}
+          <SavedViewsMenu listId={`sessions.${tab}`} />
+        </div>
+      )}
+
       {loading ? (
-        <TableSkeleton
-          rows={6}
-          columns={[
-            { width: 'w-32' },
-            { width: 'w-28' },
-            { width: 'w-40' },
-            { width: 'w-24' },
-            { width: 'w-16' },
-            { width: 'w-20' },
-          ]}
-        />
-      ) : sessions.length === 0 ? (
+        <SessionsListSkeleton />
+      ) : rows.length === 0 ? (
         <EmptyState
-          icon={
-            filter === 'unpaid' ? <IconCoin /> :
-            filter === 'past' ? <IconArchive /> :
-            filter === 'upcoming' ? <IconCalendar /> : <IconClock />
-          }
+          icon={tab === 'past' ? <IconArchive /> : tab === 'upcoming' ? <IconCalendar /> : <IconClock />}
           title={
-            filter === 'upcoming' ? t('sessions:empty.no_upcoming', { defaultValue: 'No upcoming sessions' }) :
-            filter === 'unpaid' ? t('sessions:empty.nothing_unpaid', { defaultValue: 'Nothing unpaid' }) :
-            filter === 'past' ? t('sessions:empty.no_past', { defaultValue: 'No past sessions' }) :
-            t('sessions:empty.no_sessions')
+            tab === 'today'
+              ? `No sessions on ${formatDate(activeDate.toISOString())}.`
+              : tab === 'past'
+              ? 'No past sessions.'
+              : 'No upcoming sessions.'
           }
           description={
-            filter === 'upcoming' ? t('sessions:empty.schedule_prompt', { defaultValue: 'Schedule one to fill your week.' }) :
-            filter === 'unpaid' ? t('sessions:empty.unpaid_prompt', { defaultValue: 'Every completed session is paid for. Nice.' }) :
-            filter === 'past' ? t('sessions:empty.past_prompt', { defaultValue: 'Once you log a session, it lands here.' }) :
-            t('sessions:empty.all_prompt', { defaultValue: 'Log your first session — it only takes a minute.' })
+            tab === 'today'
+              ? 'Schedule one or pick a different day.'
+              : tab === 'past'
+              ? 'Once you log a session it lands here.'
+              : 'Schedule one to fill your week.'
           }
-          action={
-            (filter === 'upcoming' || filter === 'all') ? (
-              <Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link>
-            ) : undefined
+          action={tab !== 'past'
+            ? <Link href="/app/sessions/new" className="btn-primary">{t('sessions:actions.new')}</Link>
+            : undefined
+          }
+        />
+      ) : tab === 'upcoming' ? (
+        <UpcomingGroupedList
+          groups={upcomingGroups}
+          currency={currency}
+          activeIdx={activeIdx}
+          onOpen={(id) => detail.open(`session:${id}`)}
+          selected={selected}
+          onToggleSelect={(id) =>
+            setSelected((prev) => {
+              const n = new Set(prev);
+              if (n.has(id)) n.delete(id); else n.add(id);
+              return n;
+            })
           }
         />
       ) : (
-        <>
-          {/* Mobile: card layout */}
-          <div className="md:hidden space-y-2">
-            {sessions.map((s) => {
-              const statusLabel = s.status === 'completed'
-                ? (s.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
-                : t(`sessions:status.${s.status}` as any);
-              const statusClass = cx(
-                s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),
-                s.status === 'cancelled' && 'badge-neutral',
-                s.status === 'no_show' && 'badge-claret',
-                s.status === 'scheduled' && 'badge-neutral'
-              );
-              return (
-                <Link
-                  key={s.id}
-                  href={`/app/sessions/${s.id}`}
-                  className="card p-4 block transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30 active:bg-ruleSoft/40"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="text-sm font-medium text-ink truncate">{s.student?.name ?? '—'}</div>
-                      <div className="text-2xs text-ink-muted mt-0.5">{formatDateTime(s.scheduled_at)}</div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="font-mono num text-sm text-ink">{formatCents(sessionAmount(s), currency)}</div>
-                      <span className={cx('mt-1 inline-block', statusClass)}>{statusLabel}</span>
-                    </div>
-                  </div>
-                  {(s.subject || s.topic || s.tutor?.name) && (
-                    <div className="mt-2 pt-2 border-t border-ruleSoft text-2xs text-ink-muted truncate">
-                      {[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}
-                      {s.tutor?.name && (
-                        <span className="text-ink-soft"> · {s.tutor.name}</span>
-                      )}
-                    </div>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-          {/* Desktop: table */}
-          <div className="hidden md:block table-wrap">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>{t('sessions:columns.when')}</th>
-                  <th>{t('sessions:columns.student')}</th>
-                  <th>{t('sessions:columns.subject_topic')}</th>
-                  <th>{t('sessions:columns.tutor')}</th>
-                  <th>{t('sessions:columns.status')}</th>
-                  <th className="text-right">{t('sessions:columns.amount')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sessions.map((s) => (
-                  <tr key={s.id} className="row-link"
-                    onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
-                    <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
-                    <td className="text-ink font-medium">
-                      {s.student?.name ?? '—'}
-                      {(s as any).parent_notified_at && (
-                        <span
-                          className="ml-1.5 text-forest"
-                          title="Parent emailed"
-                          aria-label="Parent emailed"
-                        >✓</span>
-                      )}
-                    </td>
-                    <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}</td>
-                    <td className="text-ink-muted">{s.tutor?.name ?? <span className="text-ink-soft">{t('sessions:fields.tutor_self')}</span>}</td>
-                    <td>
-                      <span className={cx(
-                        s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),
-                        s.status === 'cancelled' && 'badge-neutral',
-                        s.status === 'no_show' && 'badge-claret',
-                        s.status === 'scheduled' && 'badge-neutral'
-                      )}>
-                        {s.status === 'completed'
-                          ? (s.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
-                          : t(`sessions:status.${s.status}` as any)}
-                      </span>
-                    </td>
-                    <td className="text-right font-mono num text-sm">
-                      {formatCents(sessionAmount(s), currency)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
+        <SessionsList
+          rows={rows}
+          currency={currency}
+          showBilling={tab === 'past'}
+          activeIdx={activeIdx}
+          onOpen={(id) => detail.open(`session:${id}`)}
+          selected={selected}
+          onToggleSelect={(id) =>
+            setSelected((prev) => {
+              const n = new Set(prev);
+              if (n.has(id)) n.delete(id); else n.add(id);
+              return n;
+            })
+          }
+        />
       )}
+
+      <BulkActionBar count={selected.size} onClear={() => setSelected(new Set())}>
+        <button
+          type="button"
+          onClick={() => router.push(`/app/invoices/batch?session_ids=${Array.from(selected).join(',')}`)}
+          className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
+        >
+          Create invoices
+        </button>
+        <button
+          type="button"
+          onClick={() => router.push('/app/sessions/polish-queue')}
+          className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
+        >
+          Polish all
+        </button>
+      </BulkActionBar>
+
+      <SessionDetailPane
+        open={!!detailId}
+        sessionId={detailId}
+        onClose={detail.close}
+        currency={currency}
+      />
     </Layout>
   );
+}
+
+// ---------------------------------------------------------------------------
+// List rendering
+// ---------------------------------------------------------------------------
+
+function SessionsList({
+  rows, currency, showBilling, activeIdx, onOpen, selected, onToggleSelect,
+}: {
+  rows: SessionRow[];
+  currency: string;
+  showBilling: boolean;
+  activeIdx: number;
+  onOpen: (id: string) => void;
+  selected: Set<string>;
+  onToggleSelect: (id: string) => void;
+}) {
+  return (
+    <div className="card overflow-hidden">
+      <ul className="divide-y divide-rule">
+        {rows.map((r, i) => (
+          <SessionListRow
+            key={r.id}
+            row={r}
+            currency={currency}
+            showBilling={showBilling}
+            isActive={i === activeIdx}
+            isSelected={selected.has(r.id)}
+            onOpen={onOpen}
+            onToggleSelect={onToggleSelect}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SessionListRow({
+  row, currency, showBilling, isActive, isSelected, onOpen, onToggleSelect,
+}: {
+  row: SessionRow;
+  currency: string;
+  showBilling: boolean;
+  isActive: boolean;
+  isSelected: boolean;
+  onOpen: (id: string) => void;
+  onToggleSelect: (id: string) => void;
+}) {
+  const tone =
+    row.status === 'completed' && row.paid ? 'success'
+    : row.status === 'completed' ? 'rust'
+    : row.status === 'cancelled' ? 'neutral'
+    : row.status === 'no_show' ? 'claret'
+    : 'neutral';
+  const label =
+    row.status === 'completed' ? (row.paid ? 'Paid' : 'Unpaid')
+    : row.status;
+  return (
+    <li
+      onClick={() => onOpen(row.id)}
+      className={cx(
+        'group relative flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-ruleSoft/40 transition-colors duration-100',
+        isActive && 'bg-ruleSoft/30',
+        isSelected && 'bg-forest-soft/30',
+      )}
+      style={{ minHeight: 48 }}
+    >
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}
+        aria-label={isSelected ? 'Deselect' : 'Select'}
+        className={cx(
+          'shrink-0 w-4 h-4 rounded border grid place-items-center transition-all duration-100',
+          isSelected
+            ? 'bg-forest border-forest text-cream'
+            : 'border-rule opacity-0 group-hover:opacity-100',
+        )}
+      >
+        {isSelected && (
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+      </button>
+      <div className="w-20 shrink-0 text-xs text-ink-muted tabular">
+        {formatTime(row.scheduled_at)}
+        <div className="text-2xs text-ink-soft">{formatDate(row.scheduled_at, { day: 'numeric', month: 'short' })}</div>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] text-ink truncate">
+          {row.student?.name ?? '—'}
+          {row.parent_notified_at && (
+            <span className="ml-1.5 text-forest text-xs" title="Parent emailed">✓</span>
+          )}
+        </div>
+        <div className="text-2xs text-ink-soft truncate">
+          {[row.subject, row.topic, `${row.duration_minutes}m`].filter(Boolean).join(' · ')}
+          {row.tutor?.name && <span> · {row.tutor.name}</span>}
+        </div>
+      </div>
+      <div className="hidden md:flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-100 shrink-0" onClick={(e) => e.stopPropagation()}>
+        <Link href={`/app/sessions/${row.id}`} className="btn-ghost text-2xs px-2 py-1">Edit</Link>
+        {row.status === 'completed' && !row.notes_parent_facing && row.notes_internal && (
+          <Link href={`/app/sessions/${row.id}?polish=1`} className="btn-ghost text-2xs px-2 py-1">Polish</Link>
+        )}
+      </div>
+      {showBilling && (
+        <div className="shrink-0">
+          <StatusPill tone={tone as any}>{label}</StatusPill>
+        </div>
+      )}
+      <div className="w-20 shrink-0 text-right text-[13px] tabular text-ink">
+        {formatCents(sessionAmount(row), currency)}
+      </div>
+    </li>
+  );
+}
+
+function UpcomingGroupedList(props: {
+  groups: { label: string; rows: SessionRow[] }[];
+  currency: string;
+  activeIdx: number;
+  onOpen: (id: string) => void;
+  selected: Set<string>;
+  onToggleSelect: (id: string) => void;
+}) {
+  let runningIdx = 0;
+  return (
+    <div className="space-y-4">
+      {props.groups.map((g) => (
+        <section key={g.label} className="card overflow-hidden">
+          <header className="px-3 py-2 border-b border-rule sticky top-[56px] bg-cream/95 backdrop-blur z-10">
+            <h3 className="text-2xs uppercase tracking-widest text-ink-muted font-medium">
+              {g.label}
+            </h3>
+          </header>
+          <ul className="divide-y divide-rule">
+            {g.rows.map((r) => {
+              const idx = runningIdx++;
+              return (
+                <SessionListRow
+                  key={r.id}
+                  row={r}
+                  currency={props.currency}
+                  showBilling={false}
+                  isActive={idx === props.activeIdx}
+                  isSelected={props.selected.has(r.id)}
+                  onOpen={props.onOpen}
+                  onToggleSelect={props.onToggleSelect}
+                />
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function SessionsListSkeleton() {
+  return (
+    <div className="card divide-y divide-rule">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="flex items-center gap-3 p-3" style={{ minHeight: 48 }}>
+          <Skeleton className="w-4 h-4" />
+          <Skeleton className="w-16 h-3" />
+          <div className="flex-1"><Skeleton className="h-3 w-1/3 mb-1" /><Skeleton className="h-2.5 w-1/4" /></div>
+          <Skeleton className="w-16 h-3" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Grouping
+// ---------------------------------------------------------------------------
+
+function groupByDay(rows: SessionRow[]): { label: string; rows: SessionRow[] }[] {
+  if (rows.length === 0) return [];
+  const today = startOfDay(new Date()).getTime();
+  const day = 86_400_000;
+  const week = today + 7 * day;
+  const buckets = new Map<string, SessionRow[]>();
+  const order: string[] = [];
+
+  function pushTo(label: string, r: SessionRow) {
+    if (!buckets.has(label)) { buckets.set(label, []); order.push(label); }
+    buckets.get(label)!.push(r);
+  }
+  for (const r of rows) {
+    const t = new Date(r.scheduled_at).getTime();
+    const dayStart = startOfDay(new Date(t)).getTime();
+    if (dayStart === today) pushTo('Today', r);
+    else if (dayStart === today + day) pushTo('Tomorrow', r);
+    else if (dayStart < week) pushTo('This week', r);
+    else if (dayStart < today + 14 * day) pushTo('Next week', r);
+    else pushTo('Later', r);
+  }
+  return order.map((label) => ({ label, rows: buckets.get(label)! }));
 }
 
 export default function SessionsPage() {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -6,12 +6,24 @@ import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import EmptyState from '../../../components/EmptyState';
 import { IconUsers, IconArchive } from '../../../components/design/icons';
-import { TableSkeleton } from '../../../components/design/Skeleton';
+import { Skeleton } from '../../../components/design/Skeleton';
+import { FilterChips } from '../../../components/design/FilterChips';
+import { useDetailParam } from '../../../components/design/DetailPane';
+import { StudentDetailPane } from '../../../components/students/StudentDetailPane';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { Student } from '../../../lib/types';
-import { formatCents, initials } from '../../../lib/utils';
+import { formatCents, initials, cx } from '../../../lib/utils';
+
+type StudentRow = Student & {
+  _last_session_at?: string | null;
+  _next_session_at?: string | null;
+  _session_count?: number;
+  _total_minutes?: number;
+};
+
+const VIEW_KEY = 'crestio.students.view';
 
 function StudentsInner() {
   const router = useRouter();
@@ -19,15 +31,29 @@ function StudentsInner() {
   const { membership, loading: membershipLoading } = useMembership();
   const isTutor = membership?.role === 'tutor';
   const [loading, setLoading] = useState(true);
-  const [students, setStudents] = useState<Student[]>([]);
-  const [showArchived, setShowArchived] = useState(false);
+  const [students, setStudents] = useState<StudentRow[]>([]);
   const [currency, setCurrency] = useState('AUD');
   const [query, setQuery] = useState('');
-  const [homeworkPendingIds, setHomeworkPendingIds] = useState<Set<string> | null>(null);
-  const homeworkFilter = router.query.filter === 'homework_pending';
+  const detail = useDetailParam();
+  const detailId = detail.value && detail.value.startsWith('student:')
+    ? detail.value.slice('student:'.length) : null;
+
+  const archived = router.query.archived === '1';
+  const status = (router.query.status as string) ?? 'active';
+  const subject = (router.query.subject as string) ?? '';
+  const sort = (router.query.sort as string) ?? 'name';
+
+  const [view, setView] = useState<'grid' | 'list'>(() => {
+    if (typeof window === 'undefined') return 'grid';
+    return (window.localStorage.getItem(VIEW_KEY) as 'grid' | 'list') ?? 'grid';
+  });
+  useEffect(() => {
+    if (typeof window !== 'undefined') window.localStorage.setItem(VIEW_KEY, view);
+  }, [view]);
 
   useEffect(() => {
     if (membershipLoading) return;
+    let cancelled = false;
     (async () => {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
@@ -36,62 +62,100 @@ function StudentsInner() {
           .from('profiles').select('currency').eq('id', session.user.id).single();
         if (p?.currency) setCurrency(p.currency);
       }
-      // Respect the owner's show_test_accounts_in_lists preference.
       let showTests = false;
       if (session) {
         const { data: me } = await supabase
-          .from('profiles')
-          .select('show_test_accounts_in_lists')
-          .eq('id', session.user.id)
-          .maybeSingle();
+          .from('profiles').select('show_test_accounts_in_lists').eq('id', session.user.id).maybeSingle();
         showTests = !!me?.show_test_accounts_in_lists;
       }
-
-      let q = supabase
-        .from('students')
-        .select('*')
-        .eq('archived', showArchived)
-        .order('name', { ascending: true });
+      let q = supabase.from('students').select('*').eq('archived', archived);
       if (!showTests) q = q.eq('is_test_record', false);
       if (isTutor && membership?.tutor_id) {
         q = q.eq('primary_tutor_id', membership.tutor_id);
       } else if (isTutor && !membership?.tutor_id) {
-        // Tutor with no tutor record yet — nothing to show.
-        setStudents([]);
-        setLoading(false);
+        if (!cancelled) { setStudents([]); setLoading(false); }
         return;
       }
       const { data } = await q;
-      setStudents(data ?? []);
+      if (cancelled) return;
+      const list = (data ?? []) as StudentRow[];
 
-      if (homeworkFilter && session) {
-        let hwQ = supabase
+      // Enrich with session aggregates in one round-trip.
+      if (list.length > 0) {
+        const ids = list.map((s) => s.id);
+        const { data: sessRows } = await supabase
           .from('sessions')
-          .select('student_id')
-          .not('homework_description', 'is', null)
-          .is('homework_completed_at', null);
-        if (isTutor) hwQ = hwQ.eq('tutor_user_id', session.user.id);
-        const { data: hwRows } = await hwQ;
-        const ids = new Set<string>((hwRows ?? []).map((r: any) => r.student_id).filter(Boolean));
-        setHomeworkPendingIds(ids);
-      } else {
-        setHomeworkPendingIds(null);
+          .select('student_id, scheduled_at, status, duration_minutes')
+          .in('student_id', ids)
+          .gte('scheduled_at', new Date(Date.now() - 365 * 86_400_000).toISOString())
+          .limit(2000);
+        const byStudent = new Map<string, any[]>();
+        for (const s of (sessRows ?? []) as any[]) {
+          if (!byStudent.has(s.student_id)) byStudent.set(s.student_id, []);
+          byStudent.get(s.student_id)!.push(s);
+        }
+        for (const stu of list) {
+          const rows = byStudent.get(stu.id) ?? [];
+          const completed = rows.filter((r) => r.status === 'completed');
+          const last = completed
+            .map((r) => r.scheduled_at)
+            .sort()
+            .reverse()[0] ?? null;
+          const future = rows
+            .filter((r) => new Date(r.scheduled_at).getTime() > Date.now())
+            .map((r) => r.scheduled_at)
+            .sort()[0] ?? null;
+          stu._last_session_at = last;
+          stu._next_session_at = future;
+          stu._session_count = completed.length;
+          stu._total_minutes = completed.reduce((acc, r) => acc + (r.duration_minutes ?? 0), 0);
+        }
       }
+      setStudents(list);
       setLoading(false);
     })();
-  }, [showArchived, membership, membershipLoading, isTutor, homeworkFilter]);
+    return () => { cancelled = true; };
+  }, [archived, membership, membershipLoading, isTutor]);
 
-  const homeworkFiltered = homeworkPendingIds
-    ? students.filter((s) => homeworkPendingIds.has(s.id))
-    : students;
-  const filtered = query
-    ? homeworkFiltered.filter((s) =>
+  const allSubjects = useMemo(() => {
+    const set = new Set<string>();
+    for (const s of students) for (const subj of s.subjects ?? []) set.add(subj);
+    return Array.from(set).sort();
+  }, [students]);
+
+  const filtered = useMemo(() => {
+    let list = students;
+    if (status === 'active') {
+      list = list.filter((s) => s._last_session_at && Date.now() - new Date(s._last_session_at).getTime() < 21 * 86_400_000);
+    } else if (status === 'dormant') {
+      list = list.filter((s) => !s._last_session_at || Date.now() - new Date(s._last_session_at).getTime() >= 21 * 86_400_000);
+    } else if (status === 'new') {
+      list = list.filter((s) => Date.now() - new Date(s.created_at).getTime() < 14 * 86_400_000);
+    }
+    if (subject) list = list.filter((s) => (s.subjects ?? []).includes(subject));
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter((s) =>
         [s.name, s.school, s.parent_name, (s.subjects ?? []).join(' ')]
-          .join(' ')
-          .toLowerCase()
-          .includes(query.toLowerCase())
-      )
-    : homeworkFiltered;
+          .join(' ').toLowerCase().includes(q),
+      );
+    }
+    if (sort === 'last') {
+      list = [...list].sort((a, b) => (b._last_session_at ?? '').localeCompare(a._last_session_at ?? ''));
+    } else if (sort === 'sessions') {
+      list = [...list].sort((a, b) => (b._session_count ?? 0) - (a._session_count ?? 0));
+    } else {
+      list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return list;
+  }, [students, status, subject, query, sort]);
+
+  function setQueryParam(key: string, value: string) {
+    const url = new URL(window.location.href);
+    if (value) url.searchParams.set(key, value);
+    else url.searchParams.delete(key);
+    router.replace(url.pathname + url.search);
+  }
 
   return (
     <Layout
@@ -107,158 +171,229 @@ function StudentsInner() {
       }
     >
       <div className="mb-4"><SampleDataBanner /></div>
-      {homeworkFilter && (
-        <div className="mb-4 flex items-center justify-between gap-3 p-3 rounded bg-forest-soft border border-forest/20 text-sm">
-          <span className="text-forest-ink">{t('students:filter_banner.homework_pending')}</span>
-          <Link href="/app/students" className="text-xs text-forest underline">{t('students:filter_banner.clear_filter')}</Link>
-        </div>
-      )}
-      <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
+
+      <div className="flex flex-wrap items-center gap-3 mb-4">
         <input
           type="search"
-          placeholder={t('students:search_placeholder')}
+          placeholder="Search students…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="input md:max-w-sm"
+          className="input md:max-w-sm flex-1 min-w-[180px]"
         />
-        <div className="flex items-center gap-2 text-sm text-ink-muted">
-          <button
-            onClick={() => setShowArchived(false)}
-            className={
-              (showArchived ? 'btn-ghost ' : 'btn-secondary ') +
-              'text-xs px-3 py-1.5'
-            }
+        <FilterChips
+          ariaLabel="Status"
+          options={[
+            { value: 'active',  label: 'Active' },
+            { value: 'dormant', label: 'Dormant' },
+            { value: 'new',     label: 'New' },
+            { value: '',        label: 'All' },
+          ]}
+          value={status}
+          onChange={(next) => setQueryParam('status', next as string)}
+        />
+        {allSubjects.length > 0 && (
+          <select
+            value={subject}
+            onChange={(e) => setQueryParam('subject', e.target.value)}
+            className="input text-xs h-8 max-w-[160px]"
+            aria-label="Subject filter"
           >
-            {t('students:filters.active')}
+            <option value="">All subjects</option>
+            {allSubjects.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        )}
+        <div className="ml-auto flex items-center gap-1">
+          <button
+            type="button"
+            aria-label="Grid view"
+            onClick={() => setView('grid')}
+            className={cx(
+              'h-8 w-8 grid place-items-center rounded transition-colors duration-100',
+              view === 'grid' ? 'bg-ink text-cream' : 'text-ink-muted hover:bg-ruleSoft hover:text-ink',
+            )}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           </button>
           <button
-            onClick={() => setShowArchived(true)}
-            className={
-              (!showArchived ? 'btn-ghost ' : 'btn-secondary ') +
-              'text-xs px-3 py-1.5'
-            }
+            type="button"
+            aria-label="List view"
+            onClick={() => setView('list')}
+            className={cx(
+              'h-8 w-8 grid place-items-center rounded transition-colors duration-100',
+              view === 'list' ? 'bg-ink text-cream' : 'text-ink-muted hover:bg-ruleSoft hover:text-ink',
+            )}
           >
-            {t('students:filters.archived')}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => setQueryParam('archived', archived ? '' : '1')}
+            className={cx(
+              'h-8 px-2.5 text-xs rounded transition-colors duration-100',
+              archived ? 'bg-ink text-cream' : 'text-ink-muted hover:bg-ruleSoft hover:text-ink',
+            )}
+            aria-pressed={archived}
+          >
+            {archived ? 'Showing archived' : 'Active only'}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <TableSkeleton rows={6} columns={[{ width: 'w-40' }, { width: 'w-16' }, { width: 'w-32' }, { width: 'w-32' }, { width: 'w-20' }]} />
+        view === 'grid' ? <StudentGridSkeleton /> : <StudentListSkeleton />
       ) : filtered.length === 0 ? (
         <EmptyState
-          icon={showArchived ? <IconArchive /> : <IconUsers />}
-          title={showArchived ? t('students:empty.no_archived') : (isTutor ? t('students:empty.no_tutor_record') : t('students:empty.no_students'))}
-          description={
-            showArchived
-              ? t('students:empty.show_archived')
-              : (isTutor
-                  ? t('students:empty.description_tutor')
-                  : t('students:empty.description_owner'))
-          }
-          action={!showArchived && !isTutor ? <Link href="/app/students/new" className="btn-primary">{t('students:empty.add_first')}</Link> : undefined}
+          icon={archived ? <IconArchive /> : <IconUsers />}
+          title={archived ? 'No archived students.' : isTutor ? 'No students assigned.' : 'No students yet.'}
+          description={archived
+            ? 'Switch back to active to see your roster.'
+            : 'Add your first student or import a CSV.'}
+          action={!archived && !isTutor
+            ? <Link href="/app/students/new" className="btn-primary">{t('students:actions.add')}</Link>
+            : undefined}
         />
+      ) : view === 'grid' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {filtered.map((s) => (
+            <StudentCard
+              key={s.id}
+              student={s}
+              currency={currency}
+              showRate={!isTutor}
+              onOpen={() => detail.open(`student:${s.id}`)}
+            />
+          ))}
+        </div>
       ) : (
-        <>
-          {/* Mobile: card layout */}
-          <div className="md:hidden space-y-2">
+        <div className="card overflow-hidden">
+          <ul className="divide-y divide-rule">
             {filtered.map((s) => (
-              <Link
+              <li
                 key={s.id}
-                href={`/app/students/${s.id}`}
-                className="card p-4 block transition-colors duration-200 ease-out hover:border-rule/80 hover:bg-ruleSoft/30 active:bg-ruleSoft/40"
+                onClick={() => detail.open(`student:${s.id}`)}
+                className="group cursor-pointer flex items-center gap-3 px-3 py-2.5 hover:bg-ruleSoft/40 transition-colors duration-100"
+                style={{ minHeight: 48 }}
               >
-                <div className="flex items-start gap-3">
-                  <div className="h-9 w-9 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-xs font-mono font-medium shrink-0">
-                    {initials(s.name)}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <div className="text-sm text-ink font-medium truncate">
-                        {s.name}
-                        {(s as any).is_test_record && (
-                          <span className="ml-2 badge-neutral text-2xs">{t('students:test_pill')}</span>
-                        )}
-                      </div>
-                      {!isTutor && (
-                        <div className="text-2xs text-ink-muted font-mono num shrink-0">
-                          {formatCents(s.hourly_rate_cents, currency)}/hr
-                        </div>
-                      )}
-                    </div>
-                    {s.school && <div className="text-2xs text-ink-soft">{s.school}</div>}
-                    <div className="text-2xs text-ink-muted mt-1.5 truncate">
-                      {[s.year_level, s.subjects && s.subjects.length > 0 ? s.subjects.join(', ') : null]
-                        .filter(Boolean).join(' · ') || '—'}
-                    </div>
-                    {!isTutor && s.parent_name && (
-                      <div className="text-2xs text-ink-soft mt-0.5 truncate">{s.parent_name}</div>
-                    )}
+                <div className="h-7 w-7 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium shrink-0">
+                  {initials(s.name)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] text-ink truncate">{s.name}</div>
+                  <div className="text-2xs text-ink-soft truncate">
+                    {[s.year_level, (s.subjects ?? []).join(', '), s.school].filter(Boolean).join(' · ')}
                   </div>
                 </div>
-              </Link>
+                <div className="text-2xs text-ink-muted tabular shrink-0 hidden sm:block">
+                  {s._last_session_at ? `Last ${relativeDays(s._last_session_at)}` : 'No sessions'}
+                </div>
+                {!isTutor && (
+                  <div className="text-2xs text-ink-muted tabular shrink-0 w-16 text-right hidden sm:block">
+                    {formatCents(s.hourly_rate_cents, currency)}
+                  </div>
+                )}
+              </li>
             ))}
-          </div>
-          {/* Desktop: table */}
-          <div className="hidden md:block table-wrap">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>{t('students:columns.name')}</th>
-                  <th>{t('students:columns.year')}</th>
-                  <th>{t('students:columns.subjects')}</th>
-                  {!isTutor && <th>{t('students:columns.parent')}</th>}
-                  {!isTutor && <th className="text-right">{t('students:columns.rate')}</th>}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((s) => (
-                  <tr
-                    key={s.id}
-                    className="row-link"
-                    onClick={() => window.location.assign(`/app/students/${s.id}`)}
-                  >
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium">
-                          {initials(s.name)}
-                        </div>
-                        <div>
-                          <div className="text-ink font-medium">
-                            {s.name}
-                            {(s as any).is_test_record && (
-                              <span className="ml-2 badge-neutral text-2xs">{t('students:test_pill')}</span>
-                            )}
-                          </div>
-                          {s.school && <div className="text-2xs text-ink-soft">{s.school}</div>}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="text-ink-muted">{s.year_level ?? '—'}</td>
-                    <td className="text-ink-muted">
-                      {s.subjects && s.subjects.length > 0 ? s.subjects.join(', ') : '—'}
-                    </td>
-                    {!isTutor && <td className="text-ink-muted">{s.parent_name ?? '—'}</td>}
-                    {!isTutor && (
-                      <td className="text-right font-mono text-sm num">
-                        {formatCents(s.hourly_rate_cents, currency)}
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
+          </ul>
+        </div>
       )}
+
+      <StudentDetailPane
+        open={!!detailId}
+        studentId={detailId}
+        onClose={detail.close}
+        currency={currency}
+        isOwner={!isTutor}
+      />
     </Layout>
   );
 }
 
-export default function StudentsPage() {
+function StudentCard({
+  student, currency, showRate, onOpen,
+}: { student: StudentRow; currency: string; showRate: boolean; onOpen: () => void }) {
+  const lastLabel = student._last_session_at
+    ? `Last ${relativeDays(student._last_session_at)}`
+    : 'No sessions yet';
+  const subjects = student.subjects ?? [];
   return (
-    <AuthGuard>
-      <StudentsInner />
-    </AuthGuard>
+    <button
+      type="button"
+      onClick={onOpen}
+      className="card p-4 text-left transition-colors duration-100 hover:bg-ruleSoft/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 group block w-full"
+    >
+      <div className="flex items-start gap-3">
+        <div className="h-9 w-9 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium shrink-0">
+          {initials(student.name)}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm text-ink font-medium truncate">{student.name}</div>
+          <div className="text-2xs text-ink-soft truncate mt-0.5">
+            {[student.year_level, student.school].filter(Boolean).join(' · ') || '—'}
+          </div>
+        </div>
+        {showRate && student.hourly_rate_cents && (
+          <div className="text-2xs text-ink-muted tabular shrink-0">
+            {formatCents(student.hourly_rate_cents, currency)}
+          </div>
+        )}
+      </div>
+      {subjects.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-3">
+          {subjects.slice(0, 3).map((s) => (
+            <span key={s} className="text-2xs px-1.5 py-0.5 rounded bg-ruleSoft text-ink-muted">{s}</span>
+          ))}
+        </div>
+      )}
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-ruleSoft text-2xs text-ink-muted">
+        <span>{lastLabel}</span>
+        <span className="tabular">
+          {student._session_count ?? 0} sessions · {((student._total_minutes ?? 0) / 60).toFixed(1)}h
+        </span>
+      </div>
+    </button>
   );
+}
+
+function relativeDays(iso: string): string {
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 7) return `${days}d ago`;
+  if (days < 30) return `${Math.floor(days / 7)}w ago`;
+  return `${Math.floor(days / 30)}mo ago`;
+}
+
+function StudentGridSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="card p-4">
+          <div className="flex items-start gap-3">
+            <Skeleton className="w-9 h-9 rounded-full" />
+            <div className="flex-1"><Skeleton className="h-4 w-2/3 mb-1.5" /><Skeleton className="h-3 w-1/2" /></div>
+          </div>
+          <div className="flex gap-1 mt-3"><Skeleton className="h-4 w-12" /><Skeleton className="h-4 w-16" /></div>
+          <Skeleton className="h-3 w-1/2 mt-3" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StudentListSkeleton() {
+  return (
+    <div className="card divide-y divide-rule">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="flex items-center gap-3 px-3 py-2.5" style={{ minHeight: 48 }}>
+          <Skeleton className="w-7 h-7 rounded-full" />
+          <div className="flex-1"><Skeleton className="h-3 w-1/3 mb-1" /><Skeleton className="h-2.5 w-1/4" /></div>
+          <Skeleton className="w-14 h-3" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function StudentsPage() {
+  return <AuthGuard><StudentsInner /></AuthGuard>;
 }

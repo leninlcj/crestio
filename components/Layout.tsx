@@ -53,7 +53,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/app',              labelKey: 'nav.home',      match: (p) => p === '/app',                                       icon: IconHome },
   { href: '/app/sessions',     labelKey: 'nav.sessions',  match: (p) => p.startsWith('/app/sessions') || p.startsWith('/app/calendar') || p.startsWith('/app/templates'), icon: IconCalendar },
   { href: '/app/students',     labelKey: 'nav.people',    match: (p) => p.startsWith('/app/students') || p.startsWith('/app/households') || p === '/app/people', icon: IconUsers },
-  { href: '/app/invoices',     labelKey: 'nav.money',     match: (p) => p.startsWith('/app/invoices') || p === '/app/payouts' || p === '/app/money', icon: IconCoin },
+  { href: '/app/invoices',     labelKey: 'nav.money',     match: (p) => p.startsWith('/app/invoices') || p === '/app/payouts-received' || p === '/app/money', icon: IconCoin },
   { href: '/app/lesson-plans', labelKey: 'nav.resources', match: (p) => p.startsWith('/app/lesson-plans') || p.startsWith('/app/files') || p === '/app/resources', icon: IconBook },
   { href: '/app/messages',     labelKey: 'nav.messages',  match: (p) => p.startsWith('/app/messages'),                      icon: IconChat },
   { href: '/app/tutors',       labelKey: 'nav.team',      match: (p) => p.startsWith('/app/tutors') || p === '/app/team' || p === '/app/payouts', icon: IconTeam, requires: 'team_tab' },
@@ -86,11 +86,11 @@ function tabsForPath(pathname: string, _query: Record<string, any>, _opts: { isO
     }
     return tabs;
   }
-  // Money: Invoices, Payouts received
-  if (pathname.startsWith('/app/invoices') || pathname === '/app/payouts' || pathname === '/app/money') {
+  // Money: Invoices, Payouts received (parent → tutor's Stripe payouts)
+  if (pathname.startsWith('/app/invoices') || pathname === '/app/payouts-received' || pathname === '/app/money') {
     return [
-      { key: 'invoices', label: 'Invoices',         href: '/app/invoices',  match: (p) => p.startsWith('/app/invoices') },
-      { key: 'payouts',  label: 'Payouts received', href: '/app/payouts',   match: (p) => p === '/app/payouts' },
+      { key: 'invoices',         label: 'Invoices',         href: '/app/invoices',          match: (p) => p.startsWith('/app/invoices') },
+      { key: 'payouts-received', label: 'Payouts received', href: '/app/payouts-received',  match: (p) => p === '/app/payouts-received' },
     ];
   }
   // Resources: Files, Lesson plans
@@ -121,7 +121,8 @@ function defaultPageTitle(pathname: string): string {
   if (pathname.startsWith('/app/students')) return 'People';
   if (pathname.startsWith('/app/households')) return 'People';
   if (pathname.startsWith('/app/invoices')) return 'Money';
-  if (pathname === '/app/payouts') return 'Money';
+  if (pathname === '/app/payouts-received') return 'Money';
+  if (pathname === '/app/payouts') return 'Team';
   if (pathname.startsWith('/app/lesson-plans')) return 'Resources';
   if (pathname.startsWith('/app/files')) return 'Resources';
   if (pathname.startsWith('/app/messages')) return 'Messages';

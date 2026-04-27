@@ -127,7 +127,8 @@ export default function SignIn() {
       <Head>
         <title>{t('signin.page_title')}</title>
       </Head>
-      <div className="flex-1 flex items-center justify-center px-4 py-16">
+      <div className="flex-1 grid lg:grid-cols-2">
+        <div className="flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-[400px]">
           <Link href="/" className="block mx-auto mb-10 font-display text-2xl tracking-tighter text-center">
             crest<span className="italic text-forest">io</span>
@@ -250,6 +251,17 @@ export default function SignIn() {
             </>
           )}
         </div>
+        </div>
+        <aside className="hidden lg:flex items-center justify-center px-12 py-16 border-l border-rule bg-surface">
+          <figure className="max-w-md">
+            <blockquote className="font-display text-2xl text-ink leading-snug tracking-tighter italic">
+              “Crestio cut my admin time in half. Polishing notes and sending them to parents used to eat my Sunday — now it's two taps.”
+            </blockquote>
+            <figcaption className="text-xs text-ink-muted mt-4 not-italic">
+              — Sarah, English tutor · Sydney
+            </figcaption>
+          </figure>
+        </aside>
       </div>
     </div>
   );

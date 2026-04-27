@@ -184,3 +184,117 @@ All under `components/design/`:
 - Parent portal (`/parent/*`) and marketing pages (`/`, `/about`, `/for/*`)
   are unchanged in this pass.
 - Real screenshot assets and illustrations for empty states.
+
+---
+
+# Phase 2 patterns (workflows over screens)
+
+The phase-2 pass adds a small set of shared primitives that turn list pages
+into workflows. They live in `components/design/*` and are exported from
+`components/design/index.ts`.
+
+## DetailPane (`DetailPane.tsx`)
+
+A right-side slide-in panel (480px on desktop, full-screen sheet on mobile).
+Used everywhere a list row reveals details: sessions, students, invoices,
+files, lesson plans, parent threads.
+
+```tsx
+import { DetailPane, useDetailParam } from '@/components/design';
+
+const detail = useDetailParam();
+const sessionId = detail.value?.startsWith('session:') ? detail.value.slice(8) : null;
+
+<MyList onRowClick={(id) => detail.open(`session:${id}`)} />
+<DetailPane open={!!sessionId} onClose={detail.close} title="Session" fullPageHref={`/app/sessions/${sessionId}`}>
+  …
+</DetailPane>
+```
+
+URL state lives in `?detail=type:id`. Esc / click-outside / back button all
+close. The pane sets `body { overflow: hidden }` while open. Always pair with
+a `fullPageHref` so power users can jump to the existing detail route.
+
+## Inline editing (`InlineEditField`, `EditableStatusPill`, `useInlineEdit`)
+
+Click a value → input. Enter saves, Esc cancels. Optimistic; reverts on save
+failure and shows a toast. Used for student name/year/subjects, invoice notes,
+status pills.
+
+```tsx
+<InlineEditField value={student.name} onSave={(name) => patchStudent({ name })} />
+<EditableStatusPill value={inv.status} options={STATUS_OPTIONS} onChange={changeStatus} />
+```
+
+## Keyboard shortcuts (`lib/keyboard.ts`, `useKeyboard`, `KeyboardShortcutsOverlay`)
+
+Single registry; components reference shortcuts by id. The overlay (mounted
+once from `_app.tsx`, opens with `?`) is always in sync because it reads from
+the same source. See `docs/keyboard-shortcuts.md` for the full list.
+
+```tsx
+useKeyboard('listDown', () => setIdx((i) => i + 1));
+useKeyboard('listOpen', () => detail.open(`session:${rows[idx].id}`));
+```
+
+`G H`/`G S`/etc are wired in `components/GlobalKeyboardNav.tsx`. Don't add new
+combos in components — extend the registry.
+
+## Filter chips + URL state (`FilterChips`, `SavedViewsMenu`)
+
+Every list bar follows: search left · chips middle · sort right. Each filter
+is a URL search param. Saved views (per-list, ≤5) live in localStorage via
+`lib/saved-views.ts` and round-trip the URL search string.
+
+## Bulk actions (`BulkActionBar`)
+
+A floating dark pill shown when row selection is non-empty. Clear button on
+the right. Caller wires actions; default actions stay primary-action-shaped.
+
+## Density tokens
+
+- List row height: 48px (was 56). Use `style={{ minHeight: 48 }}` on `<li>`s.
+- Default font size on list rows: 13px (`text-[13px]`). Page body stays 14px.
+- Numeric columns: right-aligned + `tabular`.
+- Hover quick-actions: revealed via `opacity-0 group-hover:opacity-100`.
+- Detail-pane sub-tabs: 2px forest underline, no fill.
+
+## Sparklines (`Sparkline`)
+
+12-18px tall SVG, no axis, area + line. Bottom of stat cards. Pass any
+`number[]` — typically a 7-day series from `/api/dashboard/today`.
+
+## Now line (`NowLine`, `useNowMinute`)
+
+Thin horizontal forest line dropped into a vertical timeline between past and
+future rows. Updates every minute via `useNowMinute`.
+
+## Mini calendar (`MiniCalendar`)
+
+14-day pill row centered on today. Active day filled forest, today outlined,
+days with sessions show a dot. Used at the top of Sessions → Today.
+
+## Route progress + global polish
+
+`RouteProgressBar` (mounted in `_app.tsx`) draws a 2px forest bar across the
+top during route changes. Replaces page-level spinners.
+
+The `EmptyState` component is now compact: 24px icon, two short lines, one
+CTA, max ~320px wide. Drop the legacy "grand" empty state — pages should
+read as factual.
+
+## Pages upgraded in this pass
+
+- `/app` — dashboard sparklines, NowLine, dismissible nudges, owner team card.
+- `/app/sessions` — Today/Upcoming/Past/Polish-queue tab strip, MiniCalendar
+  on Today, FilterChips on Past, DetailPane row click, BulkActionBar.
+- `/app/students` — grid+list views, FilterChips for status/subject, full
+  StudentDetailPane with sub-tabs and inline edit.
+- `/app/invoices` — multi-select status chips, DetailPane, bulk Mark paid.
+- `/app/payouts-received` — new page; pre-14F empty state, post-14F balance + payouts list.
+- `/app/lesson-plans` — denser card grid (3-up).
+- `/app/messages` — two-pane Linear-style inbox with J/K nav.
+- `/auth/signin` — desktop quote on the right column.
+
+Pages that only got token cleanup: `/app/files`, `/app/tutors`,
+`/app/payouts`, `/app/templates`, `/app/households`, `/app/settings/*`.

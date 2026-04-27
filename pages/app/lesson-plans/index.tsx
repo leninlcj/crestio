@@ -43,45 +43,45 @@ function LessonPlansInner() {
       actions={<Link href="/app/lesson-plans/new" className="btn-primary">{t('actions.new')}</Link>}
     >
       {loading ? (
-        <div className="grid md:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }, (_, i) => (
-            <div key={i} className="card p-6">
-              <Skeleton className="h-3 w-24 mb-3" />
-              <Skeleton className="h-5 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-1/2 mb-5" />
-              <Skeleton className="h-3 w-2/3" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className="card p-4">
+              <Skeleton className="h-3 w-20 mb-2" />
+              <Skeleton className="h-4 w-3/4 mb-3" />
+              <Skeleton className="h-3 w-1/2" />
             </div>
           ))}
         </div>
       ) : plans.length === 0 ? (
         <EmptyState
           icon={<IconBook />}
-          title={t('empty.title')}
-          description={t('empty.description')}
+          title="No lesson plans yet."
+          description="Generate one and use it in a session."
           action={<Link href="/app/lesson-plans/new" className="btn-primary">{t('actions.generate')}</Link>}
         />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {plans.map((p) => (
-            <Link key={p.id} href={`/app/lesson-plans/new?id=${p.id}`}
-              className="card p-6 hover:border-forest transition-colors block">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">
-                    {p.subject}
-                    {p.year_level && ` · ${p.year_level}`}
-                  </div>
-                  <div className="font-display text-xl tracking-tightest text-ink leading-tight">
-                    {p.topic}
-                  </div>
+            <Link
+              key={p.id}
+              href={`/app/lesson-plans/new?id=${p.id}`}
+              className="card p-4 hover:bg-ruleSoft/40 transition-colors duration-100 block"
+            >
+              <div className="flex items-start justify-between gap-2 mb-1.5">
+                <div className="text-2xs uppercase tracking-widest text-ink-muted truncate">
+                  {p.subject}
+                  {p.year_level && ` · ${p.year_level}`}
                 </div>
                 {p.generated_by_ai && (
-                  <span className="badge-forest">{t('card.ai_badge')}</span>
+                  <span className="text-2xs text-forest shrink-0" title="AI generated">✨</span>
                 )}
               </div>
-              <div className="text-xs text-ink-muted mt-3 flex items-center justify-between">
-                <div>{p.student?.name ?? t('card.unassigned')}</div>
-                <div className="font-mono">{formatDate(p.created_at)}</div>
+              <div className="text-sm font-medium text-ink leading-snug line-clamp-2 mb-3">
+                {p.topic}
+              </div>
+              <div className="text-2xs text-ink-soft flex items-center justify-between">
+                <span className="truncate">{p.student?.name ?? t('card.unassigned')}</span>
+                <span className="tabular shrink-0 ml-2">{formatDate(p.created_at)}</span>
               </div>
             </Link>
           ))}

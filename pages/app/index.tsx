@@ -6,6 +6,7 @@ import Layout from '../../components/Layout';
 import { useToast } from '../../components/design/Toast';
 import { supabase } from '../../lib/supabase';
 import { useBilling } from '../../lib/billingContext';
+import { useMembership } from '../../lib/membershipContext';
 import { timeOfDayPeriod, formatTimeOfDay, DEFAULT_DASHBOARD_TZ } from '../../lib/formatTime';
 import { useLocaleFormatters } from '../../lib/useLocaleFormatters';
 import { formatCents } from '../../lib/utils';
@@ -15,6 +16,7 @@ import { NudgeCard } from '../../components/design/NudgeCard';
 import { TimelineRow } from '../../components/design/TimelineRow';
 import { Skeleton } from '../../components/design/Skeleton';
 import { StatusPill } from '../../components/design/StatusPill';
+import { NowLine, useNowMinute } from '../../components/design/NowLine';
 
 // ---------------------------------------------------------------------------
 // Dashboard — morning briefing layout.
@@ -63,10 +65,32 @@ type TodayPayload = {
   week_ahead: WeekItem[];
   invoicing_queue: InvoicingEntry[];
   homework_pending: any[];
-  today: { count: number; minutes: number; sessions: WeekItem[] };
-  week: { scheduled_count: number };
-  unpaid_invoices: { count: number; total_cents: number; oldest_overdue_days: number };
+  today: { count: number; minutes: number; sessions: WeekItem[]; series?: number[] };
+  week: { scheduled_count: number; series?: number[] };
+  polish?: { series?: number[] };
+  unpaid_invoices: { count: number; total_cents: number; oldest_overdue_days: number; series?: number[] };
 };
+
+const DISMISSED_NUDGES_KEY = 'crestio.dashboard.dismissed_nudges.v1';
+const COACHMARK_KEY = 'crestio.dashboard.polish_coachmark.v1';
+
+function loadDismissedNudges(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try { return JSON.parse(window.localStorage.getItem(DISMISSED_NUDGES_KEY) ?? '{}'); }
+  catch { return {}; }
+}
+
+function saveDismissedNudges(map: Record<string, number>) {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(DISMISSED_NUDGES_KEY, JSON.stringify(map)); } catch { /* ignore */ }
+}
+
+function compactCurrency(cents: number, currency: string): string {
+  if (cents < 100_00) return formatCents(cents, currency);
+  return new Intl.NumberFormat(undefined, {
+    style: 'currency', currency, notation: 'compact', maximumFractionDigits: 1,
+  }).format(cents / 100);
+}
 
 function DashboardInner() {
   const router = useRouter();
@@ -75,6 +99,9 @@ function DashboardInner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const cacheRef = useRef<TodayPayload | null>(null);
+  const [teamSummary, setTeamSummary] = useState<{
+    sessions: number; hours_billed: number; awaiting_notes: number;
+  } | null>(null);
 
   // One-time welcome toast after onboarding completes.
   useEffect(() => {
@@ -112,6 +139,50 @@ function DashboardInner() {
     return () => window.removeEventListener('focus', onFocus);
   }, [load]);
 
+  // Owner team summary — derived in the browser from a tutors count call.
+  // Kept lightweight so we don't add a new API endpoint just for one card.
+  const { membership } = useMembership();
+  const isOwner = membership?.role === 'owner';
+  useEffect(() => {
+    if (!isOwner) { setTeamSummary(null); return; }
+    let cancelled = false;
+    (async () => {
+      const { count: tutorCount } = await supabase
+        .from('tutors')
+        .select('id', { count: 'exact', head: true });
+      if (cancelled) return;
+      if (!tutorCount || tutorCount <= 1) { setTeamSummary(null); return; }
+
+      const weekStart = new Date();
+      weekStart.setHours(0, 0, 0, 0);
+      const dow = weekStart.getDay();
+      weekStart.setDate(weekStart.getDate() - (dow === 0 ? 6 : dow - 1));
+
+      const { data: weekSessions } = await supabase
+        .from('sessions')
+        .select('duration_minutes,status,scheduled_at')
+        .gte('scheduled_at', weekStart.toISOString())
+        .in('status', ['completed', 'scheduled']);
+
+      const { count: awaiting } = await supabase
+        .from('sessions')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'completed')
+        .is('notes_internal', null)
+        .lt('scheduled_at', new Date(Date.now() - 48 * 3_600_000).toISOString());
+
+      if (cancelled) return;
+      const completed = (weekSessions ?? []).filter((s: any) => s.status === 'completed');
+      const totalMin = completed.reduce((acc: number, s: any) => acc + (s.duration_minutes ?? 0), 0);
+      setTeamSummary({
+        sessions: weekSessions?.length ?? 0,
+        hours_billed: Math.round(totalMin / 60),
+        awaiting_notes: awaiting ?? 0,
+      });
+    })();
+    return () => { cancelled = true; };
+  }, [isOwner]);
+
   const { formatFullDate } = useLocaleFormatters(DEFAULT_DASHBOARD_TZ);
   const period = timeOfDayPeriod();
   const todayLabel = formatFullDate(new Date());
@@ -127,7 +198,7 @@ function DashboardInner() {
       <div className="px-4 md:px-8 pt-6 md:pt-10 pb-8 md:pb-12 max-w-[1200px] mx-auto">
         <header className="mb-6 md:mb-8">
           <h1 className="text-[28px] md:text-[32px] font-display font-semibold tracking-tighter leading-tight m-0">
-            {greeting}{firstName ? `, ${firstName}` : ''}.
+            {greeting}{firstName ? `, ${firstName}` : 'Welcome back'}.
           </h1>
           <div className="text-sm text-ink-muted mt-1">
             {todayLabel}
@@ -150,14 +221,20 @@ function DashboardInner() {
         ) : error ? (
           <div className="card p-6 text-sm text-claret">{error}</div>
         ) : data ? (
-          <DashboardBody payload={data} onChanged={load} />
+          <DashboardBody payload={data} teamSummary={teamSummary} onChanged={load} />
         ) : null}
       </div>
     </Layout>
   );
 }
 
-function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChanged: () => void }) {
+function DashboardBody({
+  payload, teamSummary, onChanged,
+}: {
+  payload: TodayPayload;
+  teamSummary: { sessions: number; hours_billed: number; awaiting_notes: number } | null;
+  onChanged: () => void;
+}) {
   const { currency } = payload;
   const next = payload.next_session;
   const todayCount = payload.today?.count ?? 0;
@@ -174,23 +251,58 @@ function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChange
     ? 'All done for today'
     : 'Next: scheduled';
 
-  const nudges = useMemo(() => buildNudges(payload), [payload]);
+  const allNudges = useMemo(() => buildNudges(payload), [payload]);
+  const [dismissed, setDismissed] = useState<Record<string, number>>({});
+  useEffect(() => { setDismissed(loadDismissedNudges()); }, []);
+  const visibleNudges = useMemo(() => {
+    const cutoff = Date.now() - 24 * 3_600_000;
+    return allNudges.filter((n) => {
+      const ts = dismissed[n.id ?? ''];
+      return !ts || ts < cutoff;
+    });
+  }, [allNudges, dismissed]);
+
+  function dismissNudge(id: string) {
+    const next = { ...dismissed, [id]: Date.now() };
+    setDismissed(next);
+    saveDismissedNudges(next);
+  }
+
+  // Polish coach mark — show once after first session is logged and queue > 0.
+  const [showCoachMark, setShowCoachMark] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const seen = window.localStorage.getItem(COACHMARK_KEY) === '1';
+    if (seen) return;
+    if (polishCount > 0) setShowCoachMark(true);
+  }, [polishCount]);
+  function dismissCoachMark() {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(COACHMARK_KEY, '1');
+    }
+    setShowCoachMark(false);
+  }
+
+  const showTeamCard = !!teamSummary;
+  const statColCx = showTeamCard ? 'lg:grid-cols-5' : 'lg:grid-cols-4';
 
   return (
     <>
-      {/* Stat row — 4 cards. */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-10 stat-grid">
+      {/* Stat row. */}
+      <div className={`grid grid-cols-2 ${statColCx} gap-3 md:gap-4 mb-8 md:mb-10 stat-grid`}>
         <StatCard
           label="Today"
           value={todayCount}
           sub={todayNextSub}
           href="/app/sessions?tab=today"
+          series={payload.today?.series}
         />
         <StatCard
           label="This week"
           value={weekScheduled}
           sub={weekScheduled === 0 ? 'No sessions scheduled' : 'Scheduled'}
           href="/app/sessions?tab=upcoming"
+          series={payload.week?.series}
         />
         <StatCard
           label="Polish queue"
@@ -198,10 +310,11 @@ function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChange
           sub={polishOldest ?? 'Caught up'}
           tone={polishCount > 0 ? 'amber' : 'default'}
           href="/app/sessions?tab=polish-queue"
+          series={payload.polish?.series}
         />
         <StatCard
           label="Unpaid invoices"
-          value={unpaid.count > 0 ? formatCents(unpaid.total_cents, currency) : 0}
+          value={unpaid.count > 0 ? compactCurrency(unpaid.total_cents, currency) : 0}
           sub={
             unpaid.count === 0
               ? 'All paid'
@@ -211,7 +324,17 @@ function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChange
           }
           tone={unpaid.oldest_overdue_days > 7 ? 'claret' : unpaid.count > 0 ? 'amber' : 'default'}
           href="/app/invoices"
+          series={payload.unpaid_invoices?.series}
         />
+        {showTeamCard && teamSummary && (
+          <StatCard
+            label="Team this week"
+            value={teamSummary.sessions}
+            sub={`${teamSummary.hours_billed}h billed · ${teamSummary.awaiting_notes} awaiting notes`}
+            tone={teamSummary.awaiting_notes > 0 ? 'amber' : 'default'}
+            href="/app/tutors"
+          />
+        )}
       </div>
 
       {/* Two-column body — 60/40 on desktop. */}
@@ -225,9 +348,9 @@ function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChange
         </section>
 
         {/* Needs attention */}
-        <section>
+        <section className="relative">
           <h2 className="text-[15px] font-display font-semibold tracking-tighter mb-3">Needs attention</h2>
-          {nudges.length === 0 ? (
+          {visibleNudges.length === 0 ? (
             <div className="card p-5 flex items-center gap-3">
               <div className="w-8 h-8 grid place-items-center rounded-full bg-success-soft text-success-ink shrink-0">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -238,14 +361,49 @@ function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChange
             </div>
           ) : (
             <div className="space-y-3">
-              {nudges.slice(0, 3).map((n, i) => (
-                <NudgeCard key={i} {...n} />
+              {visibleNudges.slice(0, 3).map((n, i) => (
+                <div
+                  key={n.id ?? i}
+                  className="relative animate-fade-in"
+                  style={{ animationDelay: `${i * 75}ms`, animationFillMode: 'both' }}
+                >
+                  <NudgeCard {...n} />
+                  {n.id && (
+                    <button
+                      type="button"
+                      aria-label="Dismiss"
+                      onClick={() => dismissNudge(n.id!)}
+                      className="absolute top-2 right-2 opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity duration-100 text-ink-soft hover:text-ink p-1 rounded"
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <path d="M6 6l12 12M6 18L18 6"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
               ))}
-              {nudges.length > 3 && (
+              {visibleNudges.length > 3 && (
                 <div className="text-xs text-ink-muted text-center pt-1">
-                  +{nudges.length - 3} more
+                  +{visibleNudges.length - 3} more
                 </div>
               )}
+            </div>
+          )}
+          {showCoachMark && polishCount > 0 && (
+            <div className="mt-4 card p-4 bg-amber-soft/40 border-amber/30 flex items-start gap-3 animate-fade-in">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-ink shrink-0 mt-0.5">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+              <div className="flex-1 min-w-0 text-xs text-amber-ink leading-snug">
+                Your first session is ready to polish. One tap turns rough notes into a polished update for the parent.
+              </div>
+              <button
+                type="button"
+                onClick={dismissCoachMark}
+                className="text-2xs uppercase tracking-widest text-amber-ink/70 hover:text-amber-ink"
+              >
+                Got it
+              </button>
             </div>
           )}
         </section>
@@ -255,10 +413,12 @@ function DashboardBody({ payload, onChanged }: { payload: TodayPayload; onChange
 }
 
 // ---------------------------------------------------------------------------
-// Today timeline
+// Today timeline — with NowLine and inline action buttons.
 // ---------------------------------------------------------------------------
 
 function TodayTimeline({ sessions, nextId }: { sessions: WeekItem[]; nextId: string | null }) {
+  const now = useNowMinute();
+
   if (sessions.length === 0) {
     return (
       <div className="px-3 py-10 text-center">
@@ -275,33 +435,68 @@ function TodayTimeline({ sessions, nextId }: { sessions: WeekItem[]; nextId: str
       </div>
     );
   }
-  const now = Date.now();
-  return (
-    <div className="space-y-0.5">
-      {sessions.map((s) => {
-        const start = new Date(s.scheduled_at).getTime();
-        const end = start + (s.duration_minutes ?? 0) * 60_000;
-        let state: 'past' | 'current' | 'future' = 'future';
-        let pill: { label: string; tone: 'neutral' | 'forest' | 'amber' | 'claret' | 'success' } = { label: 'Upcoming', tone: 'neutral' };
-        if (s.status === 'completed') { state = 'past'; pill = { label: 'Logged', tone: 'success' }; }
-        else if (s.status === 'cancelled') { state = 'past'; pill = { label: 'Cancelled', tone: 'claret' }; }
-        else if (s.status === 'no_show') { state = 'past'; pill = { label: 'No show', tone: 'claret' }; }
-        else if (start <= now && now <= end) { state = 'current'; pill = { label: 'In session', tone: 'forest' }; }
-        else if (s.id === nextId) { pill = { label: 'Next', tone: 'forest' }; }
 
-        return (
-          <TimelineRow
-            key={s.id}
-            href={`/app/sessions/${s.id}`}
-            time={formatTimeOfDay(s.scheduled_at)}
-            title={s.student_name}
-            subtitle={[s.subject, `${s.duration_minutes} min`].filter(Boolean).join(' · ')}
-            state={state}
-            status={<StatusPill tone={pill.tone}>{pill.label}</StatusPill>}
-          />
-        );
-      })}
-    </div>
+  // Find the index where the now line should be inserted (between past and future).
+  const nowIdx = sessions.findIndex((s) => new Date(s.scheduled_at).getTime() > now);
+  const insertNowAt = nowIdx === -1 ? sessions.length : nowIdx;
+
+  const rows: JSX.Element[] = [];
+  sessions.forEach((s, i) => {
+    if (i === insertNowAt) rows.push(<NowLine key={`now-${i}`} />);
+    rows.push(<TimelineSessionRow key={s.id} session={s} now={now} nextId={nextId} />);
+  });
+  if (insertNowAt === sessions.length) {
+    rows.push(<NowLine key="now-end" />);
+  }
+
+  return <div className="space-y-0.5">{rows}</div>;
+}
+
+function TimelineSessionRow({ session: s, now, nextId }: { session: WeekItem; now: number; nextId: string | null }) {
+  const start = new Date(s.scheduled_at).getTime();
+  const end = start + (s.duration_minutes ?? 0) * 60_000;
+  let state: 'past' | 'current' | 'future' = 'future';
+  let pill: { label: string; tone: 'neutral' | 'forest' | 'amber' | 'claret' | 'success' } = { label: 'Upcoming', tone: 'neutral' };
+  if (s.status === 'completed') { state = 'past'; pill = { label: 'Logged', tone: 'success' }; }
+  else if (s.status === 'cancelled') { state = 'past'; pill = { label: 'Cancelled', tone: 'claret' }; }
+  else if (s.status === 'no_show') { state = 'past'; pill = { label: 'No show', tone: 'claret' }; }
+  else if (start <= now && now <= end) { state = 'current'; pill = { label: 'In session', tone: 'forest' }; }
+  else if (s.id === nextId) { pill = { label: 'Next', tone: 'forest' }; }
+
+  const isFuture = state === 'future';
+  const isPast = state === 'past';
+
+  const actions = (
+    <>
+      {isPast && s.status === 'completed' && (
+        <Link href={`/app/sessions/${s.id}`} className="btn-ghost text-2xs px-2 py-1" title="Polish notes">
+          Polish
+        </Link>
+      )}
+      {isPast && s.status !== 'completed' && (
+        <Link href={`/app/sessions/${s.id}`} className="btn-ghost text-2xs px-2 py-1" title="Log notes">
+          Log notes
+        </Link>
+      )}
+      {isFuture && (
+        <>
+          <Link href={`/app/sessions/${s.id}`} className="btn-ghost text-2xs px-2 py-1">Reschedule</Link>
+          <Link href={`/app/sessions/${s.id}`} className="btn-ghost text-2xs px-2 py-1 text-claret hover:text-claret">Cancel</Link>
+        </>
+      )}
+    </>
+  );
+
+  return (
+    <TimelineRow
+      href={`/app/sessions/${s.id}`}
+      time={formatTimeOfDay(s.scheduled_at)}
+      title={s.student_name}
+      subtitle={[s.subject, `${s.duration_minutes} min`].filter(Boolean).join(' · ')}
+      state={state}
+      status={<StatusPill tone={pill.tone}>{pill.label}</StatusPill>}
+      actions={actions}
+    />
   );
 }
 
@@ -309,13 +504,14 @@ function TodayTimeline({ sessions, nextId }: { sessions: WeekItem[]; nextId: str
 // Nudge generation rules
 // ---------------------------------------------------------------------------
 
-type NudgeProps = React.ComponentProps<typeof NudgeCard>;
+type NudgeProps = React.ComponentProps<typeof NudgeCard> & { id?: string };
 
 function buildNudges(p: TodayPayload): NudgeProps[] {
   const out: NudgeProps[] = [];
 
   if (p.polish_queue.length > 0) {
     out.push({
+      id: 'polish_queue',
       icon: <DotIcon />,
       tone: 'amber',
       title: `${p.polish_queue.length} session${p.polish_queue.length === 1 ? '' : 's'} ready to polish`,
@@ -327,6 +523,7 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
 
   if (p.unpaid_invoices?.oldest_overdue_days > 7) {
     out.push({
+      id: 'overdue_invoices',
       icon: <DotIcon />,
       tone: 'claret',
       title: `${p.unpaid_invoices.count} invoice${p.unpaid_invoices.count === 1 ? '' : 's'} overdue`,
@@ -341,6 +538,7 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
     if (total > 5000) {
       const sessions = p.invoicing_queue.reduce((acc, e) => acc + e.session_count, 0);
       out.push({
+        id: 'unbilled',
         icon: <DotIcon />,
         tone: 'forest',
         title: `${sessions} unbilled session${sessions === 1 ? '' : 's'} worth ${formatCents(total, p.currency)}`,
@@ -352,6 +550,7 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
 
   if (p.reschedule_requests.length > 0) {
     out.push({
+      id: 'reschedule',
       icon: <DotIcon />,
       tone: 'amber',
       title: `${p.reschedule_requests.length} reschedule request${p.reschedule_requests.length === 1 ? '' : 's'}`,
@@ -363,6 +562,7 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
 
   if (p.homework_pending && p.homework_pending.length > 0) {
     out.push({
+      id: 'homework',
       icon: <DotIcon />,
       tone: 'default',
       title: `${p.homework_pending.length} homework item${p.homework_pending.length === 1 ? '' : 's'} pending`,
