@@ -49,8 +49,6 @@ export default function SignIn() {
     const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
     if (signInErr) {
       setLoading(false);
-      // Translate Supabase's raw "Invalid login credentials" into a humanized
-      // message. Keep ambiguous about whether email or password was wrong.
       const msg = signInErr.message ?? '';
       if (/invalid login credentials/i.test(msg)) {
         setError(t('signin.invalid_credentials'));
@@ -129,18 +127,16 @@ export default function SignIn() {
       <Head>
         <title>{t('signin.page_title')}</title>
       </Head>
-      <div className="px-6 md:px-12 py-6">
-        <Link href="/" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-      </div>
+      <div className="flex-1 flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-[400px]">
+          <Link href="/" className="block mx-auto mb-10 font-display text-2xl tracking-tighter text-center">
+            crest<span className="italic text-forest">io</span>
+          </Link>
 
-      <div className="flex-1 flex items-center justify-center px-6 pb-16">
-        <div className="w-full max-w-sm">
           {step === 'password' ? (
             <>
               {showExpiredBanner && (
-                <div className="mb-6 flex items-start justify-between gap-3 p-3 rounded border border-rule bg-rule-soft/40 text-sm text-ink">
+                <div className="mb-6 flex items-start justify-between gap-3 px-4 py-3 rounded-md border border-rule bg-surface text-sm text-ink">
                   <span>{t('signin.session_expired')}</span>
                   <button
                     type="button"
@@ -152,10 +148,14 @@ export default function SignIn() {
                   </button>
                 </div>
               )}
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('signin.kicker')}</div>
-              <h1 className="font-display text-4xl tracking-tightest mb-10">{t('signin.title')}</h1>
+              <h1 className="text-[24px] font-display font-semibold tracking-tighter mb-1 m-0">
+                Welcome back
+              </h1>
+              <p className="text-sm text-ink-muted mb-8">
+                Sign in to continue.
+              </p>
 
-              <form onSubmit={onPasswordSubmit} className="space-y-5">
+              <form onSubmit={onPasswordSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="signin-email" className="label">{t('signin.email')}</label>
                   <input
@@ -171,7 +171,12 @@ export default function SignIn() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="signin-password" className="label">{t('signin.password')}</label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label htmlFor="signin-password" className="label !mb-0">{t('signin.password')}</label>
+                    <Link href="/auth/forgot-password" className="text-xs text-forest hover:text-forest-ink underline underline-offset-2">
+                      {t('signin.forgot_password')}
+                    </Link>
+                  </div>
                   <input
                     id="signin-password"
                     type="password"
@@ -184,15 +189,9 @@ export default function SignIn() {
                   />
                 </div>
 
-                {error && <div className="text-sm text-claret">{error}</div>}
+                {error && <div className="text-xs text-claret">{error}</div>}
 
-                <div className="flex items-center justify-end -mt-1">
-                  <Link href="/auth/forgot-password" className="text-2xs uppercase tracking-widest text-ink-muted hover:text-ink">
-                    {t('signin.forgot_password')}
-                  </Link>
-                </div>
-
-                <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+                <button type="submit" disabled={loading} className="btn-primary w-full">
                   {loading ? t('signin.submitting') : t('signin.submit')}
                 </button>
               </form>
@@ -206,13 +205,14 @@ export default function SignIn() {
             </>
           ) : (
             <>
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('signin.mfa_kicker')}</div>
-              <h1 className="font-display text-4xl tracking-tightest mb-4">{t('signin.mfa_title')}</h1>
-              <p className="text-sm text-ink-muted mb-10 leading-relaxed">
+              <h1 className="text-[24px] font-display font-semibold tracking-tighter mb-1 m-0">
+                {t('signin.mfa_title')}
+              </h1>
+              <p className="text-sm text-ink-muted mb-8 leading-relaxed">
                 {t('signin.mfa_intro')}
               </p>
 
-              <form onSubmit={onMfaSubmit} className="space-y-5">
+              <form onSubmit={onMfaSubmit} className="space-y-4">
                 <div>
                   <label className="label">{t('signin.mfa_code_label')}</label>
                   <input
@@ -229,12 +229,12 @@ export default function SignIn() {
                   />
                 </div>
 
-                {error && <div className="text-sm text-claret">{error}</div>}
+                {error && <div className="text-xs text-claret">{error}</div>}
 
                 <button
                   type="submit"
                   disabled={loading || code.length !== 6}
-                  className="btn-primary w-full py-3"
+                  className="btn-primary w-full"
                 >
                   {loading ? t('signin.mfa_submitting') : t('signin.mfa_submit')}
                 </button>
@@ -243,7 +243,7 @@ export default function SignIn() {
               <button
                 type="button"
                 onClick={cancelMfa}
-                className="mt-6 text-2xs uppercase tracking-widest text-ink-muted hover:text-ink block mx-auto"
+                className="mt-6 text-xs text-ink-muted hover:text-ink block mx-auto"
               >
                 {t('signin.mfa_cancel')}
               </button>

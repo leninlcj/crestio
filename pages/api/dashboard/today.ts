@@ -129,10 +129,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .limit(30),
   );
 
+  // Unpaid invoices summary — count, sum, oldest overdue.
+  const unpaidInvoicesQ = userClient
+    .from('invoices')
+    .select('id, total_cents, due_on, status, issued_on')
+    .eq('organization_id', orgId)
+    .in('status', ['sent', 'overdue']);
+
+  // Today's already-finished sessions (for the morning-briefing timeline).
+  const todayStartIsoStr = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString();
+  })();
+  const todayCompletedQ = scopeTutor(
+    userClient
+      .from('sessions')
+      .select('id, scheduled_at, duration_minutes, subject, status, student:students!inner(id, name)')
+      .eq('organization_id', orgId)
+      .in('status', ['completed', 'cancelled', 'no_show'])
+      .gte('scheduled_at', todayStartIsoStr)
+      .lt('scheduled_at', nowIso)
+      .order('scheduled_at', { ascending: true })
+      .limit(20),
+  );
+
   const [
-    nextSessionRes, polishRes, rescheduleRes, weekAheadRes, unbilledRes, profileRes, homeworkRes,
+    nextSessionRes, polishRes, rescheduleRes, weekAheadRes, unbilledRes, profileRes, homeworkRes, unpaidInvoicesRes, todayCompletedRes,
   ] = await Promise.all([
-    nextSessionQ, polishQueueQ, rescheduleScoped, weekAheadQ, unbilledSessionsQ, profileQ, homeworkQ,
+    nextSessionQ, polishQueueQ, rescheduleScoped, weekAheadQ, unbilledSessionsQ, profileQ, homeworkQ, unpaidInvoicesQ, todayCompletedQ,
   ]);
 
   // ---- Reshape + post-process ---------------------------------------------
@@ -219,6 +244,46 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }))
     .filter((e) => e.homework_snippet);
 
+  // Aggregate unpaid invoice summary.
+  const unpaidInvoices = (unpaidInvoicesRes.data ?? []) as Array<{
+    id: string; total_cents: number; due_on: string | null; status: string; issued_on: string;
+  }>;
+  const unpaidCount = unpaidInvoices.length;
+  const unpaidTotalCents = unpaidInvoices.reduce((acc, i) => acc + (i.total_cents ?? 0), 0);
+  let oldestOverdueDays = 0;
+  for (const inv of unpaidInvoices) {
+    if (!inv.due_on) continue;
+    const due = new Date(inv.due_on + 'T00:00:00Z').getTime();
+    const diffDays = Math.floor((Date.now() - due) / 86_400_000);
+    if (diffDays > oldestOverdueDays) oldestOverdueDays = diffDays;
+  }
+
+  // Today's sessions count + total minutes (filtered from week_ahead) plus
+  // the sessions already completed earlier in the day.
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayEnd = new Date();
+  todayEnd.setHours(23, 59, 59, 999);
+  const todaysUpcoming = weekAhead.filter((s) => {
+    const t = new Date(s.scheduled_at).getTime();
+    return t >= todayStart.getTime() && t <= todayEnd.getTime();
+  });
+  const todaysCompleted = ((todayCompletedRes.data ?? []) as any[]).map((s) => ({
+    id: s.id,
+    scheduled_at: s.scheduled_at,
+    duration_minutes: s.duration_minutes,
+    subject: s.subject,
+    status: s.status as string,
+    student_name: s.student?.name ?? 'Unknown',
+  }));
+  const todaysSessions = [...todaysCompleted, ...todaysUpcoming]
+    .sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
+  const todayCount = todaysSessions.length;
+  const todayMinutes = todaysSessions.reduce((acc, s) => acc + (s.duration_minutes ?? 0), 0);
+
+  // This week scheduled count (week_ahead is already constrained to week end).
+  const weekScheduledCount = weekAhead.length;
+
   return res.status(200).json({
     role: membership.role,
     currency,
@@ -231,6 +296,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     week_ahead: weekAhead,
     invoicing_queue: invoicingQueue,
     homework_pending: homeworkPending,
+    // ---- New summary fields for the redesigned dashboard ----
+    today: {
+      count: todayCount,
+      minutes: todayMinutes,
+      // Convenience reference for the timeline.
+      sessions: todaysSessions,
+    },
+    week: {
+      scheduled_count: weekScheduledCount,
+    },
+    unpaid_invoices: {
+      count: unpaidCount,
+      total_cents: unpaidTotalCents,
+      oldest_overdue_days: oldestOverdueDays,
+    },
   });
 }
 

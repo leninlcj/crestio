@@ -1,0 +1,326 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { supabase } from '../lib/supabase';
+import { activeLocale } from '../lib/utils';
+
+// ----------------------------------------------------------------------
+// Cmd+K command palette.
+// Replaces the legacy GlobalSearch. Sections (in priority order):
+//   1. Quick actions  — Log session, Polish last, Add student, Invoice
+//   2. Jump to        — Today's sessions, Polish queue, Unbilled, etc.
+//   3. Search results — students, sessions, invoices, lesson plans
+// Recents shown when input is empty.
+// ----------------------------------------------------------------------
+
+type SearchResults = {
+  students: Array<{ id: string; name: string; year_level: string | null; subject: string | null }>;
+  sessions: Array<{ id: string; scheduled_at: string; subject: string | null; topic: string | null; status: string; student_id: string; student_name: string }>;
+  invoices: Array<{ id: string; number: string; status: string; total_cents: number; issued_on: string; student_name: string }>;
+  lesson_plans: Array<{ id: string; subject: string; topic: string; year_level: string | null; student_name: string | null }>;
+};
+
+const EMPTY_SEARCH: SearchResults = { students: [], sessions: [], invoices: [], lesson_plans: [] };
+
+type Item = {
+  id: string;
+  group: string;
+  label: string;
+  hint?: string;
+  shortcut?: string;
+  href?: string;
+  onSelect?: () => void;
+};
+
+const RECENTS_KEY = 'crestio.cmdk.recents';
+const MAX_RECENTS = 5;
+
+function loadRecents(): Item[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(RECENTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveRecent(item: Item) {
+  if (typeof window === 'undefined') return;
+  try {
+    const existing = loadRecents().filter((i) => i.id !== item.id);
+    const next = [{ ...item, group: 'Recent' }, ...existing].slice(0, MAX_RECENTS);
+    window.localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function CommandPalette() {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResults>(EMPTY_SEARCH);
+  const [loading, setLoading] = useState(false);
+  const [active, setActive] = useState(0);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cmd+K and event-based open hooks.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setOpen((v) => !v);
+      } else if (e.key === 'Escape' && open) {
+        setOpen(false);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    const onOpen = () => setOpen(true);
+    window.addEventListener('crestio:open-search', onOpen as EventListener);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('crestio:open-search', onOpen as EventListener);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    setActive(0);
+    setTimeout(() => inputRef.current?.focus(), 60);
+  }, [open]);
+
+  // Reset on route change.
+  useEffect(() => {
+    const reset = () => { setOpen(false); setQuery(''); setResults(EMPTY_SEARCH); };
+    router.events.on('routeChangeStart', reset);
+    return () => router.events.off('routeChangeStart', reset);
+  }, [router.events]);
+
+  // Debounced search.
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (query.trim().length < 2) {
+      setResults(EMPTY_SEARCH);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) { setLoading(false); return; }
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}`, {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        if (res.ok) setResults(await res.json());
+      } finally {
+        setLoading(false);
+      }
+    }, 200);
+  }, [query]);
+
+  // Static items: Quick actions + Jump to.
+  const staticItems: Item[] = useMemo(() => [
+    // Quick actions
+    { id: 'qa-log',     group: 'Quick actions', label: 'Log session',           shortcut: 'L',  onSelect: () => router.push('/app/sessions/new?mode=quick') },
+    { id: 'qa-polish',  group: 'Quick actions', label: 'Polish last session',                  onSelect: () => router.push('/app/sessions?tab=polish-queue') },
+    { id: 'qa-student', group: 'Quick actions', label: 'Add student',                          onSelect: () => router.push('/app/students/new') },
+    { id: 'qa-invoice', group: 'Quick actions', label: 'Create invoice',                       onSelect: () => router.push('/app/invoices/new') },
+    { id: 'qa-send',    group: 'Quick actions', label: 'Send invoice to parent',               onSelect: () => router.push('/app/invoices') },
+
+    // Jump to
+    { id: 'j-today',     group: 'Jump to', label: "Today's sessions",        href: '/app/sessions?tab=today' },
+    { id: 'j-polish',    group: 'Jump to', label: 'Polish queue',            href: '/app/sessions?tab=polish-queue' },
+    { id: 'j-unbilled',  group: 'Jump to', label: 'Unbilled sessions',       href: '/app/money?tab=invoices&filter=unbilled' },
+    { id: 'j-overdue',   group: 'Jump to', label: 'Overdue invoices',        href: '/app/money?tab=invoices&filter=overdue' },
+    { id: 'j-billing',   group: 'Jump to', label: 'Settings → Billing',      href: '/app/settings/billing' },
+  ], [router]);
+
+  // Build full ordered list of items based on query.
+  const items: Item[] = useMemo(() => {
+    if (query.trim().length === 0) {
+      const recents = loadRecents();
+      return [...recents, ...staticItems];
+    }
+    const q = query.trim().toLowerCase();
+    const filteredStatic = staticItems.filter((i) =>
+      i.label.toLowerCase().includes(q) || (i.hint?.toLowerCase().includes(q) ?? false)
+    );
+
+    const searchItems: Item[] = [];
+    results.students.forEach((s) => {
+      searchItems.push({
+        id: `s-${s.id}`,
+        group: 'Students',
+        label: s.name,
+        hint: [s.year_level ? `Year ${s.year_level}` : null, s.subject].filter(Boolean).join(' · '),
+        href: `/app/students/${s.id}`,
+      });
+    });
+    results.sessions.forEach((s) => {
+      searchItems.push({
+        id: `ss-${s.id}`,
+        group: 'Sessions',
+        label: `${s.student_name} · ${new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`,
+        hint: [s.subject, s.topic].filter(Boolean).join(' · ') || s.status,
+        href: `/app/sessions/${s.id}`,
+      });
+    });
+    results.invoices.forEach((i) => {
+      searchItems.push({
+        id: `i-${i.id}`,
+        group: 'Invoices',
+        label: `${i.number} · ${i.student_name}`,
+        hint: `${formatCents(i.total_cents)} · ${i.status}`,
+        href: `/app/invoices/${i.id}`,
+      });
+    });
+    results.lesson_plans.forEach((p) => {
+      searchItems.push({
+        id: `lp-${p.id}`,
+        group: 'Lesson plans',
+        label: `${p.subject} · ${p.topic}`,
+        hint: [p.student_name, p.year_level ? `Year ${p.year_level}` : null].filter(Boolean).join(' · '),
+        href: `/app/lesson-plans`,
+      });
+    });
+
+    return [...filteredStatic, ...searchItems];
+  }, [query, results, staticItems]);
+
+  // Group items in render order while preserving the global index for keyboard nav.
+  const grouped = useMemo(() => {
+    const order: string[] = [];
+    const map = new Map<string, Array<{ item: Item; index: number }>>();
+    items.forEach((item, index) => {
+      if (!map.has(item.group)) {
+        map.set(item.group, []);
+        order.push(item.group);
+      }
+      map.get(item.group)!.push({ item, index });
+    });
+    return order.map((g) => ({ group: g, entries: map.get(g)! }));
+  }, [items]);
+
+  function runItem(item: Item) {
+    saveRecent(item);
+    setOpen(false);
+    if (item.onSelect) {
+      item.onSelect();
+    } else if (item.href) {
+      router.push(item.href);
+    }
+  }
+
+  function onKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive((a) => Math.min(items.length - 1, a + 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive((a) => Math.max(0, a - 1));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const target = items[active];
+      if (target) runItem(target);
+    }
+  }
+
+  if (!open) return null;
+
+  const totalHits = items.length;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command palette"
+      className="fixed inset-0 z-[70] bg-ink/40"
+      onClick={() => setOpen(false)}
+    >
+      <div
+        className="relative w-full max-w-[600px] mx-auto mt-16 md:mt-24 bg-surface border border-rule rounded-[12px] shadow-lift overflow-hidden animate-palette-in"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={onKeyDown}
+      >
+        <div className="border-b border-rule px-4 py-3 flex items-center gap-3">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-ink-soft shrink-0">
+            <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+          </svg>
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setActive(0); }}
+            placeholder="Search anything…"
+            className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-soft"
+          />
+          <kbd className="text-2xs font-mono text-ink-soft border border-rule rounded px-1.5 py-0.5">Esc</kbd>
+        </div>
+
+        <div className="max-h-[60vh] overflow-y-auto py-1">
+          {totalHits === 0 ? (
+            <div className="px-4 py-10 text-sm text-ink-muted text-center">
+              {loading ? 'Searching…' : 'No matches.'}
+            </div>
+          ) : (
+            grouped.map(({ group, entries }) => (
+              <div key={group}>
+                <div className="px-4 pt-3 pb-1 text-2xs uppercase tracking-widest text-ink-soft font-medium">
+                  {group}
+                </div>
+                <ul role="listbox">
+                  {entries.map(({ item, index }) => {
+                    const isActive = index === active;
+                    return (
+                      <li key={item.id}>
+                        <button
+                          type="button"
+                          onMouseEnter={() => setActive(index)}
+                          onClick={() => runItem(item)}
+                          aria-selected={isActive}
+                          className={[
+                            'w-full text-left px-4 py-2 flex items-center justify-between gap-3 text-sm transition-colors duration-100',
+                            isActive ? 'bg-ruleSoft' : 'hover:bg-ruleSoft/60',
+                          ].join(' ')}
+                        >
+                          <div className="min-w-0">
+                            <div className="text-ink truncate">{item.label}</div>
+                            {item.hint && (
+                              <div className="text-xs text-ink-muted truncate">{item.hint}</div>
+                            )}
+                          </div>
+                          <span className="text-ink-soft shrink-0 flex items-center gap-2">
+                            {item.shortcut && (
+                              <kbd className="text-2xs font-mono border border-rule rounded px-1.5 py-0.5">{item.shortcut}</kbd>
+                            )}
+                            <span aria-hidden="true">↵</span>
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="border-t border-rule px-4 py-2 text-2xs text-ink-soft flex items-center justify-between">
+          <span className="flex items-center gap-3">
+            <span><kbd className="font-mono">↑↓</kbd> navigate</span>
+            <span><kbd className="font-mono">↵</kbd> select</span>
+          </span>
+          <span><kbd className="font-mono">⌘K</kbd> anywhere</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function formatCents(c: number): string {
+  return new Intl.NumberFormat(activeLocale(), { style: 'currency', currency: 'AUD',
+    maximumFractionDigits: c % 100 === 0 ? 0 : 2 }).format(c / 100);
+}
+
+export default CommandPalette;

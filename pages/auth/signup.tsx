@@ -41,17 +41,12 @@ export default function SignUp() {
       return;
     }
 
-    // If email confirmation is enabled, session will be null — the user will
-    // record their referral after confirming. For that case we keep the
-    // cookie so it's still available on the confirmed-session device.
     if (!data.session) {
       setLoading(false);
       setSentConfirmation(true);
       return;
     }
 
-    // Detect region → seed invoicing currency + UI locale. Best-effort; never
-    // blocks signup.
     try {
       await fetch('/api/onboarding/detect-region', {
         method: 'POST',
@@ -63,7 +58,6 @@ export default function SignUp() {
       });
     } catch { /* ignore */ }
 
-    // Record the referral (non-fatal — signup still continues on failure).
     const code = normaliseCode(referralCode);
     if (code) {
       try {
@@ -77,9 +71,7 @@ export default function SignUp() {
         });
         const payload = await res.json().catch(() => ({}));
         if (payload?.recorded) clearReferralCookie();
-      } catch {
-        // Silent fail — referral isn't critical path for signup.
-      }
+      } catch { /* ignore */ }
     }
 
     setLoading(false);
@@ -91,35 +83,34 @@ export default function SignUp() {
       <Head>
         <title>{t('signup.page_title')}</title>
       </Head>
-      <div className="px-6 md:px-12 py-6">
-        <Link href="/" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-      </div>
+      <div className="flex-1 flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-[400px]">
+          <Link href="/" className="block mx-auto mb-10 font-display text-2xl tracking-tighter text-center">
+            crest<span className="italic text-forest">io</span>
+          </Link>
 
-      <div className="flex-1 flex items-center justify-center px-6 pb-16">
-        <div className="w-full max-w-sm">
           {sentConfirmation ? (
             <>
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">
-                {t('signup.confirm_kicker')}
-              </div>
-              <h1 className="font-display text-4xl tracking-tightest mb-5">
+              <h1 className="text-[24px] font-display font-semibold tracking-tighter mb-1 m-0">
                 {t('signup.confirm_title')}
               </h1>
-              <p className="text-sm text-ink-muted leading-relaxed">
+              <p className="text-sm text-ink-muted mb-6 leading-relaxed">
                 {t('signup.confirm_body', { email })}
               </p>
-              <Link href="/auth/signin" className="btn-secondary w-full mt-8 py-3 justify-center">
+              <Link href="/auth/signin" className="btn-secondary w-full">
                 {t('signup.back_to_sign_in')}
               </Link>
             </>
           ) : (
             <>
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('signup.kicker')}</div>
-              <h1 className="font-display text-4xl tracking-tightest mb-10">{t('signup.title')}</h1>
+              <h1 className="text-[24px] font-display font-semibold tracking-tighter mb-1 m-0">
+                Create your account
+              </h1>
+              <p className="text-sm text-ink-muted mb-8">
+                Start your free trial — no card required.
+              </p>
 
-              <form onSubmit={onSubmit} className="space-y-5">
+              <form onSubmit={onSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="signup-email" className="label">{t('signup.email')}</label>
                   <input
@@ -139,21 +130,21 @@ export default function SignUp() {
                     value={password} onChange={(e) => setPassword(e.target.value)}
                     className="input"
                   />
-                  <div className="text-2xs text-ink-soft mt-1.5">{t('signup.password_hint')}</div>
+                  <div className="text-xs text-ink-soft mt-1.5">{t('signup.password_hint')}</div>
                 </div>
 
                 {!showReferralField ? (
                   <button
                     type="button"
                     onClick={() => setShowReferralField(true)}
-                    className="text-sm text-forest hover:text-forest-ink underline underline-offset-2 block"
+                    className="text-xs text-forest hover:text-forest-ink underline underline-offset-2 block"
                   >
                     {t('signup.referral_prompt')}
                   </button>
                 ) : (
                   <div>
                     <label htmlFor="signup-referral" className="label">
-                      {t('signup.referral_label')} <span className="text-ink-soft normal-case tracking-normal font-normal">{t('signup.referral_optional')}</span>
+                      {t('signup.referral_label')} <span className="text-ink-soft normal-case font-normal">{t('signup.referral_optional')}</span>
                     </label>
                     <input
                       id="signup-referral"
@@ -165,15 +156,15 @@ export default function SignUp() {
                       className="input font-mono tracking-wide uppercase"
                       autoComplete="off"
                     />
-                    <div className="text-2xs text-ink-soft mt-1.5">
+                    <div className="text-xs text-ink-soft mt-1.5">
                       {t('signup.referral_hint')}
                     </div>
                   </div>
                 )}
 
-                {error && <div className="text-sm text-claret">{error}</div>}
+                {error && <div className="text-xs text-claret">{error}</div>}
 
-                <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+                <button type="submit" disabled={loading} className="btn-primary w-full">
                   {loading ? t('signup.submitting') : t('signup.submit')}
                 </button>
               </form>

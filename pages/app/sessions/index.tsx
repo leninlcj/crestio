@@ -39,6 +39,15 @@ function SessionsInner() {
   const isTutor = membership?.role === 'tutor';
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>('upcoming');
+
+  // Sync internal filter with the consolidated nav `?tab=` query param so
+  // tab clicks in the new TabStrip switch the visible list.
+  useEffect(() => {
+    const tab = router.query.tab;
+    if (tab === 'past') setFilter('past');
+    else if (tab === 'today' || tab === 'upcoming') setFilter('upcoming');
+    else if (tab === 'unpaid') setFilter('unpaid');
+  }, [router.query.tab]);
   const [sessions, setSessions] = useState<(Session & { student: Student | null; tutor: Tutor | null })[]>([]);
   const [currency, setCurrency] = useState('AUD');
   const [userId, setUserId] = useState<string | null>(null);

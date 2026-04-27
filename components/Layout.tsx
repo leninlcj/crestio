@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -11,74 +11,157 @@ import { cx } from '../lib/utils';
 import AssistantPanel from './AssistantPanel';
 import AssistantLauncher from './AssistantLauncher';
 import SupportWidget from './SupportWidget';
-import GlobalSearch from './GlobalSearch';
+import CommandPalette from './CommandPalette';
 import NotificationBell from './notifications/NotificationBell';
 import { TestAccountBanner, ExemptionOffPill } from './OwnerBanners';
 import { isPlatformOwner } from '../lib/owner';
 import LanguageSwitcherModal from './LanguageSwitcherModal';
 import { useTranslation } from 'react-i18next';
+import { Breadcrumb, type Crumb } from './design/Breadcrumb';
+import { TabStrip, type Tab } from './design/TabStrip';
+import { FloatingActionButton } from './design/FloatingActionButton';
 
 interface Props {
   children: ReactNode;
+  // Legacy header props — when set, Layout renders its own page header for the
+  // children. When omitted, the children are expected to provide their own
+  // header (used by PageLayout).
   title?: string;
   subtitle?: string;
   actions?: ReactNode;
-  // Sets the browser tab title. Defaults to `title` when omitted, then falls
-  // back to "Crestio". Always suffixed with " · Crestio" except when the value
-  // already contains "Crestio".
   pageTitle?: string;
+  // New: breadcrumb shown in the top bar. PageLayout fills this in.
+  breadcrumbItems?: Crumb[];
 }
 
-type NavItem = { href: string; labelKey: string; match: (p: string) => boolean; requires?: 'multi_tutor' | 'households' };
+// ----------------------------------------------------------------------
+// Sidebar — 8 consolidated items.
+// ----------------------------------------------------------------------
 
+type NavItem = {
+  href: string;
+  labelKey: string;
+  match: (p: string) => boolean;
+  icon: () => JSX.Element;
+  requires?: 'multi_tutor' | 'team_tab' | 'money_owner';
+};
+
+// Desktop nav order (matches spec):
+//   1 Home  2 Sessions  3 People  4 Money  5 Resources
+//   6 Messages  7 Team (multi-tutor only)  8 Settings
 const NAV_ITEMS: NavItem[] = [
-  { href: '/app', labelKey: 'nav.overview', match: (p) => p === '/app' },
-  { href: '/app/calendar', labelKey: 'nav.calendar', match: (p) => p.startsWith('/app/calendar') },
-  { href: '/app/sessions', labelKey: 'nav.sessions', match: (p) => p.startsWith('/app/sessions') },
-  { href: '/app/templates', labelKey: 'nav.templates', match: (p) => p.startsWith('/app/templates') },
-  { href: '/app/students', labelKey: 'nav.students', match: (p) => p.startsWith('/app/students') },
-  { href: '/app/households', labelKey: 'nav.households', match: (p) => p.startsWith('/app/households'), requires: 'households' },
-  { href: '/app/messages', labelKey: 'nav.messages', match: (p) => p.startsWith('/app/messages') },
-  { href: '/app/lesson-plans', labelKey: 'nav.lesson_plans', match: (p) => p.startsWith('/app/lesson-plans') },
-  // Files entry visible for everyone. On Solo, /app/files renders the
-  // Team-upgrade prompt (existing behaviour); on Team, it shows the org file
-  // index. The plan check below only hides the link, but tutors and Solo
-  // owners still find the page via student detail — having a sidebar entry
-  // is the discoverable path (P2-2.1).
-  { href: '/app/files', labelKey: 'nav.files', match: (p) => p.startsWith('/app/files') },
-  { href: '/app/invoices', labelKey: 'nav.invoices', match: (p) => p.startsWith('/app/invoices') },
-  { href: '/app/tutors', labelKey: 'nav.tutors', match: (p) => p.startsWith('/app/tutors'), requires: 'multi_tutor' },
-  { href: '/app/payouts', labelKey: 'nav.payouts', match: (p) => p.startsWith('/app/payouts'), requires: 'multi_tutor' },
+  { href: '/app',              labelKey: 'nav.home',      match: (p) => p === '/app',                                       icon: IconHome },
+  { href: '/app/sessions',     labelKey: 'nav.sessions',  match: (p) => p.startsWith('/app/sessions') || p.startsWith('/app/calendar') || p.startsWith('/app/templates'), icon: IconCalendar },
+  { href: '/app/students',     labelKey: 'nav.people',    match: (p) => p.startsWith('/app/students') || p.startsWith('/app/households') || p === '/app/people', icon: IconUsers },
+  { href: '/app/invoices',     labelKey: 'nav.money',     match: (p) => p.startsWith('/app/invoices') || p === '/app/payouts' || p === '/app/money', icon: IconCoin },
+  { href: '/app/lesson-plans', labelKey: 'nav.resources', match: (p) => p.startsWith('/app/lesson-plans') || p.startsWith('/app/files') || p === '/app/resources', icon: IconBook },
+  { href: '/app/messages',     labelKey: 'nav.messages',  match: (p) => p.startsWith('/app/messages'),                      icon: IconChat },
+  { href: '/app/tutors',       labelKey: 'nav.team',      match: (p) => p.startsWith('/app/tutors') || p === '/app/team' || p === '/app/payouts', icon: IconTeam, requires: 'team_tab' },
+  { href: '/app/settings/account', labelKey: 'nav.settings', match: (p) => p.startsWith('/app/settings'),                   icon: IconGear },
 ];
 
-export default function Layout({ children, title, subtitle, actions, pageTitle }: Props) {
+// ----------------------------------------------------------------------
+// Tab strips per consolidated section.
+// Returns null when the current path doesn't belong to a tabbed group.
+// ----------------------------------------------------------------------
+
+function tabsForPath(pathname: string, _query: Record<string, any>, _opts: { isOwner: boolean; hasTeam: boolean; hasHouseholds: boolean }): Tab[] | null {
+  // Sessions: Today, Upcoming, Past, Templates, Polish queue
+  if (pathname.startsWith('/app/sessions') || pathname.startsWith('/app/templates') || pathname.startsWith('/app/calendar')) {
+    return [
+      { key: 'today',    label: 'Today',         href: '/app/sessions?tab=today',         match: (p, q) => p === '/app/sessions' && (q.tab === 'today' || !q.tab) },
+      { key: 'upcoming', label: 'Upcoming',      href: '/app/sessions?tab=upcoming',      match: (p, q) => p === '/app/sessions' && q.tab === 'upcoming' },
+      { key: 'past',     label: 'Past',          href: '/app/sessions?tab=past',          match: (p, q) => p === '/app/sessions' && q.tab === 'past' },
+      { key: 'templates',label: 'Templates',     href: '/app/templates',                  match: (p) => p.startsWith('/app/templates') },
+      { key: 'polish',   label: 'Polish queue',  href: '/app/sessions/polish-queue',      match: (p) => p.startsWith('/app/sessions/polish-queue') },
+    ];
+  }
+  // People: Students, Households (Households hidden on solo plan)
+  if (pathname.startsWith('/app/students') || pathname.startsWith('/app/households') || pathname === '/app/people') {
+    const tabs: Tab[] = [
+      { key: 'students',  label: 'Students',  href: '/app/students',  match: (p) => p.startsWith('/app/students') },
+    ];
+    if (_opts.hasHouseholds) {
+      tabs.push({ key: 'households', label: 'Households', href: '/app/households', match: (p) => p.startsWith('/app/households') });
+    }
+    return tabs;
+  }
+  // Money: Invoices, Payouts received
+  if (pathname.startsWith('/app/invoices') || pathname === '/app/payouts' || pathname === '/app/money') {
+    return [
+      { key: 'invoices', label: 'Invoices',         href: '/app/invoices',  match: (p) => p.startsWith('/app/invoices') },
+      { key: 'payouts',  label: 'Payouts received', href: '/app/payouts',   match: (p) => p === '/app/payouts' },
+    ];
+  }
+  // Resources: Files, Lesson plans
+  if (pathname.startsWith('/app/lesson-plans') || pathname.startsWith('/app/files') || pathname === '/app/resources') {
+    return [
+      { key: 'lesson-plans', label: 'Lesson plans', href: '/app/lesson-plans', match: (p) => p.startsWith('/app/lesson-plans') },
+      { key: 'files',        label: 'Files',        href: '/app/files',        match: (p) => p.startsWith('/app/files') },
+    ];
+  }
+  // Team: Tutors, Payouts (owner only on multi-tutor plan)
+  if (pathname.startsWith('/app/tutors') || pathname === '/app/team') {
+    return [
+      { key: 'tutors',  label: 'Tutors',           href: '/app/tutors',  match: (p) => p.startsWith('/app/tutors') },
+      { key: 'payouts', label: 'Payouts to tutors',href: '/app/payouts', match: (p) => p === '/app/payouts' },
+    ];
+  }
+  // Settings: tabs already exist via SettingsTabs — leave to that component.
+  return null;
+}
+
+// Page-title fallback derived from the pathname. Used for browser tab title
+// when the page doesn't pass one in.
+function defaultPageTitle(pathname: string): string {
+  if (pathname === '/app') return 'Home';
+  if (pathname.startsWith('/app/sessions')) return 'Sessions';
+  if (pathname.startsWith('/app/templates')) return 'Templates';
+  if (pathname.startsWith('/app/calendar')) return 'Calendar';
+  if (pathname.startsWith('/app/students')) return 'People';
+  if (pathname.startsWith('/app/households')) return 'People';
+  if (pathname.startsWith('/app/invoices')) return 'Money';
+  if (pathname === '/app/payouts') return 'Money';
+  if (pathname.startsWith('/app/lesson-plans')) return 'Resources';
+  if (pathname.startsWith('/app/files')) return 'Resources';
+  if (pathname.startsWith('/app/messages')) return 'Messages';
+  if (pathname.startsWith('/app/tutors')) return 'Team';
+  if (pathname.startsWith('/app/settings')) return 'Settings';
+  return 'Crestio';
+}
+
+export default function Layout({
+  children,
+  title,
+  subtitle,
+  actions,
+  pageTitle,
+  breadcrumbItems,
+}: Props) {
   const { t } = useTranslation('common');
   const router = useRouter();
   const { organization } = useOrganization();
   const { membership } = useMembership();
-  const isTutor = membership?.role === 'tutor';
   const isOwner = membership?.role === 'owner';
   const planTier = organization?.plan_tier ?? 'solo';
-
-  const nav = NAV_ITEMS.filter((item) => {
-    // Owner-only items (Tutors, Payouts) respect plan gating too.
-    if (item.requires === 'multi_tutor') {
-      if (!isOwner) return false;
-      return planAllowsFeature(planTier, 'multi_tutor');
-    }
-    // Households nav entry: hidden on Solo plan.
-    if (item.requires === 'households') {
-      return planTier !== 'solo';
-    }
-    return true;
-  });
+  const hasMultiTutor = planAllowsFeature(planTier, 'multi_tutor');
+  const hasHouseholds = planTier !== 'solo';
 
   const businessName = organization?.name ?? 'Crestio';
   const [userEmail, setUserEmail] = useState('');
   const [accountOpen, setAccountOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [messagesUnread, setMessagesUnread] = useState<{ total: number; hasUrgent: boolean }>({ total: 0, hasUrgent: false });
+
+  const nav = useMemo(() => NAV_ITEMS.filter((item) => {
+    if (item.requires === 'team_tab') {
+      // Team sidebar entry: owner on multi-tutor plan.
+      return isOwner && hasMultiTutor;
+    }
+    return true;
+  }), [isOwner, hasMultiTutor]);
 
   useEffect(() => {
     let cancelled = false;
@@ -105,13 +188,12 @@ export default function Layout({ children, title, subtitle, actions, pageTitle }
     };
   }, [router.pathname]);
 
-  // Items that appear in the mobile "More" drawer. Plan- and role-aware.
   const moreNav = [
     { href: '/app/sessions', label: t('nav.sessions') },
     { href: '/app/messages', label: t('nav.messages') },
     { href: '/app/lesson-plans', label: t('nav.lesson_plans') },
     { href: '/app/invoices', label: t('nav.invoices') },
-    ...(isOwner && planAllowsFeature(planTier, 'multi_tutor') ? [
+    ...(isOwner && hasMultiTutor ? [
       { href: '/app/tutors', label: t('nav.tutors') },
       { href: '/app/payouts', label: t('nav.payouts') },
     ] : []),
@@ -128,7 +210,7 @@ export default function Layout({ children, title, subtitle, actions, pageTitle }
   }, []);
 
   useEffect(() => {
-    const handle = () => setAccountOpen(false);
+    const handle = () => { setAccountOpen(false); setMobileNavOpen(false); };
     router.events.on('routeChangeStart', handle);
     return () => router.events.off('routeChangeStart', handle);
   }, [router.events]);
@@ -140,10 +222,20 @@ export default function Layout({ children, title, subtitle, actions, pageTitle }
 
   const avatar = (userEmail[0] ?? 'U').toUpperCase();
 
-  const browserTitleBase = pageTitle ?? title;
-  const browserTitle = browserTitleBase
-    ? (browserTitleBase.includes('Crestio') ? browserTitleBase : `${browserTitleBase} · Crestio`)
-    : 'Crestio';
+  // Browser tab title.
+  const browserTitleBase = pageTitle ?? title ?? defaultPageTitle(router.pathname);
+  const browserTitle = browserTitleBase.includes('Crestio')
+    ? browserTitleBase
+    : `${browserTitleBase} · Crestio`;
+
+  // Tab strip for the current consolidated section (if any).
+  const tabs = tabsForPath(router.pathname, router.query, { isOwner, hasTeam: hasMultiTutor, hasHouseholds });
+
+  // Breadcrumb for the top bar. If the page provided crumbs, use them;
+  // else derive a single-leaf crumb from the page title.
+  const crumbs: Crumb[] = breadcrumbItems && breadcrumbItems.length > 0
+    ? breadcrumbItems
+    : [{ label: title ?? defaultPageTitle(router.pathname) }];
 
   return (
     <div
@@ -155,116 +247,113 @@ export default function Layout({ children, title, subtitle, actions, pageTitle }
       </Head>
       <TestAccountBanner />
       <div className="flex flex-1 min-h-0">
-      {/* ================= DESKTOP SIDEBAR (nav only) ================= */}
-      <aside className="w-60 shrink-0 border-r border-rule bg-cream hidden md:flex flex-col min-h-screen sticky top-0">
-        <Link href="/app" className="block px-6 py-6 border-b border-rule">
-          <div className="font-display text-2xl tracking-tightest text-ink leading-none">
-            crest<span className="italic text-forest">io</span>
-          </div>
-          {businessName.toLowerCase() !== 'crestio' && (
-            <div className="text-2xs uppercase tracking-widest text-ink-soft mt-1.5 truncate">
-              {businessName}
-            </div>
+        {/* ============== DESKTOP SIDEBAR (collapsed below xl) ============== */}
+        <aside
+          className={cx(
+            'hidden md:flex shrink-0 border-r border-rule bg-surface flex-col min-h-screen sticky top-0',
+            'w-[60px] xl:w-[224px]',
           )}
-        </Link>
+          aria-label="Primary"
+        >
+          <Link href="/app" className="flex items-center gap-2 px-3 xl:px-5 h-14 border-b border-rule">
+            <span className="font-display text-xl tracking-tighter text-ink leading-none">
+              c<span className="hidden xl:inline">rest</span><span className="italic text-forest">i</span>o
+            </span>
+          </Link>
 
-        <div className="px-3 pt-4 pb-3 border-b border-rule space-y-2">
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-search'))}
-            className="w-full flex items-center justify-between px-3 py-2 rounded border border-rule bg-surface hover:bg-ruleSoft transition-colors text-left"
-            aria-label={t('nav.search')}
-          >
-            <span className="text-sm text-ink-muted">{t('actions.search_placeholder')}</span>
-            <span className="text-2xs text-ink-soft font-mono">⌘K</span>
-          </button>
-          <button
-            type="button"
-            onClick={openAssistant}
-            className="w-full flex items-center justify-between px-3 py-2 rounded border border-rule bg-surface hover:bg-ruleSoft transition-colors text-left"
-            aria-label={t('nav.assistant')}
-          >
-            <span className="text-sm text-ink">{t('nav.assistant')}</span>
-            <span className="text-2xs text-ink-soft">AI</span>
-          </button>
-        </div>
-
-        <nav className="px-3 py-4 space-y-0.5 flex-1">
-          {nav.map((item) => {
-            const active = item.match(router.pathname);
-            const showBadge = item.href === '/app/messages' && messagesUnread.total > 0;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? 'page' : undefined}
-                className={cx(
-                  'group relative flex items-center justify-between pl-3.5 pr-3 py-2 text-sm rounded transition-all duration-200 ease-out',
-                  active
-                    ? 'bg-surface text-ink font-medium shadow-card'
-                    : 'text-ink-muted hover:text-ink hover:bg-ruleSoft/70',
-                )}
-              >
-                {/* Subtle left accent on the active link */}
-                <span
-                  aria-hidden="true"
+          <nav className="flex-1 py-3 px-2 xl:px-2 space-y-0.5">
+            {nav.map((item) => {
+              const active = item.match(router.pathname);
+              const showBadge = item.href === '/app/messages' && messagesUnread.total > 0;
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  title={t(item.labelKey)}
                   className={cx(
-                    'absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-forest transition-opacity duration-200 ease-out',
-                    active ? 'opacity-100' : 'opacity-0',
+                    'group relative flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors duration-100',
+                    active
+                      ? 'text-forest font-medium'
+                      : 'text-ink-muted hover:text-ink hover:bg-ruleSoft',
                   )}
-                />
-                <span>{t(item.labelKey)}</span>
-                {showBadge && (
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cx(
+                      'absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-forest transition-opacity duration-100',
+                      active ? 'opacity-100' : 'opacity-0',
+                    )}
+                  />
                   <span
                     className={cx(
-                      'inline-flex items-center justify-center text-2xs font-medium rounded-full px-1.5 min-w-[18px] h-[18px]',
-                      messagesUnread.hasUrgent ? 'bg-claret text-cream' : 'bg-forest text-cream',
+                      'shrink-0 grid place-items-center w-7 h-7 rounded-md transition-colors duration-100',
+                      active ? 'bg-forest-soft text-forest' : 'text-ink-muted group-hover:text-ink',
                     )}
-                    aria-label={`${messagesUnread.total} unread messages`}
                   >
-                    {messagesUnread.total > 99 ? '99+' : messagesUnread.total}
+                    <Icon />
                   </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+                  <span className="hidden xl:inline truncate">{t(item.labelKey)}</span>
+                  {showBadge && (
+                    <span
+                      className={cx(
+                        'hidden xl:inline-flex ml-auto items-center justify-center text-2xs font-medium rounded-full px-1.5 min-w-[18px] h-[18px]',
+                        messagesUnread.hasUrgent ? 'bg-claret text-white' : 'bg-forest text-white',
+                      )}
+                      aria-label={`${messagesUnread.total} unread messages`}
+                    >
+                      {messagesUnread.total > 99 ? '99+' : messagesUnread.total}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
 
-      {/* ================= DESKTOP TOP BAR ================= */}
-      <div className="flex-1 min-w-0 flex flex-col">
-        <header className="hidden md:flex sticky top-0 z-20 bg-cream border-b border-rule px-6 h-14 items-center justify-end gap-2">
-          <ExemptionOffPill />
-          <NotificationBell mode="tutor" />
-          <AccountDropdown
-            email={userEmail}
-            avatar={avatar}
-            open={accountOpen}
-            setOpen={setAccountOpen}
-            isOwner={isOwner}
-            isPlatformOwner={isPlatformOwner(userEmail)}
-            onOpenLanguage={() => { setAccountOpen(false); setLanguageOpen(true); }}
-            signOut={signOut}
-          />
-        </header>
+          <div className="border-t border-rule p-2 xl:p-3">
+            <div className="hidden xl:flex items-center justify-between mb-2 px-1">
+              <span className="text-2xs uppercase tracking-widest text-ink-soft font-medium">
+                {planTier === 'solo' ? 'Solo' : planTier === 'team' ? 'Team' : 'Trial'}
+              </span>
+              {isOwner && (
+                <Link href="/app/settings/billing" className="text-2xs text-forest hover:underline">
+                  Manage
+                </Link>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={openAssistant}
+              className="hidden xl:flex w-full items-center gap-2 px-3 py-2 rounded-md text-xs text-ink-muted hover:text-ink hover:bg-ruleSoft transition-colors duration-100"
+            >
+              <IconSparkle />
+              <span>{t('nav.assistant')}</span>
+            </button>
+          </div>
+        </aside>
 
-        {/* ================= MOBILE TOP BAR ================= */}
-        <div className="md:hidden sticky top-0 z-30 bg-cream border-b border-rule pt-safe">
-          <div className="px-5 h-14 flex items-center justify-between">
-            <Link href="/app" className="font-display text-xl tracking-tightest">
-              crest<span className="italic text-forest">io</span>
-            </Link>
-            <div className="flex items-center gap-2">
+        {/* ================= MAIN COLUMN ================= */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          {/* ============== DESKTOP TOP BAR ============== */}
+          <header className="hidden md:flex sticky top-0 z-20 bg-cream/95 backdrop-blur supports-[backdrop-filter]:bg-cream/85 border-b border-rule h-14 items-center gap-4 px-4 md:px-8">
+            <Breadcrumb items={crumbs} />
+            <div className="flex-1 flex justify-center">
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-search'))}
-                className="h-11 w-11 grid place-items-center rounded border border-rule text-ink"
-                aria-label="Search"
+                className="hidden md:flex items-center gap-2 w-full max-w-[340px] px-3 h-9 rounded-md border border-rule bg-surface hover:bg-ruleSoft/60 transition-colors duration-100 text-left"
+                aria-label="Open command palette"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
-                  <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-ink-soft shrink-0">
+                  <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
                 </svg>
+                <span className="flex-1 text-xs text-ink-muted truncate">Search anything…</span>
+                <kbd className="text-2xs font-mono text-ink-soft border border-rule rounded px-1.5 py-0.5">⌘K</kbd>
               </button>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <ExemptionOffPill />
               <NotificationBell mode="tutor" />
               <AccountDropdown
                 email={userEmail}
@@ -277,121 +366,209 @@ export default function Layout({ children, title, subtitle, actions, pageTitle }
                 signOut={signOut}
               />
             </div>
-          </div>
-        </div>
+          </header>
 
-        {/* ================= MAIN ================= */}
-        <main className="flex-1 min-w-0 pb-20 md:pb-0">
-          {title && (
-            <header className="px-5 md:px-12 pt-8 md:pt-10 pb-6 md:pb-8 border-b border-rule bg-cream">
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                <div>
-                  {subtitle && (
-                    <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">
-                      {subtitle}
-                    </div>
-                  )}
-                  <h1 className="font-display text-3xl md:text-5xl tracking-tightest text-ink leading-none">
-                    {title}
-                  </h1>
-                </div>
-                {actions && <div className="hidden md:flex items-center gap-2">{actions}</div>}
+          {/* ============== MOBILE TOP BAR ============== */}
+          <div className="md:hidden sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-rule pt-safe">
+            <div className="px-4 h-14 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen(true)}
+                className="h-10 w-10 grid place-items-center rounded-md text-ink"
+                aria-label="Open menu"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
+              </button>
+              <div className="flex-1 min-w-0 text-center">
+                <span className="text-sm text-ink font-medium truncate">{crumbs[crumbs.length - 1]?.label}</span>
               </div>
-              {actions && <div className="md:hidden flex items-center gap-2 mt-4 [&>*]:!px-3 [&>*]:!py-1.5 [&>*]:!text-xs">{actions}</div>}
-            </header>
-          )}
-
-          <div className="px-5 md:px-12 py-6 md:py-10">{children}</div>
-        </main>
-
-        {/* ================= MOBILE BOTTOM TABS (5 items) ================= */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-cream border-t border-rule pb-safe">
-          <div className="grid grid-cols-5">
-            <Link href="/app" className={tabCx(router.pathname === '/app')}>
-              <IconHome />
-              <span className="text-2xs font-medium">Home</span>
-            </Link>
-            <Link href="/app/calendar" className={tabCx(router.pathname.startsWith('/app/calendar'))}>
-              <IconCalendar />
-              <span className="text-2xs font-medium">Calendar</span>
-            </Link>
-            <Link href="/app/students" className={tabCx(router.pathname.startsWith('/app/students'))}>
-              <IconUsers />
-              <span className="text-2xs font-medium">Students</span>
-            </Link>
-            <button type="button" onClick={openAssistant} className={tabCx(false)}>
-              <IconSparkle />
-              <span className="text-2xs font-medium">Assistant</span>
-            </button>
-            <button type="button" onClick={() => setMoreOpen(true)} className={cx(tabCx(moreOpen), 'relative')}>
-              <IconMore />
-              <span className="text-2xs font-medium">More</span>
-              {messagesUnread.total > 0 && (
-                <span
-                  className={cx(
-                    'absolute top-1 right-1/4 inline-block w-2 h-2 rounded-full',
-                    messagesUnread.hasUrgent ? 'bg-claret' : 'bg-forest',
-                  )}
-                  aria-label="Unread messages"
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-search'))}
+                  className="h-10 w-10 grid place-items-center rounded-md text-ink"
+                  aria-label="Search"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+                  </svg>
+                </button>
+                <NotificationBell mode="tutor" />
+                <AccountDropdown
+                  email={userEmail}
+                  avatar={avatar}
+                  open={accountOpen}
+                  setOpen={setAccountOpen}
+                  isOwner={isOwner}
+                  isPlatformOwner={isPlatformOwner(userEmail)}
+                  onOpenLanguage={() => { setAccountOpen(false); setLanguageOpen(true); }}
+                  signOut={signOut}
                 />
-              )}
-            </button>
-          </div>
-        </nav>
-
-        {/* ================= MOBILE MORE DRAWER ================= */}
-        {moreOpen && (
-          <div className="md:hidden fixed inset-0 z-40 bg-ink/40" onClick={() => setMoreOpen(false)}>
-            <div
-              className="absolute bottom-0 left-0 right-0 bg-cream rounded-t-xl shadow-lift pb-safe"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="h-1 w-10 bg-rule rounded-full mx-auto my-3" />
-              <div className="px-5 pb-4 divide-y divide-ruleSoft">
-                {moreNav.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center justify-between py-3 text-ink"
-                    onClick={() => setMoreOpen(false)}
-                  >
-                    <span>{item.label}</span>
-                    <span className="text-ink-soft">›</span>
-                  </Link>
-                ))}
-                <button
-                  onClick={() => { setMoreOpen(false); window.dispatchEvent(new CustomEvent('crestio:open-support')); }}
-                  className="w-full flex items-center justify-between py-3 text-ink text-left"
-                >
-                  <span>Help &amp; support</span>
-                  <span className="text-ink-soft">›</span>
-                </button>
-                <button
-                  onClick={signOut}
-                  className="w-full flex items-center justify-between py-3 text-claret text-left"
-                >
-                  <span>Sign out</span>
-                  <span>›</span>
-                </button>
               </div>
             </div>
           </div>
-        )}
-      </div>
 
-      <AssistantPanel />
-      <AssistantLauncher />
-      <SupportWidget />
-      <GlobalSearch />
+          {/* ============== TAB STRIP (consolidated sections) ============== */}
+          {tabs && tabs.length > 0 && !breadcrumbItems && (
+            <TabStrip tabs={tabs} ariaLabel="Section tabs" />
+          )}
+
+          {/* ============== MAIN CONTENT ============== */}
+          <main className="flex-1 min-w-0 pb-24 md:pb-0">
+            {title && (
+              <div className="px-4 md:px-8 pt-6 md:pt-8 pb-2">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+                  <div className="min-w-0">
+                    {subtitle && (
+                      <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1 font-medium">
+                        {subtitle}
+                      </div>
+                    )}
+                    <h1 className="text-[24px] font-display font-semibold tracking-tighter text-ink leading-tight m-0">
+                      {title}
+                    </h1>
+                  </div>
+                  {actions && (
+                    <div className="flex items-center gap-2 shrink-0 [&_a.btn-primary]:h-10 [&_button.btn-primary]:h-10">
+                      {actions}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className={cx(title ? 'px-4 md:px-8 pb-8 md:pb-10 pt-4' : '')}>
+              {children}
+            </div>
+          </main>
+
+          {/* ============== MOBILE BOTTOM TABS ============== */}
+          <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-surface border-t border-rule pb-safe">
+            <div className="grid grid-cols-5">
+              <Link href="/app" className={tabCx(router.pathname === '/app')}>
+                <IconHome />
+                <span className="text-2xs font-medium">Home</span>
+              </Link>
+              <Link href="/app/sessions" className={tabCx(router.pathname.startsWith('/app/sessions') || router.pathname.startsWith('/app/templates') || router.pathname.startsWith('/app/calendar'))}>
+                <IconCalendar />
+                <span className="text-2xs font-medium">Sessions</span>
+              </Link>
+              <Link href="/app/students" className={tabCx(router.pathname.startsWith('/app/students') || router.pathname.startsWith('/app/households'))}>
+                <IconUsers />
+                <span className="text-2xs font-medium">People</span>
+              </Link>
+              <Link href="/app/messages" className={cx(tabCx(router.pathname.startsWith('/app/messages')), 'relative')}>
+                <IconChat />
+                <span className="text-2xs font-medium">Messages</span>
+                {messagesUnread.total > 0 && (
+                  <span
+                    className={cx(
+                      'absolute top-1 right-1/4 inline-block w-2 h-2 rounded-full',
+                      messagesUnread.hasUrgent ? 'bg-claret' : 'bg-forest',
+                    )}
+                    aria-label="Unread messages"
+                  />
+                )}
+              </Link>
+              <button type="button" onClick={() => setMoreOpen(true)} className={cx(tabCx(moreOpen))}>
+                <IconMore />
+                <span className="text-2xs font-medium">More</span>
+              </button>
+            </div>
+          </nav>
+
+          {/* ============== MOBILE NAV DRAWER ============== */}
+          {mobileNavOpen && (
+            <div className="md:hidden fixed inset-0 z-40 bg-ink/40 animate-fade-in" onClick={() => setMobileNavOpen(false)}>
+              <div
+                className="absolute top-0 bottom-0 left-0 w-[280px] bg-surface shadow-lift animate-fade-in flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="px-5 h-14 flex items-center border-b border-rule">
+                  <span className="font-display text-xl tracking-tighter">
+                    crest<span className="italic text-forest">io</span>
+                  </span>
+                </div>
+                <nav className="flex-1 py-3 px-2 overflow-y-auto">
+                  {nav.map((item) => {
+                    const active = item.match(router.pathname);
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cx(
+                          'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm',
+                          active ? 'text-forest font-medium bg-forest-soft/40' : 'text-ink hover:bg-ruleSoft',
+                        )}
+                        onClick={() => setMobileNavOpen(false)}
+                      >
+                        <Icon />
+                        <span>{t(item.labelKey)}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
+          )}
+
+          {/* ============== MOBILE MORE DRAWER ============== */}
+          {moreOpen && (
+            <div className="md:hidden fixed inset-0 z-40 bg-ink/40 animate-fade-in" onClick={() => setMoreOpen(false)}>
+              <div
+                className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-[12px] shadow-lift pb-safe"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="h-1 w-10 bg-rule rounded-full mx-auto my-3" />
+                <div className="px-5 pb-4 divide-y divide-ruleSoft">
+                  {moreNav.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center justify-between py-3 text-sm text-ink"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      <span>{item.label}</span>
+                      <span className="text-ink-soft">›</span>
+                    </Link>
+                  ))}
+                  <button
+                    onClick={() => { setMoreOpen(false); window.dispatchEvent(new CustomEvent('crestio:open-support')); }}
+                    className="w-full flex items-center justify-between py-3 text-sm text-ink text-left"
+                  >
+                    <span>Help &amp; support</span>
+                    <span className="text-ink-soft">›</span>
+                  </button>
+                  <button
+                    onClick={signOut}
+                    className="w-full flex items-center justify-between py-3 text-sm text-claret text-left"
+                  >
+                    <span>Sign out</span>
+                    <span>›</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <AssistantPanel />
+        <AssistantLauncher />
+        <SupportWidget />
+        <CommandPalette />
+        <FloatingActionButton />
       </div>
       <LanguageSwitcherModal open={languageOpen} onClose={() => setLanguageOpen(false)} />
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Account dropdown (top-right)
-// ---------------------------------------------------------------------------
+// ----------------------------------------------------------------------
+// Account dropdown
+// ----------------------------------------------------------------------
 
 function AccountDropdown({
   email,
@@ -417,12 +594,12 @@ function AccountDropdown({
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-ruleSoft transition-colors"
+        className="flex items-center gap-2 px-1.5 py-1 rounded-md hover:bg-ruleSoft transition-colors duration-100"
         aria-label="Account menu"
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <div className="h-8 w-8 bg-forest text-cream rounded-full grid place-items-center text-xs font-medium font-mono">
+        <div className="h-8 w-8 bg-forest text-white rounded-full grid place-items-center text-xs font-medium font-mono">
           {avatar}
         </div>
       </button>
@@ -431,10 +608,10 @@ function AccountDropdown({
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
           <div
             role="menu"
-            className="absolute right-0 top-full mt-1 z-50 w-60 bg-surface border border-rule rounded shadow-lift py-1 animate-fade-in"
+            className="absolute right-0 top-full mt-1 z-50 w-60 bg-surface border border-rule rounded-md shadow-lift py-1 animate-fade-in"
           >
             <div className="px-3 py-2 border-b border-rule">
-              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-0.5">{t('nav.signed_in_as')}</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-0.5 font-medium">{t('nav.signed_in_as')}</div>
               <div className="text-xs text-ink truncate">{email}</div>
             </div>
             <Link href="/app/settings/account" className="block px-3 py-2 text-sm text-ink hover:bg-ruleSoft" role="menuitem">
@@ -455,7 +632,7 @@ function AccountDropdown({
             )}
             {isPlatformOwner && (
               <div className="border-t border-rule mt-1 pt-1">
-                <div className="px-3 pb-1 text-2xs uppercase tracking-widest text-ink-soft">{t('nav.owner_tools')}</div>
+                <div className="px-3 pb-1 text-2xs uppercase tracking-widest text-ink-soft font-medium">{t('nav.owner_tools')}</div>
                 <Link href="/app/owner/test-accounts" className="block px-3 py-2 text-sm text-ink hover:bg-ruleSoft" role="menuitem">
                   {t('nav.test_accounts')}
                 </Link>
@@ -490,60 +667,84 @@ function AccountDropdown({
 
 function tabCx(active: boolean) {
   return cx(
-    'flex flex-col items-center justify-center gap-1 py-2.5 transition-colors',
+    'flex flex-col items-center justify-center gap-1 py-2.5 transition-colors duration-100',
     active ? 'text-forest' : 'text-ink-muted active:bg-ruleSoft',
   );
 }
 
+// ----------------------------------------------------------------------
+// Icon set — single 18×18 stroke-1.75 weight.
+// ----------------------------------------------------------------------
+
 function IconHome() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1V9.5z"/>
-    </svg>
-  );
-}
-function IconClock() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-    </svg>
-  );
-}
-function IconUsers() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/>
-      <circle cx="10" cy="7" r="4"/>
-      <path d="M21 21v-2a4 4 0 0 0-3-3.87"/>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-    </svg>
-  );
-}
-function IconInvoice() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 3h10l4 4v14H6z"/><path d="M8 10h8M8 14h8M8 18h4"/>
     </svg>
   );
 }
 function IconCalendar() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="5" width="18" height="16" rx="2"/>
-      <path d="M3 10h18M8 3v4M16 3v4"/>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>
+    </svg>
+  );
+}
+function IconUsers() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/>
+      <path d="M21 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  );
+}
+function IconCoin() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c.7-.6 1.7-1 3-1s2.3.4 3 1"/><path d="M9 14.5c.7.6 1.7 1 3 1s2.3-.4 3-1"/>
+    </svg>
+  );
+}
+function IconBook() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4V4z"/><path d="M4 16a4 4 0 0 1 4-4h12"/>
+    </svg>
+  );
+}
+function IconChat() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12a8 8 0 0 1-11.3 7.3L4 21l1.7-5.7A8 8 0 1 1 21 12z"/>
+    </svg>
+  );
+}
+function IconTeam() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/>
+      <path d="M3 19a6 6 0 0 1 12 0"/><path d="M15 19a4 4 0 0 1 6.5-3.1"/>
+    </svg>
+  );
+}
+function IconGear() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
     </svg>
   );
 }
 function IconSparkle() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>
     </svg>
   );
 }
 function IconMore() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
     </svg>
   );

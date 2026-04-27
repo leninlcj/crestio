@@ -16,18 +16,28 @@
     @apply bg-cream text-ink font-sans;
     font-feature-settings: 'ss01', 'cv11';
     overscroll-behavior-y: none;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
+  /* Typography — single source of truth.
+     Display = page hero numbers (40 / 600 / tabular).
+     H1 = page title (24 / 600).
+     H2 = section (16 / 600).
+     Body = 14 / 400 / 1.5.
+     Heading tracking is -0.02em.                                       */
   h1, h2, h3, h4 {
-    @apply font-display tracking-tightest;
-    font-weight: 500;
+    @apply font-display tracking-tighter text-ink;
+    font-weight: 600;
   }
+  h1 { font-size: 24px; line-height: 1.2; }
+  h2 { font-size: 16px; line-height: 1.4; }
 
   input, select, textarea, button {
     font-family: inherit;
   }
 
-  /* Prevent iOS auto-zoom on input focus — inputs must be 16px+ on mobile */
+  /* Prevent iOS auto-zoom on input focus — inputs must be 16px+ on mobile. */
   @media (max-width: 767px) {
     input, select, textarea {
       font-size: 16px !important;
@@ -42,56 +52,53 @@
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0 30px #FFFFFF inset !important;
-    -webkit-text-fill-color: #1A1815 !important;
+    -webkit-text-fill-color: #0F1714 !important;
   }
 }
 
 @layer components {
+  /* Buttons — 40px tall, 8px radius, single transition. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors duration-150 disabled:opacity-40 disabled:cursor-not-allowed;
-    border-radius: 4px;
+    @apply inline-flex items-center justify-center gap-2 px-4 text-sm font-medium transition-colors duration-100 disabled:opacity-40 disabled:cursor-not-allowed;
+    border-radius: 8px;
+    height: 40px;
     min-height: 40px;
   }
-  .btn-primary {
-    @apply btn bg-forest text-cream hover:bg-forest-ink active:bg-forest-ink;
-  }
-  .btn-secondary {
-    @apply btn bg-surface text-ink border border-rule hover:bg-ruleSoft active:bg-ruleSoft;
-  }
-  .btn-ghost {
-    @apply btn text-ink-muted hover:text-ink hover:bg-ruleSoft active:bg-ruleSoft;
-  }
-  .btn-danger {
-    @apply btn text-claret hover:bg-claret/5 active:bg-claret/10;
-  }
+  .btn-primary  { @apply btn bg-forest text-white hover:bg-forest-ink active:bg-forest-ink; }
+  .btn-secondary{ @apply btn bg-surface text-ink border border-rule hover:bg-ruleSoft active:bg-ruleSoft; }
+  .btn-ghost    { @apply btn text-ink-muted hover:text-ink hover:bg-ruleSoft active:bg-ruleSoft; }
+  .btn-danger   { @apply btn text-claret hover:bg-claret/5 active:bg-claret/10; }
 
+  /* Inputs — 40px tall, 8px radius, 2px forest focus ring. */
   .input {
-    @apply w-full bg-surface border border-rule px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-soft transition-colors;
-    border-radius: 4px;
-    min-height: 42px;
+    @apply w-full bg-surface border border-rule px-3 text-sm text-ink placeholder:text-ink-soft transition-colors duration-100;
+    border-radius: 8px;
+    height: 40px;
+    min-height: 40px;
   }
+  textarea.input { height: auto; min-height: 80px; @apply py-2.5; }
   .input:focus {
     @apply border-forest;
-    box-shadow: 0 0 0 3px rgba(31, 58, 46, 0.08);
+    box-shadow: 0 0 0 2px rgba(31, 58, 46, 0.2);
   }
 
   .label {
-    @apply block text-2xs uppercase tracking-widest text-ink-muted font-medium mb-1.5;
+    @apply block text-xs font-medium text-ink-muted mb-1.5;
   }
 
+  /* Cards — white surface, 1px border, 8px radius, no shadow. */
   .card {
     @apply bg-surface border border-rule;
-    border-radius: 6px;
+    border-radius: 8px;
   }
-  /* Subtle hover lift for cards that benefit from tactile feedback. Apply to
-     dashboard cards and other "interactive" surfaces. 200ms ease-out. */
   .card-hover {
-    @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-card hover:border-rule/80;
+    @apply transition-colors duration-100 ease-out hover:bg-ruleSoft/40;
   }
   .card-clickable {
-    @apply cursor-pointer card-hover hover:shadow-lift active:translate-y-0;
+    @apply cursor-pointer card-hover;
   }
 
+  /* Tables — 56px row height, hover background only, no inner dividers. */
   .table-wrap {
     @apply card overflow-x-auto;
   }
@@ -99,56 +106,57 @@
     @apply w-full;
   }
   .table th {
-    @apply text-left text-2xs uppercase tracking-widest text-ink-muted font-medium px-5 py-3.5 border-b border-rule bg-ruleSoft whitespace-nowrap;
+    @apply text-left text-2xs uppercase tracking-widest text-ink-muted font-medium px-4 py-3 border-b border-rule whitespace-nowrap;
   }
-  /* Sticky table headers on desktop. Offset accounts for the 56px sticky
-     top bar in Layout. On mobile we typically convert to card layouts so
-     stickiness isn't needed. */
   @media (min-width: 768px) {
     .table thead th {
       position: sticky;
       top: 56px;
       z-index: 5;
+      background: #FAFAF8;
     }
   }
   .table td {
-    @apply px-5 py-4 text-sm border-b border-ruleSoft;
-  }
-  .table tr:last-child td {
-    @apply border-b-0;
+    @apply px-4 py-3 text-sm text-ink;
+    height: 56px;
   }
   .table tbody tr {
-    @apply transition-colors duration-150 ease-out;
+    @apply transition-colors duration-100 ease-out border-b border-ruleSoft;
   }
-  .table tr.row-link {
-    @apply cursor-pointer hover:bg-ruleSoft/60 active:bg-ruleSoft/80;
+  .table tbody tr:last-child {
+    @apply border-b-0;
   }
-  .table tbody tr:not(.row-link):hover {
-    @apply bg-ruleSoft/30;
+  .table tr.row-link, .table tbody tr:hover {
+    @apply cursor-pointer bg-ruleSoft/40;
   }
 
-  .badge {
-    @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-2xs font-medium uppercase tracking-wider whitespace-nowrap;
-    border-radius: 3px;
+  /* Status pills — 11px text, tinted bg at 8% opacity, full color text. */
+  .pill {
+    @apply inline-flex items-center text-2xs font-semibold whitespace-nowrap;
+    border-radius: 999px;
+    padding: 4px 8px;
   }
-  .badge-neutral { @apply badge bg-ruleSoft text-ink-muted; }
-  .badge-forest  { @apply badge bg-forest-soft text-forest-ink; }
-  .badge-rust    { @apply badge bg-rust/10 text-rust; }
-  .badge-claret  { @apply badge bg-claret/10 text-claret; }
-  .badge-amber   { @apply badge bg-amber-soft text-amber-ink; }
+  .pill-neutral { @apply pill bg-ruleSoft text-ink-muted; }
+  .pill-forest  { @apply pill text-forest-ink; background-color: rgba(31, 58, 46, 0.08); }
+  .pill-success { @apply pill text-success-ink; background-color: rgba(47, 125, 79, 0.10); }
+  .pill-amber   { @apply pill text-amber-ink; background-color: rgba(184, 134, 11, 0.10); }
+  .pill-claret  { @apply pill text-claret; background-color: rgba(122, 34, 51, 0.08); }
+  .pill-rust    { @apply pill text-rust; background-color: rgba(139, 74, 31, 0.08); }
+
+  /* Legacy badge aliases (older code paths). Prefer .pill-* in new code. */
+  .badge          { @apply pill; }
+  .badge-neutral  { @apply pill-neutral; }
+  .badge-forest   { @apply pill-forest; }
+  .badge-rust     { @apply pill-rust; }
+  .badge-claret   { @apply pill-claret; }
+  .badge-amber    { @apply pill-amber; }
 
   .prose-plan {
     @apply text-sm leading-relaxed text-ink;
   }
-  .prose-plan h1 {
-    @apply font-display text-2xl tracking-tightest mt-6 mb-2;
-  }
-  .prose-plan h2 {
-    @apply font-display text-xl tracking-tightest mt-6 mb-2;
-  }
-  .prose-plan h3 {
-    @apply font-sans text-base font-semibold mt-5 mb-1.5 uppercase text-xs tracking-widest text-ink-muted;
-  }
+  .prose-plan h1 { @apply font-display text-2xl tracking-tighter mt-6 mb-2; }
+  .prose-plan h2 { @apply font-display text-xl tracking-tighter mt-6 mb-2; }
+  .prose-plan h3 { @apply font-sans text-xs font-semibold mt-5 mb-1.5 uppercase tracking-widest text-ink-muted; }
   .prose-plan p { @apply mb-3; }
   .prose-plan ul { @apply list-disc pl-5 mb-3 space-y-1; }
   .prose-plan ol { @apply list-decimal pl-5 mb-3 space-y-1; }
@@ -157,65 +165,60 @@
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-balance { text-wrap: balance; }
+
+  /* Tabular numerals — for stats, money, durations. */
+  .num, .tabular {
+    font-feature-settings: 'tnum', 'lnum';
+    font-variant-numeric: tabular-nums lining-nums;
   }
-  /* Slim scrollbars for horizontal scrollers (assistant chip row, etc.) */
+
+  /* Page hero numbers — 40px / 600 / tabular. */
+  .display-num {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 40px;
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-feature-settings: 'tnum', 'lnum';
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Slim scrollbars for horizontal scrollers. */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: rgba(26, 24, 21, 0.18) transparent;
+    scrollbar-color: rgba(15, 23, 20, 0.18) transparent;
   }
-  .scrollbar-thin::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
-  }
+  .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(26, 24, 21, 0.18);
+    background: rgba(15, 23, 20, 0.18);
     border-radius: 6px;
   }
-  .num {
-    font-feature-settings: 'tnum', 'lnum';
-  }
-  /* Safe area padding for iPhone notch / home indicator */
-  .pt-safe {
-    padding-top: env(safe-area-inset-top);
-  }
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .pl-safe {
-    padding-left: env(safe-area-inset-left);
-  }
-  .pr-safe {
-    padding-right: env(safe-area-inset-right);
-  }
+
+  /* Safe area padding for iPhone notch / home indicator. */
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pl-safe { padding-left: env(safe-area-inset-left); }
+  .pr-safe { padding-right: env(safe-area-inset-right); }
 }
 
-/* Stat-card row collapses to 2 columns when the assistant push sidebar
-   is open on lg viewports (1024-1279px). On xl+ there's room for 4. */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  [data-assistant-open='true'] .stat-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Skeleton shimmer — subtle, slow (1.6s), cream → ruleSoft → cream.
-   Avoid the loud diagonal sweep that's standard on most sites. */
+/* Skeleton shimmer — 1.4s ease-in-out infinite. */
 @keyframes skeleton-pulse {
-  0%, 100% { background-color: rgba(232, 227, 219, 0.45); }
-  50%      { background-color: rgba(232, 227, 219, 0.85); }
+  0%, 100% { background-color: rgba(234, 234, 230, 0.55); }
+  50%      { background-color: rgba(234, 234, 230, 0.95); }
 }
 .skeleton-shimmer {
-  background-color: rgba(232, 227, 219, 0.45);
-  animation: skeleton-pulse 1.6s ease-in-out infinite;
+  background-color: rgba(234, 234, 230, 0.55);
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  border-radius: 8px;
 }
 
+/* Assistant typing dots — kept; small inline animation. */
 @keyframes assistant-dot-pulse {
   0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
   40% { opacity: 1; transform: translateY(-1px); }
 }
-
 .assistant-dot {
   display: inline-block;
   width: 6px;
@@ -228,40 +231,27 @@
 .assistant-dot:nth-child(2) { animation-delay: 0.2s; }
 .assistant-dot:nth-child(3) { animation-delay: 0.4s; }
 
-/* Print styles — used when saving an invoice to PDF via the browser's
-   native Save as PDF. Hides app chrome so only the invoice renders. */
-@media print {
-  /* Hide the app scaffolding */
-  aside, nav, header, footer,
-  [data-print-hide],
-  .print-hide {
-    display: none !important;
+/* Stat-card row collapses to 2 columns when assistant push sidebar
+   is open on lg viewports (1024-1279px). On xl+ there's room for 4. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  [data-assistant-open='true'] .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Hide fixed-position overlays like the support widget */
+}
+
+/* Print styles — used when saving an invoice to PDF. */
+@media print {
+  aside, nav, header, footer,
+  [data-print-hide], .print-hide { display: none !important; }
   .fixed { display: none !important; }
-  /* Restore the printable card */
   .print-show { display: block !important; }
-  /* Reset body for a clean A4 canvas */
   html, body, #__next, main {
     background: white !important;
     color: black !important;
     margin: 0 !important;
     padding: 0 !important;
   }
-  @page {
-    margin: 14mm;
-    size: A4 portrait;
-  }
-  /* Soften tailwind card styles for print */
-  .card {
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-  }
-  /* Make the printed invoice full-width */
-  .print-invoice {
-    max-width: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
+  @page { margin: 14mm; size: A4 portrait; }
+  .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+  .print-invoice { max-width: none !important; padding: 0 !important; margin: 0 !important; }
 }
