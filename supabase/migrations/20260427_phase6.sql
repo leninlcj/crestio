@@ -188,7 +188,13 @@ alter table public.parents
 alter table public.profiles
   add column if not exists tour_completed_at timestamptz null,
   add column if not exists last_seen_changelog_at timestamptz null,
-  add column if not exists power_user_mode boolean not null default false;
+  add column if not exists power_user_mode boolean not null default false,
+  add column if not exists timezone text null,
+  add column if not exists weekly_digest_opt_out boolean not null default false,
+  add column if not exists last_weekly_digest_sent_for_week text null;
+
+-- Index for the weekly digest cron's filter on opt-out + last-sent week.
+create index if not exists profiles_weekly_digest_idx on public.profiles(weekly_digest_opt_out, last_weekly_digest_sent_for_week);
 
 alter table public.organizations
   add column if not exists about text null,

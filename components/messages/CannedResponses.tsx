@@ -11,6 +11,19 @@ const DEFAULT_TEMPLATES: Template[] = [
 ];
 
 const STORAGE_KEY = 'crestio.canned_responses.v1';
+const USAGE_KEY = 'crestio.canned_responses.usage.v1';
+
+function loadUsage(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try { return JSON.parse(window.localStorage.getItem(USAGE_KEY) ?? '{}'); }
+  catch { return {}; }
+}
+function bumpUsage(key: string) {
+  if (typeof window === 'undefined') return;
+  const usage = loadUsage();
+  usage[key] = (usage[key] ?? 0) + 1;
+  try { window.localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch { /* */ }
+}
 
 type Props = {
   onPick: (body: string) => void;
@@ -19,6 +32,7 @@ type Props = {
 export default function CannedResponses({ onPick }: Props) {
   const [open, setOpen] = useState(false);
   const [custom, setCustom] = useState<Template[]>([]);
+  const [usage, setUsage] = useState<Record<string, number>>({});
   const [adding, setAdding] = useState(false);
   const [draftLabel, setDraftLabel] = useState('');
   const [draftBody, setDraftBody] = useState('');
@@ -29,7 +43,23 @@ export default function CannedResponses({ onPick }: Props) {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) setCustom(JSON.parse(raw));
     } catch { /* ignore */ }
+    setUsage(loadUsage());
   }, []);
+
+  function pickAndCount(tpl: Template) {
+    bumpUsage(tpl.key);
+    setUsage(loadUsage());
+    onPick(tpl.body);
+    setOpen(false);
+  }
+
+  // Sort all templates by usage; the most-used floats to the top so heavy
+  // users land on their favourite without scanning.
+  const allTemplates = [...DEFAULT_TEMPLATES, ...custom];
+  const mostUsed = allTemplates
+    .map((t) => ({ t, count: usage[t.key] ?? 0 }))
+    .filter((e) => e.count > 0)
+    .sort((a, b) => b.count - a.count)[0];
 
   useEffect(() => {
     function close(e: MouseEvent) {
@@ -71,19 +101,29 @@ export default function CannedResponses({ onPick }: Props) {
 
       {open && (
         <div className="absolute bottom-full mb-2 left-0 w-80 max-h-96 overflow-y-auto rounded-md bg-surface border border-rule shadow-lift z-30 animate-fade-in">
-          <div className="px-3 py-2 border-b border-rule text-2xs uppercase tracking-widest text-ink-soft">
-            Templates
+          <div className="px-3 py-2 border-b border-rule flex items-center justify-between">
+            <div className="text-2xs uppercase tracking-widest text-ink-soft">Templates</div>
+            {mostUsed && (
+              <div className="text-2xs text-ink-soft">
+                Most used: <strong className="text-ink-muted">{mostUsed.t.label}</strong> ({mostUsed.count}×)
+              </div>
+            )}
           </div>
           <ul>
             {DEFAULT_TEMPLATES.map((tpl) => (
               <li key={tpl.key}>
                 <button
                   type="button"
-                  onClick={() => { onPick(tpl.body); setOpen(false); }}
-                  className="w-full text-left px-3 py-2.5 hover:bg-cream transition-colors"
+                  onClick={() => pickAndCount(tpl)}
+                  className="w-full text-left px-3 py-2.5 hover:bg-cream transition-colors flex items-start justify-between gap-2"
                 >
-                  <div className="text-sm font-medium text-ink">{tpl.label}</div>
-                  <div className="text-2xs text-ink-soft truncate">{tpl.body}</div>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium text-ink truncate">{tpl.label}</span>
+                    <span className="block text-2xs text-ink-soft truncate">{tpl.body}</span>
+                  </span>
+                  {(usage[tpl.key] ?? 0) > 0 && (
+                    <span className="text-2xs text-ink-soft num tabular shrink-0 mt-0.5">{usage[tpl.key]}×</span>
+                  )}
                 </button>
               </li>
             ))}
@@ -96,11 +136,16 @@ export default function CannedResponses({ onPick }: Props) {
               <li key={tpl.key} className="flex items-center group">
                 <button
                   type="button"
-                  onClick={() => { onPick(tpl.body); setOpen(false); }}
-                  className="flex-1 text-left px-3 py-2.5 hover:bg-cream transition-colors"
+                  onClick={() => pickAndCount(tpl)}
+                  className="flex-1 text-left px-3 py-2.5 hover:bg-cream transition-colors flex items-start justify-between gap-2"
                 >
-                  <div className="text-sm font-medium text-ink">{tpl.label}</div>
-                  <div className="text-2xs text-ink-soft truncate">{tpl.body}</div>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium text-ink truncate">{tpl.label}</span>
+                    <span className="block text-2xs text-ink-soft truncate">{tpl.body}</span>
+                  </span>
+                  {(usage[tpl.key] ?? 0) > 0 && (
+                    <span className="text-2xs text-ink-soft num tabular shrink-0 mt-0.5">{usage[tpl.key]}×</span>
+                  )}
                 </button>
                 <button
                   type="button"

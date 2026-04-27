@@ -23,7 +23,16 @@ import { Banner } from '../../components/design/Banner';
 import { formatRelativeDate, formatMoney } from '../../lib/format';
 import InsightsPanel from '../../components/dashboard/InsightsPanel';
 import StreakPill from '../../components/dashboard/StreakPill';
+import StreakHeatmapModal from '../../components/dashboard/StreakHeatmapModal';
+import MonthlyImpactCard from '../../components/dashboard/MonthlyImpactCard';
+import AnniversaryBanner from '../../components/dashboard/AnniversaryBanner';
+import InsightCard from '../../components/dashboard/InsightCard';
+import BatchInvoicingNudge from '../../components/dashboard/BatchInvoicingNudge';
+import CalibrationPill from '../../components/dashboard/CalibrationPill';
+import Tour from '../../components/onboarding/Tour';
 import { pickGreeting, computeStreak } from '../../lib/dashboardGreeting';
+import { pickInsight } from '../../lib/insightCard';
+import { useOrganization } from '../../lib/organizationContext';
 
 // ---------------------------------------------------------------------------
 // Dashboard — morning briefing layout.
@@ -114,6 +123,7 @@ function compactCurrency(cents: number, currency: string): string {
 function DashboardInner() {
   const router = useRouter();
   const toast = useToast();
+  const { organization } = useOrganization();
   const [data, setData] = useState<TodayPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -121,16 +131,68 @@ function DashboardInner() {
   const [teamSummary, setTeamSummary] = useState<{
     sessions: number; hours_billed: number; awaiting_notes: number;
   } | null>(null);
+  const [streakOpen, setStreakOpen] = useState(false);
+  const [tourActive, setTourActive] = useState(false);
+  const [calibrationCount, setCalibrationCount] = useState(0);
 
   // One-time welcome toast after onboarding completes.
   useEffect(() => {
-    if (router.query.welcome === '1') {
+    if (router.query.welcome === '1' || router.query.welcome === 'sample') {
       toast.show({ message: 'Welcome — press ⌘K anytime to find anything.', tone: 'info', durationMs: 6000 });
       const url = new URL(window.location.href);
       url.searchParams.delete('welcome');
       window.history.replaceState({}, '', url.toString());
     }
   }, [router.query.welcome, toast]);
+
+  // First-run tour. Activate when profile.tour_completed_at is null and there
+  // is at least some data on the dashboard (real or sample).
+  useEffect(() => {
+    if (router.query.tour === 'replay') {
+      setTourActive(true);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || cancelled) return;
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('tour_completed_at, power_user_mode')
+        .eq('id', session.user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      // Apply power-user class globally.
+      if (prof?.power_user_mode) {
+        document.documentElement.classList.add('crestio-power-user');
+      } else {
+        document.documentElement.classList.remove('crestio-power-user');
+      }
+      if (!prof?.tour_completed_at) {
+        // Defer slightly so the dashboard finishes rendering first.
+        setTimeout(() => { if (!cancelled) setTourActive(true); }, 1200);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [router.query.tour]);
+
+  // Calibration count.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) return;
+        const res = await fetch('/api/dashboard/calibration-count', {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        if (!res.ok || cancelled) return;
+        const p = await res.json();
+        setCalibrationCount(p.edits_count ?? 0);
+      } catch { /* */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const load = useCallback(async () => {
     if (!cacheRef.current) setLoading(true);
@@ -215,6 +277,38 @@ function DashboardInner() {
     return computeStreak(dates);
   }, [data]);
 
+  // Build session dates for streak heatmap (past 30 days).
+  const heatmapSessionDates = useMemo(() => {
+    if (!data) return [];
+    const out: string[] = [];
+    for (const s of data.today?.sessions ?? []) out.push(s.scheduled_at);
+    for (const s of data.week_ahead ?? []) out.push(s.scheduled_at);
+    return out;
+  }, [data]);
+
+  // Insight card data — derived client-side from the existing payload.
+  const insight = useMemo(() => {
+    if (!data) return null;
+    const polishedThisWeek = (data.polish?.series ?? []).reduce((a: number, b: number) => a + b, 0);
+    return pickInsight({
+      polished_this_week: polishedThisWeek,
+    });
+  }, [data]);
+
+  // Monthly impact card — show on first day of month for 7 days.
+  const monthlyImpact = useMemo(() => {
+    if (!data) return null;
+    const now = new Date();
+    if (now.getDate() > 7) return null;
+    const monthName = now.toLocaleString('en-AU', { month: 'long' });
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const previousLabel = lastMonth.toLocaleString('en-AU', { month: 'long' });
+    return {
+      monthLabel: monthName,
+      previousLabel,
+    };
+  }, [data]);
+
   return (
     <Layout pageTitle="Home">
       <div className="px-4 md:px-8 pt-6 md:pt-10 pb-8 md:pb-12 max-w-[1200px] mx-auto">
@@ -223,7 +317,17 @@ function DashboardInner() {
             <h1 className="text-[28px] md:text-[32px] font-display font-semibold tracking-tighter leading-tight m-0">
               {greeting}
             </h1>
-            {streakDays >= 3 && <StreakPill days={streakDays} />}
+            {streakDays >= 3 && (
+              <button
+                type="button"
+                onClick={() => setStreakOpen(true)}
+                className="rounded-full hover:opacity-80 transition-opacity"
+                aria-label="Open streak heatmap"
+              >
+                <StreakPill days={streakDays} />
+              </button>
+            )}
+            <CalibrationPill editsCount={calibrationCount} />
           </div>
           <div className="text-sm text-ink-muted mt-1">
             {todayLabel}
@@ -240,6 +344,29 @@ function DashboardInner() {
 
         <TrialBanner />
         <div className="mb-4"><SampleDataBanner /></div>
+        <AnniversaryBanner
+          organizationCreatedAt={(organization as any)?.created_at}
+          totalSessions={(data?.today?.series ?? []).reduce((a: number, b: number) => a + b, 0) + (data?.polish?.series ?? []).reduce((a: number, b: number) => a + b, 0)}
+        />
+        {monthlyImpact && data && (
+          <MonthlyImpactCard
+            monthLabel={monthlyImpact.monthLabel}
+            sessions={(data.today?.series ?? []).reduce((a: number, b: number) => a + b, 0)}
+            hours={Math.round((data.today?.minutes ?? 0) / 60 * 4.3)}
+            earnedCents={(data.unpaid_invoices?.total_cents ?? 0)}
+            studentsHelped={(data.team_breakdown?.length ?? 5)}
+            currency={data.currency}
+          />
+        )}
+        {insight && <InsightCard insight={insight} />}
+        {data && (
+          <BatchInvoicingNudge
+            unbilledSessions={data.invoicing_queue.reduce((acc, e) => acc + e.session_count, 0)}
+            unbilledHouseholds={data.invoicing_queue.length}
+            totalCents={data.invoicing_queue.reduce((acc, e) => acc + e.total_cents, 0)}
+            currency={data.currency}
+          />
+        )}
         <StateOfTheAppBanners payload={data} />
 
         {loading && !data ? (
@@ -250,6 +377,13 @@ function DashboardInner() {
           <DashboardBody payload={data} teamSummary={teamSummary} onChanged={load} />
         ) : null}
       </div>
+      <StreakHeatmapModal
+        open={streakOpen}
+        onClose={() => setStreakOpen(false)}
+        sessionDates={heatmapSessionDates}
+        streakDays={streakDays}
+      />
+      <Tour active={tourActive} onComplete={() => setTourActive(false)} />
     </Layout>
   );
 }
@@ -336,15 +470,18 @@ function DashboardBody({
           previousSeries={payload.week?.previous_series}
           deltaUnit="sessions"
         />
-        <StatCard
-          label="Polish queue"
-          value={polishCount}
-          sub={polishOldest ?? 'Caught up'}
-          tone={polishCount > 0 ? 'amber' : 'default'}
-          href="/app/sessions?tab=polish-queue"
-          series={payload.polish?.series}
-          previousSeries={payload.polish?.previous_series}
-        />
+        <div data-tour="polish-card">
+          <StatCard
+            label="Polish queue"
+            value={polishCount}
+            sub={polishOldest ?? 'Caught up'}
+            tone={polishCount > 0 ? 'amber' : 'default'}
+            href="/app/sessions?tab=polish-queue"
+            series={payload.polish?.series}
+            previousSeries={payload.polish?.previous_series}
+          />
+        </div>
+        <div data-tour="invoices-card">
         <StatCard
           label="Unpaid invoices"
           value={unpaid.count > 0 ? compactCurrency(unpaid.total_cents, currency) : 0}
@@ -361,6 +498,7 @@ function DashboardBody({
           series={payload.unpaid_invoices?.series}
           previousSeries={payload.unpaid_invoices?.previous_series}
         />
+        </div>
         {showTeamCard && teamSummary && (
           <OwnerTeamCard
             sessions={teamSummary.sessions}
@@ -374,7 +512,7 @@ function DashboardBody({
       {/* Two-column body — 60/40 on desktop. */}
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 md:gap-8">
         {/* Today timeline + Tomorrow at a glance */}
-        <section>
+        <section data-tour="today-timeline">
           <h2 className="text-[15px] font-display font-semibold tracking-tighter mb-3">Today</h2>
           <div className="card p-3 md:p-4">
             <TodayTimeline sessions={payload.today?.sessions ?? []} nextId={next?.id ?? null} />

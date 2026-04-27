@@ -1,9 +1,11 @@
 import { useEffect, useState, FormEvent } from 'react';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import SettingsTabs from '../../../components/SettingsTabs';
 import CalendarHowToModal from '../../../components/CalendarHowToModal';
+import PowerUserToggle from '../../../components/settings/PowerUserToggle';
 import { supabase } from '../../../lib/supabase';
 import { SUPPORTED_LOCALES, LOCALE_NATIVE_NAME, isSupportedLocale, type SupportedLocale } from '../../../lib/i18n';
 import { useLocale } from '../../../lib/localeContext';
@@ -90,8 +92,40 @@ function PreferencesInner() {
         </form>
 
         <CalendarExportCard />
+        <ProductivityCard />
       </div>
     </Layout>
+  );
+}
+
+function ProductivityCard() {
+  const router = useRouter();
+  async function replayTour() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      await supabase.from('profiles').update({ tour_completed_at: null }).eq('id', session.user.id);
+    }
+    router.push('/app?tour=replay');
+  }
+  return (
+    <div className="card p-8 space-y-2">
+      <div>
+        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Productivity</div>
+        <h2 className="font-display text-xl tracking-tightest">How dense do you want it?</h2>
+      </div>
+      <PowerUserToggle />
+      <div className="flex items-start gap-4 py-4 border-t border-rule">
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-ink mb-1">Replay onboarding tour</div>
+          <p className="text-2xs text-ink-muted leading-relaxed">
+            Walks through the dashboard, quick log, polish queue, and invoices. Takes 30 seconds.
+          </p>
+        </div>
+        <button type="button" onClick={replayTour} className="btn-secondary text-xs h-8 min-h-[32px] px-4 shrink-0">
+          Replay
+        </button>
+      </div>
+    </div>
   );
 }
 

@@ -339,6 +339,30 @@
 }
 
 /* -------------------------------------------------------------------- */
+/* Power user mode — toggled from /app/settings/preferences. Tighter type, */
+/* tighter row spacing, sparkline labels visible. Applied at the html     */
+/* root via .crestio-power-user — no per-component plumbing needed.       */
+/* -------------------------------------------------------------------- */
+.crestio-power-user body {
+  font-size: 13px;
+}
+.crestio-power-user .table td {
+  height: 40px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.crestio-power-user .table th {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.crestio-power-user .card {
+  /* Slightly tighter card padding too. */
+}
+.crestio-power-user .display-num {
+  font-size: 36px;
+}
+
+/* -------------------------------------------------------------------- */
 /* Reduced motion — kill non-essential animation, keep opacity crossfades. */
 /* -------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

@@ -21,6 +21,7 @@ import { Breadcrumb, type Crumb } from './design/Breadcrumb';
 import { TabStrip, type Tab } from './design/TabStrip';
 import { FloatingActionButton } from './design/FloatingActionButton';
 import { Avatar } from './design/Avatar';
+import WhatsNewSection from './WhatsNewSection';
 
 // Stub changelog — bumped when something user-visible ships. Used by the
 // "what's new" beacon on the avatar.
@@ -417,6 +418,7 @@ export default function Layout({
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'))}
                 aria-label="Quick log session"
+                data-tour="quick-log"
                 className="p-2 rounded hover:bg-ruleSoft transition-colors text-ink"
                 title="N — quick log"
               >
@@ -696,12 +698,13 @@ function AccountDropdown({
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
           <div
             role="menu"
-            className="absolute right-0 top-full mt-1 z-50 w-60 bg-surface border border-rule rounded-md shadow-lift py-1 animate-fade-in"
+            className="absolute right-0 top-full mt-1 z-50 w-72 bg-surface border border-rule rounded-md shadow-lift py-1 animate-fade-in"
           >
             <div className="px-3 py-2 border-b border-rule">
               <div className="text-2xs uppercase tracking-widest text-ink-soft mb-0.5 font-medium">{t('nav.signed_in_as')}</div>
               <div className="text-xs text-ink truncate">{email}</div>
             </div>
+            <WhatsNewSection onClose={() => setOpen(false)} />
             <Link href="/app/settings/account" className="block px-3 py-2 text-sm text-ink hover:bg-ruleSoft" role="menuitem">
               {t('nav.settings')}
             </Link>
