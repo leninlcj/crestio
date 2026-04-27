@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { GetStaticProps } from 'next';
 import MarketingNav from '../components/marketing/MarketingNav';
 import PricingTable from '../components/marketing/PricingTable';
-import InteractiveTimeSaved from '../components/marketing/InteractiveTimeSaved';
+import ROICalculator from '../components/marketing/ROICalculator';
 import FAQ from '../components/marketing/FAQ';
 import FinalCTA from '../components/marketing/FinalCTA';
 import MarketingFooter from '../components/marketing/MarketingFooter';
@@ -19,6 +19,9 @@ export default function Pricing() {
       <Head>
         <title>{t('meta.pricing_title')}</title>
         <meta name="description" content={t('meta.pricing_description')} />
+        <meta property="og:title" content={t('meta.pricing_title')} />
+        <meta property="og:description" content={t('meta.pricing_description')} />
+        <meta property="og:image" content="/api/og?type=pricing&title=Solo%20%2424.%20Team%20%2459.%20No%20surprises." />
       </Head>
 
       <div className="min-h-screen bg-cream text-ink">
@@ -26,7 +29,9 @@ export default function Pricing() {
 
         <main>
           <PricingTable defaultExpanded showCompareLink />
-          <InteractiveTimeSaved />
+          <section className="border-t border-rule">
+            <ROICalculator />
+          </section>
           <FAQ
             questions={PRICING_FAQS}
             prefix="pricing_faq"

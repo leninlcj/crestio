@@ -14,12 +14,16 @@ import PricingTable from '../components/marketing/PricingTable';
 import FAQ from '../components/marketing/FAQ';
 import FinalCTA from '../components/marketing/FinalCTA';
 import MarketingFooter from '../components/marketing/MarketingFooter';
+import SandboxEmbed from '../components/marketing/SandboxEmbed';
+import StickyConversionBar from '../components/marketing/StickyConversionBar';
+import FounderHomepageEmbed from '../components/marketing/FounderHomepageEmbed';
 import { serverSideTranslations } from '../lib/i18nServer';
 import { fetchMarketingStats } from '../lib/marketing-stats';
+import { loadFounderNotes, type FounderNote } from '../lib/founderNotes';
 
-type Props = { practicesCount: number };
+type Props = { practicesCount: number; latestFounderNote: FounderNote | null };
 
-export default function Home({ practicesCount }: Props) {
+export default function Home({ practicesCount, latestFounderNote }: Props) {
   const router = useRouter();
   const { t } = useTranslation('marketing');
   const [showDeleted, setShowDeleted] = useState(false);
@@ -30,6 +34,7 @@ export default function Home({ practicesCount }: Props) {
 
   const metaTitle = t('meta.home_title');
   const metaDescription = t('meta.home_description');
+  const ogUrl = '/api/og?type=marketing&title=Run%20your%20tutoring%20practice%20%E2%80%94%20finally%20without%20the%20spreadsheet.&subtitle=Log%20a%20session%20in%208%20seconds.%20Polish%20notes.%20Get%20paid%20by%20card.';
 
   return (
     <>
@@ -39,8 +44,11 @@ export default function Home({ practicesCount }: Props) {
         <meta property="og:title" content={metaTitle} />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:url" content="https://crestio.ai" />
+        <meta property="og:image" content={ogUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metaTitle} />
         <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={ogUrl} />
       </Head>
 
       <div className="min-h-screen bg-cream text-ink">
@@ -50,15 +58,18 @@ export default function Home({ practicesCount }: Props) {
           </div>
         )}
 
+        <StickyConversionBar />
         <MarketingNav />
 
         <main>
           <Hero practicesCount={practicesCount} />
+          <SandboxEmbed />
           <SocialProofBand />
           <PainSection />
           <HowItWorks />
           <FeatureGrid />
           <TestimonialSpotlight />
+          {latestFounderNote && <FounderHomepageEmbed latest={latestFounderNote} />}
           <PricingTable />
           <FAQ />
           <FinalCTA />
@@ -72,10 +83,12 @@ export default function Home({ practicesCount }: Props) {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
   const stats = await fetchMarketingStats();
+  const notes = loadFounderNotes();
   return {
     props: {
       ...serverSideTranslations(locale, ['marketing']),
       practicesCount: stats.practicesCount,
+      latestFounderNote: notes[0] ?? null,
     },
     revalidate: 600,
   };

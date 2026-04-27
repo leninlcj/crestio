@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import marketingConfig from '../../config/marketing.json';
+import { SHIP_VELOCITY_90D } from '../../lib/shipVelocityConstant';
 
-export default function MarketingFooter() {
+type Props = { shipVelocity?: number };
+
+export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Props = {}) {
   const { t } = useTranslation('marketing');
   const [healthy, setHealthy] = useState<boolean | null>(null);
 
@@ -18,7 +21,27 @@ export default function MarketingFooter() {
 
   return (
     <footer className="border-t border-rule bg-cream">
-      <div className="px-6 md:px-12 py-14 md:py-16 max-w-6xl mx-auto">
+      <div className="px-6 md:px-12 pt-10 md:pt-12 pb-6 max-w-6xl mx-auto">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-8 border-b border-rule">
+          <Link
+            href="/changelog"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-rule bg-surface text-2xs text-ink-muted hover:text-ink hover:border-ink-soft transition-colors"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-forest" />
+            <span><strong className="text-ink">{shipVelocity}</strong> features shipped in the last 90 days</span>
+          </Link>
+          <div className="flex items-center gap-3 text-2xs uppercase tracking-widest text-ink-soft">
+            <span>Built on</span>
+            <Link href="/security#vendor-stack" className="hover:text-ink transition-colors">Supabase</Link>
+            <span aria-hidden>·</span>
+            <Link href="/security#vendor-stack" className="hover:text-ink transition-colors">Stripe</Link>
+            <span aria-hidden>·</span>
+            <Link href="/security#vendor-stack" className="hover:text-ink transition-colors">Vercel</Link>
+            <span aria-hidden>·</span>
+            <Link href="/security#vendor-stack" className="hover:text-ink transition-colors">Anthropic</Link>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-10">
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="font-display text-2xl tracking-tightest inline-block mb-3">
@@ -27,7 +50,7 @@ export default function MarketingFooter() {
             <p className="text-sm text-ink-muted leading-relaxed max-w-xs mb-5">
               {t('footer_v2.tagline')}
             </p>
-            <div className="flex items-center gap-2 text-2xs">
+            <Link href="/status" className="inline-flex items-center gap-2 text-2xs hover:text-ink transition-colors">
               <span
                 className={[
                   'w-1.5 h-1.5 rounded-full',
@@ -38,26 +61,33 @@ export default function MarketingFooter() {
               <span className="text-ink-soft uppercase tracking-widest">
                 {healthy === false ? t('footer_v2.status_down') : t('footer_v2.status_ok')}
               </span>
-            </div>
+            </Link>
           </div>
 
           <FooterColumn title={t('footer_v2.col_product')} links={[
             { label: t('footer_v2.product_pricing'), href: '/pricing' },
+            { label: 'Sandbox', href: '/sandbox' },
             { label: t('footer_v2.product_changelog'), href: '/changelog' },
-            { label: t('footer_v2.product_security'), href: '/privacy' },
+            { label: 'Roadmap', href: '/roadmap' },
+            { label: 'Customers', href: '/customers' },
+            { label: 'Security', href: '/security' },
+            { label: 'Status', href: '/status' },
           ]} />
 
-          <FooterColumn title={t('footer_v2.col_for_tutors')} links={[
-            { label: t('footer_v2.for_solo'), href: '/for/sydney' },
-            { label: t('footer_v2.for_team'), href: '/for/large-practices' },
-            { label: t('footer_v2.for_exam'), href: '/for/exam-prep' },
-            { label: t('footer_v2.for_music'), href: '/for/music-teachers' },
-            { label: t('footer_v2.for_new'), href: '/for/new-tutors' },
-            { label: t('footer_v2.for_parents'), href: '/for/parents' },
+          <FooterColumn title="Compare" links={[
+            { label: 'vs TeachWorks', href: '/compare/teachworks' },
+            { label: 'vs Wyzant', href: '/compare/wyzant' },
+            { label: 'vs spreadsheet', href: '/compare/spreadsheet' },
+            { label: 'vs Notion', href: '/compare/notion' },
+            { label: 'vs TutorBird', href: '/compare/tutorbird' },
+            { label: 'Migrate to Crestio', href: '/migrate' },
           ]} />
 
           <FooterColumn title={t('footer_v2.col_company')} links={[
             { label: t('footer_v2.company_about'), href: '/about' },
+            { label: 'Founder updates', href: '/founder' },
+            { label: 'Brand kit', href: '/brand' },
+            { label: 'Developers', href: '/developers' },
             { label: t('footer_v2.company_contact'), href: '/contact' },
             { label: t('footer_v2.company_privacy'), href: '/privacy' },
             { label: t('footer_v2.company_terms'), href: '/terms' },
