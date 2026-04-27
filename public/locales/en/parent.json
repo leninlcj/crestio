@@ -1,4 +1,71 @@
 {
+  "topbar": {
+    "portal_title": "Student portal",
+    "portal_title_named": "{{tutor}}'s student portal",
+    "account": "Account",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "sign_out": "Sign out"
+  },
+  "tabs": {
+    "home": "Home",
+    "students": "Students",
+    "sessions": "Sessions",
+    "invoices": "Invoices",
+    "messages": "Messages",
+    "calendar": "Calendar",
+    "aria": "Sections",
+    "bottom_aria": "Quick navigation"
+  },
+  "dashboard_v2": {
+    "greeting_morning": "Good morning, {{name}}.",
+    "greeting_afternoon": "Good afternoon, {{name}}.",
+    "greeting_evening": "Good evening, {{name}}.",
+    "greeting_anon": "Welcome back.",
+    "subline_one_child": "{{child}} is studying with {{tutor}}.",
+    "subline_one_child_no_tutor": "{{child}} is your only student here.",
+    "subline_many_with_tutor": "You have {{count}} students with {{tutor}}.",
+    "subline_many": "You have {{count}} students here.",
+    "next_session": "Next session",
+    "no_upcoming_card": "No upcoming sessions scheduled.",
+    "duration_minutes": "{{count}} min",
+    "duration_minutes_plural": "{{count}} min",
+    "view_session": "View session",
+    "add_to_calendar": "Add to calendar",
+    "latest_session": "Latest session note",
+    "no_latest_session": "No session notes shared yet.",
+    "read_full_note": "Read full note",
+    "balance": "Balance",
+    "all_paid_up": "All paid up.",
+    "outstanding_balance": "Outstanding balance",
+    "unpaid_invoices": "{{count}} unpaid invoice",
+    "unpaid_invoices_plural": "{{count}} unpaid invoices",
+    "pay_now": "Pay now",
+    "all_students": "Your students",
+    "no_students_yet": "No students linked yet.",
+    "outstanding_short": "Owes",
+    "last_session_at": "last session {{date}}",
+    "recent_activity": "Recent activity",
+    "no_activity": "Nothing to show yet.",
+    "about_student": "about {{name}}"
+  },
+  "sessions_page": {
+    "heading": "Sessions",
+    "sub": "Every session, scheduled and completed.",
+    "filter_all": "All",
+    "filter_upcoming": "Upcoming",
+    "filter_completed": "Completed",
+    "filter_this_month": "This month",
+    "empty": "Nothing here yet.",
+    "status_scheduled": "Scheduled",
+    "status_completed": "Completed",
+    "status_cancelled": "Cancelled",
+    "status_no_show": "No-show",
+    "status_pending_change": "Change requested"
+  },
+  "connectors": {
+    "with_tutor": "with {{name}}"
+  },
   "dashboard": {
     "page_title_fallback": "Crestio",
     "kicker": "Welcome",
@@ -74,12 +141,22 @@
   "calendar": {
     "kicker": "Calendar",
     "heading": "This week",
+    "heading_v2": "Calendar",
     "today": "Today",
-    "week_range": "{{start}} – {{end}}"
+    "week_range": "{{start}} – {{end}}",
+    "view_week": "Week",
+    "view_day": "Day"
   },
   "invoices_page": {
     "kicker": "Invoices",
     "heading": "Your invoices",
+    "heading_v2": "Invoices",
+    "sub_v2": "{{paid}} paid · {{unpaid}} unpaid",
+    "section_unpaid": "Unpaid",
+    "section_paid": "Paid",
+    "pay_inline": "Pay",
+    "pay_all": "Pay {{count}} invoice",
+    "pay_all_plural": "Pay {{count}} invoices",
     "empty": "No invoices yet.",
     "outstanding_eyebrow": "Outstanding",
     "outstanding_note": "To pay, follow the instructions on each invoice from your tutor.",
@@ -107,11 +184,14 @@
     "subtotal": "Subtotal:",
     "notes": "Notes",
     "download_print": "Download / print",
-    "em_dash": "—"
+    "em_dash": "—",
+    "pay_now": "Pay now"
   },
   "messages_page": {
     "kicker": "Messages",
-    "heading": "Your messages"
+    "heading": "Your messages",
+    "heading_v2": "Messages",
+    "sub_v2": "Direct messages with your tutor."
   },
   "notifications_page": {
     "kicker": "Notifications",
@@ -139,6 +219,13 @@
   "settings_page": {
     "kicker": "Account",
     "heading": "Settings",
+    "sub_v2": "Account, password, and how Crestio talks to you.",
+    "profile_heading": "Profile",
+    "profile_sub": "Your name and email.",
+    "password_sub": "Choose something you'll remember.",
+    "notifications_heading": "Notifications",
+    "notifications_sub": "Pick what we email you about.",
+    "notifications_manage": "Manage notifications",
     "loading": "Loading…",
     "details_heading": "Your details",
     "email_label": "Email",
@@ -194,7 +281,10 @@
         "description": "If on, skip emails for normal or info messages."
       }
     },
-    "saved": "Saved."
+    "saved": "Saved.",
+    "sms_label": "SMS notifications",
+    "sms_hint": "Get a text message for urgent updates.",
+    "coming_soon": "Coming soon"
   },
   "accept": {
     "kicker": "Parent portal",

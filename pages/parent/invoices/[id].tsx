@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../../components/AuthGuardParent';
+import ParentLayout from '../../../components/parent/ParentLayout';
 import { supabase } from '../../../lib/supabase';
 import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
@@ -31,11 +32,12 @@ type InvoiceData = {
   is_batch_generated: boolean;
   household_id: string | null;
   student_id: string | null;
+  payment_token: string | null;
   household: { id: string; display_name: string } | null;
   student: { id: string; name: string } | null;
 };
 
-function ParentInvoiceDetailInner() {
+function Inner() {
   const { t } = useTranslation('parent');
   const router = useRouter();
   const { id } = router.query;
@@ -62,7 +64,7 @@ function ParentInvoiceDetailInner() {
       setLoading(true);
       const { data: inv, error: invErr } = await supabase
         .from('invoices')
-        .select('id, number, issued_on, due_on, total_cents, status, notes, billing_period_start, billing_period_end, is_batch_generated, household_id, student_id, household:households(id, display_name), student:students(id, name)')
+        .select('id, number, issued_on, due_on, total_cents, status, notes, billing_period_start, billing_period_end, is_batch_generated, household_id, student_id, payment_token, household:households(id, display_name), student:students(id, name)')
         .eq('id', id)
         .maybeSingle();
       if (invErr || !inv) { setError(t('invoice_detail.not_found')); setLoading(false); return; }
@@ -113,7 +115,6 @@ function ParentInvoiceDetailInner() {
       }
       setLoading(false);
     })();
-
   }, [id]);
 
   const grouped = useMemo(() => {
@@ -134,144 +135,158 @@ function ParentInvoiceDetailInner() {
   const overdue =
     invoice?.due_on && invoice.status !== 'paid' && invoice.status !== 'void' &&
     new Date(invoice.due_on) < new Date();
+  const isUnpaid = invoice && invoice.status !== 'paid' && invoice.status !== 'void';
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
-        <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-        <Link href="/parent/invoices" className="text-sm text-ink-muted hover:text-ink">{t('invoice_detail.back')}</Link>
-      </nav>
+    <section className="px-6 md:px-12 pt-10 pb-16 max-w-3xl mx-auto">
+      {loading ? (
+        <div className="space-y-3 animate-pulse">
+          <div className="h-6 w-40 bg-ruleSoft rounded" />
+          <div className="h-12 bg-ruleSoft rounded" />
+          <div className="h-32 bg-ruleSoft rounded" />
+        </div>
+      ) : error || !invoice ? (
+        <div className="card p-6 text-sm text-claret">{error ?? t('invoice_detail.not_found')}</div>
+      ) : (
+        <>
+          <Link href="/parent/invoices" className="text-sm text-ink-muted hover:text-ink mb-6 inline-block">
+            ← {t('invoices_page.heading_v2')}
+          </Link>
 
-      <main className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
-        {loading ? (
-          <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
-        ) : error || !invoice ? (
-          <div className="card p-6 text-sm text-claret">{error ?? t('invoice_detail.not_found')}</div>
-        ) : (
-          <>
-            <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
+          <div className="rounded-md border border-rule bg-surface p-6 md:p-8 mb-6">
+            <div className="flex flex-wrap items-baseline justify-between gap-4 mb-6">
               <div>
                 <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">
                   {t('invoice_detail.number_label', { number: invoice.number })}
                 </div>
-                <h1 className="font-display text-3xl tracking-tightest">
+                <div className="font-display text-2xl tracking-tighter">
                   {invoice.household?.display_name ?? invoice.student?.name ?? t('invoice_detail.heading_fallback')}
-                </h1>
+                </div>
               </div>
               <div className="text-right">
-                <div className="font-display text-3xl tracking-tightest num font-mono">
+                <div className="font-display text-3xl tracking-tighter font-mono tabular-nums">
                   {formatAud(invoice.total_cents)}
                 </div>
-                <div className="text-2xs uppercase tracking-widest mt-1">
-                  <span className={
-                    invoice.status === 'paid' ? 'badge-forest' :
-                    overdue ? 'badge-claret' :
-                    invoice.status === 'sent' ? 'badge-rust' :
-                    invoice.status === 'draft' ? 'badge-neutral' :
-                    'badge-neutral'
-                  }>
-                    {invoice.status === 'paid' ? t('invoice_detail.status_paid')
-                      : overdue ? t('invoice_detail.status_overdue')
-                      : invoice.status}
-                  </span>
-                </div>
+                <span className={[
+                  'mt-1 inline-block',
+                  invoice.status === 'paid' ? 'badge-forest' :
+                  overdue ? 'badge-claret' :
+                  invoice.status === 'sent' ? 'badge-rust' : 'badge-neutral',
+                ].join(' ')}>
+                  {invoice.status === 'paid' ? t('invoice_detail.status_paid')
+                    : overdue ? t('invoice_detail.status_overdue')
+                    : invoice.status}
+                </span>
               </div>
             </div>
 
-            <div className="card p-5 mb-6 grid grid-cols-2 gap-6 text-sm">
+            {isUnpaid && invoice.payment_token && (
+              <Link
+                href={`/pay/${invoice.payment_token}`}
+                className="btn-primary w-full sm:w-auto text-sm h-11 px-6 inline-flex items-center justify-center"
+              >
+                {t('invoice_detail.pay_now')}
+              </Link>
+            )}
+
+            <div className="grid grid-cols-2 gap-6 text-sm pt-6 border-t border-rule mt-6">
               <div>
-                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoice_detail.issued')}</div>
+                <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">{t('invoice_detail.issued')}</div>
                 <div>{fmtDate(invoice.issued_on)}</div>
               </div>
               <div>
-                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoice_detail.due')}</div>
-                <div>{fmtDate(invoice.due_on)}</div>
+                <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">{t('invoice_detail.due')}</div>
+                <div className={overdue ? 'text-claret' : ''}>{fmtDate(invoice.due_on)}</div>
               </div>
               {invoice.billing_period_start && invoice.billing_period_end && (
                 <div className="col-span-2">
-                  <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('invoice_detail.period')}</div>
+                  <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">{t('invoice_detail.period')}</div>
                   <div>{fmtDate(invoice.billing_period_start)} – {fmtDate(invoice.billing_period_end)}</div>
                 </div>
               )}
             </div>
+          </div>
 
-            <div className="card p-5 mb-6">
-              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('invoice_detail.sessions')}</div>
-              {invoice.household_id ? (
-                grouped.length === 0 ? (
-                  <div className="text-sm text-ink-muted">{t('invoice_detail.no_line_items')}</div>
-                ) : (
-                  <div className="space-y-5">
-                    {grouped.map((g) => (
-                      <div key={g.student_id}>
-                        <div className="text-sm font-medium text-ink mb-2">{g.student_name}</div>
-                        <ul className="divide-y divide-ruleSoft">
-                          {g.items.map((l) => (
-                            <li key={l.id} className="py-2 flex items-start justify-between gap-3">
-                              <div className="min-w-0">
-                                <div className="text-sm text-ink">
-                                  {fmtDateTime(l.scheduled_at)}
-                                  <span className="text-ink-soft text-2xs"> · {t('invoice_detail.minutes_suffix', { minutes: l.duration_minutes })}</span>
-                                </div>
-                                <div className="text-2xs text-ink-muted">
-                                  {[l.subject, l.topic].filter(Boolean).join(' · ') || t('invoice_detail.tutoring_session')}
-                                </div>
+          <div className="rounded-md border border-rule bg-surface p-6 mb-6">
+            <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">{t('invoice_detail.sessions')}</div>
+            {invoice.household_id ? (
+              grouped.length === 0 ? (
+                <div className="text-sm text-ink-muted">{t('invoice_detail.no_line_items')}</div>
+              ) : (
+                <div className="space-y-5">
+                  {grouped.map((g) => (
+                    <div key={g.student_id}>
+                      <div className="text-sm font-medium text-ink mb-2">{g.student_name}</div>
+                      <ul className="divide-y divide-ruleSoft">
+                        {g.items.map((l) => (
+                          <li key={l.id} className="py-2 flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="text-sm text-ink">
+                                {fmtDateTime(l.scheduled_at)}
+                                <span className="text-ink-soft text-2xs"> · {t('invoice_detail.minutes_suffix', { minutes: l.duration_minutes })}</span>
                               </div>
-                              <div className="font-mono text-sm shrink-0">{formatAud(l.amount_cents)}</div>
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="text-right text-2xs text-ink-muted mt-2">
-                          {t('invoice_detail.subtotal')} <span className="font-mono text-sm text-ink">{formatAud(g.subtotal)}</span>
+                              <div className="text-2xs text-ink-muted">
+                                {[l.subject, l.topic].filter(Boolean).join(' · ') || t('invoice_detail.tutoring_session')}
+                              </div>
+                            </div>
+                            <div className="font-mono text-sm shrink-0 tabular-nums">{formatAud(l.amount_cents)}</div>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="text-right text-2xs text-ink-muted mt-2">
+                        {t('invoice_detail.subtotal')} <span className="font-mono text-sm text-ink tabular-nums">{formatAud(g.subtotal)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            ) : legacySessions.length === 0 ? (
+              <div className="text-sm text-ink-muted">{t('invoice_detail.no_sessions')}</div>
+            ) : (
+              <ul className="divide-y divide-ruleSoft">
+                {legacySessions.map((s: any) => {
+                  const amount = Math.round(((s.charge_rate_cents ?? 0) * s.duration_minutes) / 60);
+                  return (
+                    <li key={s.id} className="py-2 flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-sm text-ink">
+                          {fmtDateTime(s.scheduled_at)}
+                          <span className="text-ink-soft text-2xs"> · {t('invoice_detail.minutes_suffix', { minutes: s.duration_minutes })}</span>
+                        </div>
+                        <div className="text-2xs text-ink-muted">
+                          {[s.subject, s.topic].filter(Boolean).join(' · ') || t('invoice_detail.tutoring_session')}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )
-              ) : legacySessions.length === 0 ? (
-                <div className="text-sm text-ink-muted">{t('invoice_detail.no_sessions')}</div>
-              ) : (
-                <ul className="divide-y divide-ruleSoft">
-                  {legacySessions.map((s: any) => {
-                    const amount = Math.round(((s.charge_rate_cents ?? 0) * s.duration_minutes) / 60);
-                    return (
-                      <li key={s.id} className="py-2 flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="text-sm text-ink">
-                            {fmtDateTime(s.scheduled_at)}
-                            <span className="text-ink-soft text-2xs"> · {t('invoice_detail.minutes_suffix', { minutes: s.duration_minutes })}</span>
-                          </div>
-                          <div className="text-2xs text-ink-muted">
-                            {[s.subject, s.topic].filter(Boolean).join(' · ') || t('invoice_detail.tutoring_session')}
-                          </div>
-                        </div>
-                        <div className="font-mono text-sm shrink-0">{formatAud(amount)}</div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-
-            {invoice.notes && (
-              <div className="card p-5 mb-6">
-                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('invoice_detail.notes')}</div>
-                <p className="text-sm text-ink whitespace-pre-wrap">{invoice.notes}</p>
-              </div>
+                      <div className="font-mono text-sm shrink-0 tabular-nums">{formatAud(amount)}</div>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
+          </div>
 
-            <div className="flex justify-end">
-              <button onClick={() => window.print()} className="btn-secondary text-sm">{t('invoice_detail.download_print')}</button>
+          {invoice.notes && (
+            <div className="rounded-md border border-rule bg-surface p-5 mb-6">
+              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-2">{t('invoice_detail.notes')}</div>
+              <p className="text-sm text-ink whitespace-pre-wrap">{invoice.notes}</p>
             </div>
-          </>
-        )}
-      </main>
-    </div>
+          )}
+
+          <div className="flex justify-end">
+            <button onClick={() => window.print()} className="btn-secondary text-sm">{t('invoice_detail.download_print')}</button>
+          </div>
+        </>
+      )}
+    </section>
   );
 }
 
-export default function ParentInvoiceDetailPage() {
-  return <AuthGuardParent><ParentInvoiceDetailInner /></AuthGuardParent>;
+export default function Page() {
+  return (
+    <AuthGuardParent>
+      <ParentLayout active="invoices" noTabs>
+        <Inner />
+      </ParentLayout>
+    </AuthGuardParent>
+  );
 }

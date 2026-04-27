@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../../components/AuthGuardParent';
+import ParentLayout from '../../../components/parent/ParentLayout';
 import { supabase } from '../../../lib/supabase';
 
 type PrefKey =
@@ -63,44 +64,56 @@ function Inner() {
   }
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
-        <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
+    <section className="px-6 md:px-12 pt-10 pb-16 max-w-2xl mx-auto">
+      <div className="mb-6 flex items-baseline justify-between gap-3">
+        <div>
+          <h1 className="font-display text-3xl md:text-4xl tracking-tighter text-ink mb-1">
+            {t('settings_notifications_page.heading')}
+          </h1>
+          <p className="text-sm text-ink-muted">{t('settings_notifications_page.intro')}</p>
+        </div>
+        <Link href="/parent/settings" className="text-sm text-ink-muted hover:text-ink shrink-0">
+          {t('nav.back_settings')}
         </Link>
-        <Link href="/parent/settings" className="text-sm text-ink-muted hover:text-ink">{t('nav.back_settings')}</Link>
-      </nav>
-      <main className="px-6 md:px-12 py-10 max-w-2xl mx-auto">
-        <div className="mb-6">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('settings_notifications_page.kicker')}</div>
-          <h1 className="font-display text-4xl tracking-tightest">{t('settings_notifications_page.heading')}</h1>
+      </div>
+
+      <div className="rounded-md border border-rule bg-surface divide-y divide-ruleSoft">
+        {TOGGLES.map((toggle) => (
+          <label key={toggle.key} className="flex items-start gap-4 px-5 py-4 cursor-pointer hover:bg-cream transition-colors">
+            <input
+              type="checkbox"
+              checked={valueOf(toggle.key)}
+              disabled={loading}
+              onChange={(e) => update(toggle.key, e.target.checked)}
+              className="h-5 w-5 accent-forest mt-0.5"
+            />
+            <div className="flex-1">
+              <div className="text-sm text-ink">{t(`settings_notifications_page.toggles.${toggle.i18nKey}.label`)}</div>
+              <div className="text-2xs text-ink-muted mt-1 leading-relaxed">{t(`settings_notifications_page.toggles.${toggle.i18nKey}.description`)}</div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <div className="rounded-md border border-rule bg-surface p-5 mt-4 flex items-center justify-between">
+        <div>
+          <div className="text-sm font-medium text-ink">{t('settings_notifications_page.sms_label')}</div>
+          <div className="text-2xs text-ink-soft mt-0.5">{t('settings_notifications_page.sms_hint')}</div>
         </div>
-        <div className="card p-8 space-y-5">
-          <p className="text-sm text-ink-muted">
-            {t('settings_notifications_page.intro')}
-          </p>
-          {TOGGLES.map((toggle) => (
-            <label key={toggle.key} className="flex items-start gap-4 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={valueOf(toggle.key)}
-                disabled={loading}
-                onChange={(e) => update(toggle.key, e.target.checked)}
-                className="h-5 w-5 accent-forest mt-0.5"
-              />
-              <div className="flex-1">
-                <div className="text-sm text-ink">{t(`settings_notifications_page.toggles.${toggle.i18nKey}.label`)}</div>
-                <div className="text-2xs text-ink-muted mt-1 leading-relaxed">{t(`settings_notifications_page.toggles.${toggle.i18nKey}.description`)}</div>
-              </div>
-            </label>
-          ))}
-          {saved && <div className="text-xs text-forest">{t('settings_notifications_page.saved')}</div>}
-        </div>
-      </main>
-    </div>
+        <span className="badge-neutral text-2xs">{t('settings_notifications_page.coming_soon')}</span>
+      </div>
+
+      {saved && <div className="text-xs text-success mt-4">{t('settings_notifications_page.saved')}</div>}
+    </section>
   );
 }
 
 export default function Page() {
-  return <AuthGuardParent><Inner /></AuthGuardParent>;
+  return (
+    <AuthGuardParent>
+      <ParentLayout noTabs>
+        <Inner />
+      </ParentLayout>
+    </AuthGuardParent>
+  );
 }

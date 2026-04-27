@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { activeLocale } from '../../../lib/utils';
 import AuthGuardParent from '../../../components/AuthGuardParent';
+import ParentLayout from '../../../components/parent/ParentLayout';
 import { supabase } from '../../../lib/supabase';
 import { WeekCalendar, mondayOfWeek } from '../../../components/calendar/WeekCalendar';
 import { SessionDetailModal } from '../../../components/calendar/SessionDetailModal';
@@ -92,7 +93,7 @@ function relativeOrAbsolute(iso: string): string {
   return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-type Tab = 'calendar' | 'sessions' | 'homework' | 'invoices' | 'updates' | 'files';
+type Tab = 'overview' | 'sessions' | 'homework' | 'files' | 'updates';
 
 type ParentFileRow = {
   id: string;
@@ -114,7 +115,7 @@ function ParentStudentInner() {
   const [files, setFiles] = useState<ParentFileRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<Tab>('calendar');
+  const [tab, setTab] = useState<Tab>('overview');
   const [weekStart, setWeekStart] = useState<Date>(() => mondayOfWeek(new Date()));
   const [detailSession, setDetailSession] = useState<CalendarSession | null>(null);
 
@@ -218,20 +219,12 @@ function ParentStudentInner() {
   const subject = student?.subjects && student.subjects.length > 0 ? student.subjects[0] : null;
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
+    <>
       <Head>
         <title>{student?.name ? `${student.name} · Crestio` : 'Crestio'}</title>
       </Head>
-      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
-        <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-        <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-ink">
-          {t('nav.all_children')}
-        </Link>
-      </nav>
 
-      <main className="px-6 md:px-12 py-10 md:py-14 max-w-4xl mx-auto">
+      <main className="px-6 md:px-12 pt-10 pb-16 max-w-4xl mx-auto">
         {loading ? (
           <div className="card p-6 text-sm text-ink-muted animate-pulse">{t('student.loading')}</div>
         ) : error ? (
@@ -267,32 +260,36 @@ function ParentStudentInner() {
               </div>
             )}
 
-            <div className="border-b border-rule mb-6 overflow-x-auto">
+            <div className="border-b border-rule mb-6 overflow-x-auto scrollbar-thin -mx-6 px-6 md:mx-0 md:px-0">
               <nav className="flex gap-1 min-w-max" role="tablist">
-                {(['calendar', 'sessions', 'homework', 'invoices', 'updates', 'files'] as Tab[]).map((t) => (
+                {(['overview', 'sessions', 'homework', 'files', 'updates'] as Tab[]).map((tk) => (
                   <button
-                    key={t}
+                    key={tk}
                     type="button"
                     role="tab"
-                    aria-selected={tab === t}
-                    onClick={() => setTab(t)}
+                    aria-selected={tab === tk}
+                    onClick={() => setTab(tk)}
                     className={[
                       'px-4 py-3 text-sm -mb-px border-b-2 transition-colors capitalize',
-                      tab === t ? 'border-forest text-ink font-medium' : 'border-transparent text-ink-muted hover:text-ink',
+                      tab === tk ? 'border-forest text-ink font-medium' : 'border-transparent text-ink-muted hover:text-ink',
                     ].join(' ')}
                   >
-                    {t}
+                    {tk}
                   </button>
                 ))}
               </nav>
             </div>
 
-            {tab === 'calendar' && typeof id === 'string' && (
-              <CalendarTab
+            {tab === 'overview' && typeof id === 'string' && (
+              <OverviewTab
                 weekStart={weekStart} setWeekStart={setWeekStart}
                 sessions={calendarSessions}
                 onClickSession={(s) => setDetailSession(s)}
                 studentId={id}
+                upcoming={upcomingSessions}
+                past={pastSessions}
+                allSessions={sessions}
+                updates={updates}
               />
             )}
 
@@ -310,8 +307,6 @@ function ParentStudentInner() {
               <HomeworkTab sessions={sessions} onToggleHomework={toggleHomework} />
             )}
 
-            {tab === 'invoices' && <InvoicesTab invoices={invoices} />}
-
             {tab === 'updates' && <UpdatesTab updates={updates} />}
 
             {tab === 'files' && <FilesTab files={files} sessions={sessions} />}
@@ -326,6 +321,110 @@ function ParentStudentInner() {
         onChanged={load}
         mode="parent"
       />
+    </>
+  );
+}
+
+function OverviewTab({
+  weekStart, setWeekStart, sessions, onClickSession, studentId,
+  upcoming, past, allSessions, updates,
+}: {
+  weekStart: Date;
+  setWeekStart: (d: Date) => void;
+  sessions: CalendarSession[];
+  onClickSession: (s: CalendarSession) => void;
+  studentId: string;
+  upcoming: SessionRow[];
+  past: SessionRow[];
+  allSessions: SessionRow[];
+  updates: ParentUpdate[];
+}) {
+  const recent = past.slice(0, 5);
+  const next = upcoming.slice(0, 3);
+  const tutorNote = updates[0] ?? null;
+  return (
+    <div className="space-y-10">
+      {next.length > 0 && (
+        <section>
+          <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Coming up</div>
+          <div className="space-y-2">
+            {next.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => onClickSession(sessions.find((c) => c.id === s.id) ?? sessions[0])}
+                className="w-full text-left p-4 rounded-md border border-forest/30 bg-forest/[0.04] hover:bg-forest/[0.06] transition-colors"
+              >
+                <div className="font-display text-base tracking-tightest text-forest-ink">
+                  {relativeDayLabel(s.scheduled_at)} · {new Date(s.scheduled_at).toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })}
+                </div>
+                <div className="text-xs text-forest-ink/80 mt-0.5">
+                  {s.duration_minutes} min{s.subject ? ` · ${s.subject}` : ''}
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {recent.length > 0 && (
+        <section>
+          <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Recent sessions</div>
+          <div className="space-y-3">
+            {recent.map((s) => (
+              <article key={s.id} className="rounded-md border border-rule bg-surface p-5">
+                <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-2">
+                  <div className="font-display text-base tracking-tightest">
+                    {relativeDayLabel(s.scheduled_at)} · {new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}
+                  </div>
+                  <div className="text-2xs text-ink-soft font-mono tabular-nums">
+                    {new Date(s.scheduled_at).toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' })} · {s.duration_minutes} min
+                  </div>
+                </div>
+                {s.notes_parent_facing ? (
+                  <p className="text-sm text-ink-muted leading-relaxed line-clamp-3 whitespace-pre-wrap break-words">
+                    {s.notes_parent_facing}
+                  </p>
+                ) : (
+                  <p className="text-2xs text-ink-soft italic">No notes shared yet.</p>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {tutorNote && (
+        <section>
+          <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Tutor&apos;s note</div>
+          <article className="rounded-md border border-rule bg-surface p-5">
+            <div className="text-2xs text-ink-soft mb-2">
+              {relativeOrAbsolute(tutorNote.created_at)} · {tutorNote.created_by_name}
+            </div>
+            <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap break-words">{tutorNote.content}</p>
+          </article>
+        </section>
+      )}
+
+      <section>
+        <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">This week</div>
+        <div className="flex items-center gap-2 mb-3">
+          <button onClick={() => {
+            const d = new Date(weekStart); d.setDate(d.getDate() - 7); setWeekStart(d);
+          }} className="btn-ghost text-xs h-8 min-h-[32px] px-2.5">‹</button>
+          <button onClick={() => setWeekStart(mondayOfWeek(new Date()))} className="btn-ghost text-xs h-8 min-h-[32px] px-3">Today</button>
+          <button onClick={() => {
+            const d = new Date(weekStart); d.setDate(d.getDate() + 7); setWeekStart(d);
+          }} className="btn-ghost text-xs h-8 min-h-[32px] px-2.5">›</button>
+        </div>
+        <WeekCalendar
+          weekStart={weekStart}
+          sessions={sessions}
+          onClickSession={onClickSession}
+          readOnly
+        />
+        <ParentCalendarSubscribeCard studentId={studentId} />
+      </section>
     </div>
   );
 }
@@ -888,5 +987,11 @@ function HomeworkHistoryRow({
 }
 
 export default function ParentStudent() {
-  return <AuthGuardParent><ParentStudentInner /></AuthGuardParent>;
+  return (
+    <AuthGuardParent>
+      <ParentLayout active="students" noTabs>
+        <ParentStudentInner />
+      </ParentLayout>
+    </AuthGuardParent>
+  );
 }

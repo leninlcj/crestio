@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../components/AuthGuardParent';
+import ParentLayout from '../../components/parent/ParentLayout';
 import { supabase } from '../../lib/supabase';
 
-function ParentSettingsInner() {
+function Inner() {
   const { t } = useTranslation('parent');
   const router = useRouter();
   const [name, setName] = useState('');
@@ -78,141 +79,90 @@ function ParentSettingsInner() {
   }
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
-        <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-        <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-ink">
-          {t('nav.back_dashboard')}
-        </Link>
-      </nav>
+    <section className="px-6 md:px-12 pt-10 pb-16 max-w-2xl mx-auto">
+      <div className="mb-8">
+        <h1 className="font-display text-3xl md:text-4xl tracking-tighter text-ink mb-1">
+          {t('settings_page.heading')}
+        </h1>
+        <p className="text-sm text-ink-muted">{t('settings_page.sub_v2')}</p>
+      </div>
 
-      <main className="px-6 md:px-12 py-12 md:py-16 max-w-xl mx-auto space-y-6">
-        <div>
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('settings_page.kicker')}</div>
-          <h1 className="font-display text-4xl md:text-5xl tracking-tightest mb-6">{t('settings_page.heading')}</h1>
-        </div>
-
-        {loading ? (
-          <div className="text-sm text-ink-muted">{t('settings_page.loading')}</div>
-        ) : (
-          <>
-            <form onSubmit={saveName} className="card p-8 space-y-5">
-              <h2 className="font-display text-xl tracking-tightest">{t('settings_page.details_heading')}</h2>
-              <div>
-                <label className="label">{t('settings_page.email_label')}</label>
-                <input type="email" disabled value={email} className="input bg-ink-soft/10" />
-                <div className="text-2xs text-ink-soft mt-1.5">
-                  {t('settings_page.email_hint')}
-                </div>
-              </div>
-              <div>
-                <label className="label">{t('settings_page.name_label')}</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input" />
-              </div>
-              {nameError && <div className="text-sm text-claret">{nameError}</div>}
-              {nameSaved && <div className="text-sm text-forest">{t('settings_page.saved')}</div>}
+      {loading ? (
+        <div className="text-sm text-ink-muted">{t('settings_page.loading')}</div>
+      ) : (
+        <div className="space-y-6">
+          <form onSubmit={saveName} className="rounded-md border border-rule bg-surface p-6 md:p-7 space-y-5">
+            <div>
+              <h2 className="font-display text-lg tracking-tightest mb-1">{t('settings_page.profile_heading')}</h2>
+              <p className="text-2xs text-ink-soft">{t('settings_page.profile_sub')}</p>
+            </div>
+            <div>
+              <label className="label">{t('settings_page.email_label')}</label>
+              <input type="email" disabled value={email} className="input bg-ruleSoft" />
+              <div className="text-2xs text-ink-soft mt-1.5">{t('settings_page.email_hint')}</div>
+            </div>
+            <div>
+              <label className="label">{t('settings_page.name_label')}</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input" />
+            </div>
+            {nameError && <div className="text-sm text-claret">{nameError}</div>}
+            {nameSaved && <div className="text-sm text-success">{t('settings_page.saved')}</div>}
+            <div>
               <button type="submit" disabled={savingName} className="btn-primary">
                 {savingName ? t('settings_page.saving') : t('settings_page.save')}
               </button>
-            </form>
+            </div>
+          </form>
 
-            <form onSubmit={changePassword} className="card p-8 space-y-5">
-              <h2 className="font-display text-xl tracking-tightest">{t('settings_page.change_password')}</h2>
-              <div>
-                <label className="label">{t('settings_page.new_password_label')}</label>
-                <input type="password" minLength={8} required value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)} className="input" />
-                <div className="text-2xs text-ink-soft mt-1.5">{t('settings_page.password_min')}</div>
-              </div>
-              {passwordError && <div className="text-sm text-claret">{passwordError}</div>}
-              {passwordMsg && <div className="text-sm text-forest">{passwordMsg}</div>}
-              <button type="submit" disabled={changingPassword || newPassword.length < 8}
-                className="btn-primary">
+          <form onSubmit={changePassword} className="rounded-md border border-rule bg-surface p-6 md:p-7 space-y-5">
+            <div>
+              <h2 className="font-display text-lg tracking-tightest mb-1">{t('settings_page.change_password')}</h2>
+              <p className="text-2xs text-ink-soft">{t('settings_page.password_sub')}</p>
+            </div>
+            <div>
+              <label className="label">{t('settings_page.new_password_label')}</label>
+              <input type="password" minLength={8} required value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)} className="input" />
+              <div className="text-2xs text-ink-soft mt-1.5">{t('settings_page.password_min')}</div>
+            </div>
+            {passwordError && <div className="text-sm text-claret">{passwordError}</div>}
+            {passwordMsg && <div className="text-sm text-success">{passwordMsg}</div>}
+            <div>
+              <button type="submit" disabled={changingPassword || newPassword.length < 8} className="btn-primary">
                 {changingPassword ? t('settings_page.updating') : t('settings_page.update_password')}
               </button>
-            </form>
-
-            {parentId && <ParentNotifPrefs parentId={parentId} />}
-
-            <div className="card p-8">
-              <h2 className="font-display text-xl tracking-tightest mb-4">{t('settings_page.sign_out_heading')}</h2>
-              <p className="text-sm text-ink-muted mb-4">
-                {t('settings_page.sign_out_body')}
-              </p>
-              <button onClick={signOut} className="btn-secondary">{t('settings_page.sign_out')}</button>
             </div>
-          </>
-        )}
-      </main>
-    </div>
-  );
-}
+          </form>
 
-function ParentNotifPrefs({ parentId }: { parentId: string }) {
-  const { t } = useTranslation('parent');
-  const [emailEnabled, setEmailEnabled] = useState(true);
-  const [urgentOnly, setUrgentOnly] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+          <div className="rounded-md border border-rule bg-surface p-6 md:p-7">
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h2 className="font-display text-lg tracking-tightest">{t('settings_page.notifications_heading')}</h2>
+              <Link href="/parent/settings/notifications" className="text-xs text-forest hover:text-forest-ink underline underline-offset-2">
+                {t('settings_page.notifications_manage')} →
+              </Link>
+            </div>
+            <p className="text-sm text-ink-muted">{t('settings_page.notifications_sub')}</p>
+          </div>
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase
-        .from('parents')
-        .select('notify_messages_email, notify_messages_urgent_only')
-        .eq('id', parentId)
-        .maybeSingle();
-      if (data) {
-        setEmailEnabled(data.notify_messages_email !== false);
-        setUrgentOnly(!!data.notify_messages_urgent_only);
-      }
-      setLoaded(true);
-    })();
-  }, [parentId]);
-
-  async function update(field: 'notify_messages_email' | 'notify_messages_urgent_only', value: boolean) {
-    await supabase.from('parents').update({ [field]: value }).eq('id', parentId);
-  }
-
-  return (
-    <div className="card p-8 space-y-5">
-      <div>
-        <h2 className="font-display text-xl tracking-tightest">{t('settings_page.msg_notifs_heading')}</h2>
-        <p className="text-sm text-ink-muted mt-2">
-          {t('settings_page.msg_notifs_body')}
-        </p>
-      </div>
-      <label className="flex items-start gap-4 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={emailEnabled}
-          disabled={!loaded}
-          onChange={(e) => { setEmailEnabled(e.target.checked); update('notify_messages_email', e.target.checked); }}
-          className="h-5 w-5 accent-forest mt-0.5"
-        />
-        <div className="flex-1">
-          <div className="text-sm text-ink">{t('settings_page.msg_when_label')}</div>
-          <div className="text-2xs text-ink-muted mt-1">{t('settings_page.msg_when_hint')}</div>
+          <div className="rounded-md border border-rule bg-surface p-6 md:p-7">
+            <h2 className="font-display text-lg tracking-tightest mb-2">{t('settings_page.sign_out_heading')}</h2>
+            <p className="text-sm text-ink-muted mb-4">
+              {t('settings_page.sign_out_body')}
+            </p>
+            <button onClick={signOut} className="btn-secondary">{t('settings_page.sign_out')}</button>
+          </div>
         </div>
-      </label>
-      <label className="flex items-start gap-4 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={urgentOnly}
-          disabled={!loaded || !emailEnabled}
-          onChange={(e) => { setUrgentOnly(e.target.checked); update('notify_messages_urgent_only', e.target.checked); }}
-          className="h-5 w-5 accent-forest mt-0.5"
-        />
-        <div className="flex-1">
-          <div className="text-sm text-ink">{t('settings_page.msg_urgent_label')}</div>
-          <div className="text-2xs text-ink-muted mt-1">{t('settings_page.msg_urgent_hint')}</div>
-        </div>
-      </label>
-    </div>
+      )}
+    </section>
   );
 }
 
 export default function ParentSettings() {
-  return <AuthGuardParent><ParentSettingsInner /></AuthGuardParent>;
+  return (
+    <AuthGuardParent>
+      <ParentLayout noTabs>
+        <Inner />
+      </ParentLayout>
+    </AuthGuardParent>
+  );
 }

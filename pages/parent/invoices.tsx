@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../components/AuthGuardParent';
+import ParentLayout from '../../components/parent/ParentLayout';
 import { supabase } from '../../lib/supabase';
 import { useLocaleFormatters } from '../../lib/useLocaleFormatters';
 
@@ -19,7 +20,7 @@ type InvoiceRow = {
   is_batch_generated: boolean;
 };
 
-function InvoicesInner() {
+function Inner() {
   const { t } = useTranslation('parent');
   const { formatMoney, formatDate } = useLocaleFormatters();
   const [loading, setLoading] = useState(true);
@@ -48,99 +49,135 @@ function InvoicesInner() {
     })();
   }, []);
 
-  const unpaidTotal = invoices
-    .filter((i) => i.status !== 'paid' && i.status !== 'void')
-    .reduce((a, i) => a + (i.total_cents ?? 0), 0);
-
   const formatAud = (cents: number) => formatMoney(cents, 'AUD', { maximumFractionDigits: cents % 100 === 0 ? 0 : 2 });
+  const isUnpaid = (i: InvoiceRow) => i.status !== 'paid' && i.status !== 'void';
+
+  const unpaid = useMemo(() => invoices.filter(isUnpaid), [invoices]);
+  const paid = useMemo(() => invoices.filter((i) => i.status === 'paid'), [invoices]);
+  const unpaidTotal = unpaid.reduce((a, i) => a + (i.total_cents ?? 0), 0);
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
-        <Link href="/parent/dashboard" className="font-display text-2xl tracking-tightest">
-          crest<span className="italic text-forest">io</span>
-        </Link>
-        <Link href="/parent/dashboard" className="text-sm text-ink-muted hover:text-ink">{t('nav.back_dashboard')}</Link>
-      </nav>
+    <section className="px-6 md:px-12 pt-10 pb-16 max-w-3xl mx-auto">
+      <div className="mb-6">
+        <h1 className="font-display text-3xl md:text-4xl tracking-tighter text-ink mb-1">
+          {t('invoices_page.heading_v2')}
+        </h1>
+        <p className="text-sm text-ink-muted">
+          {t('invoices_page.sub_v2', { paid: paid.length, unpaid: unpaid.length })}
+        </p>
+      </div>
 
-      <main className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
-        <div className="mb-6">
-          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">{t('invoices_page.kicker')}</div>
-          <h1 className="font-display text-4xl tracking-tightest">{t('invoices_page.heading')}</h1>
+      {loading ? (
+        <div className="space-y-2 animate-pulse">
+          {[1, 2, 3].map((i) => <div key={i} className="h-20 bg-ruleSoft rounded-md" />)}
         </div>
-
-        {loading ? (
-          <div className="card p-6 text-sm text-ink-muted">{t('common.loading')}</div>
-        ) : invoices.length === 0 ? (
-          <div className="card p-6 text-sm text-ink-muted">{t('invoices_page.empty')}</div>
-        ) : (
-          <>
-            {unpaidTotal > 0 && (
-              <div className="card p-5 mb-6 bg-claret/5 border-claret/30">
-                <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                  <div>
-                    <div className="text-2xs uppercase tracking-widest text-claret/80 mb-1">{t('invoices_page.outstanding_eyebrow')}</div>
-                    <div className="font-display text-3xl tracking-tightest text-claret">{formatAud(unpaidTotal)}</div>
+      ) : invoices.length === 0 ? (
+        <div className="rounded-md border border-rule bg-surface p-6 text-sm text-ink-muted">
+          {t('invoices_page.empty')}
+        </div>
+      ) : (
+        <>
+          {unpaidTotal > 0 && (
+            <div className="rounded-md border border-claret/30 bg-claret/[0.04] p-5 mb-6">
+              <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                <div>
+                  <div className="text-2xs uppercase tracking-widest text-claret mb-1">
+                    {t('invoices_page.outstanding_eyebrow')}
                   </div>
-                  <Link href="/parent/pay" className="btn-primary text-sm">
-                    Pay invoices
-                  </Link>
+                  <div className="font-display text-3xl tracking-tighter text-claret tabular-nums">
+                    {formatAud(unpaidTotal)}
+                  </div>
+                  <div className="text-2xs text-claret/80 mt-1">
+                    {t('dashboard_v2.unpaid_invoices', { count: unpaid.length })}
+                  </div>
                 </div>
-                <div className="text-2xs text-ink-soft mt-2">
-                  {t('invoices_page.outstanding_note')}
-                </div>
+                <Link href="/parent/pay" className="btn-primary text-sm h-10 min-h-[40px] px-4">
+                  {t('invoices_page.pay_all', { count: unpaid.length })}
+                </Link>
               </div>
-            )}
-
-            <div className="space-y-3">
-              {invoices.map((inv) => {
-                const overdue = inv.due_on && inv.status !== 'paid' && inv.status !== 'void'
-                  && new Date(inv.due_on) < new Date();
-                const badge = inv.status === 'paid' ? 'badge-forest'
-                  : overdue ? 'badge-claret' : 'badge-rust';
-                const issuedText = t('invoices_page.issued_label', {
-                  date: formatDate(inv.issued_on, { day: 'numeric', month: 'short', year: 'numeric' }),
-                });
-                const dueText = inv.due_on
-                  ? ` · ${t('invoices_page.due_label', { date: formatDate(inv.due_on, { day: 'numeric', month: 'short' }) })}`
-                  : '';
-                return (
-                  <Link
-                    key={inv.id}
-                    href={`/parent/invoices/${inv.id}`}
-                    className="card p-5 flex flex-wrap items-center justify-between gap-3 hover:shadow-lift transition-shadow"
-                  >
-                    <div>
-                      <div className="font-mono text-sm">
-                        {inv.number}
-                        {inv.is_batch_generated && (
-                          <span className="ml-2 badge-neutral text-2xs">{t('invoices_page.family_badge')}</span>
-                        )}
-                      </div>
-                      <div className="text-2xs text-ink-muted">
-                        {inv.household_name ? <>{inv.household_name} · </> : inv.student_name ? <>{inv.student_name} · </> : null}
-                        {issuedText}{dueText}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-sm">{formatAud(inv.total_cents)}</span>
-                      <span className={badge}>
-                        {inv.status === 'paid' ? t('invoices_page.status_paid')
-                          : overdue ? t('invoices_page.status_overdue')
-                          : inv.status}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
             </div>
-          </>
-        )}
-      </main>
-    </div>
+          )}
+
+          {unpaid.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-2xs uppercase tracking-widest text-ink-soft mb-3">
+                {t('invoices_page.section_unpaid')}
+              </h2>
+              <div className="space-y-2">
+                {unpaid.map((inv) => <InvoiceCard key={inv.id} inv={inv} formatAud={formatAud} formatDate={formatDate} t={t as any} />)}
+              </div>
+            </div>
+          )}
+
+          {paid.length > 0 && (
+            <div>
+              <h2 className="text-2xs uppercase tracking-widest text-ink-soft mb-3">
+                {t('invoices_page.section_paid')}
+              </h2>
+              <div className="space-y-2">
+                {paid.map((inv) => <InvoiceCard key={inv.id} inv={inv} formatAud={formatAud} formatDate={formatDate} t={t as any} />)}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
+function InvoiceCard({ inv, formatAud, formatDate, t }: { inv: InvoiceRow; formatAud: (c: number) => string; formatDate: (iso: string, opts?: Intl.DateTimeFormatOptions) => string; t: (k: string, v?: any) => string }) {
+  const overdue = inv.due_on && inv.status !== 'paid' && inv.status !== 'void' && new Date(inv.due_on) < new Date();
+  const isUnpaid = inv.status !== 'paid' && inv.status !== 'void';
+  const issuedText = t('invoices_page.issued_label', {
+    date: formatDate(inv.issued_on, { day: 'numeric', month: 'short', year: 'numeric' }),
+  });
+  const dueText = inv.due_on
+    ? ` · ${t('invoices_page.due_label', { date: formatDate(inv.due_on, { day: 'numeric', month: 'short' }) })}`
+    : '';
+  return (
+    <Link
+      href={`/parent/invoices/${inv.id}`}
+      className={[
+        'block p-4 rounded-md border bg-surface hover:bg-cream transition-colors',
+        overdue ? 'border-claret/30' : 'border-rule',
+      ].join(' ')}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            {overdue && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-claret overdue-dot-pulse" />}
+            <span className="font-mono text-sm text-ink">{inv.number}</span>
+            {inv.is_batch_generated && (
+              <span className="badge-neutral text-2xs">{t('invoices_page.family_badge')}</span>
+            )}
+          </div>
+          <div className="text-2xs text-ink-soft mt-0.5">
+            {inv.household_name ? <>{inv.household_name} · </> : inv.student_name ? <>{inv.student_name} · </> : null}
+            {issuedText}{dueText}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-sm tabular-nums">{formatAud(inv.total_cents)}</span>
+          <span className={inv.status === 'paid' ? 'badge-forest' : overdue ? 'badge-claret' : 'badge-rust'}>
+            {inv.status === 'paid' ? t('invoices_page.status_paid') : overdue ? t('invoices_page.status_overdue') : inv.status}
+          </span>
+          {isUnpaid && (
+            <span className="hidden md:inline text-xs text-forest hover:underline underline-offset-2">
+              {t('invoices_page.pay_inline')} →
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 }
 
 export default function ParentInvoices() {
-  return <AuthGuardParent><InvoicesInner /></AuthGuardParent>;
+  return (
+    <AuthGuardParent>
+      <ParentLayout active="invoices">
+        <Inner />
+      </ParentLayout>
+    </AuthGuardParent>
+  );
 }

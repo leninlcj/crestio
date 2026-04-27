@@ -63,6 +63,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       this_week_sessions: [],
       recent_updates: [],
       stats: { sessions_this_month: 0, sessions_this_year: 0, outstanding_cents: 0, paid_cents: 0 },
+      primary_tutor: null,
+      primary_organization: null,
     });
   }
 
@@ -164,6 +166,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
+  // Resolve the "primary tutor" for the portal header. Pick the most
+  // frequent tutor across this-week + recent sessions; fall back to the
+  // organisation owner if no tutor identified. Same for organisation.
+  const orgIds = Array.from(new Set(students.map((s) => s.organization_id).filter(Boolean))) as string[];
+  let primaryTutor: { name: string | null } | null = null;
+  let primaryOrganization: { name: string | null; brand_color: string | null } | null = null;
+
+  if (orgIds.length > 0) {
+    const { data: orgs } = await admin
+      .from('organizations')
+      .select('id, name')
+      .in('id', orgIds)
+      .limit(1);
+    if (orgs && orgs.length > 0) {
+      primaryOrganization = { name: (orgs[0] as any).name ?? null, brand_color: null };
+    }
+  }
+
+  const tutorFreq = new Map<string, number>();
+  for (const s of thisWeek) if (s.tutor_name) tutorFreq.set(s.tutor_name, (tutorFreq.get(s.tutor_name) ?? 0) + 1);
+  if (tutorFreq.size > 0) {
+    const [topName] = Array.from(tutorFreq.entries()).sort((a, b) => b[1] - a[1])[0];
+    primaryTutor = { name: topName };
+  } else if (orgIds.length > 0) {
+    // Fallback: ask the org-membership table for an owner. Don't require a
+    // role column on profiles since not every install has it.
+    const { data: ownerMember } = await admin
+      .from('organization_memberships')
+      .select('user_id')
+      .eq('organization_id', orgIds[0])
+      .eq('role', 'owner')
+      .maybeSingle();
+    if (ownerMember?.user_id) {
+      const { data: ownerProfile } = await admin
+        .from('profiles')
+        .select('owner_name')
+        .eq('id', ownerMember.user_id)
+        .maybeSingle();
+      if (ownerProfile?.owner_name) primaryTutor = { name: ownerProfile.owner_name };
+    }
+  }
+
   return res.status(200).json({
     parent: { name: parent.name, email: parent.email },
     students: students.map((s) => ({
@@ -179,5 +223,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       outstanding_cents: outstandingCents,
       paid_cents: paidCents,
     },
+    primary_tutor: primaryTutor,
+    primary_organization: primaryOrganization,
   });
 }
