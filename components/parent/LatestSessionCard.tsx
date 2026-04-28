@@ -59,14 +59,7 @@ export default function LatestSessionCard({ studentIds }: Props) {
   }
 
   if (!latest) {
-    return (
-      <section className="rounded-md border border-rule bg-surface p-5 md:p-6">
-        <h2 className="text-2xs uppercase tracking-widest text-ink-soft mb-2">
-          {t('dashboard_v2.latest_session')}
-        </h2>
-        <div className="text-sm text-ink-muted">{t('dashboard_v2.no_latest_session')}</div>
-      </section>
-    );
+    return <LatestSessionPending studentIds={studentIds} />;
   }
 
   const preview = (latest.notes_parent_facing ?? '').slice(0, 200);
@@ -93,5 +86,59 @@ export default function LatestSessionCard({ studentIds }: Props) {
         {t('dashboard_v2.read_full_note')} →
       </div>
     </Link>
+  );
+}
+
+// Pending state — there's a recent completed session but the polished note
+// hasn't shipped yet. Soft "tutor is working on it" copy.
+function LatestSessionPending({ studentIds }: { studentIds: string[] }) {
+  const { t } = useTranslation('parent');
+  const { formatDate } = useLocaleFormatters();
+  const [pending, setPending] = useState<{ student_name: string; scheduled_at: string } | null>(null);
+
+  useEffect(() => {
+    if (studentIds.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('sessions')
+        .select('scheduled_at, student:students!inner(name)')
+        .in('student_id', studentIds)
+        .eq('status', 'completed')
+        .is('notes_parent_facing', null)
+        .order('scheduled_at', { ascending: false })
+        .limit(1);
+      if (cancelled) return;
+      const row = (data ?? [])[0] as any;
+      if (row) setPending({ student_name: row.student?.name ?? '—', scheduled_at: row.scheduled_at });
+    })();
+    return () => { cancelled = true; };
+  }, [studentIds.join(',')]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (pending) {
+    const within24h = Date.now() - new Date(pending.scheduled_at).getTime() < 30 * 3600_000;
+    return (
+      <section className="rounded-md border border-rule bg-surface p-5 md:p-6">
+        <h2 className="text-2xs uppercase tracking-widest text-ink-soft mb-2">
+          {t('dashboard_v2.latest_session')}
+        </h2>
+        <div className="text-sm text-ink leading-relaxed">
+          {within24h ? (
+            <>Your tutor is working on {pending.student_name.split(' ')[0]}'s notes from {formatDate(pending.scheduled_at, { weekday: 'long' }).toLowerCase()}'s session. Check back tonight.</>
+          ) : (
+            <>Notes for {pending.student_name.split(' ')[0]}'s last session are coming soon.</>
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="rounded-md border border-rule bg-surface p-5 md:p-6">
+      <h2 className="text-2xs uppercase tracking-widest text-ink-soft mb-2">
+        {t('dashboard_v2.latest_session')}
+      </h2>
+      <div className="text-sm text-ink-muted">{t('dashboard_v2.no_latest_session')}</div>
+    </section>
   );
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../components/AuthGuardParent';
 import ParentLayout from '../../components/parent/ParentLayout';
+import AutoPayCard from '../../components/parent/AutoPayCard';
 import { supabase } from '../../lib/supabase';
 import { useLocaleFormatters } from '../../lib/useLocaleFormatters';
 
@@ -25,9 +26,16 @@ function Inner() {
   const { formatMoney, formatDate } = useLocaleFormatters();
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
+  const [parentId, setParentId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: parent } = await supabase
+          .from('parents').select('id').eq('auth_user_id', session.user.id).maybeSingle();
+        if (parent) setParentId(parent.id);
+      }
       const { data } = await supabase
         .from('invoices')
         .select('id, number, issued_on, due_on, total_cents, status, student_id, household_id, is_batch_generated, student:students(name), household:households(display_name)')
@@ -95,6 +103,12 @@ function Inner() {
                   {t('invoices_page.pay_all', { count: unpaid.length })}
                 </Link>
               </div>
+            </div>
+          )}
+
+          {paid.length > 0 && (
+            <div className="mb-6">
+              <AutoPayCard parentId={parentId} />
             </div>
           )}
 

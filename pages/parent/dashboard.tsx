@@ -11,12 +11,47 @@ import LatestSessionCard from '../../components/parent/LatestSessionCard';
 import BalanceCard from '../../components/parent/BalanceCard';
 import StudentRow from '../../components/parent/StudentRow';
 import ActivityFeed from '../../components/parent/ActivityFeed';
+import FirstTimeWelcome from '../../components/parent/FirstTimeWelcome';
+import TutorWeekStrip from '../../components/parent/TutorWeekStrip';
+import { supabase } from '../../lib/supabase';
 
 function ParentDashboardContents() {
   const router = useRouter();
   const { t } = useTranslation('parent');
   const { overview, loading, error, parentFirstName, primaryTutorName, reload } = useParentContext();
   const [noAccessBanner, setNoAccessBanner] = useState(false);
+  const [parentRow, setParentRow] = useState<{ id: string; first_login_seen_at: string | null } | null>(null);
+  const [tutorAbout, setTutorAbout] = useState<string | null>(null);
+
+  // Load the first-login marker + tutor about. The overview API doesn't yet
+  // include first_login_seen_at, so a small extra query is fine here.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || cancelled) return;
+      const { data: parent } = await supabase
+        .from('parents')
+        .select('id, first_login_seen_at')
+        .eq('auth_user_id', session.user.id)
+        .maybeSingle();
+      if (!cancelled && parent) setParentRow({ id: parent.id, first_login_seen_at: parent.first_login_seen_at });
+
+      // Tutor about — single round-trip via the parent's first student → org.
+      const { data: link } = await supabase
+        .from('parent_student_links')
+        .select('student:students!inner(organization_id)')
+        .eq('parent_id', (parent as any)?.id ?? '')
+        .is('revoked_at', null)
+        .limit(1);
+      const orgId = ((link ?? [])[0] as any)?.student?.organization_id;
+      if (orgId) {
+        const { data: org } = await supabase.from('organizations').select('about').eq('id', orgId).maybeSingle();
+        if (!cancelled) setTutorAbout((org as any)?.about ?? null);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -83,6 +118,15 @@ function ParentDashboardContents() {
         )}
       </section>
 
+      <FirstTimeWelcome
+        parentId={parentRow?.id ?? null}
+        parentName={parentFirstName}
+        tutorName={primaryTutorName}
+        practiceName={overview?.primary_organization?.name ?? null}
+        tutorAbout={tutorAbout}
+        shouldShow={!!parentRow && parentRow.first_login_seen_at == null}
+      />
+
       <section className="px-6 md:px-12 pb-16 max-w-5xl mx-auto space-y-6">
         {loading ? (
           <DashboardSkeleton />
@@ -91,6 +135,8 @@ function ParentDashboardContents() {
         ) : !overview ? null : (
           <>
             <NextSessionCard session={nextSession} onChanged={reload} />
+
+            <TutorWeekStrip sessionsThisWeek={overview.this_week_sessions} />
 
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               <LatestSessionCard studentIds={studentIds} />

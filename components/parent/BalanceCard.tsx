@@ -13,15 +13,22 @@ export default function BalanceCard({ outstandingCents, unpaidCount }: Props) {
 
   if (outstandingCents <= 0) {
     return (
-      <section className="rounded-md border border-rule bg-surface p-5 md:p-6">
-        <h2 className="text-2xs uppercase tracking-widest text-ink-soft mb-2">
+      <section className="rounded-md border border-forest/20 bg-forest-soft/40 p-5 md:p-6">
+        <h2 className="text-2xs uppercase tracking-widest text-forest font-medium mb-3">
           {t('dashboard_v2.balance')}
         </h2>
-        <div className="flex items-center gap-2 text-base text-success">
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden>
-            <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span>{t('dashboard_v2.all_paid_up')}</span>
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-full bg-forest text-cream grid place-items-center shrink-0" aria-hidden>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8.5L6.5 12L13 4.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div className="min-w-0">
+            <div className="font-display text-base md:text-lg tracking-tightest text-forest-ink leading-tight">
+              All paid up.
+            </div>
+            <div className="text-2xs text-forest-ink/85 mt-1">Thank you.</div>
+          </div>
         </div>
       </section>
     );
