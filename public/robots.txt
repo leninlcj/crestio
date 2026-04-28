@@ -1,0 +1,37 @@
+# Crestio — robots.txt
+# Marketing surfaces are crawl-allowed; the authenticated app and
+# parent portal are not. Sandbox is no-index (set in HTML head too).
+
+User-agent: *
+Allow: /
+Allow: /pricing
+Allow: /changelog
+Allow: /roadmap
+Allow: /founder
+Allow: /security
+Allow: /status
+Allow: /brand
+Allow: /developers
+Allow: /customers
+Allow: /customers/
+Allow: /compare/
+Allow: /for/
+Allow: /migrate
+Allow: /roi
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+
+Disallow: /app
+Disallow: /app/
+Disallow: /parent
+Disallow: /parent/
+Disallow: /sandbox
+Disallow: /api/
+Disallow: /auth/
+Disallow: /pay/
+Disallow: /tutor/accept
+Disallow: /files/
+
+Sitemap: https://crestio.ai/sitemap.xml

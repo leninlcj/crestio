@@ -20,6 +20,7 @@ import FounderHomepageEmbed from '../components/marketing/FounderHomepageEmbed';
 import { serverSideTranslations } from '../lib/i18nServer';
 import { fetchMarketingStats } from '../lib/marketing-stats';
 import { loadFounderNotes, type FounderNote } from '../lib/founderNotes';
+import { softwareAppSchema, organizationSchema } from '../lib/schemaOrg';
 
 type Props = { practicesCount: number; latestFounderNote: FounderNote | null };
 
@@ -49,6 +50,14 @@ export default function Home({ practicesCount, latestFounderNote }: Props) {
         <meta name="twitter:title" content={metaTitle} />
         <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content={ogUrl} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema()) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
+        />
       </Head>
 
       <div className="min-h-screen bg-cream text-ink">
