@@ -14,6 +14,7 @@ import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { LessonPlan, Student } from '../../../lib/types';
 import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
+import { InlineAddRow } from '../../../components/quickcreate/InlineAddRow';
 
 function LessonPlansInner() {
   const { t } = useTranslation('lesson_plans');
@@ -118,6 +119,7 @@ function LessonPlansInner() {
               </div>
             </div>
           ))}
+          <InlineAddRow type="lesson_plan" label="New lesson plan" variant="tile" href="/app/lesson-plans/new" />
         </div>
       )}
 

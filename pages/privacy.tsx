@@ -106,7 +106,36 @@ export default function Privacy() {
 
       <h2 id="children">Children's data</h2>
       <p>
-        Crestio handles information about children (students) but children do not directly use our service. Only tutors and parents have accounts. Tutors are responsible for obtaining appropriate consent from parents before adding a student's details to Crestio. Parents who join the parent portal are consenting to Crestio processing their child's tutoring information on their tutor's behalf.
+        Crestio handles information about children (students). Only tutors and parents have administrative accounts. Tutors are responsible for obtaining appropriate consent from parents before adding a student's details to Crestio. Parents who join the parent portal are consenting to Crestio processing their child's tutoring information on their tutor's behalf.
+      </p>
+
+      <h2 id="students-under-18">Students under 18</h2>
+      <p>
+        Crestio offers an optional <strong>student portal</strong> at <code>/student</code>. Tutors can opt individual students in. Students do not sign up by themselves — there is no public student signup. The portal collects only what is needed for the student to see their own sessions: email, full name, date of birth (for age verification), and which homework items they've marked done.
+      </p>
+      <p>
+        <strong>Data minimization.</strong> Students never see other students, never see invoices or payments, never see internal tutor notes, and never see marketing of any kind. We never send students promotional email.
+      </p>
+      <p>
+        <strong>Parental consent under 16.</strong> When a tutor enables portal access for a student under 16, the invitation routes to the student's parent first. The student's account is not created until the parent explicitly approves. Parents can revoke access at any time from the parent portal — revocation immediately deactivates the student's sign-in.
+      </p>
+      <p>
+        <strong>Tutor-only data control.</strong> All student-portal data lives within the tutor's organisation. Crestio does not share student data with third parties beyond the infrastructure providers needed to operate the service (covered in <a href="#third-parties">Third parties</a>). Crestio does not sell student data or use it for training third-party models.
+      </p>
+      <p>
+        <strong>Marketing.</strong> Crestio sends students no marketing email, no "tips and tricks" series, and no newsletters. Operational email — invitation, welcome, new note, new homework — is sent only when triggered by the tutor.
+      </p>
+      <p>
+        <strong>Deletion when access ends.</strong> When a tutor or parent disables a student's portal access, the student's authentication is revoked immediately. The student's tutoring records remain with the tutor's organisation so the tutor can continue teaching the student. If the tutor's organisation is deleted, all student-portal accounts are deleted within 30 days, with 30 days' notice by email.
+      </p>
+      <p>
+        <strong>Account ownership at 18.</strong> When a student turns 18, their data status flips to "self-managed adult". They are notified by email and can choose to take ownership of their account or delete it.
+      </p>
+      <p>
+        <strong>Compliance.</strong> Where applicable, we follow the GDPR Article 8 standard for processing children's data, the Australian Privacy Principles, and the U.S. Children's Online Privacy Protection Act (COPPA). Under-13 students require additional verifiable parental consent before access can be enabled — captured by the parent's signed consent action in the parent portal.
+      </p>
+      <p>
+        <strong>If something feels wrong.</strong> Students can email <a href="mailto:support@crestio.ai">support@crestio.ai</a> directly, or speak to a parent or another adult they trust.
       </p>
 
       <h2 id="cookies">Cookies and tracking</h2>

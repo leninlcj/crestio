@@ -7,6 +7,7 @@ import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import EmptyState from '../../../components/EmptyState';
 import { IconHouseholds, IconArchive } from '../../../components/design/icons';
+import { InlineAddRow } from '../../../components/quickcreate/InlineAddRow';
 
 type Parent = { id: string; name: string | null; email: string | null; is_primary: boolean };
 type StudentLite = { id: string; name: string };
@@ -229,6 +230,7 @@ function HouseholdsInner() {
           {filtered.map((h) => (
             <HouseholdCard key={h.id} h={h} />
           ))}
+          <InlineAddRow type="household" label="Add household" variant="tile" />
         </div>
       )}
 

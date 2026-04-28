@@ -23,6 +23,12 @@ import GlobalKeyboardNav from '../components/GlobalKeyboardNav';
 import { TimeTickProvider } from '../lib/useTimeAgo';
 import { UndoProvider } from '../lib/useUndo';
 import { InlineComposer } from '../components/design/InlineComposer';
+import { QuickCreate } from '../components/quickcreate/QuickCreate';
+import { DetailPaneStackProvider, DetailPaneStackOverlay } from '../components/depth/DetailPaneStack';
+import { UndoKeybind } from '../components/UndoKeybind';
+import { TrashZone } from '../components/depth/TrashZone';
+// Side-effect import: registers default pane renderers with the stack.
+import '../components/panes/StackPanes';
 import '../styles/globals.css';
 
 type SsrI18n = { locale: string; resources: I18nResources };
@@ -64,13 +70,19 @@ export default function App({ Component, pageProps }: AppProps) {
                     <ToastProvider>
                       <UndoProvider>
                         <TimeTickProvider>
-                          <RouteProgressBar />
-                          <KeyboardShortcutsOverlay />
-                          <GlobalKeyboardNav />
-                          <ReferralCapture />
-                          <Component {...pageProps} />
-                          <BillingRequiredModal />
-                          <InlineComposer />
+                          <DetailPaneStackProvider>
+                            <RouteProgressBar />
+                            <KeyboardShortcutsOverlay />
+                            <GlobalKeyboardNav />
+                            <UndoKeybind />
+                            <ReferralCapture />
+                            <Component {...pageProps} />
+                            <BillingRequiredModal />
+                            <InlineComposer />
+                            <QuickCreate />
+                            <TrashZone />
+                            <DetailPaneStackOverlay />
+                          </DetailPaneStackProvider>
                         </TimeTickProvider>
                       </UndoProvider>
                     </ToastProvider>

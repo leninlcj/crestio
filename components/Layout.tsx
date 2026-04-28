@@ -22,6 +22,7 @@ import { TabStrip, type Tab } from './design/TabStrip';
 import { FloatingActionButton } from './design/FloatingActionButton';
 import { Avatar } from './design/Avatar';
 import WhatsNewSection from './WhatsNewSection';
+import { NewItemMenu } from './quickcreate/NewItemMenu';
 
 // Stub changelog — bumped when something user-visible ships. Used by the
 // "what's new" beacon on the avatar.
@@ -414,18 +415,7 @@ export default function Layout({
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <ExemptionOffPill />
-              <button
-                type="button"
-                onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'))}
-                aria-label="Quick log session"
-                data-tour="quick-log"
-                className="p-2 rounded hover:bg-ruleSoft transition-colors text-ink"
-                title="N — quick log"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-              </button>
+              <NewItemMenu />
               <NotificationBell mode="tutor" />
               <AccountDropdown
                 email={userEmail}

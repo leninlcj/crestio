@@ -33,6 +33,19 @@ export default function AuthGuard({ children, requireOnboarded = true }: Props) 
         return;
       }
 
+      // If this user is a student-portal account, route them to /student.
+      // Without this branch a student arriving at /app/* would be sent to
+      // /app/onboarding — which is for tutors only.
+      const { data: studentUser } = await supabase
+        .from('student_users')
+        .select('id, disabled_at')
+        .eq('auth_user_id', session.user.id)
+        .maybeSingle();
+      if (!cancelled && studentUser && !studentUser.disabled_at) {
+        router.replace('/student');
+        return;
+      }
+
       if (requireOnboarded) {
         const { data: profile } = await supabase
           .from('profiles')

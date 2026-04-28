@@ -13,6 +13,7 @@ import { RichEditor } from '../design/RichEditor';
 import { Tooltip } from '../design/Tooltip';
 import { formatCents, formatDate, formatTime } from '../../lib/utils';
 import { formatMoney, formatDuration } from '../../lib/format';
+import { StudentAccessCard } from './StudentAccessCard';
 
 type Props = {
   open: boolean;
@@ -33,6 +34,7 @@ type StudentDetail = {
   parent_name: string | null;
   parent_email: string | null;
   household_id: string | null;
+  date_of_birth: string | null;
   created_at: string;
   archived: boolean;
 };
@@ -332,6 +334,13 @@ export function StudentDetailPane({ open, studentId, onClose, currency, isOwner 
                   />
                 </Field>
               )}
+              <Field label="Date of birth">
+                <InlineEditField
+                  value={student.date_of_birth ?? ''}
+                  placeholder="yyyy-mm-dd"
+                  onSave={(text) => patchStudent({ date_of_birth: text || null })}
+                />
+              </Field>
               <Field label="Parent">
                 <div className="text-sm text-ink">
                   {student.parent_name ?? <span className="text-ink-soft">—</span>}
@@ -340,6 +349,15 @@ export function StudentDetailPane({ open, studentId, onClose, currency, isOwner 
                   <div className="text-xs text-ink-muted">{student.parent_email}</div>
                 )}
               </Field>
+
+              <StudentAccessCard
+                studentId={student.id}
+                studentName={student.name}
+                dateOfBirth={student.date_of_birth}
+                parentEmail={student.parent_email}
+                hasLinkedParent={!!student.parent_email || !!student.parent_name}
+              />
+
               <div className="flex items-center gap-2 pt-2 border-t border-rule">
                 <Link
                   href={`/app/sessions/new?student_id=${student.id}`}

@@ -28,7 +28,17 @@ export default function AuthGuardParent({ children }: Props) {
         .maybeSingle();
 
       if (!cancelled && !parent) {
-        // Signed in, but not a parent — must be a tutor account.
+        // Could be a student account — route them to /student instead of /app.
+        const { data: studentUser } = await supabase
+          .from('student_users')
+          .select('id, disabled_at')
+          .eq('auth_user_id', session.user.id)
+          .maybeSingle();
+        if (studentUser && !studentUser.disabled_at) {
+          router.replace('/student');
+          return;
+        }
+        // Otherwise must be a tutor account.
         router.replace('/app');
         return;
       }

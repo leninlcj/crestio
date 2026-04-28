@@ -11,11 +11,13 @@ type Tab = {
   i18nKey: string;
   ownerOnly?: boolean;
   requires?: 'multi_tutor';
+  // Optional literal label used when the tab isn't yet in the i18n bundles.
+  literal?: string;
 };
 
 const TABS: Tab[] = [
   // Reordered for trust: Profile → Organisation → Schedule prefs → Notifications →
-  // Billing → Parent payments → Team → Referrals → API → Data
+  // Billing → Parent payments → Team → Referrals → API → Data → Trash → Activity
   { href: '/app/settings/account', i18nKey: 'account' },
   { href: '/app/settings/organisation', i18nKey: 'organisation', ownerOnly: true },
   { href: '/app/settings/preferences', i18nKey: 'preferences' },
@@ -25,6 +27,9 @@ const TABS: Tab[] = [
   { href: '/app/settings/referrals', i18nKey: 'referrals', ownerOnly: true },
   { href: '/app/settings/integrations', i18nKey: 'integrations' },
   { href: '/app/settings/data', i18nKey: 'data' },
+  { href: '/app/settings/templates', i18nKey: 'templates', literal: 'Templates' },
+  { href: '/app/settings/trash', i18nKey: 'trash', literal: 'Trash' },
+  { href: '/app/settings/my-activity', i18nKey: 'my-activity', literal: 'My activity' },
 ];
 
 export function SettingsTabs() {
@@ -59,7 +64,11 @@ export function SettingsTabs() {
                   : 'border-transparent text-ink-muted hover:text-ink'
               )}
             >
-              {t(`tabs.${tab.i18nKey}`)}
+              {(() => {
+                const key = `tabs.${tab.i18nKey}`;
+                const label = t(key);
+                return label === key && tab.literal ? tab.literal : label;
+              })()}
             </Link>
           );
         })}

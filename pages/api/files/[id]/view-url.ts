@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: file } = await admin
     .from('files')
-    .select('id, organization_id, student_id, is_org_library, storage_path, converted_pdf_path, mime_type, status, deleted_at, allow_printing, display_name, uploaded_by_user_id')
+    .select('id, organization_id, student_id, intended_student_id, is_org_library, storage_path, converted_pdf_path, mime_type, status, deleted_at, allow_printing, display_name, uploaded_by_user_id')
     .eq('id', fileId)
     .maybeSingle();
   if (!file) return res.status(404).json({ error: 'File not found.' });
@@ -64,8 +64,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(409).json({ error: `File is not ready (status=${file.status}).` });
   }
 
-  // Authorize: org member (owner/tutor) OR linked parent.
-  let viewerRoleHint: 'owner' | 'tutor' | 'parent' | null = null;
+  // Authorize: org member (owner/tutor) OR linked parent OR intended student.
+  let viewerRoleHint: 'owner' | 'tutor' | 'parent' | 'student' | null = null;
+  let viewerEmailForWatermark: string | null = null;
 
   const { data: member } = await admin
     .from('organization_members')
@@ -90,6 +91,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .is('revoked_at', null)
         .maybeSingle();
       if (link) viewerRoleHint = 'parent';
+    }
+  }
+
+  // Student viewer: only if file's intended_student_id is set and matches.
+  if (!viewerRoleHint && file.intended_student_id) {
+    const { data: studentUser } = await admin
+      .from('student_users')
+      .select('id, student_id, email, disabled_at')
+      .eq('auth_user_id', userId)
+      .maybeSingle();
+    if (studentUser && !studentUser.disabled_at && studentUser.student_id === file.intended_student_id) {
+      viewerRoleHint = 'student';
+      viewerEmailForWatermark = studentUser.email;
     }
   }
 
@@ -121,6 +135,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     isOrgOwner: viewerRoleHint === 'owner',
     isOrgTutor: viewerRoleHint === 'tutor',
     isParent: viewerRoleHint === 'parent',
+    isStudent: viewerRoleHint === 'student',
   });
 
   // Dedupe within a 5-minute window (P2-3.2). Casual back-and-forth from one
@@ -167,12 +182,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     tutorName = uploader?.owner_name ?? null;
   }
 
+  // Students always see the strict watermark (their email + tutor + ts).
+  const watermarkBase = viewerRoleHint === 'student'
+    ? `${viewerEmailForWatermark} · ${org?.name ?? 'crestio.ai'}`
+    : watermarkFor(org?.name, planTier);
+
   return res.status(200).json({
     signed_url: signed.signedUrl,
     expires_at: expiresAt,
     mime_type: file.mime_type,
-    watermark_text: watermarkFor(org?.name, planTier),
-    allow_printing: file.allow_printing === true,
+    watermark_text: watermarkBase,
+    allow_printing: viewerRoleHint === 'student' ? false : file.allow_printing === true,
     display_name: (file as any).display_name ?? null,
     organization_name: org?.name ?? null,
     tutor_name: tutorName,

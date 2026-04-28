@@ -23,6 +23,8 @@ import { Banner } from '../../components/design/Banner';
 import { formatRelativeDate, formatMoney } from '../../lib/format';
 import InsightsPanel from '../../components/dashboard/InsightsPanel';
 import StreakPill from '../../components/dashboard/StreakPill';
+import { RecentlyDeletedCard } from '../../components/dashboard/RecentlyDeletedCard';
+import { MaintenanceSuggestions } from '../../components/dashboard/MaintenanceSuggestions';
 import StreakHeatmapModal from '../../components/dashboard/StreakHeatmapModal';
 import MonthlyImpactCard from '../../components/dashboard/MonthlyImpactCard';
 import AnniversaryBanner from '../../components/dashboard/AnniversaryBanner';
@@ -344,6 +346,8 @@ function DashboardInner() {
 
         <TrialBanner />
         <div className="mb-4"><SampleDataBanner /></div>
+        <div className="mb-4"><RecentlyDeletedCard /></div>
+        <div className="mb-4"><MaintenanceSuggestions /></div>
         <AnniversaryBanner
           organizationCreatedAt={(organization as any)?.created_at}
           totalSessions={(data?.today?.series ?? []).reduce((a: number, b: number) => a + b, 0) + (data?.polish?.series ?? []).reduce((a: number, b: number) => a + b, 0)}

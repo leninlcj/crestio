@@ -14,12 +14,19 @@ import { activeLocale } from '../lib/utils';
 
 type SearchResults = {
   students: Array<{ id: string; name: string; year_level: string | null; subject: string | null }>;
+  parents: Array<{ id: string; name: string | null; email: string | null }>;
+  tutors: Array<{ id: string; name: string; email: string | null }>;
   sessions: Array<{ id: string; scheduled_at: string; subject: string | null; topic: string | null; status: string; student_id: string; student_name: string }>;
   invoices: Array<{ id: string; number: string; status: string; total_cents: number; issued_on: string; student_name: string }>;
   lesson_plans: Array<{ id: string; subject: string; topic: string; year_level: string | null; student_name: string | null }>;
+  files: Array<{ id: string; name: string; mime_type: string; created_at: string }>;
+  tags: Array<{ id: string; name: string; color: string }>;
 };
 
-const EMPTY_SEARCH: SearchResults = { students: [], sessions: [], invoices: [], lesson_plans: [] };
+const EMPTY_SEARCH: SearchResults = {
+  students: [], parents: [], tutors: [], sessions: [], invoices: [],
+  lesson_plans: [], files: [], tags: [],
+};
 
 type Item = {
   id: string;
@@ -174,6 +181,39 @@ export function CommandPalette() {
 
     const trimmed = query.trim();
 
+    // Slash commands: "/ns" → new session, "/nstu" → new student, etc.
+    if (trimmed.startsWith('/')) {
+      const slash = trimmed.slice(1).toLowerCase();
+      const SLASH_MAP: Record<string, { type: string; label: string }> = {
+        'ns':   { type: 'session',         label: 'New session' },
+        'nstu': { type: 'student',         label: 'New student' },
+        'nh':   { type: 'household',       label: 'New household' },
+        'np':   { type: 'parent',          label: 'New parent' },
+        'ni':   { type: 'invoice',         label: 'New invoice' },
+        'nlp':  { type: 'lesson_plan',     label: 'New lesson plan' },
+        'nf':   { type: 'file',            label: 'New file (upload)' },
+        'nt':   { type: 'template',        label: 'New template' },
+        'nm':   { type: 'message_thread',  label: 'New message thread' },
+      };
+      const matches = Object.entries(SLASH_MAP)
+        .filter(([k]) => k.startsWith(slash) || slash.startsWith(k));
+      if (matches.length > 0) {
+        return matches.map(([k, v]) => ({
+          id: `slash-${k}`,
+          group: 'Slash commands',
+          label: v.label,
+          hint: `/${k}`,
+          onSelect: () => {
+            if (v.type === 'session') {
+              window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'));
+            } else {
+              window.dispatchEvent(new CustomEvent('crestio:open-quick-create', { detail: { type: v.type } }));
+            }
+          },
+        } as Item));
+      }
+    }
+
     // Math: "= 1 + 2" → calculator
     if (trimmed.startsWith('=')) {
       const expr = trimmed.slice(1).trim();
@@ -294,6 +334,49 @@ export function CommandPalette() {
           label: `${p.subject} · ${p.topic}`,
           hint: [p.student_name, p.year_level ? `Year ${p.year_level}` : null].filter(Boolean).join(' · '),
           href: `/app/lesson-plans`,
+        });
+      });
+    }
+    if (!typeFilter && results.parents) {
+      results.parents.forEach((p) => {
+        searchItems.push({
+          id: `p-${p.id}`,
+          group: 'Parents',
+          label: p.name ?? p.email ?? 'Parent',
+          hint: p.email ?? undefined,
+          href: `/app/parents`,
+        });
+      });
+    }
+    if (!typeFilter && results.tutors) {
+      results.tutors.forEach((t) => {
+        searchItems.push({
+          id: `t-${t.id}`,
+          group: 'Tutors',
+          label: t.name,
+          hint: t.email ?? undefined,
+          href: `/app/tutors/${t.id}`,
+        });
+      });
+    }
+    if (!typeFilter && results.files) {
+      results.files.forEach((f) => {
+        searchItems.push({
+          id: `f-${f.id}`,
+          group: 'Files',
+          label: f.name,
+          hint: f.mime_type,
+          href: `/files/${f.id}`,
+        });
+      });
+    }
+    if (!typeFilter && results.tags) {
+      results.tags.forEach((t) => {
+        searchItems.push({
+          id: `tg-${t.id}`,
+          group: 'Tags',
+          label: `#${t.name}`,
+          hint: 'Tag',
         });
       });
     }

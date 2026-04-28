@@ -6,6 +6,7 @@ import EmptyState from '../../../components/EmptyState';
 import { IconCalendar } from '../../../components/design/icons';
 import { supabase } from '../../../lib/supabase';
 import { activeLocale } from '../../../lib/utils';
+import { InlineAddRow } from '../../../components/quickcreate/InlineAddRow';
 
 const DAY_LABELS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const RULE_LABELS: Record<'weekly' | 'fortnightly' | 'monthly', string> = {
@@ -123,6 +124,9 @@ function TemplatesInner() {
                 </div>
               );
             })}
+            {!showEnded && (
+              <InlineAddRow type="template" label="New template" variant="tile" href="/app/templates/new" />
+            )}
           </div>
         )}
       </div>

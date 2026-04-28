@@ -17,6 +17,10 @@ const StudentDetailPane = dynamic(
 import { Avatar } from '../../../components/design/Avatar';
 import { MiniBarChart } from '../../../components/design/MiniBarChart';
 import { Tooltip } from '../../../components/design/Tooltip';
+import { InlineAddRow } from '../../../components/quickcreate/InlineAddRow';
+import { BulkArchiveBar } from '../../../components/design/BulkArchiveBar';
+import { HoverCard } from '../../../components/depth/HoverCard';
+import { useOptionalDetailStack } from '../../../components/depth/DetailPaneStack';
 import SampleDataBanner from '../../../components/SampleDataBanner';
 import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
@@ -59,9 +63,28 @@ function StudentsInner() {
     if (typeof window === 'undefined') return 'grid';
     return (window.localStorage.getItem(VIEW_KEY) as 'grid' | 'list') ?? 'grid';
   });
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  function toggleSel(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
   useEffect(() => {
     if (typeof window !== 'undefined') window.localStorage.setItem(VIEW_KEY, view);
   }, [view]);
+
+  // Drop-on-TrashZone removes the row; restore (⌘Z) re-adds via a refresh.
+  useEffect(() => {
+    function onArchived(e: Event) {
+      const detail = (e as CustomEvent).detail as { type: string; id: string };
+      if (detail?.type !== 'student') return;
+      setStudents((rs) => rs.filter((r) => r.id !== detail.id));
+    }
+    window.addEventListener('crestio:entity-archived', onArchived as EventListener);
+    return () => window.removeEventListener('crestio:entity-archived', onArchived as EventListener);
+  }, []);
 
   useEffect(() => {
     if (membershipLoading) return;
@@ -301,6 +324,7 @@ function StudentsInner() {
               onOpen={() => detail.open(`student:${s.id}`)}
             />
           ))}
+          {!isTutor && !archived && <InlineAddRow type="student" label="Add student" variant="tile" />}
         </div>
       ) : (
         <div className="card overflow-hidden">
@@ -309,14 +333,31 @@ function StudentsInner() {
               <li
                 key={s.id}
                 onClick={() => detail.open(`student:${s.id}`)}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData('application/x-crestio-entity', JSON.stringify({ type: 'student', id: s.id, label: s.name }));
+                  e.dataTransfer.effectAllowed = 'move';
+                }}
                 className="group cursor-pointer flex items-center gap-3 px-3 py-2.5 hover:bg-ruleSoft/40 transition-colors duration-100"
                 style={{ minHeight: 48 }}
               >
+                {!isTutor && (
+                  <input
+                    type="checkbox"
+                    aria-label={`Select ${s.name}`}
+                    checked={selected.has(s.id)}
+                    onChange={(e) => { e.stopPropagation(); toggleSel(s.id); }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="shrink-0"
+                  />
+                )}
                 <div className="h-7 w-7 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-mono font-medium shrink-0">
                   {initials(s.name)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-[13px] text-ink truncate">{s.name}</div>
+                  <div className="text-[13px] text-ink truncate">
+                    <HoverCard type="student" id={s.id}>{s.name}</HoverCard>
+                  </div>
                   <div className="text-2xs text-ink-soft truncate">
                     {[s.year_level, (s.subjects ?? []).join(', '), s.school].filter(Boolean).join(' · ')}
                   </div>
@@ -332,7 +373,25 @@ function StudentsInner() {
               </li>
             ))}
           </ul>
+          {!isTutor && !archived && (
+            <div className="px-3 py-2 border-t border-rule">
+              <InlineAddRow type="student" label="Add student" />
+            </div>
+          )}
         </div>
+      )}
+
+      {!isTutor && selected.size > 0 && (
+        <BulkArchiveBar
+          entityType="student"
+          selected={selected}
+          onClear={() => setSelected(new Set())}
+          items={filtered.filter((s) => selected.has(s.id)).map((s) => ({
+            id: s.id, label: s.name,
+            sublabel: [s.year_level, (s.subjects ?? []).join(', ')].filter(Boolean).join(' · '),
+          }))}
+          onLocalRemove={(ids) => setStudents((rs) => rs.filter((r) => !ids.includes(r.id)))}
+        />
       )}
 
       <StudentDetailPane

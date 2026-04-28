@@ -56,6 +56,14 @@ export const SHORTCUTS: KeyBinding[] = [
   // --- Detail pane -----------------------------------------------------
   { id: 'paneClose',   label: 'Close pane',            group: 'Detail pane', hint: 'Esc',   keys: ['escape'], allowInInput: true },
   { id: 'paneSave',    label: 'Save',                  group: 'Detail pane', hint: '⌘⏎',   keys: ['mod+enter'], allowInInput: true },
+  { id: 'paneBack',    label: 'Back to previous pane', group: 'Detail pane', hint: '⌘[',   keys: ['mod+['] },
+  { id: 'paneForward', label: 'Forward (re-push pane)', group: 'Detail pane', hint: '⌘]',   keys: ['mod+]'] },
+
+  // --- Universal undo --------------------------------------------------
+  { id: 'undo',        label: 'Undo last action',      group: 'Global',     hint: '⌘Z',    keys: ['mod+z'] },
+  { id: 'redo',        label: 'Redo',                  group: 'Global',     hint: '⌘⇧Z',   keys: ['mod+shift+z'] },
+  { id: 'selectMatching', label: 'Select all matching filter', group: 'Lists', hint: '⌘⇧A', keys: ['mod+shift+a'] },
+  { id: 'quickCreate', label: 'Quick create',          group: 'Global',     hint: '⌘N',    keys: ['mod+n'] },
 ];
 
 export function shortcutById(id: string): KeyBinding | undefined {
