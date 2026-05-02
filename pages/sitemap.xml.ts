@@ -9,6 +9,8 @@ const SITE = 'https://crestio.ai';
 const STATIC_PATHS = [
   { path: '/', changefreq: 'weekly', priority: 1.0 },
   { path: '/pricing', changefreq: 'monthly', priority: 0.9 },
+  { path: '/sandbox', changefreq: 'monthly', priority: 0.7 },
+  { path: '/how-polish-works', changefreq: 'monthly', priority: 0.5 },
   { path: '/changelog', changefreq: 'weekly', priority: 0.7 },
   { path: '/roadmap', changefreq: 'weekly', priority: 0.6 },
   { path: '/founder', changefreq: 'monthly', priority: 0.5 },
@@ -22,6 +24,8 @@ const STATIC_PATHS = [
   { path: '/contact', changefreq: 'monthly', priority: 0.4 },
   { path: '/privacy', changefreq: 'yearly', priority: 0.2 },
   { path: '/terms', changefreq: 'yearly', priority: 0.2 },
+  { path: '/cookies', changefreq: 'yearly', priority: 0.2 },
+  { path: '/acceptable-use', changefreq: 'yearly', priority: 0.2 },
 ];
 
 function urlEntry(loc: string, changefreq: string, priority: number, lastmod?: string): string {

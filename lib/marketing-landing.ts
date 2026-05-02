@@ -15,9 +15,11 @@ export const LANDING_PAGES: Record<string, LandingMeta> = {
   sydney:           { type: 'region',   i18nKey: 'sydney',           currency: 'AUD', country: 'AU', hasFaq: true },
   india:            { type: 'region',   i18nKey: 'india',            currency: 'INR', country: 'IN' },
   uk:               { type: 'region',   i18nKey: 'uk',               currency: 'GBP', country: 'GB' },
+  solo:             { type: 'vertical', i18nKey: 'solo',                                                  hasFaq: true },
+  'small-practices':{ type: 'vertical', i18nKey: 'small_practices',                                       hasFaq: true },
+  'large-practices':{ type: 'vertical', i18nKey: 'large_practices',                                       hasFaq: true },
   'music-teachers': { type: 'vertical', i18nKey: 'music_teachers',                                        hasFaq: true },
   'exam-prep':      { type: 'vertical', i18nKey: 'exam_prep',                                             hasFaq: true },
-  'large-practices':{ type: 'vertical', i18nKey: 'large_practices',                                       hasFaq: true },
 };
 
 export function isValidLandingSlug(slug: string): boolean {

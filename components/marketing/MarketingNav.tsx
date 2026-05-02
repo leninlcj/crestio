@@ -41,8 +41,8 @@ export default function MarketingNav() {
   }
 
   const tutorsLinks: NavLink[] = [
-    { href: '/for/sydney', label: t('nav.tutors_solo'), description: t('nav.tutors_solo_desc') },
-    { href: '/for/large-practices', label: t('nav.tutors_practices'), description: t('nav.tutors_practices_desc') },
+    { href: '/for/solo', label: t('nav.tutors_solo'), description: t('nav.tutors_solo_desc') },
+    { href: '/for/small-practices', label: t('nav.tutors_practices'), description: t('nav.tutors_practices_desc') },
     { href: '/for/exam-prep', label: t('nav.tutors_exam'), description: t('nav.tutors_exam_desc') },
     { href: '/for/music-teachers', label: t('nav.tutors_music'), description: t('nav.tutors_music_desc') },
     { href: '/for/new-tutors', label: t('nav.tutors_new'), description: t('nav.tutors_new_desc') },
@@ -50,6 +50,8 @@ export default function MarketingNav() {
   ];
   const resourcesLinks: NavLink[] = [
     { href: '/changelog', label: t('nav.resources_changelog'), description: t('nav.resources_changelog_desc') },
+    { href: '/roadmap', label: t('nav.resources_roadmap'), description: t('nav.resources_roadmap_desc') },
+    { href: '/founder', label: t('nav.resources_founder'), description: t('nav.resources_founder_desc') },
     { href: '/about', label: t('nav.resources_about'), description: t('nav.resources_about_desc') },
     { href: '/contact', label: t('nav.resources_contact'), description: t('nav.resources_contact_desc') },
   ];

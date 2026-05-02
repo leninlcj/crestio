@@ -23,13 +23,17 @@ export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Pr
     <footer className="border-t border-rule bg-cream">
       <div className="px-6 md:px-12 pt-10 md:pt-12 pb-6 max-w-6xl mx-auto">
         <div className="flex flex-wrap items-center justify-between gap-4 pb-8 mb-8 border-b border-rule">
-          <Link
-            href="/changelog"
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-rule bg-surface text-2xs text-ink-muted hover:text-ink hover:border-ink-soft transition-colors"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-forest" />
-            <span><strong className="text-ink">{shipVelocity}</strong> features shipped in the last 90 days</span>
-          </Link>
+          {shipVelocity > 0 ? (
+            <Link
+              href="/changelog"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-rule bg-surface text-2xs text-ink-muted hover:text-ink hover:border-ink-soft transition-colors"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-forest" />
+              <span><strong className="text-ink">{shipVelocity}</strong> features shipped in the last 90 days</span>
+            </Link>
+          ) : (
+            <span aria-hidden />
+          )}
           <div className="flex items-center gap-3 text-2xs uppercase tracking-widest text-ink-soft">
             <span>Built on</span>
             <Link href="/security#vendor-stack" className="hover:text-ink transition-colors">Supabase</Link>
@@ -42,7 +46,7 @@ export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Pr
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 md:gap-10">
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="font-display text-2xl tracking-tightest inline-block mb-3">
               crest<span className="italic text-forest">io</span>
@@ -83,6 +87,14 @@ export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Pr
             { label: 'Migrate to Crestio', href: '/migrate' },
           ]} />
 
+          <FooterColumn title="For tutors" links={[
+            { label: 'Solo tutors', href: '/for/solo' },
+            { label: 'Small practices', href: '/for/small-practices' },
+            { label: 'Exam prep', href: '/for/exam-prep' },
+            { label: 'New tutors', href: '/for/new-tutors' },
+            { label: 'For parents', href: '/for/parents' },
+          ]} />
+
           <FooterColumn title={t('footer_v2.col_company')} links={[
             { label: t('footer_v2.company_about'), href: '/about' },
             { label: 'Founder updates', href: '/founder' },
@@ -91,12 +103,14 @@ export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Pr
             { label: t('footer_v2.company_contact'), href: '/contact' },
             { label: t('footer_v2.company_privacy'), href: '/privacy' },
             { label: t('footer_v2.company_terms'), href: '/terms' },
+            { label: 'Cookies', href: '/cookies' },
+            { label: 'Acceptable use', href: '/acceptable-use' },
             { label: t('footer_v2.company_signin'), href: '/auth/signin' },
           ]} />
         </div>
 
         <div className="mt-12 pt-8 border-t border-rule flex flex-col md:flex-row items-center justify-between gap-4 text-2xs text-ink-soft">
-          <div className="uppercase tracking-widest">{t('footer_v2.copyright', { year: new Date().getFullYear() })}</div>
+          <div className="uppercase tracking-widest">© {new Date().getFullYear()} Crestio · Made by a tutor, in Sydney</div>
           <div className="flex items-center gap-4">
             {marketingConfig.social?.twitter && (
               <a
