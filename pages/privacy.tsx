@@ -21,7 +21,7 @@ export default function Privacy() {
   return (
     <LegalPage
       title="Privacy policy"
-      lastUpdated="24 April 2026"
+      lastUpdated="2 May 2026"
       toc={TOC}
     >
       <h2 id="who-we-are">Who we are</h2>
@@ -71,7 +71,7 @@ export default function Privacy() {
         <li><strong>Vercel</strong> — web hosting and application delivery.</li>
         <li><strong>Stripe</strong> — payment processing. Stripe sees your name, email, country, and card details; we do not.</li>
         <li>
-          <strong>A third-party AI service provider based in the United States</strong> — used only when you invoke Polish notes, Generate lesson plan, or the in-app Assistant. Message content is sent only when you use these features; nothing is sent in the background. This provider is certified to industry security standards (SOC 2 Type II) and does not train on customer data.
+          <strong>Anthropic</strong> (United States) — powers Polish notes, Generate lesson plan, and the in-app Assistant. Message content is sent only when you invoke these features; nothing is sent in the background. Anthropic is audited under SOC 2 Type II, and under their commercial terms customer prompts and outputs are not used to train their models.
         </li>
         <li><strong>Resend</strong> — transactional email delivery.</li>
       </ul>

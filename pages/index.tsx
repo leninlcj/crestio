@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import type { GetStaticProps } from 'next';
 import MarketingNav from '../components/marketing/MarketingNav';
 import Hero from '../components/marketing/Hero';
-import SocialProofBand from '../components/marketing/SocialProofBand';
 import PainSection from '../components/marketing/PainSection';
 import HowItWorks from '../components/marketing/HowItWorks';
 import FeatureGrid from '../components/marketing/FeatureGrid';
@@ -73,7 +72,6 @@ export default function Home({ practicesCount, latestFounderNote }: Props) {
         <main>
           <Hero practicesCount={practicesCount} />
           <SandboxEmbed />
-          <SocialProofBand />
           <PainSection />
           <HowItWorks />
           <FeatureGrid />

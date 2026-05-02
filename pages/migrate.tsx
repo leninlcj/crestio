@@ -84,7 +84,7 @@ export default function Migrate() {
                     <input
                       type="text"
                       required
-                      placeholder="Sarah K."
+                      placeholder="Your name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="input"

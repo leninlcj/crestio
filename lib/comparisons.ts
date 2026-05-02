@@ -101,7 +101,7 @@ export const COMPETITOR_PAGES: Record<string, CompetitorPage> = {
           { feature: 'Auto-pay (parent saves card)', crestio: 'shipping Q2', competitor: 'no' },
           { feature: 'Multi-invoice batch payment', crestio: 'yes', competitor: 'no' },
           { feature: 'Refund flow with audit log', crestio: 'yes', competitor: 'partial' },
-          { feature: 'GST / VAT handling', crestio: 'yes', competitor: 'yes' },
+          { feature: 'GST handling (Australia)', crestio: 'yes', competitor: 'yes' },
         ],
       },
       {
@@ -289,7 +289,7 @@ export const COMPETITOR_PAGES: Record<string, CompetitorPage> = {
           { feature: '8-second session log', crestio: 'yes', competitor: 'no' },
           { feature: 'AI-polished parent updates', crestio: 'yes', competitor: 'no' },
           { feature: 'Recurring templates', crestio: 'yes', competitor: 'yes' },
-          { feature: 'Track instrument practice goals', crestio: 'yes', competitor: 'yes' },
+          { feature: 'Track instrument practice goals', crestio: 'partial', competitor: 'yes', note: 'Crestio supports this via free-text session notes only — no structured practice-goal tracker.' },
         ],
       },
       {

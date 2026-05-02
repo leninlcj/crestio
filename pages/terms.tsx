@@ -21,7 +21,7 @@ const TOC = [
 
 export default function Terms() {
   return (
-    <LegalPage title="Terms of service" lastUpdated="24 April 2026" toc={TOC}>
+    <LegalPage title="Terms of service" lastUpdated="2 May 2026" toc={TOC}>
       <h2 id="agreement">Agreement</h2>
       <p>
         By creating a Crestio account, you agree to these terms. Read them carefully. If you don't agree, don't use the service.

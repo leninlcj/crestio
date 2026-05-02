@@ -74,11 +74,11 @@ export default function SandboxDashboard() {
       <header className="mb-6 md:mb-8">
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-[28px] md:text-[32px] font-display font-semibold tracking-tighter leading-tight m-0">
-            Good morning, Sarah.
+            Good morning.
           </h1>
-          <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-forest-soft text-forest-ink text-2xs font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-forest" />
-            12 days running
+          <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-soft text-amber-ink text-2xs font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber" />
+            Sandbox
           </div>
         </div>
         <div className="text-sm text-ink-muted mt-1">

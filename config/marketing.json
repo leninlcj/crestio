@@ -2,26 +2,16 @@
   "stats": {
     "practices_count_min_show": 10,
     "default_practices_count": 0,
-    "default_cities_count": 5
+    "default_cities_count": 0
   },
-  "cities": [
-    "Sydney",
-    "Melbourne",
-    "Brisbane",
-    "Auckland",
-    "London"
-  ],
+  "cities": [],
   "testimonials": {
     "homepage": {
-      "enabled": true,
-      "quote": "Crestio cut my Sunday admin from 4 hours to 25 minutes. The polish feature alone would be worth the subscription.",
-      "name": "Sarah K.",
-      "title": "HSC English tutor, Sydney",
-      "stats": [
-        { "label": "Students managed", "value": "8" },
-        { "label": "Billed per month", "value": "$3,200" },
-        { "label": "Hours saved per week", "value": "2.4" }
-      ],
+      "enabled": false,
+      "quote": "",
+      "name": "",
+      "title": "",
+      "stats": [],
       "is_real": false
     }
   },

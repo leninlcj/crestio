@@ -15,6 +15,15 @@ export default function ForSlugPage({ slug, meta }: Props) {
     ? [1, 2, 3].map((n) => ({ q: k(`faq_${n}_q`), a: k(`faq_${n}_a`) }))
     : [];
 
+  const limitations = meta.i18nKey === 'music_teachers'
+    ? {
+        heading: k('limitations_heading'),
+        intro: k('limitations_intro'),
+        bullets: [1, 2, 3, 4, 5].map((n) => k(`limitations_b${n}`)),
+        closing: k('limitations_closing'),
+      }
+    : undefined;
+
   const schemaOrg = meta.country
     ? {
         '@context': 'https://schema.org',
@@ -38,6 +47,7 @@ export default function ForSlugPage({ slug, meta }: Props) {
       painHeading={k('pain_heading')}
       painLines={painLines}
       painResolution={k('resolution')}
+      limitations={limitations}
       faqHeading={faqQuestions.length > 0 ? t('faq_v2.heading') : undefined}
       faqQuestions={faqQuestions}
       schemaOrg={schemaOrg as Record<string, unknown> | null}

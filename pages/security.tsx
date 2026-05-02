@@ -41,7 +41,7 @@ export default function Security() {
             <SecuritySection title="Access control" icon={<IconShield />}>
               <p>Every table has row-level security at the database. The query "show me everyone's invoices" cannot succeed even if a code path forgets to filter by organization. The database refuses.</p>
               <p>Tutor private notes are column-level: even within your own organization, only you can read them. Session notes shared with parents are a separate column with separate policy.</p>
-              <p>Admin access at Crestio is two engineers. Both are required for production database access. We log every access to a separate audit stream.</p>
+              <p>Admin access at Crestio is one person — Lenin, the founder. Production database access is logged to a separate audit stream and rate-limited. As the team grows, two-person review will be required before this changes.</p>
             </SecuritySection>
 
             <SecuritySection title="Compliance" icon={<IconBalance />}>

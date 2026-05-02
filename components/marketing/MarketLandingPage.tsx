@@ -19,6 +19,13 @@ type Testimonial = {
   enabled?: boolean;
 };
 
+export type Limitations = {
+  heading: string;
+  intro?: string;
+  bullets: string[];
+  closing?: string;
+};
+
 export type LandingPageProps = {
   type: 'region' | 'vertical';
   slug: string;
@@ -31,6 +38,7 @@ export type LandingPageProps = {
   painHeading: string;
   painLines: string[];
   painResolution: string;
+  limitations?: Limitations;
   testimonials?: Testimonial[];
   faqQuestions?: { q: string; a: string }[];
   faqHeading?: string;
@@ -89,6 +97,39 @@ export default function MarketLandingPage(props: LandingPageProps) {
             </li>
           </ul>
         </section>
+
+        {props.limitations && props.limitations.bullets.length > 0 && (
+          <section className="px-6 md:px-12 pb-16 md:pb-20 max-w-4xl mx-auto">
+            <div className="rounded-md border border-rule bg-surface p-6 md:p-8">
+              <h2 className="font-display text-xl md:text-2xl tracking-tightest text-ink mb-3">
+                {props.limitations.heading}
+              </h2>
+              {props.limitations.intro && (
+                <p className="text-sm text-ink-muted leading-relaxed mb-5 max-w-prose">
+                  {props.limitations.intro}
+                </p>
+              )}
+              <ul className="space-y-2.5">
+                {props.limitations.bullets.map((b, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-ink-muted leading-relaxed">
+                    <span aria-hidden className="text-ink-soft mt-1 shrink-0">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                        <path d="M4 7h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+              {props.limitations.closing && (
+                <p className="text-sm text-ink-muted leading-relaxed mt-5 pt-5 border-t border-rule max-w-prose">
+                  {props.limitations.closing}
+                </p>
+              )}
+            </div>
+          </section>
+        )}
 
         <FeatureGrid />
 
