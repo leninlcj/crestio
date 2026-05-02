@@ -255,10 +255,10 @@ export default function SignIn() {
         <aside className="hidden lg:flex items-center justify-center px-12 py-16 border-l border-rule bg-surface">
           <figure className="max-w-md">
             <blockquote className="font-display text-2xl text-ink leading-snug tracking-tighter italic">
-              “Crestio cut my admin time in half. Polishing notes and sending them to parents used to eat my Sunday — now it's two taps.”
+              “I built Crestio because every Sunday I was opening three different spreadsheets to do the same thing. So I built the tool that does the same thing in eight seconds.”
             </blockquote>
             <figcaption className="text-xs text-ink-muted mt-4 not-italic">
-              — Sarah, English tutor · Sydney
+              — Lenin, founder · HSC English tutor, Sydney
             </figcaption>
           </figure>
         </aside>

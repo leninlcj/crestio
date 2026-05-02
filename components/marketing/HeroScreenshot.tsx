@@ -54,8 +54,8 @@ export default function HeroScreenshot() {
             ))}
             <div className="mt-auto px-2 py-1.5 text-2xs text-ink-soft border-t border-rule pt-3 mt-3">
               <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-forest/20 flex items-center justify-center text-forest font-medium text-[8px]">T</div>
-                <span>Tutor</span>
+                <div className="w-5 h-5 rounded-full bg-forest/20 flex items-center justify-center text-forest font-medium text-[8px]">LJ</div>
+                <span>Lenin J.</span>
               </div>
             </div>
           </aside>
@@ -63,7 +63,7 @@ export default function HeroScreenshot() {
           <main className="flex-1 p-4 md:p-6 space-y-4">
             <div>
               <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">Tuesday, 28 Apr</div>
-              <div className="font-display text-lg md:text-xl tracking-tightest text-ink">Good morning.</div>
+              <div className="font-display text-lg md:text-xl tracking-tightest text-ink">Good morning, Lenin.</div>
             </div>
 
             <div className="grid grid-cols-4 gap-2.5" data-hotspot-target="today">

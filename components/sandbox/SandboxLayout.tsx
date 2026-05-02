@@ -82,7 +82,7 @@ export default function SandboxLayout({ children, page = 'home' }: Props) {
               </button>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-display tracking-tighter" aria-hidden>SK</div>
+              <div className="w-8 h-8 rounded-full bg-forest-soft text-forest-ink grid place-items-center text-2xs font-display tracking-tighter" aria-hidden>LJ</div>
             </div>
           </header>
 

@@ -1,9 +1,15 @@
 ---
-# Founder notes. Most recent at top. Each block: ## DATE — TITLE then prose.
-# Voice: peer-to-peer, calm, factual. Sign each off as "— Lenin".
+# Founder notes. Most recent at top. Each block:
+#   ## DATE — TITLE
+#   slug: optional-kebab-case
+#   <prose>
+# Voice: peer-to-peer, calm, factual. Sign each off as "— Lenin" (or
+# "— Lenin, founder" — the component renders the trailing sign-off in
+# small caps).
 ---
 
 ## 2026-05-02 — I built this for myself first
+slug: i-built-this-for-myself-first
 
 I'm Lenin. I tutor HSC English in Sydney. I built Crestio because every Sunday afternoon I was opening three different spreadsheets, copy-pasting session notes into emails, chasing parents for invoice payments, and forgetting which student needed what next week.
 
@@ -11,10 +17,11 @@ I tried Teachworks. Too much. I tried Notion. Too DIY. I tried sticky notes. Los
 
 Crestio is in early access. I'm still the main person using it. If you're a tutor and you want to try it, I'd love to know what works and what doesn't — email me directly at lenin@crestio.ai and I'll respond personally.
 
-— Lenin
+— Lenin, founder
 Sydney, May 2026
 
-## 2026-05-01 — 14F shipped — parents can now pay by card
+## 2026-04-27 — 14F shipped — parents can now pay by card
+slug: 14f-shipped-card-payments
 
 Stripe Connect went live last week. Parents can now pay invoices with a card directly instead of bank transfer.
 
@@ -24,4 +31,4 @@ Refunds are one tap from the invoice. Money goes back to the parent's card in 5�
 
 A few billing setups don't fit the standard flow yet: group sessions where one parent pays for multiple kids, sibling discounts, prepaid lesson packs. If that's how you bill, email me at lenin@crestio.ai and tell me what your invoice currently looks like. I want the next iteration to handle it instead of pushing you back to bank transfer.
 
-— Lenin
+— Lenin, founder

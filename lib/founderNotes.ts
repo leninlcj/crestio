@@ -1,14 +1,29 @@
 // Server-only — reads /content/founder-notes.md and parses ## blocks.
-// Each block: ## YYYY-MM-DD — Title\n\nProse...
+// Each block:
+//   ## YYYY-MM-DD — Title
+//   slug: optional-kebab (one line, optional)
+//   prose...
 
 import fs from 'fs';
 import path from 'path';
 
 export type FounderNote = {
   date: string;       // YYYY-MM-DD
+  slug: string;       // kebab-case, used as anchor id and (eventually) per-note URL
   title: string;
-  body: string;       // markdown-ish prose
+  body: string;       // markdown-ish prose; trailing sign-off paragraph is rendered in small caps
 };
+
+function autoSlug(date: string, title: string): string {
+  const titleSlug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .split(/\s+/)
+    .slice(0, 6)
+    .join('-');
+  return titleSlug || date;
+}
 
 export function loadFounderNotes(): FounderNote[] {
   try {
@@ -24,9 +39,18 @@ export function loadFounderNotes(): FounderNote[] {
       if (!m) continue;
       const date = m[1];
       const title = m[2].trim();
-      const prose = lines.slice(1).join('\n').trim();
+
+      let slug = autoSlug(date, title);
+      let bodyStart = 1;
+      const slugMatch = lines[1]?.trim().match(/^slug:\s*(.+)$/);
+      if (slugMatch) {
+        slug = slugMatch[1].trim();
+        bodyStart = 2;
+      }
+
+      const prose = lines.slice(bodyStart).join('\n').trim();
       if (!title || !prose) continue;
-      notes.push({ date, title, body: prose });
+      notes.push({ date, slug, title, body: prose });
     }
     return notes;
   } catch {

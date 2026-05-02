@@ -39,7 +39,7 @@ export default function StickyConversionBar({ heroSelector = 'h1' }: { heroSelec
   const utmSource = (Array.isArray(router.query.utm_source) ? router.query.utm_source[0] : router.query.utm_source) ?? '';
   const ref = (Array.isArray(router.query.ref) ? router.query.ref[0] : router.query.ref) ?? '';
 
-  let copy: string = "Sarah cut her Sunday admin from 4 hours to 25 minutes.";
+  let copy: string = "7-day free trial. No credit card. Cancel from the dashboard.";
   if (ref) {
     copy = `Invited by a friend? You both get a free month.`;
   } else if (utmSource === 'twitter' || utmSource === 'x') {
