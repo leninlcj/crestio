@@ -8,6 +8,7 @@ import FAQ from '../components/marketing/FAQ';
 import FinalCTA from '../components/marketing/FinalCTA';
 import MarketingFooter from '../components/marketing/MarketingFooter';
 import { serverSideTranslations } from '../lib/i18nServer';
+import { softwareAppSchema } from '../lib/schemaOrg';
 
 const PRICING_FAQS = ['refunds', 'plan_changes', 'currency', 'session_definition'] as const;
 
@@ -22,6 +23,10 @@ export default function Pricing() {
         <meta property="og:title" content={t('meta.pricing_title')} />
         <meta property="og:description" content={t('meta.pricing_description')} />
         <meta property="og:image" content="/api/og?type=pricing&title=Solo%20%2424.%20Team%20%2459.%20No%20surprises." />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema()) }}
+        />
       </Head>
 
       <div className="min-h-screen bg-cream text-ink">

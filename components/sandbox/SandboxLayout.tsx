@@ -96,6 +96,9 @@ export default function SandboxLayout({ children, page = 'home' }: Props) {
 }
 
 function SandboxBanner() {
+  function reset() {
+    if (typeof window !== 'undefined') window.location.reload();
+  }
   return (
     <div className="sticky top-0 z-30 bg-amber-soft border-b border-amber/30 px-4 md:px-8 h-11 flex items-center justify-between gap-3 text-2xs md:text-xs">
       <div className="flex items-center gap-2 text-amber-ink min-w-0">
@@ -105,13 +108,22 @@ function SandboxBanner() {
         <span className="font-medium">You're in a sandbox.</span>
         <span className="hidden sm:inline text-amber-ink/85 truncate">Click anywhere — nothing saves.</span>
       </div>
-      <Link
-        href="/auth/signup"
-        className="shrink-0 inline-flex items-center gap-1.5 bg-forest text-cream rounded-full px-3 py-1.5 text-2xs font-medium hover:bg-forest-ink transition-colors"
-      >
-        Start free trial
-        <span aria-hidden>→</span>
-      </Link>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={reset}
+          className="hidden sm:inline-flex items-center gap-1 text-amber-ink/85 hover:text-amber-ink underline-offset-2 hover:underline"
+        >
+          ↻ Reset sandbox
+        </button>
+        <Link
+          href="/auth/signup"
+          className="inline-flex items-center gap-1.5 bg-forest text-cream rounded-full px-3 py-1.5 text-2xs font-medium hover:bg-forest-ink transition-colors"
+        >
+          Start free trial
+          <span aria-hidden>→</span>
+        </Link>
+      </div>
     </div>
   );
 }

@@ -38,6 +38,37 @@ export function organizationSchema() {
       'https://twitter.com/crestio',
       'https://www.linkedin.com/company/crestio',
     ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'lenin@crestio.ai',
+      contactType: 'customer support',
+      areaServed: 'AU',
+      availableLanguage: ['English'],
+    },
+  };
+}
+
+export function articleSchema(args: {
+  url: string;
+  headline: string;
+  datePublished: string;       // YYYY-MM-DD
+  description?: string;
+  author?: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': args.url },
+    headline: args.headline,
+    datePublished: args.datePublished,
+    dateModified: args.datePublished,
+    description: args.description,
+    author: { '@type': 'Person', name: args.author ?? 'Lenin' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Crestio',
+      logo: { '@type': 'ImageObject', url: `${SITE}/icon-512.png` },
+    },
   };
 }
 

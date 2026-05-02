@@ -5,17 +5,32 @@ import MarketingNav from '../components/marketing/MarketingNav';
 import MarketingFooter from '../components/marketing/MarketingFooter';
 import { loadChangelog, type ChangelogEntry } from '../lib/changelog';
 import { serverSideTranslations } from '../lib/i18nServer';
+import { articleSchema } from '../lib/schemaOrg';
 
 type Props = { entries: ChangelogEntry[] };
 
 export default function Changelog({ entries }: Props) {
   const { t } = useTranslation('marketing');
 
+  const articles = entries.map((e) => articleSchema({
+    url: `https://crestio.ai/changelog#${e.version.toLowerCase()}`,
+    headline: e.title,
+    datePublished: e.date,
+    description: e.bullets[0] ?? e.title,
+  }));
+
   return (
     <>
       <Head>
         <title>{t('meta.changelog_title')}</title>
         <meta name="description" content={t('meta.changelog_description')} />
+        {articles.map((schema, i) => (
+          <script
+            key={i}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
       </Head>
 
       <div className="min-h-screen bg-cream text-ink">
