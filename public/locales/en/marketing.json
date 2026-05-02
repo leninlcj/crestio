@@ -42,7 +42,7 @@
     "resources_founder": "Founder updates",
     "resources_founder_desc": "Notes from Lenin",
     "resources_about": "About",
-    "resources_about_desc": "Who we are",
+    "resources_about_desc": "About Lenin",
     "resources_contact": "Contact",
     "resources_contact_desc": "Get in touch"
   },
@@ -76,7 +76,7 @@
   "migration_banner": {
     "eyebrow": "Migration concierge",
     "title": "Switching from a spreadsheet, Notion, or another tool?",
-    "body": "Send us your data — we'll move it free for the first 100 tutors. Every student, every past session, every invoice already in place when you log in.",
+    "body": "Send your data — I'll move it free for the first 100 tutors. Every student, every past session, every invoice already in place when you log in.",
     "spots": "{{taken}} of {{total}} spots taken",
     "spots_zero": "Be one of the first.",
     "cta": "Start the migration"
@@ -447,7 +447,7 @@
     "q4": "Can parents see everything?",
     "a4": "Only what you share. Session notes split into internal (yours) and parent-facing (shared). Parents only see sessions you've released to them, and only for their own child.",
     "q5": "Is this for tutoring companies or individual tutors?",
-    "a5": "Both. Solo is for independent tutors. Team fits small tutoring practices up to 5 tutors. Growth supports up to 15. If you're running a larger operation, email support@crestio.ai and we'll point you in the right direction.",
+    "a5": "Both. Solo is for independent tutors. Team fits small tutoring practices up to 5 tutors. Growth supports up to 15. If you're running a larger operation, email lenin@crestio.ai and I'll point you in the right direction.",
     "q6": "Who runs Crestio?",
     "a6": "The Crestio team is one person — Lenin, founder and HSC English tutor in Sydney. Questions or feedback? Email lenin@crestio.ai and you'll get a reply directly from him, usually within 24 hours."
   },
@@ -461,7 +461,7 @@
     "fees":          { "q": "What's the Stripe fee on top of Crestio?", "a": "On parent payments: 2.9% + 30c (Stripe) + 1% (Crestio). Charged to you, not the parent. So on a $100 invoice you keep about $96. No fees on bank-transfer invoices." },
     "export":        { "q": "Can I export my data?",                    "a": "Yes. CSV export of students, sessions, invoices, and messages from Settings → Data. Anytime. No lock-in." },
     "parent_account":{ "q": "Do parents need an account?",              "a": "No. Parents get a private link by email and pay with their card. They can optionally claim an account if they want a history view, but it's never required." },
-    "shutdown":      { "q": "What if Crestio shuts down?",              "a": "We commit to 12 months notice and a final export window. Your data stays exportable as CSV the entire time. If we ever do shut down, you'll have plenty of room to migrate." },
+    "shutdown":      { "q": "What if Crestio shuts down?",              "a": "Crestio commits to 12 months notice and a final export window. Your data stays exportable as CSV the entire time. If Crestio ever does shut down, you'll have plenty of room to migrate." },
     "data":          { "q": "Where is my data stored?",                  "a": "Supabase, hosted in Australia for AU customers (or auto-detected closest region for others). Encrypted at rest and in transit. Each organisation's data is isolated — no cross-tenant access at the database level." }
   },
 
@@ -530,32 +530,32 @@
     "founder_p3": "So I built the thing I needed. Crestio is opinionated about what matters: log a session in 8 seconds, polish your notes the way a parent will read them, get paid by card without learning what Stripe is. Nothing else. No bloat. No upsells. No surprise fees on the parent.",
     "founder_p4": "If you tutor and you've ever spent a Sunday wishing the admin would do itself — this is for you. Email me directly: lenin@crestio.ai. I read every message.",
     "founder_signature": "— Lenin, founder",
-    "values_eyebrow": "What we believe",
-    "values_heading": "Four things we're stubborn about.",
+    "values_eyebrow": "What I believe",
+    "values_heading": "Four things I'm stubborn about.",
     "values_calm_title": "Calm by default",
     "values_calm_body": "No streaks, no badges, no notification bombs. The app is quiet so you can hear yourself think.",
     "values_tutor_title": "Tutor-first",
-    "values_tutor_body": "We don't sell to schools or chains. Every product decision asks: would a working tutor with eight students actually use this — or is it just busywork dressed up as a feature?",
+    "values_tutor_body": "I don't sell to schools or chains. Every product decision asks: would a working tutor with eight students actually use this — or is it just busywork dressed up as a feature?",
     "values_privacy_title": "Privacy is non-negotiable",
     "values_privacy_body": "Parents see what you share, nothing more. AI never trains on your data. Tutors in a team can't see each other's rates.",
     "values_built_title": "Built in public",
-    "values_built_body": "We ship the changelog. We email customers when something changes. We tell you what's broken before you find it.",
+    "values_built_body": "I ship the changelog. I email customers when something changes. I tell you what's broken before you find it.",
     "why_eyebrow": "Why",
-    "why_heading": "Why we built Crestio.",
+    "why_heading": "Why I built Crestio.",
     "why_p1": "Tutoring software is a graveyard of products built by people who never tutored. The tools that exist optimise for the tuition-centre owner with 50 staff, not the working tutor with eight students and a Sunday admin block.",
-    "why_p2": "We built Crestio because tutors deserve the same software craft that designers, developers, and writers get. Calm tools, sharp typography, fast keyboard shortcuts, real product care.",
+    "why_p2": "I built Crestio because tutors deserve the same software craft that designers, developers, and writers get. Calm tools, sharp typography, fast keyboard shortcuts, real product care.",
     "why_p3": "And because the work tutors do — paying attention to one kid, planning the next session, writing notes a parent will actually read — is worth doing well. The admin around it should never be the hard part.",
     "roadmap_eyebrow": "Roadmap",
     "roadmap_heading": "What's next.",
-    "roadmap_body": "We ship every week or two. The public changelog is the source of truth.",
+    "roadmap_body": "I ship every week or two. The public changelog is the source of truth.",
     "roadmap_link": "See changelog →",
     "hiring_eyebrow": "Hiring",
-    "hiring_heading": "We don't have open roles right now.",
-    "hiring_body": "We will. When we do, they'll be listed here. No surprise listings, no \"send your CV anyway\" inbox.",
-    "contact_intro": "Questions, feedback, ideas? We read every message.",
+    "hiring_heading": "There aren't any open roles right now.",
+    "hiring_body": "When that changes, roles will be listed here. No surprise listings, no \"send your CV anyway\" inbox.",
+    "contact_intro": "Questions, feedback, ideas? I read every message.",
     "kicker_legacy": "About us",
     "body_1": "Crestio is built solo, in Sydney, by a working HSC English tutor.",
-    "body_2": "We think the work tutors do is the part that should get your time.",
+    "body_2": "I think the work tutors do is the part that should get your time.",
     "body_3": "So Crestio is opinionated. It does the boring parts well, gets out of the way for the rest, and gives you something quiet and well-made to use every day."
   },
 
@@ -632,9 +632,9 @@
   "pricing_faq": {
     "eyebrow": "Pricing FAQ",
     "heading": "Pricing questions, answered.",
-    "refunds":            { "q": "Can I get a refund?", "a": "Yes. Email support@crestio.ai within 7 days of your first paid month and we'll refund you, no questions. After that, you keep access until the end of the period you've paid for." },
+    "refunds":            { "q": "Can I get a refund?", "a": "Yes. Email lenin@crestio.ai within 7 days of your first paid month and I'll refund you, no questions. After that, you keep access until the end of the period you've paid for." },
     "plan_changes":       { "q": "Can I switch plans?", "a": "Anytime. Upgrades take effect immediately and prorate. Downgrades take effect at the next billing cycle so you keep what you've paid for." },
-    "currency":           { "q": "What currencies are supported?", "a": "Crestio bills in AUD by default. We support local currency display for AUD, USD, GBP, INR, NZD, CAD, and EUR. Stripe handles the conversion for parent payments." },
+    "currency":           { "q": "What currencies are supported?", "a": "Crestio bills in AUD by default. Crestio supports local currency display for AUD, USD, GBP, INR, NZD, CAD, and EUR. Stripe handles the conversion for parent payments." },
     "session_definition": { "q": "What counts as a session?", "a": "A session is one logged tutoring session for one student. Group sessions count as one session even if multiple students are present. There's no per-session fee — you can log unlimited sessions on every plan." }
   },
 
@@ -643,7 +643,7 @@
     "title": "60-second tour",
     "close": "Close",
     "placeholder_title": "Video coming soon",
-    "placeholder_body": "We're recording a proper 60-second tour now. Until it's ready, the homepage and product screenshots are the best preview of what Crestio looks like."
+    "placeholder_body": "I'm recording a proper 60-second tour now. Until it's ready, the homepage and product screenshots are the best preview of what Crestio looks like."
   },
 
   "for": {
@@ -713,7 +713,7 @@
       "faq_2_q": "What if I only have 3 students?",
       "faq_2_a": "Crestio works fine at 3 students. Solo plan covers up to ~30 — there's no per-student fee. Use the 7-day free trial without a card to see if it earns the spot in your week.",
       "faq_3_q": "Can I move my existing students from a spreadsheet?",
-      "faq_3_a": "Yes — and we'll do it for you free for the first 100 tutors. Email lenin@crestio.ai with your spreadsheet, or use /migrate to send the file directly."
+      "faq_3_a": "Yes — and I'll do it for you free for the first 100 tutors. Email lenin@crestio.ai with your spreadsheet, or use /migrate to send the file directly."
     },
     "small_practices": {
       "meta_title": "Crestio for small tutoring practices · 2–5 tutors",

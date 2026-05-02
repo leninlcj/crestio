@@ -21,7 +21,7 @@ const TOC = [
 
 export default function Terms() {
   return (
-    <LegalPage title="Terms of service" lastUpdated="2 May 2026" toc={TOC}>
+    <LegalPage title="Terms of service" lastUpdated="2 May 2026 (sole-founder voice clarified)" toc={TOC}>
       <h2 id="agreement">Agreement</h2>
       <p>
         By creating a Crestio account, you agree to these terms. Read them carefully. If you don't agree, don't use the service.
@@ -37,7 +37,7 @@ export default function Terms() {
         <li>You're responsible for your account security.</li>
         <li>Don't share credentials with anyone else.</li>
         <li>Notify us immediately if you suspect unauthorised access.</li>
-        <li>We may suspend accounts that violate these terms, with notice where possible.</li>
+        <li>Crestio may suspend accounts that violate these terms, with notice where possible.</li>
       </ul>
 
       <h2 id="your-content">Your content</h2>
@@ -58,10 +58,10 @@ export default function Terms() {
         You retain ownership of files you upload. By uploading, you grant Crestio a limited licence to store, process, and deliver the file to the people you have explicitly linked to (your students' parents, your organisation's tutors). You agree to indemnify Crestio against any third-party claim arising from a file you upload.
       </p>
       <p>
-        <strong>Takedown.</strong> If you believe a file on Crestio infringes your rights or contains harmful material, email <a href="mailto:support@crestio.ai">support@crestio.ai</a> with the file URL or a description, the rights you hold, and your contact details. We will review within 5 business days and remove or restrict access where appropriate.
+        <strong>Takedown.</strong> If you believe a file on Crestio infringes your rights or contains harmful material, email <a href="mailto:lenin@crestio.ai">lenin@crestio.ai</a> with the file URL or a description, the rights you hold, and your contact details. Crestio will review within 5 business days and remove or restrict access where appropriate.
       </p>
       <p>
-        Crestio does not actively review uploaded files. We may remove files that violate these terms or applicable law.
+        Crestio does not actively review uploaded files. Crestio may remove files that violate these terms or applicable law.
       </p>
 
       <h2 id="acceptable-use">Acceptable use</h2>
@@ -91,7 +91,7 @@ export default function Terms() {
         You can cancel anytime from the billing portal. Access continues until the end of your paid billing period. No refunds for partial months except where required by law.
       </p>
       <p>
-        Prices are in Australian Dollars, inclusive of GST where applicable. We may change prices with at least 30 days' email notice; changes apply at your next billing cycle.
+        Prices are in Australian Dollars, inclusive of GST where applicable. Crestio may change prices with at least 30 days' email notice; changes apply at your next billing cycle.
       </p>
 
       <h2 id="ai-content">AI-generated content</h2>
@@ -101,12 +101,12 @@ export default function Terms() {
 
       <h2 id="availability">Service availability</h2>
       <p>
-        We aim to keep Crestio available at all times, but we don't guarantee uninterrupted access. We may perform maintenance, and occasional outages happen. We won't be liable for brief periods of unavailability.
+        Crestio aims to be available at all times, but doesn't guarantee uninterrupted access. Maintenance happens, and occasional outages happen. Crestio is not liable for brief periods of unavailability.
       </p>
 
       <h2 id="termination">Termination</h2>
       <p>
-        You can delete your account anytime from settings. We may suspend or terminate accounts that violate these terms, with notice where possible. On termination, your data is removed per our privacy policy.
+        You can delete your account anytime from settings. Crestio may suspend or terminate accounts that violate these terms, with notice where possible. On termination, your data is removed per the privacy policy.
       </p>
 
       <h2 id="disclaimer">Disclaimer and limitation of liability</h2>
@@ -127,12 +127,12 @@ export default function Terms() {
 
       <h2 id="changes">Changes to these terms</h2>
       <p>
-        We may update these terms. Material changes will be notified by email at least 14 days in advance. Continuing to use Crestio after changes take effect means you accept the new terms.
+        Crestio may update these terms. Material changes will be notified by email at least 14 days in advance. Continuing to use Crestio after changes take effect means you accept the new terms.
       </p>
 
       <h2 id="contact">Contact</h2>
       <p>
-        Questions: <a href="mailto:support@crestio.ai">support@crestio.ai</a>.
+        Questions: <a href="mailto:lenin@crestio.ai">lenin@crestio.ai</a>.
       </p>
     </LegalPage>
   );
