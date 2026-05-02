@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import Link from 'next/link';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import HeroScreenshot from './HeroScreenshot';
-import VideoModal from './VideoModal';
 
 type Props = {
   badgeText?: string;
@@ -14,6 +12,7 @@ type Props = {
   microNote?: string;
   showScreenshot?: boolean;
   practicesCount?: number;
+  signal?: { commits: number };
 };
 
 export default function Hero({
@@ -26,41 +25,18 @@ export default function Hero({
   microNote,
   showScreenshot = true,
   practicesCount,
+  signal,
 }: Props) {
   const { t } = useTranslation('marketing');
-  const [videoOpen, setVideoOpen] = useState(false);
 
-  const finalHeadline = headline ?? (
-    <Trans
-      i18nKey="hero.heading_v2"
-      ns="marketing"
-      components={{
-        u: <span className="relative inline-block">
-          <span className="relative z-10">spreadsheet hell</span>
-          <svg
-            aria-hidden
-            viewBox="0 0 220 8"
-            preserveAspectRatio="none"
-            className="absolute left-0 right-0 -bottom-1 w-full h-[8px] text-forest"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-          >
-            <path d="M2 5 Q 35 1, 70 4 T 140 4 T 218 4" />
-          </svg>
-        </span>,
-      }}
-    />
-  );
-
+  const finalHeadline = headline ?? t('hero.heading_v2');
   const finalSubheadline = subheadline ?? t('hero.subheading_v2');
   const finalBadge = badgeText ?? t('hero.badge');
   const finalCtaPrimary = ctaPrimary ?? { label: t('hero.cta_v2'), href: '/auth/signup' };
-  const finalCtaSecondary = ctaSecondary ?? { label: t('hero.cta_secondary'), onClick: () => setVideoOpen(true) };
+  const finalCtaSecondary = ctaSecondary ?? { label: t('hero.cta_secondary'), href: '/sandbox' };
   const finalMicroNote = microNote ?? t('hero.micro_note');
 
-  const showCount = practicesCount !== undefined && practicesCount >= 10;
+  const showLatentTrustedBy = practicesCount !== undefined && practicesCount >= 10;
 
   return (
     <section className="px-6 md:px-12 pt-10 md:pt-16 pb-12 md:pb-20 max-w-[1200px] mx-auto">
@@ -96,7 +72,7 @@ export default function Hero({
             finalCtaSecondary.href ? (
               <Link
                 href={finalCtaSecondary.href}
-                className="btn-secondary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto"
+                className="btn-secondary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto sm:min-w-[200px]"
               >
                 {finalCtaSecondary.label}
               </Link>
@@ -104,9 +80,8 @@ export default function Hero({
               <button
                 type="button"
                 onClick={finalCtaSecondary.onClick}
-                className="btn-secondary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto"
+                className="btn-secondary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto sm:min-w-[200px]"
               >
-                <span aria-hidden className="mr-1">▸</span>
                 {finalCtaSecondary.label}
               </button>
             )
@@ -115,7 +90,35 @@ export default function Hero({
 
         <div className="text-xs text-ink-soft">{finalMicroNote}</div>
 
-        {showCount && (
+        {signal && (
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-2xs uppercase tracking-widest text-ink-soft">
+            {signal.commits >= 1 && (
+              <>
+                <span aria-label="ship velocity">
+                  <span className="num tabular text-ink">{signal.commits}</span>{' '}
+                  <span>{signal.commits === 1 ? 'commit' : 'commits'} in the last 7 days</span>
+                </span>
+                <span aria-hidden className="w-1 h-1 rounded-full bg-rule" />
+              </>
+            )}
+            <Link href="/changelog" className="text-ink-muted hover:text-ink underline-offset-4 hover:underline">
+              {t('hero.signal_changelog')} →
+            </Link>
+            <span aria-hidden className="w-1 h-1 rounded-full bg-rule" />
+            <span className="inline-flex items-center gap-1.5">
+              <span aria-hidden className="inline-block">
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden>
+                  <rect width="14" height="10" rx="1" fill="#012169" />
+                  <path d="M0 0L14 10M14 0L0 10" stroke="#fff" strokeWidth="1" />
+                  <path d="M7 0V10M0 5H14" stroke="#fff" strokeWidth="2" />
+                </svg>
+              </span>
+              {t('hero.signal_made_in')}
+            </span>
+          </div>
+        )}
+
+        {showLatentTrustedBy && (
           <div className="mt-8 text-2xs uppercase tracking-widest text-ink-soft">
             {t('hero.trusted_by', { count: practicesCount })}
           </div>
@@ -127,8 +130,6 @@ export default function Hero({
           <HeroScreenshot />
         </div>
       )}
-
-      <VideoModal open={videoOpen} onClose={() => setVideoOpen(false)} />
     </section>
   );
 }

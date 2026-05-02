@@ -48,25 +48,61 @@
   "hero": {
     "eyebrow": "For independent tutors and small teams",
     "heading": "The all-in-one tool for tutors who take their work seriously.",
-    "heading_v2": "Run your tutoring like a real business. Without the <u>spreadsheet hell</u>.",
+    "heading_v2": "The calm operating system for tutors.",
     "subheading": "Stop spending Sundays on parent updates. Crestio handles sessions, notes, and invoicing — so you can teach.",
-    "subheading_v2": "Crestio is the calm operating system for independent tutors and small practices. Log sessions in seconds. AI polishes your notes into parent updates. Invoice with one tap. Get paid by card.",
+    "subheading_v2": "Built by a Sydney HSC tutor for tutors. Log sessions in seconds, AI polishes your notes in your voice, parents pay invoices by card. No spreadsheets. No double entry. No Sunday-night admin.",
     "cta": "Start free trial",
     "cta_v2": "Start 7-day free trial",
-    "cta_secondary": "Watch 60-second tour",
+    "cta_secondary": "Try the sandbox",
     "price_note": "From {{price}}/month. 7-day free trial. Cancel anytime.",
     "see_plans": "See all plans →",
-    "badge": "New — Parent payments via Stripe",
-    "micro_note": "No credit card · Cancel anytime · Australian-built.",
+    "badge": "Early access · solo tutors and small practices",
+    "micro_note": "No credit card · Cancel anytime · Australian-made",
     "trusted_by": "Trusted by tutors across {{count}} practices",
+    "signal_commits": "{{count}} commits in the last 7 days",
+    "signal_commits_one": "1 commit in the last 7 days",
+    "signal_changelog": "Open changelog",
+    "signal_made_in": "Made in Sydney",
     "hotspot_today": "Today",
     "hotspot_polish": "Polish",
     "hotspot_invoice": "Invoice",
     "hotspot_pay": "Get paid"
   },
 
+  "migration_banner": {
+    "eyebrow": "Migration concierge",
+    "title": "Switching from a spreadsheet, Notion, or another tool?",
+    "body": "Send us your data — we'll move it free for the first 100 tutors. Every student, every past session, every invoice already in place when you log in.",
+    "spots": "{{taken}} of {{total}} spots taken",
+    "spots_zero": "Be one of the first.",
+    "cta": "Start the migration"
+  },
+
   "social_proof": {
     "line": "Built by a working HSC tutor in Sydney. In early access."
+  },
+
+  "polish_demo": {
+    "eyebrow": "Try it without signing up",
+    "heading": "See the polish in action.",
+    "sub": "Type messy session notes. Watch Crestio rewrite them as a parent update. No signup.",
+    "input_label": "Your raw notes",
+    "input_placeholder": "covered photosynthesis. mei struggled with the light reaction. hw pages 142-145. confident on chloroplasts.",
+    "style_label": "Polish style",
+    "style_warm": "Warm",
+    "style_concise": "Concise",
+    "style_detailed": "Detailed",
+    "polish_button": "Polish notes",
+    "polishing": "Polishing…",
+    "output_label": "Parent-ready update",
+    "empty_state": "Click polish to see the rewrite.",
+    "disclaimer": "This is a fixed demo. The real polish uses Anthropic Claude and learns your voice over weeks.",
+    "how_link": "How polish actually works →",
+    "try_own_label": "Try with your own example",
+    "try_own_cta": "Open the sandbox →",
+    "regenerate": "Regenerate",
+    "copy": "Copy",
+    "copied": "Copied"
   },
 
   "pain": {
