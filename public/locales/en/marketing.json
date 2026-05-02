@@ -239,9 +239,48 @@
     "pay_now": "Skip the trial — pay now →",
     "show_compare": "See full feature comparison",
     "hide_compare": "Hide comparison",
-    "solo_pitch": "Independent tutor with one or two students? Crestio Solo is built for you. Use it free for 7 days, no card.",
-    "enterprise_pitch": "10+ tutors? Talk to us:",
+    "solo_pitch": "Solo tutor with 1–2 students? Use Crestio Solo free for 7 days, no card.",
+    "enterprise_pitch": "Bigger practice or unusual setup? Email",
     "footer_note": "Prices in AUD. Inclusive of GST where applicable. Cancel anytime."
+  },
+
+  "inline_pricing": {
+    "eyebrow": "Pricing",
+    "heading": "Honest pricing. No per-seat tax.",
+    "subheading": "Pick a plan. Trial it. Cancel anytime from the dashboard.",
+    "recommended": "Recommended",
+    "per_month": "/mo",
+    "compare_link": "See full feature comparison →",
+    "solo": {
+      "label": "Solo",
+      "price": "$24",
+      "subhead": "For independent tutors with up to ~30 students.",
+      "b1": "AI session polish",
+      "b2": "Parent portal",
+      "b3": "Stripe parent payments",
+      "b4": "Calendar with drag-to-reschedule",
+      "cta": "Start 7-day trial"
+    },
+    "team": {
+      "label": "Team",
+      "price": "$59",
+      "subhead": "For owners with up to 5 tutors.",
+      "b1": "Everything in Solo",
+      "b2": "Role-based access (owner / tutor)",
+      "b3": "Per-tutor payouts and reporting",
+      "b4": "Owner Mondays brief",
+      "cta": "Start 14-day trial"
+    },
+    "growth": {
+      "label": "Growth",
+      "price": "$129",
+      "subhead": "For practices scaling past 5 tutors.",
+      "b1": "Everything in Team",
+      "b2": "Up to 15 tutors",
+      "b3": "Priority support, 4h response",
+      "b4": "Custom onboarding call",
+      "cta": "Talk to us"
+    }
   },
 
   "tiers": {

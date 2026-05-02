@@ -40,6 +40,7 @@ export default function About() {
           <section className="px-6 md:px-12 pb-16 md:pb-24 max-w-3xl mx-auto">
             <div className="rounded-md border border-rule bg-surface p-8 md:p-12">
               <div className="flex items-start gap-5 mb-8">
+                {/* TODO: replace with founder photo at /public/marketing/lenin-founder.jpg when available. */}
                 <div className="w-16 h-16 rounded-full bg-forest/10 text-forest-ink flex items-center justify-center font-display text-xl tracking-tightest shrink-0">
                   L
                 </div>

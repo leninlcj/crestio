@@ -11,6 +11,7 @@ export default function FounderHomepageEmbed({ latest }: Props) {
     <section className="px-6 md:px-12 py-16 md:py-20 max-w-5xl mx-auto">
       <div className="grid md:grid-cols-[200px_1fr] gap-6 md:gap-12 items-start">
         <div className="flex md:flex-col items-center md:items-start gap-4 md:gap-3">
+          {/* TODO: replace with founder photo at /public/marketing/lenin-founder.jpg when available. */}
           <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-forest-soft text-forest-ink grid place-items-center font-display text-2xl md:text-3xl tracking-tightest shrink-0" aria-hidden>
             L
           </div>

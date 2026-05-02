@@ -87,13 +87,17 @@ export default function PricingTable({ showHeader = true, showCompareLink = true
         ))}
       </div>
 
-      <div className="text-center mt-10 space-y-3">
-        <p className="text-sm text-ink-muted">{t('pricing_v2.solo_pitch')}</p>
-        <p className="text-sm text-ink-muted">
+      <div className="mt-12 max-w-3xl mx-auto rounded-md border border-rule bg-cream p-5 md:p-6 text-center">
+        <div className="text-2xs uppercase tracking-widest text-ink-soft mb-2">Doesn't fit?</div>
+        <p className="text-sm text-ink-muted leading-relaxed mb-2">
+          {t('pricing_v2.solo_pitch')}
+        </p>
+        <p className="text-sm text-ink-muted leading-relaxed">
           {t('pricing_v2.enterprise_pitch')}{' '}
-          <a href="mailto:hello@crestio.ai" className="text-forest hover:text-forest-ink underline underline-offset-2">
-            hello@crestio.ai
+          <a href="mailto:lenin@crestio.ai" className="text-forest hover:text-forest-ink underline underline-offset-2">
+            lenin@crestio.ai
           </a>
+          .
         </p>
       </div>
 
@@ -148,12 +152,12 @@ function TierCard({
       className={[
         'flex flex-col relative rounded-md p-7 md:p-8',
         highlight
-          ? 'border border-forest bg-surface shadow-lift'
+          ? 'border border-forest bg-surface shadow-lift pt-14 md:pt-14'
           : 'border border-rule bg-surface',
       ].join(' ')}
     >
       {highlight && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-forest text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-medium whitespace-nowrap">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-forest text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-medium whitespace-nowrap">
           {t('pricing_v2.recommended')}
         </div>
       )}

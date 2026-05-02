@@ -60,6 +60,8 @@ export default function FounderPage({ notes }: Props) {
 }
 
 function FounderAvatar() {
+  // TODO: replace with founder photo at /public/marketing/lenin-founder.jpg
+  // when available. Until then, render initial-only avatar.
   return (
     <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-forest-soft text-forest-ink grid place-items-center font-display text-xl md:text-2xl tracking-tightest shrink-0" aria-hidden>
       L

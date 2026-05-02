@@ -11,7 +11,7 @@ import PainSection from '../components/marketing/PainSection';
 import HowItWorks from '../components/marketing/HowItWorks';
 import FeatureGrid from '../components/marketing/FeatureGrid';
 import TestimonialSpotlight from '../components/marketing/TestimonialSpotlight';
-import PricingTable from '../components/marketing/PricingTable';
+import InlinePricing from '../components/marketing/InlinePricing';
 import FAQ from '../components/marketing/FAQ';
 import FinalCTA from '../components/marketing/FinalCTA';
 import MarketingFooter from '../components/marketing/MarketingFooter';
@@ -88,7 +88,7 @@ export default function Home({ practicesCount, latestFounderNote, migrationCount
           <FeatureGrid />
           <TestimonialSpotlight />
           {latestFounderNote && <FounderHomepageEmbed latest={latestFounderNote} />}
-          <PricingTable />
+          <InlinePricing />
           <FAQ />
           <FinalCTA />
         </main>
