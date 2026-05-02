@@ -13,3 +13,15 @@ Crestio is in early access. I'm still the main person using it. If you're a tuto
 
 — Lenin
 Sydney, May 2026
+
+## 2026-05-01 — 14F shipped — parents can now pay by card
+
+Stripe Connect went live last week. Parents can now pay invoices with a card directly instead of bank transfer.
+
+The math on a $100 invoice: Stripe takes 2.9% + 30¢ (about $3.20), Crestio takes a 1% platform fee ($1), you receive $95.80. Bank transfer still works exactly like before — if your rate doesn't account for the card friction, leave that invoice on bank transfer. Both options live side-by-side on the invoice page.
+
+Refunds are one tap from the invoice. Money goes back to the parent's card in 5–10 business days, the platform fee reverses, and you don't pay the Stripe fee on a refunded charge.
+
+A few billing setups don't fit the standard flow yet: group sessions where one parent pays for multiple kids, sibling discounts, prepaid lesson packs. If that's how you bill, email me at lenin@crestio.ai and tell me what your invoice currently looks like. I want the next iteration to handle it instead of pushing you back to bank transfer.
+
+— Lenin
