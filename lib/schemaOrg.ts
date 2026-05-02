@@ -34,10 +34,6 @@ export function organizationSchema() {
     name: 'Crestio',
     url: SITE,
     logo: `${SITE}/icon-512.png`,
-    sameAs: [
-      'https://twitter.com/crestio',
-      'https://www.linkedin.com/company/crestio',
-    ],
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'lenin@crestio.ai',
