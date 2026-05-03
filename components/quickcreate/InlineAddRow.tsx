@@ -38,13 +38,13 @@ export function InlineAddRow({ type, label, variant = 'row', href }: Props) {
       <button
         type="button"
         onClick={trigger}
-        className="w-full h-full min-h-[120px] border border-dashed border-rule rounded-md bg-surface hover:bg-forest/5 hover:border-forest transition-colors duration-100 flex flex-col items-center justify-center gap-1 text-ink-muted hover:text-forest"
+        className="w-full h-full min-h-[210px] border border-dashed border-rule rounded-md bg-surface hover:bg-forest/5 hover:border-forest transition-colors duration-100 flex flex-col items-center justify-center gap-2 text-ink-muted hover:text-forest"
         aria-label={label}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M12 5v14M5 12h14" />
         </svg>
-        <span className="text-xs">{label}</span>
+        <span className="text-sm">{label}</span>
       </button>
     );
   }

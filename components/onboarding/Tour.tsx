@@ -11,6 +11,8 @@ type Step = {
   title: string;
   body: string;
   placement: 'top' | 'bottom' | 'right' | 'left';
+  /** When true, ignore the selector and render a centered modal. */
+  centered?: boolean;
 };
 
 const STEPS: Step[] = [
@@ -18,8 +20,9 @@ const STEPS: Step[] = [
     id: 'dashboard',
     selector: '[data-tour="today-timeline"]',
     title: 'Your home base',
-    body: 'Today\'s sessions live here. Past, current, and upcoming — at a glance.',
+    body: "Today's sessions live here. Past, current, and upcoming — at a glance.",
     placement: 'bottom',
+    centered: true,
   },
   {
     id: 'quick-log',
@@ -103,7 +106,7 @@ export default function Tour({ active, onComplete }: Props) {
   if (!active) return null;
   const step = STEPS[stepIdx];
 
-  if (!rect) {
+  if (step.centered || !rect) {
     // Element not on page — render a centered welcome card instead.
     return (
       <div className="fixed inset-0 z-[100] grid place-items-center bg-ink/40 animate-fade-in">

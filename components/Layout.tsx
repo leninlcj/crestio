@@ -26,7 +26,7 @@ import { NewItemMenu } from './quickcreate/NewItemMenu';
 
 // Stub changelog — bumped when something user-visible ships. Used by the
 // "what's new" beacon on the avatar.
-const LATEST_CHANGELOG_TAG = '2026-04-27-phase3';
+const LATEST_CHANGELOG_TAG = '2026-05-04-ph7d';
 const LAST_SEEN_KEY = 'crestio.changelog.last_seen.v1';
 
 function useUnseenChangelog(): { unseen: boolean; markSeen: () => void } {

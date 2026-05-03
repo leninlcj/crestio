@@ -28,12 +28,25 @@ export function useKeyboard(id: string, handler: () => void, opts: Options = {})
       if (seqTimer) { clearTimeout(seqTimer); seqTimer = null; }
     }
 
-    function inEditableTarget(target: EventTarget | null): boolean {
-      const el = target as HTMLElement | null;
+    function isEditableElement(el: HTMLElement | null): boolean {
       if (!el) return false;
       const tag = el.tagName?.toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
       if (el.isContentEditable) return true;
+      // Walk up to catch nested contenteditable (rich-text editors).
+      if (typeof el.closest === 'function' && el.closest('[contenteditable="true"]')) return true;
+      return false;
+    }
+
+    function inEditableTarget(target: EventTarget | null): boolean {
+      // e.target is the originating element. document.activeElement is what
+      // currently has focus — those can differ when the event was retargeted
+      // through a portal or shadow DOM. Both must be safe before we fire.
+      if (isEditableElement(target as HTMLElement | null)) return true;
+      if (typeof document !== 'undefined'
+          && isEditableElement(document.activeElement as HTMLElement | null)) {
+        return true;
+      }
       return false;
     }
 

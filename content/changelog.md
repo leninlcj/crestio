@@ -4,6 +4,16 @@
 # Pure text — i18n is intentionally not applied here for now.
 ---
 
+## ph7d — 2026-05-04
+### Faster Home + Cmd+K palette
+- Cmd+K opens a command palette on every page. Type "log session zane 1h" and Crestio pre-fills the form. Fuzzy-search across students, sessions, invoices, and pages.
+- Home is now a morning briefing. The new Right-now card flips through five states: in session, starts in 60 min, later today, later this week, nothing.
+- Stat tiles never lie about deltas. Both zero hides the line. New activity reads "+N this week".
+- Mutually exclusive Active / Dormant / New filters on Students.
+- The "9999 days" rendering is gone. Never-tutored students surface in their own bucket.
+- Parents page lists every parent in the org again, including those added via the household flow.
+- Home tile and Batch invoice now agree — both read from one shared unbilled_completed_sessions view.
+
 ## 14F — 2026-04-27
 ### Parent payments via Stripe
 - Public payment links — parents pay any unpaid invoice from their email.
