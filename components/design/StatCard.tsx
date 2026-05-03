@@ -51,13 +51,18 @@ export function StatCard({ label, value, numericValue, sub, href, tone = 'defaul
     : value;
 
   // Week-over-week delta from series totals.
+  // Rules (ph7d 1.5):
+  //   - both zero    → no delta at all (don't render the line)
+  //   - prev=0, cur>0 → "+N this week" (no "vs last week")
+  //   - both positive → "+N vs last week" or "−N vs last week"
+  //   - cur=0, prev>0 → "−N vs last week"
   const delta = useMemo(() => {
     if (!series || !previousSeries) return null;
     const cur = series.reduce((a, b) => a + b, 0);
     const prev = previousSeries.reduce((a, b) => a + b, 0);
-    const diff = cur - prev;
     if (cur === 0 && prev === 0) return null;
-    return { cur, prev, diff };
+    const diff = cur - prev;
+    return { cur, prev, diff, prevWasZero: prev === 0 };
   }, [series, previousSeries]);
 
   const sparklineWidth = 120;
@@ -90,7 +95,11 @@ export function StatCard({ label, value, numericValue, sub, href, tone = 'defaul
       )}
       {delta && (
         <div className="text-2xs text-ink-soft num tabular leading-snug">
-          {delta.diff === 0 ? (
+          {delta.prevWasZero ? (
+            <span className="text-success-ink">
+              +{delta.cur} this week{deltaUnit ? ` ${deltaUnit}` : ''}
+            </span>
+          ) : delta.diff === 0 ? (
             <span>Same as last week</span>
           ) : (
             <span className={delta.diff > 0 ? 'text-success-ink' : 'text-claret'}>

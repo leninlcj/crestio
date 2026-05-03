@@ -186,12 +186,19 @@ function StudentsInner() {
 
   const filtered = useMemo(() => {
     let list = students;
+    // Mutually exclusive across active / dormant / new. "All" is everyone.
+    //   active  = had a session in the last 30 days
+    //   dormant = had a session before, but none in the last 30 days
+    //   new     = created in the last 14 days AND zero sessions
     if (status === 'active') {
-      list = list.filter((s) => s._last_session_at && Date.now() - new Date(s._last_session_at).getTime() < 21 * 86_400_000);
+      list = list.filter((s) => s._last_session_at
+        && Date.now() - new Date(s._last_session_at).getTime() < 30 * 86_400_000);
     } else if (status === 'dormant') {
-      list = list.filter((s) => !s._last_session_at || Date.now() - new Date(s._last_session_at).getTime() >= 21 * 86_400_000);
+      list = list.filter((s) => s._last_session_at
+        && Date.now() - new Date(s._last_session_at).getTime() >= 30 * 86_400_000);
     } else if (status === 'new') {
-      list = list.filter((s) => Date.now() - new Date(s.created_at).getTime() < 14 * 86_400_000);
+      list = list.filter((s) => !s._last_session_at
+        && Date.now() - new Date(s.created_at).getTime() < 14 * 86_400_000);
     }
     if (subject) list = list.filter((s) => (s.subjects ?? []).includes(subject));
     if (query) {
@@ -308,9 +315,16 @@ function StudentsInner() {
           title={archived ? 'No archived students.' : isTutor ? 'No students assigned.' : 'No students yet.'}
           description={archived
             ? 'Switch back to active to see your roster.'
-            : 'Add your first student or import a CSV.'}
+            : isTutor
+              ? 'Ask your owner to assign students to you.'
+              : 'Start with one or import a roster from CSV.'}
           action={!archived && !isTutor
-            ? <Link href="/app/students/new" className="btn-primary">{t('students:actions.add')}</Link>
+            ? (
+              <div className="flex items-center gap-2">
+                <Link href="/app/students/new" className="btn-primary">Add your first</Link>
+                <Link href="/app/students/import" className="btn-secondary text-sm">Import from CSV</Link>
+              </div>
+            )
             : undefined}
         />
       ) : view === 'grid' ? (
@@ -515,12 +529,18 @@ function AtRiskStrip({ student }: { student: StudentRow }) {
 }
 
 function computeStudentStatus(s: StudentRow): { tone: 'active' | 'dormant' | 'new'; color: string; label: string } {
-  const isNew = Date.now() - new Date(s.created_at).getTime() < 14 * 86_400_000;
-  if (isNew) return { tone: 'new', color: '#1E40AF', label: 'New (added in the last 14 days)' };
-  if (s._last_session_at && Date.now() - new Date(s._last_session_at).getTime() < 21 * 86_400_000) {
-    return { tone: 'active', color: '#2F7D4F', label: 'Active (session in the last 3 weeks)' };
+  // Mirror the filter rules so a student's badge always matches the tab they
+  // would appear under. Mutually exclusive across active / dormant / new.
+  const hasSession = !!s._last_session_at;
+  const isNew = !hasSession
+    && Date.now() - new Date(s.created_at).getTime() < 14 * 86_400_000;
+  if (isNew) {
+    return { tone: 'new', color: '#1E40AF', label: 'New (added in the last 14 days, no sessions yet)' };
   }
-  return { tone: 'dormant', color: '#A0A39E', label: 'Dormant (no session in the last 3 weeks)' };
+  if (hasSession && Date.now() - new Date(s._last_session_at!).getTime() < 30 * 86_400_000) {
+    return { tone: 'active', color: '#2F7D4F', label: 'Active (session in the last 30 days)' };
+  }
+  return { tone: 'dormant', color: '#A0A39E', label: 'Dormant (no session in the last 30 days)' };
 }
 
 function relativeDays(iso: string): string {
