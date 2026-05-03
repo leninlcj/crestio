@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="240" viewBox="0 0 720 240" role="img" aria-labelledby="title desc">
+  <title id="title">Crestio wordmark on light background</title>
+  <desc id="desc">The Crestio wordmark in ink and forest green on a cream background.</desc>
+  <rect width="720" height="240" fill="#FAFAF8"/>
+  <text x="360" y="142" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="88" font-weight="500" letter-spacing="-4" fill="#0F1714">crest<tspan font-style="italic" fill="#1F3A2E">io</tspan></text>
+</svg>

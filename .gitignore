@@ -45,3 +45,4 @@ public/locales/.cache/
 .env.staging
 .claude/
 .claude/
+.env*.local

@@ -15,8 +15,6 @@ const COLORS: { name: string; value: string; usage: string }[] = [
 const LOGO_FILES = [
   { label: 'Logo · light · SVG', href: '/marketing/brand/crestio-light.svg', kind: 'svg' },
   { label: 'Logo · dark · SVG', href: '/marketing/brand/crestio-dark.svg', kind: 'svg' },
-  { label: 'Logo · light · PNG (512px)', href: '/marketing/brand/crestio-light.png', kind: 'png' },
-  { label: 'Logo · dark · PNG (512px)', href: '/marketing/brand/crestio-dark.png', kind: 'png' },
   { label: 'Logo · monochrome · SVG', href: '/marketing/brand/crestio-mono.svg', kind: 'svg' },
 ];
 

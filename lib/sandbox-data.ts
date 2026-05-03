@@ -67,6 +67,14 @@ const STUDENT_DATA = [
 
 // Polish samples — pre-written rough → polished pairs. Deterministic per session.
 export const SANDBOX_POLISH_SAMPLES: Record<string, { rough: string; polished: string }> = {
+  'sess-today-1': {
+    rough: 'Aiden worked on Module C creative writing piece. Strong opening, narrative voice consistent.',
+    polished: `Aiden worked on his Module C creative writing today. His opening is strong and his narrative voice stayed consistent across the piece, which is exactly the kind of control we want for this module.\n\nNext time we'll focus on tightening the middle section so the tension builds more deliberately and the ending lands with more purpose.`,
+  },
+  'sess-today-2': {
+    rough: 'Lily covered persuasive techniques in advertising. Good engagement, some new vocab introduced.',
+    polished: `Lily worked through persuasive techniques in advertising today. She was engaged throughout the session and picked up several new terms confidently, especially when we connected them to examples she could recognise.\n\nFor homework, she is going to find one advertisement and label the techniques we covered so we can check her understanding next lesson.`,
+  },
   'sess-pp-1': {
     rough: 'Hector — went over Handmaids Tale ch 23-24, did colour symbolism. Topic sentence good, link sentences need work. HW: paragraph on the Aunts as control mechanism. Re-read 23/24 bring 2 quotes.',
     polished: `Hector came in well-prepared with his annotations on chapters 23-24 of "The Handmaid's Tale." We focused the session on colour symbolism — he identified four distinct functions of the colour red across the novel and we built an analytical paragraph linking two of them to the broader argument about female autonomy.\n\nHis topic sentences are sharp and confident. The link sentences between evidence and analysis still need work — they tend to restate the quote rather than develop the argument.\n\nFor next session, Hector is drafting an analytical paragraph on the Aunts as a control mechanism. He's also re-reading chapters 23 and 24 and bringing two quotes he'd like to discuss.`,
@@ -100,7 +108,7 @@ export function getSandboxData(): SandboxData {
       duration_minutes: 60,
       subject: 'HSC Std Eng',
       status: 'completed',
-      notes_internal: 'Aiden worked on Module C creative writing piece. Strong opening, narrative voice consistent.',
+      notes_internal: SANDBOX_POLISH_SAMPLES['sess-today-1'].rough,
       is_polished: false,
       is_sent_to_parent: false,
     },
@@ -111,7 +119,7 @@ export function getSandboxData(): SandboxData {
       duration_minutes: 60,
       subject: 'English',
       status: 'completed',
-      notes_internal: 'Lily covered persuasive techniques in advertising. Good engagement, some new vocab introduced.',
+      notes_internal: SANDBOX_POLISH_SAMPLES['sess-today-2'].rough,
       is_polished: false,
       is_sent_to_parent: false,
     },

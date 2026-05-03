@@ -33,6 +33,7 @@ export default function Pricing() {
         <MarketingNav />
 
         <main>
+          <h1 className="sr-only">{t('pricing_v2.heading')}</h1>
           <PricingTable defaultExpanded showCompareLink />
           <section className="border-t border-rule">
             <ROICalculator />

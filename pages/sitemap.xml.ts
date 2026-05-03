@@ -9,7 +9,6 @@ const SITE = 'https://crestio.ai';
 const STATIC_PATHS = [
   { path: '/', changefreq: 'weekly', priority: 1.0 },
   { path: '/pricing', changefreq: 'monthly', priority: 0.9 },
-  { path: '/sandbox', changefreq: 'monthly', priority: 0.7 },
   { path: '/how-polish-works', changefreq: 'monthly', priority: 0.5 },
   { path: '/changelog', changefreq: 'weekly', priority: 0.7 },
   { path: '/roadmap', changefreq: 'weekly', priority: 0.6 },

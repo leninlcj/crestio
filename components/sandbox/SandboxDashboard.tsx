@@ -31,6 +31,7 @@ export default function SandboxDashboard() {
     .sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
 
   const polishQueue = sessions.filter((s) => s.status === 'completed' && !s.is_polished);
+  const parentUpdateQueue = sessions.filter((s) => s.status === 'completed' && !s.is_sent_to_parent);
   const completedToday = todaySessions.filter((s) => s.status === 'completed').length;
   const scheduledToday = todaySessions.length;
   const unpaid = invoices.filter((i) => i.status === 'sent' || i.status === 'overdue');
@@ -175,14 +176,14 @@ export default function SandboxDashboard() {
         <div className="flex items-baseline justify-between mb-4">
           <h2 className="text-[15px] font-display font-semibold tracking-tighter">Polish queue</h2>
           <div className="text-2xs text-ink-soft uppercase tracking-widest">
-            {polishQueue.length} {polishQueue.length === 1 ? 'session' : 'sessions'}
+            {parentUpdateQueue.length} {parentUpdateQueue.length === 1 ? 'update' : 'updates'}
           </div>
         </div>
         <div className="space-y-3">
-          {polishQueue.length === 0 ? (
+            {parentUpdateQueue.length === 0 ? (
             <div className="card p-6 text-sm text-ink-muted">No sessions waiting. You're all caught up.</div>
           ) : (
-            polishQueue.map((s) => (
+            parentUpdateQueue.map((s) => (
               <PolishCard
                 key={s.id}
                 session={s}

@@ -8,6 +8,16 @@ import { supabase } from '../../lib/supabase';
 import { readReferralCookie, clearReferralCookie } from '../../lib/referralCookie';
 import { normaliseCode } from '../../lib/referralCode';
 import { serverSideTranslations } from '../../lib/i18nServer';
+import { PLAN_CATALOGUE, formatPlanPrice, type BillingInterval } from '../../lib/plans';
+import type { PlanTier } from '../../lib/billing';
+
+const isPlanTier = (value: unknown): value is PlanTier => (
+  value === 'solo' || value === 'team' || value === 'growth'
+);
+
+const isBillingInterval = (value: unknown): value is BillingInterval => (
+  value === 'monthly' || value === 'annual'
+);
 
 export default function SignUp() {
   const router = useRouter();
@@ -19,6 +29,9 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentConfirmation, setSentConfirmation] = useState(false);
+  const selectedPlan = isPlanTier(router.query.plan) ? router.query.plan : null;
+  const selectedInterval = isBillingInterval(router.query.interval) ? router.query.interval : 'monthly';
+  const selectedPlanEntry = selectedPlan ? PLAN_CATALOGUE[selectedPlan] : null;
 
   // Pre-fill referral code from the cookie captured by ReferralCapture.
   useEffect(() => {
@@ -107,8 +120,35 @@ export default function SignUp() {
                 Create your account
               </h1>
               <p className="text-sm text-ink-muted mb-8">
-                Start your free trial — no card required.
+                {selectedPlanEntry
+                  ? `Start ${selectedPlanEntry.label} — no card required.`
+                  : 'Start your free trial — no card required.'}
               </p>
+
+              {selectedPlanEntry && (
+                <div className="card mb-6 p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-widest text-ink-soft">
+                        Selected plan
+                      </div>
+                      <div className="mt-1 text-base font-semibold text-ink">
+                        {selectedPlanEntry.label}
+                      </div>
+                      <p className="mt-1 text-xs leading-5 text-ink-muted">
+                        {selectedPlanEntry.pitch}
+                      </p>
+                    </div>
+                    <span className="pill-forest">
+                      {selectedPlanEntry.trialDays}-day trial
+                    </span>
+                  </div>
+                  <div className="mt-4 border-t border-rule pt-3 text-sm text-ink-muted">
+                    Then <span className="font-semibold text-ink">{formatPlanPrice(selectedPlanEntry.tier, selectedInterval)}</span>
+                    . Cancel before billing starts.
+                  </div>
+                </div>
+              )}
 
               <form onSubmit={onSubmit} className="space-y-4">
                 <div>

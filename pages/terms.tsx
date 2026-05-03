@@ -85,7 +85,7 @@ export default function Terms() {
         <li><strong>Growth</strong> — tailored pricing for larger practices. Contact us.</li>
       </ul>
       <p>
-        New Solo accounts get a 7-day free trial. New Team accounts get a 14-day free trial. A valid payment method is required at signup. Your card is charged at the end of the trial unless you cancel first.
+        New Solo accounts get a 7-day free trial. New Team accounts get a 14-day free trial. No payment method is required to create an account or start a trial. If you choose a paid subscription, Stripe collects your payment method and charges you according to the plan and billing interval you select.
       </p>
       <p>
         You can cancel anytime from the billing portal. Access continues until the end of your paid billing period. No refunds for partial months except where required by law.
