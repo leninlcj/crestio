@@ -232,7 +232,7 @@ function StudentsInner() {
       actions={
         isTutor ? undefined : (
           <div className="flex items-center gap-2">
-            <Link href="/app/students/import" className="btn-secondary text-xs">Import CSV</Link>
+            <Link href="/app/import?tab=students" className="btn-secondary text-xs">Import CSV</Link>
             <Link href="/app/students/new" className="btn-primary">{t('students:actions.add')}</Link>
           </div>
         )
@@ -322,7 +322,7 @@ function StudentsInner() {
             ? (
               <div className="flex items-center gap-2">
                 <Link href="/app/students/new" className="btn-primary">Add your first</Link>
-                <Link href="/app/students/import" className="btn-secondary text-sm">Import from CSV</Link>
+                <Link href="/app/import?tab=students" className="btn-secondary text-sm">Import from CSV</Link>
               </div>
             )
             : undefined}

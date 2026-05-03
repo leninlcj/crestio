@@ -56,6 +56,9 @@
   "result": {
     "imported_n": "Importada {{count}} fila",
     "imported_n_other": "Importadas {{count}} filas",
+    "linked_n": "Vinculada a {{count}} familia existente.",
+    "linked_n_other": "Vinculadas a {{count}} familias existentes.",
+    "parents_hint": "Los datos de contacto de los padres se guardan en cada familia. Puedes invitar a los padres a iniciar sesión desde la página de Padres cuando estés listo.",
     "skipped_n": "{{count}} omitida",
     "skipped_n_other": "{{count}} omitidas",
     "row_label": "Fila {{row}}",

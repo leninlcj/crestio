@@ -1,5 +1,6 @@
-import { useState, useRef, useMemo, useCallback } from 'react';
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Papa from 'papaparse';
 import { useTranslation } from 'react-i18next';
 import AuthGuard from '../../components/AuthGuard';
@@ -29,10 +30,16 @@ const HOUSEHOLD_REQUIRED: HouseholdField[] = ['household_name', 'parent_name', '
 
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-type RowOutcome = { row: number; reason: string; status: 'failed' | 'skipped' };
+type RowOutcome = {
+  row: number;
+  reason: string;
+  status: 'failed' | 'skipped' | 'linked';
+};
 
 type ImportResult = {
   imported: number;
+  /** Households tab: rows that linked a parent to an existing household. */
+  linked?: number;
   skipped: number;
   outcomes: RowOutcome[];
 };
@@ -40,9 +47,27 @@ type ImportResult = {
 function ImportInner() {
   const { t } = useTranslation(['import', 'common']);
   const { membership } = useMembership();
+  const router = useRouter();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const [tab, setTab] = useState<Tab>('students');
+  // Initial tab comes from ?tab=… so deep links from /app/students,
+  // /app/households, /app/parents land on the right tab. Anything other
+  // than the two known values falls back to "students".
+  const [tab, setTab] = useState<Tab>(() => {
+    if (typeof window === 'undefined') return 'students';
+    const qp = new URLSearchParams(window.location.search).get('tab');
+    return qp === 'households' ? 'households' : 'students';
+  });
+
+  // Keep state in sync if the URL changes after mount (back/forward, in-app
+  // navigation that mutates the query string).
+  useEffect(() => {
+    if (!router.isReady) return;
+    const qp = router.query.tab;
+    const next: Tab = qp === 'households' ? 'households' : 'students';
+    if (next !== tab) setTab(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.tab]);
 
   const [error, setError] = useState<string | null>(null);
   const [headers, setHeaders] = useState<string[]>([]);
@@ -82,6 +107,12 @@ function ImportInner() {
     if (next === tab) return;
     setTab(next);
     reset();
+    // Push the URL state so a refresh keeps the same tab.
+    router.replace(
+      { pathname: router.pathname, query: { ...router.query, tab: next } },
+      undefined,
+      { shallow: true },
+    );
   }
 
   function handleFile(file: File) {
@@ -203,6 +234,7 @@ function ImportInner() {
       }
       setResult({
         imported: json.imported ?? 0,
+        linked: json.linked ?? 0,
         skipped: json.skipped ?? 0,
         outcomes: Array.isArray(json.outcomes) ? json.outcomes : [],
       });
@@ -247,6 +279,9 @@ function ImportInner() {
   }
 
   if (result) {
+    const linkedOutcomes = result.outcomes.filter((o) => o.status === 'linked');
+    const errorOutcomes = result.outcomes.filter((o) => o.status !== 'linked');
+    const linkedCount = result.linked ?? linkedOutcomes.length;
     return (
       <Layout title={t('page_title')} subtitle={t('page_subtitle')}>
         <div className="max-w-2xl space-y-4">
@@ -254,23 +289,33 @@ function ImportInner() {
             <h2 className="font-display text-2xl tracking-tightest text-ink mb-2">
               {t('result.imported_n', { count: result.imported })}
             </h2>
-            {result.outcomes.length > 0 && (
+            {linkedCount > 0 && (
+              <div className="text-sm text-ink-muted mb-2">
+                {t('result.linked_n', { count: linkedCount })}
+              </div>
+            )}
+            {tab === 'households' && (
+              <p className="text-sm text-ink-soft mt-3">
+                {t('result.parents_hint')}
+              </p>
+            )}
+            {errorOutcomes.length > 0 && (
               <div className="mt-4">
                 <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">
-                  {t('result.skipped_n', { count: result.outcomes.length })}
+                  {t('result.skipped_n', { count: errorOutcomes.length })}
                 </div>
                 <ul className="text-sm text-ink-muted space-y-1 max-h-72 overflow-auto">
-                  {result.outcomes.slice(0, 50).map((o) => (
+                  {errorOutcomes.slice(0, 50).map((o) => (
                     <li key={`${o.row}-${o.reason}`}>{t('result.row_label', { row: o.row })}: {o.reason}</li>
                   ))}
-                  {result.outcomes.length > 50 && (
-                    <li>… {t('result.and_more', { count: result.outcomes.length - 50 })}</li>
+                  {errorOutcomes.length > 50 && (
+                    <li>… {t('result.and_more', { count: errorOutcomes.length - 50 })}</li>
                   )}
                 </ul>
               </div>
             )}
             <div className="flex flex-wrap gap-3 mt-6">
-              {result.outcomes.length > 0 && (
+              {errorOutcomes.length > 0 && (
                 <button onClick={downloadErrorReport} className="btn-secondary">
                   {t('result.download_errors')}
                 </button>
@@ -295,25 +340,27 @@ function ImportInner() {
       subtitle={t('page_subtitle')}
     >
       <div className="max-w-4xl space-y-6">
-        <div className="flex items-center gap-2 border-b border-rule">
-          <button
-            type="button"
-            onClick={() => switchTab('students')}
-            className={`px-4 py-2 text-sm transition-colors ${tab === 'students' ? 'text-ink border-b-2 border-forest -mb-px font-medium' : 'text-ink-muted hover:text-ink'}`}
-            aria-selected={tab === 'students'}
-            role="tab"
-          >
-            {t('tab.students')}
-          </button>
-          <button
-            type="button"
-            onClick={() => switchTab('households')}
-            className={`px-4 py-2 text-sm transition-colors ${tab === 'households' ? 'text-ink border-b-2 border-forest -mb-px font-medium' : 'text-ink-muted hover:text-ink'}`}
-            aria-selected={tab === 'households'}
-            role="tab"
-          >
-            {t('tab.households')}
-          </button>
+        <div className="flex items-center gap-1 border-b border-rule" role="tablist">
+          {(['students', 'households'] as const).map((key) => {
+            const active = tab === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => switchTab(key)}
+                role="tab"
+                aria-selected={active}
+                className={[
+                  'relative px-4 py-2.5 text-sm transition-colors duration-100 -mb-px',
+                  active
+                    ? 'text-forest font-semibold border-b-[3px] border-forest'
+                    : 'text-ink-soft/70 hover:text-ink border-b-[3px] border-transparent',
+                ].join(' ')}
+              >
+                {t(`tab.${key}`)}
+              </button>
+            );
+          })}
         </div>
 
         {error && <div className="card p-4 text-sm text-claret" role="alert">{error}</div>}
@@ -417,24 +464,44 @@ function ImportInner() {
                   invalid: validity.invalid,
                 })}
               </p>
-              <div className="table-wrap">
-                <table className="table">
+              {/*
+                Custom-styled preview table. We intentionally do NOT use the
+                global `.table` class here: that class makes <thead th> sticky
+                at top:56px, which inside the card's overflow-x-auto scroll
+                context pushes the header 56px down and clips the first body
+                row. overflow-x: auto for wide tables, overflow-y: visible to
+                guarantee no row clipping.
+              */}
+              <div
+                className="card border border-rule rounded-lg"
+                style={{ overflowX: 'auto', overflowY: 'visible' }}
+              >
+                <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr>
+                    <tr className="border-b border-rule bg-ruleSoft/30">
                       {headers.map((h, idx) => {
                         const m = mappingForTab[idx];
                         const label = !m || m === 'skip'
                           ? <span className="text-ink-muted">{h || ''}</span>
                           : <span>{t(`field.${m}`)}</span>;
-                        return <th key={idx}>{label}</th>;
+                        return (
+                          <th
+                            key={idx}
+                            className="text-left text-2xs uppercase tracking-widest text-ink-muted font-medium px-4 py-3 whitespace-nowrap"
+                          >
+                            {label}
+                          </th>
+                        );
                       })}
                     </tr>
                   </thead>
                   <tbody>
                     {previewRows.map((r, ri) => (
-                      <tr key={ri}>
+                      <tr key={ri} className="border-b border-ruleSoft last:border-b-0">
                         {headers.map((_, ci) => (
-                          <td key={ci}>{r[ci] ?? ''}</td>
+                          <td key={ci} className="px-4 py-3 text-sm text-ink whitespace-nowrap">
+                            {r[ci] ?? ''}
+                          </td>
                         ))}
                       </tr>
                     ))}

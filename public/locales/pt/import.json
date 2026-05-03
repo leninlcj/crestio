@@ -56,6 +56,9 @@
   "result": {
     "imported_n": "{{count}} linha importada",
     "imported_n_other": "{{count}} linhas importadas",
+    "linked_n": "Vinculada a {{count}} família existente.",
+    "linked_n_other": "Vinculadas a {{count}} famílias existentes.",
+    "parents_hint": "As informações de contato dos responsáveis ficam salvas em cada família. Você pode convidar os responsáveis a entrar pela página de Responsáveis quando estiver pronto.",
     "skipped_n": "{{count}} ignorada",
     "skipped_n_other": "{{count}} ignoradas",
     "row_label": "Linha {{row}}",

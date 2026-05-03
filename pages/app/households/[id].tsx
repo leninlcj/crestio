@@ -145,12 +145,17 @@ function HouseholdDetailInner() {
 
   async function archiveHousehold() {
     if (!household) return;
-    if (!window.confirm(t('detail.confirm_archive'))) return;
+    // Use the unified soft-delete API so the audit log and trash UI reflect
+    // the action consistently across student/household/parent.
+    if (!window.confirm(
+      `Delete ${household.display_name}? Their session history and invoices stay on file. You can restore them within 30 days from Settings → Archived.`,
+    )) return;
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) return;
-    const res = await fetch(`/api/households/${household.id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${session.access_token}` },
+    const res = await fetch('/api/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ entity_type: 'household', ids: [household.id] }),
     });
     if (res.ok) router.push('/app/households');
   }
@@ -224,7 +229,7 @@ function HouseholdDetailInner() {
             {household.archived_at ? (
               <button onClick={unarchiveHousehold} className="btn-secondary">{t('detail.unarchive')}</button>
             ) : (
-              <button onClick={archiveHousehold} className="btn-ghost text-claret">{t('detail.archive')}</button>
+              <button onClick={archiveHousehold} className="btn-ghost text-claret">Delete</button>
             )}
           </>
         ) : undefined

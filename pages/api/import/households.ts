@@ -27,7 +27,11 @@ type HouseholdRowInput = {
   preferred_currency?: string | null;
 };
 
-type RowOutcome = { row: number; reason: string; status: 'failed' | 'skipped' };
+type RowOutcome = {
+  row: number;
+  reason: string;
+  status: 'failed' | 'skipped' | 'linked';
+};
 
 type StagedRow = {
   row: number;
@@ -37,6 +41,8 @@ type StagedRow = {
   parent_phone: string | null;
   billing_address: string | null;
   preferred_currency: string | null;
+  /** When set, the row reuses an existing household instead of creating one. */
+  existing_household_id: string | null;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -102,13 +108,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // round-trip rather than per-row queries.
   const { data: existingHouseholds } = await admin
     .from('households')
-    .select('id, display_name, billing_email')
+    .select('id, display_name, billing_email, billing_address, preferred_currency')
     .eq('organization_id', orgId)
     .is('archived_at', null);
 
-  const existingHouseholdByName = new Map<string, string>();
-  for (const h of (existingHouseholds ?? []) as Array<{ id: string; display_name: string; billing_email: string | null }>) {
-    existingHouseholdByName.set(h.display_name.trim().toLowerCase(), h.id);
+  type ExistingHouseholdRow = {
+    id: string;
+    display_name: string;
+    billing_email: string | null;
+    billing_address: string | null;
+    preferred_currency: string | null;
+  };
+  const existingHouseholdByName = new Map<string, ExistingHouseholdRow>();
+  for (const h of (existingHouseholds ?? []) as ExistingHouseholdRow[]) {
+    existingHouseholdByName.set(h.display_name.trim().toLowerCase(), h);
   }
 
   const { data: existingParents } = await admin
@@ -179,11 +192,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     seenInFileByEmail.add(fileEmailKey);
     seenInFileByName.add(fileNameKey);
 
-    if (existingHouseholdByName.has(fileNameKey)) {
-      outcomes.push({ row: rowNum, reason: 'A household with this name already exists.', status: 'skipped' });
-      continue;
-    }
-
+    // Reuse path: case-insensitive, trimmed display_name match within the
+    // same org. We attach the parent (creating the parents row if needed)
+    // and only fill billing_address / preferred_currency if currently NULL.
+    const existing = existingHouseholdByName.get(fileNameKey);
     staged.push({
       row: rowNum,
       household_name: householdName,
@@ -192,6 +204,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       parent_phone: parentPhone,
       billing_address: billingAddress,
       preferred_currency: preferredCurrency ?? orgCurrency,
+      existing_household_id: existing?.id ?? null,
     });
   }
 
@@ -239,14 +252,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // ---------------------------------------------------------------------------
-  // Insert households in batches of 100. For each successfully created
-  // household, create a household_parents link to the resolved parent. A
-  // failing batch falls back to per-row inserts so one bad row doesn't sink
-  // the whole batch.
+  // Split staged into two paths:
+  //   • newRows  — household doesn't exist yet → batch-insert + link parent.
+  //   • reuseRows — household exists by display_name → link this parent to
+  //     the existing household (deduped via household_parents PK), and
+  //     backfill billing_address / preferred_currency only if currently NULL.
   // ---------------------------------------------------------------------------
+  const newRows = staged.filter((s) => s.existing_household_id === null);
+  const reuseRows = staged.filter((s) => s.existing_household_id !== null);
+
   let importedCount = 0;
-  for (let i = 0; i < staged.length; i += BATCH_SIZE) {
-    const slice = staged.slice(i, i + BATCH_SIZE);
+  let linkedCount = 0;
+
+  // ---- create-new path ---------------------------------------------------
+  for (let i = 0; i < newRows.length; i += BATCH_SIZE) {
+    const slice = newRows.slice(i, i + BATCH_SIZE);
     const householdPayload = slice.map((s) => ({
       organization_id: orgId,
       display_name: s.household_name,
@@ -278,9 +298,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .insert(links);
       if (linkErr) {
         console.error('[import/households] household_parents link insert failed', linkErr);
-        // Households were created — surface the link failure but don't
-        // double-count those as imported. Mark the affected rows as failed
-        // so the user notices and can re-link manually.
         for (const s of slice) {
           outcomes.push({
             row: s.row,
@@ -294,9 +311,62 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     importedCount += insertedHouseholds?.length ?? 0;
   }
 
+  // ---- reuse-existing path ----------------------------------------------
+  // Per-row because each row may need to (a) backfill the household billing
+  // fields, (b) link a parent, and (c) tolerate the case where the
+  // household_parents pair already exists. Batching gains nothing here.
+  for (const s of reuseRows) {
+    const householdId = s.existing_household_id!;
+    const existing = Array.from(existingHouseholdByName.values()).find((h) => h.id === householdId);
+
+    // Backfill only-if-NULL columns. Skip the round-trip when there's
+    // nothing to backfill.
+    const update: Record<string, unknown> = {};
+    if (existing && !existing.billing_address && s.billing_address) {
+      update.billing_address = s.billing_address;
+    }
+    if (existing && !existing.preferred_currency && s.preferred_currency) {
+      update.preferred_currency = s.preferred_currency;
+    }
+    if (Object.keys(update).length > 0) {
+      const { error: updErr } = await admin
+        .from('households')
+        .update(update)
+        .eq('id', householdId);
+      if (updErr) {
+        console.warn('[import/households] reuse backfill update failed', updErr.message);
+        // Non-fatal — continue to the parent link.
+      }
+    }
+
+    const parentId = parentIdByEmail.get(s.parent_email);
+    if (!parentId) {
+      outcomes.push({ row: s.row, reason: 'Parent record could not be resolved.', status: 'failed' });
+      continue;
+    }
+
+    // Idempotent link insert. The unique (household_id, parent_id) constraint
+    // protects us from duplicates if the row is re-imported. is_primary stays
+    // FALSE so we don't accidentally demote whoever the user already chose.
+    const { error: linkErr } = await admin
+      .from('household_parents')
+      .upsert(
+        { household_id: householdId, parent_id: parentId, is_primary: false },
+        { onConflict: 'household_id,parent_id', ignoreDuplicates: true },
+      );
+    if (linkErr) {
+      outcomes.push({ row: s.row, reason: `Could not link parent: ${linkErr.message}`, status: 'failed' });
+      continue;
+    }
+
+    outcomes.push({ row: s.row, reason: 'Linked to existing household.', status: 'linked' });
+    linkedCount++;
+  }
+
   return res.status(200).json({
     imported: importedCount,
-    skipped: outcomes.length,
+    linked: linkedCount,
+    skipped: outcomes.filter((o) => o.status !== 'linked').length,
     outcomes,
   });
 }

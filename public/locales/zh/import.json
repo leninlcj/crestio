@@ -54,6 +54,8 @@
   },
   "result": {
     "imported_n": "已导入 {{count}} 行",
+    "linked_n": "已关联到 {{count}} 个现有家庭。",
+    "parents_hint": "家长联系信息保存在每个家庭中。准备好时,您可以从家长页面邀请家长登录。",
     "skipped_n": "已跳过 {{count}} 行",
     "row_label": "第 {{row}} 行",
     "and_more": "… 还有 {{count}} 行",

@@ -54,6 +54,8 @@
   },
   "result": {
     "imported_n": "{{count}} baris diimpor",
+    "linked_n": "Ditautkan ke {{count}} keluarga yang ada.",
+    "parents_hint": "Informasi kontak orang tua disimpan di setiap keluarga. Anda dapat mengundang orang tua untuk masuk dari halaman Orang Tua saat siap.",
     "skipped_n": "{{count}} dilewati",
     "row_label": "Baris {{row}}",
     "and_more": "… dan {{count}} lainnya",

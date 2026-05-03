@@ -151,9 +151,12 @@ function HouseholdsInner() {
       title={t('page.title')}
       actions={
         !isTutor ? (
-          <button type="button" onClick={() => setNewFormOpen((v) => !v)} className="btn-primary">
-            {newFormOpen ? t('actions.cancel') : t('actions.new')}
-          </button>
+          <div className="flex items-center gap-2">
+            <Link href="/app/import?tab=households" className="btn-secondary text-xs">Import CSV</Link>
+            <button type="button" onClick={() => setNewFormOpen((v) => !v)} className="btn-primary">
+              {newFormOpen ? t('actions.cancel') : t('actions.new')}
+            </button>
+          </div>
         ) : undefined
       }
     >

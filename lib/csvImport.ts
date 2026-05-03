@@ -95,8 +95,25 @@ export const HOUSEHOLD_SYNONYMS: SynonymMap<HouseholdField> = {
   ],
 };
 
+// Field-keyed anti-match rules: certain field keys must NEVER bind to headers
+// that look like a different concept. Without this, "parent name" would
+// substring-match the "name" synonym for student.name and quietly overwrite
+// the student name from a parent column. Add new rules here as needed.
+const ANTI_MATCH: Record<string, (headerNorm: string) => boolean> = {
+  // Student name field must not absorb any column that's clearly about a
+  // parent/guardian (e.g. "parent name", "parent_name", "parent contact name",
+  // "parents", "guardian"). normaliseHeader has already collapsed
+  // underscores/dashes/dots into spaces, so the check is on word boundaries.
+  name: (h) => /(^|\s)(parent|parents|guardian|guardians)(\s|$)/.test(h),
+};
+
 // Score a header against a synonym set. Lower is better; -1 = no match.
-function matchScore(headerNorm: string, synonyms: readonly string[]): number {
+function matchScore(
+  headerNorm: string,
+  synonyms: readonly string[],
+  fieldKey?: string,
+): number {
+  if (fieldKey && ANTI_MATCH[fieldKey]?.(headerNorm)) return -1;
   for (let i = 0; i < synonyms.length; i++) {
     if (synonyms[i] === headerNorm) return i;
   }
@@ -119,7 +136,7 @@ export function autoMapHeader<K extends string>(
   let bestKey: K | null = null;
   let bestScore = Number.POSITIVE_INFINITY;
   (Object.keys(synonyms) as K[]).forEach((k) => {
-    const score = matchScore(norm, synonyms[k]);
+    const score = matchScore(norm, synonyms[k], k as string);
     if (score >= 0 && score < bestScore) {
       bestScore = score;
       bestKey = k;
@@ -141,7 +158,7 @@ export function autoMapHeaders<K extends string>(
     const norm = normaliseHeader(h);
     if (!norm) return;
     (Object.keys(synonyms) as K[]).forEach((k) => {
-      const score = matchScore(norm, synonyms[k]);
+      const score = matchScore(norm, synonyms[k], k as string);
       if (score >= 0) candidates.push({ idx, key: k, score });
     });
   });
@@ -184,9 +201,28 @@ export function normalisePhone(raw: string, defaultCountry?: CountryCode): Phone
   const noCountry = parsePhoneNumberFromString(trimmed);
   if (noCountry?.isValid()) return { ok: true, e164: noCountry.number };
 
+  // Two-pass strategy. Strict first: a country only "wins" if the parsed
+  // number's country matches the country we passed in. This is what fixes
+  // UK national format like "07700 900123" — a naive first-valid loop will
+  // often happily parse it as a US number (libphonenumber strips the leading
+  // 0 and gets 10 digits starting with 770, a valid Atlanta area code), so
+  // 'US' would short-circuit the loop before 'GB' ever gets a try. By
+  // requiring parsed.country === c, only GB can claim this number, and the
+  // loop continues until a country actually owns the format.
   for (const c of tryCountries) {
     const parsed = parsePhoneNumberFromString(trimmed, c);
-    if (parsed?.isValid()) return { ok: true, e164: parsed.number };
+    if (parsed?.isValid() && parsed.country === c) {
+      return { ok: true, e164: parsed.number };
+    }
+  }
+  // Loose fallback: if no country claims it as their own, accept any country
+  // that says it's valid — better than rejecting a number the user can read
+  // and dial in their head.
+  for (const c of tryCountries) {
+    const parsed = parsePhoneNumberFromString(trimmed, c);
+    if (parsed?.isValid()) {
+      return { ok: true, e164: parsed.number };
+    }
   }
   return { ok: false, reason: `Could not parse phone "${trimmed}".` };
 }

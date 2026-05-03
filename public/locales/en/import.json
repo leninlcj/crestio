@@ -56,6 +56,9 @@
   "result": {
     "imported_n": "Imported {{count}} row",
     "imported_n_other": "Imported {{count}} rows",
+    "linked_n": "Linked to {{count}} existing household.",
+    "linked_n_other": "Linked to {{count}} existing households.",
+    "parents_hint": "Parent contact info is saved on each household. You can invite parents to sign in from the Parents page when you're ready.",
     "skipped_n": "{{count}} skipped",
     "skipped_n_other": "{{count}} skipped",
     "row_label": "Row {{row}}",

@@ -88,6 +88,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     archived_by: userId,
     archive_reason: body.reason ?? null,
   };
+  // students + tutors carry a legacy `archived` boolean column. Many list
+  // queries still filter on it (.eq('archived', false)) — keep the two in
+  // sync so soft-deleted rows actually disappear from list views without
+  // touching every call site. Restore mirrors this in /api/restore.
+  if (entityType === 'student' || entityType === 'tutor') {
+    updatePayload.archived = true;
+  }
 
   // households — older migrations don't have updated_at trigger; safe to skip.
   const { error: updErr } = await admin
@@ -138,6 +145,7 @@ async function applyCascade(
   const summary: Record<string, number> = {};
   const now = new Date().toISOString();
   const meta = { archived_at: now, archived_by: userId, archive_reason: reason };
+  const studentMeta = { ...meta, archived: true };
 
   if (entityType === 'household') {
     // Archive every student in these households.
@@ -148,7 +156,7 @@ async function applyCascade(
       .is('archived_at', null);
     const studentIds = (studentRows ?? []).map((s) => s.id);
     if (studentIds.length > 0) {
-      await admin.from('students').update(meta).in('id', studentIds);
+      await admin.from('students').update(studentMeta).in('id', studentIds);
       summary.students = studentIds.length;
       // Pause templates for those students.
       const { data: tplRows } = await admin

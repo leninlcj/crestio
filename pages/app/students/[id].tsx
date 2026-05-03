@@ -390,10 +390,25 @@ function StudentDetailInner() {
 
   async function deleteStudent() {
     if (!student) return;
-    const ok = window.confirm(`Delete ${student.name} permanently? This also deletes all of their sessions. This cannot be undone.`);
+    // Soft-delete: hide from default views but preserve session/invoice
+    // history. The unified /api/archive route stamps archived_at + archived_by
+    // and (for students) flips the legacy `archived` boolean too.
+    const ok = window.confirm(
+      `Delete ${student.name}? Their session history and invoices stay on file. You can restore them within 30 days from Settings → Archived.`,
+    );
     if (!ok) return;
-    const { error: err } = await supabase.from('students').delete().eq('id', student.id);
-    if (err) { setError(err.message); return; }
+    const { data: { session: auth } } = await supabase.auth.getSession();
+    if (!auth?.access_token) return;
+    const res = await fetch('/api/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.access_token}` },
+      body: JSON.stringify({ entity_type: 'student', ids: [student.id] }),
+    });
+    if (!res.ok) {
+      const payload = await res.json().catch(() => ({}));
+      setError(payload?.error ?? 'Could not delete student.');
+      return;
+    }
     router.push('/app/students');
   }
 

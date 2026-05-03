@@ -70,6 +70,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const updatePayload: Record<string, unknown> = from === 'archive'
     ? { archived_at: null, archived_by: null, archive_reason: null }
     : { deleted_at: null, deleted_by: null };
+  // Mirror /api/archive: keep the legacy `archived` boolean on students/tutors
+  // in sync so list views (.eq('archived', false)) re-show the row.
+  if (from === 'archive' && (entityType === 'student' || entityType === 'tutor')) {
+    updatePayload.archived = false;
+  }
 
   const { error: updErr } = await admin
     .from(spec.table)

@@ -73,6 +73,30 @@ function ParentsInner() {
     });
   }
 
+  async function deleteParent(p: ParentRow) {
+    // Soft-delete via /api/archive — keeps history (links revoke; no hard
+    // delete). Confirmation copy mirrors the student/household flow so the
+    // restore window is consistent.
+    const ok = window.confirm(
+      `Delete ${p.name ?? p.email}? Their session history and invoices stay on file. You can restore them within 30 days from Settings → Archived.`,
+    );
+    if (!ok) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return;
+    const res = await fetch('/api/archive', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ entity_type: 'parent', ids: [p.id] }),
+    });
+    if (!res.ok) {
+      const payload = await res.json().catch(() => ({}));
+      toast.show({ message: payload?.error ?? 'Could not delete parent.', tone: 'error' });
+      return;
+    }
+    setRows((rs) => rs.filter((r) => r.id !== p.id));
+    toast.show({ message: 'Parent deleted. Restore from Settings → Archived within 30 days.', tone: 'success' });
+  }
+
   async function inviteSelected() {
     const ids = Array.from(selected);
     const targets = rows.filter((r) => ids.includes(r.id) && !r.accepted && !r.invited);
@@ -98,7 +122,13 @@ function ParentsInner() {
   }
 
   return (
-    <Layout title="Parents" subtitle="People">
+    <Layout
+      title="Parents"
+      subtitle="People"
+      actions={
+        <Link href="/app/import?tab=households" className="btn-secondary text-xs">Import CSV</Link>
+      }
+    >
       <div className="flex flex-wrap items-center gap-3 mb-4" data-test-id="parents-toolbar">
         <input
           type="search"
@@ -208,6 +238,10 @@ function ParentsInner() {
                     Added {formatDate(p.created_at, { day: 'numeric', month: 'short' })}
                   </div>
                   <StatusPill tone={inviteTone as any}>{inviteLabel}</StatusPill>
+                  <RowKebab
+                    onDelete={() => deleteParent(p)}
+                    parentLabel={p.name ?? p.email}
+                  />
                 </li>
               );
             })}
@@ -226,6 +260,36 @@ function ParentsInner() {
         </button>
       </BulkActionBar>
     </Layout>
+  );
+}
+
+function RowKebab({ onDelete, parentLabel }: { onDelete: () => void; parentLabel: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
+      <button
+        type="button"
+        aria-label={`Actions for ${parentLabel}`}
+        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
+        className="h-7 w-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft hover:text-ink transition-colors"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} aria-hidden />
+          <div className="absolute right-0 top-8 z-40 min-w-[160px] card border border-rule rounded-md py-1 shadow-lift">
+            <button
+              type="button"
+              onClick={() => { setOpen(false); onDelete(); }}
+              className="block w-full text-left px-3 py-1.5 text-sm text-claret hover:bg-claret/8 transition-colors"
+            >
+              Delete
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

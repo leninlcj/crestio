@@ -56,6 +56,9 @@
   "result": {
     "imported_n": "{{count}} ligne importée",
     "imported_n_other": "{{count}} lignes importées",
+    "linked_n": "Associé à {{count}} foyer existant.",
+    "linked_n_other": "Associé à {{count}} foyers existants.",
+    "parents_hint": "Les coordonnées des parents sont enregistrées dans chaque foyer. Vous pouvez inviter les parents à se connecter depuis la page Parents quand vous êtes prêt.",
     "skipped_n": "{{count}} ignorée",
     "skipped_n_other": "{{count}} ignorées",
     "row_label": "Ligne {{row}}",
