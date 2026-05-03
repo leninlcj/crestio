@@ -35,7 +35,6 @@ type ImportResult = {
   imported: number;
   skipped: number;
   outcomes: RowOutcome[];
-  note?: string;
 };
 
 function ImportInner() {
@@ -206,7 +205,6 @@ function ImportInner() {
         imported: json.imported ?? 0,
         skipped: json.skipped ?? 0,
         outcomes: Array.isArray(json.outcomes) ? json.outcomes : [],
-        note: json.note,
       });
     } finally {
       setSubmitting(false);
@@ -256,11 +254,6 @@ function ImportInner() {
             <h2 className="font-display text-2xl tracking-tightest text-ink mb-2">
               {t('result.imported_n', { count: result.imported })}
             </h2>
-            {result.note === 'parent_records_not_created' && (
-              <div className="mt-2 mb-4 text-sm text-ink-muted bg-rule-soft border border-rule rounded p-3">
-                {t('result.parent_records_note')}
-              </div>
-            )}
             {result.outcomes.length > 0 && (
               <div className="mt-4">
                 <div className="text-2xs uppercase tracking-widest text-ink-muted mb-2">

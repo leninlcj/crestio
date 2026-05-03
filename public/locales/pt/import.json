@@ -63,7 +63,6 @@
     "download_errors": "Baixar relatório de erros",
     "back_to_students": "Voltar para alunos",
     "back_to_households": "Voltar para famílias",
-    "import_another": "Importar outro arquivo",
-    "parent_records_note": "As famílias foram criadas e os dados de contato do responsável foram salvos em cada família. Contas de responsável com acesso de login não são criadas automaticamente — convide os responsáveis a partir de uma família quando estiver pronto."
+    "import_another": "Importar outro arquivo"
   }
 }

@@ -63,7 +63,6 @@
     "download_errors": "Download error report",
     "back_to_students": "Back to students",
     "back_to_households": "Back to households",
-    "import_another": "Import another file",
-    "parent_records_note": "Households were created and parent contact info saved on each household. Parent accounts (with sign-in access) aren't created automatically — invite parents from a household when you're ready."
+    "import_another": "Import another file"
   }
 }

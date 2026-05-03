@@ -63,7 +63,6 @@
     "download_errors": "Télécharger le rapport d'erreurs",
     "back_to_students": "Retour aux élèves",
     "back_to_households": "Retour aux foyers",
-    "import_another": "Importer un autre fichier",
-    "parent_records_note": "Les foyers ont été créés et les coordonnées du parent enregistrées sur chaque foyer. Les comptes parents avec accès de connexion ne sont pas créés automatiquement — invitez les parents depuis un foyer lorsque vous êtes prêt."
+    "import_another": "Importer un autre fichier"
   }
 }

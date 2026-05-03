@@ -60,7 +60,6 @@
     "download_errors": "Unduh laporan kesalahan",
     "back_to_students": "Kembali ke siswa",
     "back_to_households": "Kembali ke keluarga",
-    "import_another": "Impor file lain",
-    "parent_records_note": "Keluarga dibuat dan info kontak orang tua disimpan pada setiap keluarga. Akun orang tua dengan akses login tidak dibuat otomatis — undang orang tua dari halaman keluarga saat Anda siap."
+    "import_another": "Impor file lain"
   }
 }

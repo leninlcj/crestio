@@ -63,7 +63,6 @@
     "download_errors": "Descargar informe de errores",
     "back_to_students": "Volver a estudiantes",
     "back_to_households": "Volver a familias",
-    "import_another": "Importar otro archivo",
-    "parent_records_note": "Las familias se crearon y los datos de contacto del padre/madre quedaron guardados en cada familia. Las cuentas de padre/madre con acceso de inicio de sesión no se crean automáticamente — invítalos desde una familia cuando estés listo."
+    "import_another": "Importar otro archivo"
   }
 }

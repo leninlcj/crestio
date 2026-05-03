@@ -4,15 +4,11 @@ import { getMembershipForUser } from '../../../lib/membership';
 import { isOrgBillingOk } from '../../../lib/billing';
 import { EMAIL_RE, normalisePhone, trimOrNull } from '../../../lib/csvImport';
 
-// Households + parents CSV import. The schema only allows creating parent
-// records that are tied to an auth.users row (parents.auth_user_id is NOT
-// NULL with FK to auth.users), and the founder explicitly told us NOT to
-// touch the signup flow. We therefore create the *household* and stash the
-// parent contact info on it: billing_email holds the parent's email, and
-// the rest (name, phone, billing address, preferred currency) is appended
-// to the household's notes column so nothing is lost. The founder can
-// invite parents via the existing invite flow later, and the records will
-// link up by email.
+// Households + parents CSV import. Creates a household row plus a real
+// parents row (with auth_user_id IS NULL until the parent signs up) and a
+// household_parents link between them. Parents are deduped by
+// (organization_id, lower(email)) — if a parent with that email already
+// exists in the org, we link to them instead of creating a duplicate.
 
 const PLAN_CAPS: Record<string, { perImport: number }> = {
   solo: { perImport: 50 },
@@ -102,17 +98,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const orgId = membership.organization_id;
 
-  const { data: existing } = await admin
+  // Pre-load existing households + parents in this org so dedupe is one
+  // round-trip rather than per-row queries.
+  const { data: existingHouseholds } = await admin
     .from('households')
     .select('id, display_name, billing_email')
     .eq('organization_id', orgId)
     .is('archived_at', null);
 
-  const existingByDisplayName = new Map<string, string>();
-  const existingByBillingEmail = new Map<string, string>();
-  for (const h of (existing ?? []) as Array<{ id: string; display_name: string; billing_email: string | null }>) {
-    existingByDisplayName.set(h.display_name.trim().toLowerCase(), h.id);
-    if (h.billing_email) existingByBillingEmail.set(h.billing_email.trim().toLowerCase(), h.id);
+  const existingHouseholdByName = new Map<string, string>();
+  for (const h of (existingHouseholds ?? []) as Array<{ id: string; display_name: string; billing_email: string | null }>) {
+    existingHouseholdByName.set(h.display_name.trim().toLowerCase(), h.id);
+  }
+
+  const { data: existingParents } = await admin
+    .from('parents')
+    .select('id, email')
+    .eq('organization_id', orgId);
+
+  const parentIdByEmail = new Map<string, string>();
+  for (const p of (existingParents ?? []) as Array<{ id: string; email: string | null }>) {
+    if (p.email) parentIdByEmail.set(p.email.trim().toLowerCase(), p.id);
   }
 
   // ---------------------------------------------------------------------------
@@ -173,11 +179,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     seenInFileByEmail.add(fileEmailKey);
     seenInFileByName.add(fileNameKey);
 
-    if (existingByBillingEmail.has(parentEmailRaw)) {
-      outcomes.push({ row: rowNum, reason: 'A household with this parent email already exists.', status: 'skipped' });
-      continue;
-    }
-    if (existingByDisplayName.has(fileNameKey)) {
+    if (existingHouseholdByName.has(fileNameKey)) {
       outcomes.push({ row: rowNum, reason: 'A household with this name already exists.', status: 'skipped' });
       continue;
     }
@@ -194,88 +196,154 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (staged.length === 0) {
-    return res.status(200).json({
-      imported: 0,
-      skipped: outcomes.length,
-      outcomes,
-      note: 'parent_records_not_created',
-    });
+    return res.status(200).json({ imported: 0, skipped: outcomes.length, outcomes });
   }
 
   // ---------------------------------------------------------------------------
-  // Insert in batches of 100 — partial success is acceptable. parents.auth_user_id
-  // is NOT NULL (FK -> auth.users), so we deliberately do NOT insert into
-  // parents here; the parent_name / phone / address / currency get folded
-  // into households.notes for now. The founder can invite parents through
-  // the existing flow later — that path creates the auth.users row, the
-  // parents row, and links them via email.
+  // Resolve parents up-front: any new emails get a fresh parents row
+  // (auth_user_id NULL); known emails reuse the existing row. Done in one
+  // batch so each unique email yields exactly one parent record.
   // ---------------------------------------------------------------------------
+  const newParentRows: Array<{ email: string; name: string; phone: string | null }> = [];
+  const stagedEmailsNeedingParent = new Set<string>();
+  for (const s of staged) {
+    if (parentIdByEmail.has(s.parent_email)) continue;
+    if (stagedEmailsNeedingParent.has(s.parent_email)) continue;
+    stagedEmailsNeedingParent.add(s.parent_email);
+    newParentRows.push({
+      email: s.parent_email,
+      name: s.parent_name,
+      phone: s.parent_phone,
+    });
+  }
 
+  if (newParentRows.length > 0) {
+    const payload = newParentRows.map((p) => ({
+      organization_id: orgId,
+      auth_user_id: null,
+      email: p.email,
+      name: p.name,
+      phone: p.phone,
+    }));
+    const { data: created, error: pErr } = await admin
+      .from('parents')
+      .insert(payload)
+      .select('id, email');
+    if (pErr) {
+      console.error('[import/households] parent create failed', pErr);
+      return res.status(500).json({ error: pErr.message });
+    }
+    for (const p of (created ?? []) as Array<{ id: string; email: string | null }>) {
+      if (p.email) parentIdByEmail.set(p.email.trim().toLowerCase(), p.id);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Insert households in batches of 100. For each successfully created
+  // household, create a household_parents link to the resolved parent. A
+  // failing batch falls back to per-row inserts so one bad row doesn't sink
+  // the whole batch.
+  // ---------------------------------------------------------------------------
   let importedCount = 0;
   for (let i = 0; i < staged.length; i += BATCH_SIZE) {
     const slice = staged.slice(i, i + BATCH_SIZE);
-    const payload = slice.map((s) => ({
+    const householdPayload = slice.map((s) => ({
       organization_id: orgId,
       display_name: s.household_name,
       billing_email: s.parent_email,
-      notes: composeNotes(s),
+      billing_address: s.billing_address,
+      preferred_currency: s.preferred_currency,
     }));
-    const { data: inserted, error: insertErr } = await admin
+    const { data: insertedHouseholds, error: insertErr } = await admin
       .from('households')
-      .insert(payload)
-      .select('id');
-    if (!insertErr) {
-      importedCount += inserted?.length ?? 0;
+      .insert(householdPayload)
+      .select('id, display_name, billing_email');
+
+    if (insertErr) {
+      console.warn('[import/households] batch failed, falling back to per-row', insertErr.message);
+      importedCount += await fallbackPerRowInsert(admin, orgId, slice, parentIdByEmail, outcomes);
       continue;
     }
-    console.warn('[import/households] batch failed, falling back to per-row', insertErr.message);
-    importedCount += await fallbackPerRowInsert(admin, orgId, slice, outcomes);
+
+    const links: Array<{ household_id: string; parent_id: string; is_primary: boolean }> = [];
+    for (const h of (insertedHouseholds ?? []) as Array<{ id: string; display_name: string; billing_email: string | null }>) {
+      const email = (h.billing_email ?? '').trim().toLowerCase();
+      const parentId = email ? parentIdByEmail.get(email) : null;
+      if (!parentId) continue;
+      links.push({ household_id: h.id, parent_id: parentId, is_primary: true });
+    }
+    if (links.length > 0) {
+      const { error: linkErr } = await admin
+        .from('household_parents')
+        .insert(links);
+      if (linkErr) {
+        console.error('[import/households] household_parents link insert failed', linkErr);
+        // Households were created — surface the link failure but don't
+        // double-count those as imported. Mark the affected rows as failed
+        // so the user notices and can re-link manually.
+        for (const s of slice) {
+          outcomes.push({
+            row: s.row,
+            reason: `Household created but parent link failed: ${linkErr.message}`,
+            status: 'failed',
+          });
+        }
+        continue;
+      }
+    }
+    importedCount += insertedHouseholds?.length ?? 0;
   }
 
   return res.status(200).json({
     imported: importedCount,
     skipped: outcomes.length,
     outcomes,
-    note: 'parent_records_not_created',
   });
-}
-
-function composeNotes(s: StagedRow): string {
-  const lines: string[] = [];
-  lines.push(`Primary contact: ${s.parent_name}`);
-  if (s.parent_phone) lines.push(`Phone: ${s.parent_phone}`);
-  if (s.billing_address) lines.push(`Billing address: ${s.billing_address}`);
-  if (s.preferred_currency) lines.push(`Preferred currency: ${s.preferred_currency}`);
-  return lines.join('\n');
 }
 
 async function fallbackPerRowInsert(
   admin: SupabaseClient,
   orgId: string,
   slice: StagedRow[],
+  parentIdByEmail: Map<string, string>,
   outcomes: RowOutcome[],
 ): Promise<number> {
   let imported = 0;
   for (const s of slice) {
-    const { error } = await admin
+    const { data: household, error } = await admin
       .from('households')
       .insert({
         organization_id: orgId,
         display_name: s.household_name,
         billing_email: s.parent_email,
-        notes: composeNotes(s),
+        billing_address: s.billing_address,
+        preferred_currency: s.preferred_currency,
       })
       .select('id')
       .single();
-    if (error) {
+    if (error || !household) {
       outcomes.push({
         row: s.row,
-        reason: `Database error: ${error.message}`,
+        reason: `Database error: ${error?.message ?? 'unknown'}`,
         status: 'failed',
       });
-    } else {
-      imported++;
+      continue;
     }
+    const parentId = parentIdByEmail.get(s.parent_email);
+    if (parentId) {
+      const { error: linkErr } = await admin
+        .from('household_parents')
+        .insert({ household_id: household.id, parent_id: parentId, is_primary: true });
+      if (linkErr) {
+        outcomes.push({
+          row: s.row,
+          reason: `Household created but parent link failed: ${linkErr.message}`,
+          status: 'failed',
+        });
+        continue;
+      }
+    }
+    imported++;
   }
   return imported;
 }
