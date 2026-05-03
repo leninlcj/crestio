@@ -100,15 +100,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .limit(30),
   );
 
-  // Unbilled math needs two queries: completed sessions in the lookback window,
-  // plus every invoice's issued_on per student.
+  // Unbilled math reads from the unbilled_completed_sessions view so the
+  // Home tile and the Batch invoice page never disagree (ph7d 1.6).
   const unbilledSessionsQ = scopeTutor(
     userClient
-      .from('sessions')
-      .select('id, scheduled_at, duration_minutes, subject, student:students!inner(id, name, hourly_rate_cents, household_id, is_test_record)')
+      .from('unbilled_completed_sessions')
+      .select('id, scheduled_at, duration_minutes, subject, tutor_user_id, student:students!inner(id, name, hourly_rate_cents, household_id, is_test_record)')
       .eq('organization_id', orgId)
-      .eq('status', 'completed')
-      .is('invoice_id', null)
       .gte('scheduled_at', invoiceCutoff)
       .order('scheduled_at', { ascending: true }),
   );
@@ -495,14 +493,9 @@ async function computeInvoicingQueue(
 ): Promise<InvoicingEntry[]> {
   if (unbilledSessions.length === 0) return [];
 
-  // Drop sessions already moved to batch invoices via invoice_sessions (the
-  // new link path). Legacy per-student invoices use sessions.invoice_id which
-  // is already filtered in the query above.
-  const sessionIds = unbilledSessions.map((s) => s.id);
-  const { data: already } = await client
-    .from('invoice_sessions').select('session_id').in('session_id', sessionIds);
-  const alreadySet = new Set(((already ?? []) as any[]).map((r) => r.session_id));
-  unbilledSessions = unbilledSessions.filter((s) => !alreadySet.has(s.id) && !s.student?.is_test_record);
+  // The view already excludes invoice_sessions, but test records still need
+  // to be filtered out — the view doesn't carry the is_test_record flag.
+  unbilledSessions = unbilledSessions.filter((s) => !s.student?.is_test_record);
   if (unbilledSessions.length === 0) return [];
 
   const studentIds = Array.from(new Set(unbilledSessions.map((s) => s.student?.id).filter(Boolean)));

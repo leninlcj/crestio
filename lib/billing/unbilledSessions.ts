@@ -23,9 +23,14 @@ export type GetUnbilledOptions = {
 };
 
 // Returns completed sessions in the period that are not yet on any invoice.
-// Old per-student invoicing attached sessions via sessions.invoice_id;
-// batch invoicing attaches via invoice_sessions. A session counts as "on an
-// invoice" if either link is present.
+// Reads from the public.unbilled_completed_sessions view so the Home tile and
+// the Batch invoice page agree on the same definition of "unbilled":
+//   * status = 'completed'
+//   * not soft-deleted
+//   * not on the legacy sessions.invoice_id link
+//   * not on the batch invoice_sessions join table
+// Test records are filtered post-query because the view doesn't carry the
+// student.is_test_record flag.
 export async function getUnbilledSessions(
   admin: SupabaseClient,
   options: GetUnbilledOptions,
@@ -33,13 +38,11 @@ export async function getUnbilledSessions(
   const { organizationId, periodStart, periodEnd, tutorUserId } = options;
 
   let q = admin
-    .from('sessions')
+    .from('unbilled_completed_sessions')
     .select(
-      'id, scheduled_at, duration_minutes, subject, topic, charge_rate_cents, student_id, invoice_id, student:students!inner(id, name, hourly_rate_cents, household_id, is_test_record)'
+      'id, scheduled_at, duration_minutes, subject, topic, charge_rate_cents, student_id, invoice_id, tutor_user_id, organization_id, student:students!inner(id, name, hourly_rate_cents, household_id, is_test_record)'
     )
     .eq('organization_id', organizationId)
-    .eq('status', 'completed')
-    .is('invoice_id', null)
     .gte('scheduled_at', periodStart.toISOString())
     .lt('scheduled_at', periodEnd.toISOString())
     .order('scheduled_at', { ascending: true });
@@ -51,18 +54,8 @@ export async function getUnbilledSessions(
   const all = (rows ?? []) as any[];
   if (all.length === 0) return [];
 
-  // Exclude any sessions that made it onto invoice_sessions via batch flow.
-  const ids = all.map((s) => s.id);
-  const { data: already } = await admin
-    .from('invoice_sessions')
-    .select('session_id')
-    .in('session_id', ids);
-  const excluded = new Set(((already ?? []) as any[]).map((r) => r.session_id));
-
   const result: UnbilledSession[] = [];
   for (const s of all) {
-    if (excluded.has(s.id)) continue;
-    // Skip test records — batch invoicing never bills test data.
     if (s.student?.is_test_record) continue;
     const rateCents =
       s.charge_rate_cents ?? s.student?.hourly_rate_cents ?? null;
