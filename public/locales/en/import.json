@@ -1,0 +1,69 @@
+{
+  "page_title": "Import data",
+  "page_subtitle": "Bring your students and households over from a spreadsheet.",
+  "owner_only": "Only the organisation owner can run a bulk import.",
+  "tab": {
+    "students": "Students",
+    "households": "Households + parents"
+  },
+  "drop": {
+    "headline": "Drop a CSV here, or click to upload",
+    "hint": "CSV or TSV. Up to 10 MB. We'll auto-detect the delimiter and ignore any extra columns.",
+    "template_prompt": "Need a starting point?",
+    "template_link": "Download the template"
+  },
+  "field": {
+    "name": "Student name",
+    "household_name": "Household name",
+    "subjects": "Subjects",
+    "year_level": "Year / grade",
+    "pay_rate_dollars": "Pay rate (per hour)",
+    "notes": "Notes",
+    "parent_name": "Parent name",
+    "parent_email": "Parent email",
+    "parent_phone": "Parent phone",
+    "billing_address": "Billing address",
+    "preferred_currency": "Preferred currency"
+  },
+  "mapping": {
+    "headline": "Map your columns",
+    "required_label": "Required:",
+    "skip": "— Skip this column —",
+    "column_n": "(column {{n}})",
+    "missing": "Map a column to: {{fields}}."
+  },
+  "preview": {
+    "headline": "Preview",
+    "summary": "Showing the first {{shown}} of {{total}} rows. {{valid}} valid, {{invalid}} with issues.",
+    "show_errors": "Show issues ({{count}})"
+  },
+  "actions": {
+    "importing": "Importing…",
+    "import_n_valid": "Import {{count}} row",
+    "import_n_valid_other": "Import {{count}} rows",
+    "use_different_file": "Use a different file"
+  },
+  "errors": {
+    "too_big": "File is {{mb}}MB — max is {{max}}MB.",
+    "parse_failed": "Could not parse the file: {{reason}}.",
+    "empty": "The file looks empty.",
+    "no_columns": "The file has no columns.",
+    "not_signed_in": "You're not signed in.",
+    "commit_failed": "Import failed.",
+    "missing_required": "Missing required: {{fields}}.",
+    "bad_email": "Invalid email: \"{{email}}\"."
+  },
+  "result": {
+    "imported_n": "Imported {{count}} row",
+    "imported_n_other": "Imported {{count}} rows",
+    "skipped_n": "{{count}} skipped",
+    "skipped_n_other": "{{count}} skipped",
+    "row_label": "Row {{row}}",
+    "and_more": "… and {{count}} more",
+    "download_errors": "Download error report",
+    "back_to_students": "Back to students",
+    "back_to_households": "Back to households",
+    "import_another": "Import another file",
+    "parent_records_note": "Households were created and parent contact info saved on each household. Parent accounts (with sign-in access) aren't created automatically — invite parents from a household when you're ready."
+  }
+}

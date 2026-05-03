@@ -1,0 +1,69 @@
+{
+  "page_title": "ڈیٹا درآمد کریں",
+  "page_subtitle": "اپنے طلبہ اور گھرانوں کو اسپریڈ شیٹ سے یہاں لائیں۔",
+  "owner_only": "صرف ادارے کا مالک بلک امپورٹ چلا سکتا ہے۔",
+  "tab": {
+    "students": "طلبہ",
+    "households": "گھرانے اور والدین"
+  },
+  "drop": {
+    "headline": "یہاں CSV چھوڑیں یا اپ لوڈ کے لیے کلک کریں",
+    "hint": "CSV یا TSV، زیادہ سے زیادہ 10 MB۔ ہم خود بخود الگ کنندہ کا پتہ لگاتے ہیں اور اضافی کالم نظر انداز کرتے ہیں۔",
+    "template_prompt": "ابتدائی نمونہ چاہیے؟",
+    "template_link": "ٹیمپلیٹ ڈاؤن لوڈ کریں"
+  },
+  "field": {
+    "name": "طالبعلم کا نام",
+    "household_name": "گھرانے کا نام",
+    "subjects": "مضامین",
+    "year_level": "سال / جماعت",
+    "pay_rate_dollars": "فی گھنٹہ معاوضہ",
+    "notes": "نوٹس",
+    "parent_name": "والدین کا نام",
+    "parent_email": "والدین کا ای میل",
+    "parent_phone": "والدین کا فون",
+    "billing_address": "بلنگ پتہ",
+    "preferred_currency": "ترجیحی کرنسی"
+  },
+  "mapping": {
+    "headline": "اپنے کالم میپ کریں",
+    "required_label": "لازمی:",
+    "skip": "— اس کالم کو چھوڑیں —",
+    "column_n": "(کالم {{n}})",
+    "missing": "ایک کالم کو میپ کریں: {{fields}}۔"
+  },
+  "preview": {
+    "headline": "پیش منظر",
+    "summary": "{{total}} میں سے پہلی {{shown}} سطریں دکھائی جارہی ہیں۔ {{valid}} درست، {{invalid}} میں مسائل۔",
+    "show_errors": "مسائل دکھائیں ({{count}})"
+  },
+  "actions": {
+    "importing": "درآمد جاری ہے…",
+    "import_n_valid": "{{count}} سطر درآمد کریں",
+    "import_n_valid_other": "{{count}} سطریں درآمد کریں",
+    "use_different_file": "کوئی اور فائل منتخب کریں"
+  },
+  "errors": {
+    "too_big": "فائل کا سائز {{mb}}MB ہے — زیادہ سے زیادہ {{max}}MB۔",
+    "parse_failed": "فائل پڑھی نہیں جا سکی: {{reason}}۔",
+    "empty": "فائل خالی لگتی ہے۔",
+    "no_columns": "فائل میں کوئی کالم نہیں ہیں۔",
+    "not_signed_in": "آپ سائن ان نہیں ہیں۔",
+    "commit_failed": "درآمد ناکام رہی۔",
+    "missing_required": "لازمی فیلڈز غائب: {{fields}}۔",
+    "bad_email": "غلط ای میل: \"{{email}}\"۔"
+  },
+  "result": {
+    "imported_n": "{{count}} سطر درآمد ہوئی",
+    "imported_n_other": "{{count}} سطریں درآمد ہوئیں",
+    "skipped_n": "{{count}} چھوڑی گئی",
+    "skipped_n_other": "{{count}} چھوڑی گئیں",
+    "row_label": "سطر {{row}}",
+    "and_more": "… اور {{count}} مزید",
+    "download_errors": "نقص کی رپورٹ ڈاؤن لوڈ کریں",
+    "back_to_students": "طلبہ پر واپس",
+    "back_to_households": "گھرانوں پر واپس",
+    "import_another": "ایک اور فائل درآمد کریں",
+    "parent_records_note": "گھرانے بنا دیے گئے اور ہر گھرانے میں والدین کی رابطہ معلومات محفوظ کر دی گئی۔ سائن ان رسائی والے والدین اکاؤنٹس خودکار طور پر نہیں بنتے — جب تیار ہوں تو گھرانے سے والدین کو دعوت دیں۔"
+  }
+}

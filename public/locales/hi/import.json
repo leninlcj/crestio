@@ -1,0 +1,69 @@
+{
+  "page_title": "डेटा आयात करें",
+  "page_subtitle": "अपने छात्रों और परिवारों को स्प्रेडशीट से ले आएं।",
+  "owner_only": "केवल संगठन का स्वामी ही बल्क आयात चला सकता है।",
+  "tab": {
+    "students": "छात्र",
+    "households": "परिवार और अभिभावक"
+  },
+  "drop": {
+    "headline": "यहाँ CSV ड्रॉप करें, या अपलोड करने के लिए क्लिक करें",
+    "hint": "CSV या TSV, अधिकतम 10 MB। हम विभाजक स्वतः पहचान लेते हैं और अतिरिक्त कॉलम अनदेखा कर देते हैं।",
+    "template_prompt": "शुरुआती बिंदु चाहिए?",
+    "template_link": "टेम्पलेट डाउनलोड करें"
+  },
+  "field": {
+    "name": "छात्र का नाम",
+    "household_name": "परिवार का नाम",
+    "subjects": "विषय",
+    "year_level": "कक्षा / वर्ष",
+    "pay_rate_dollars": "प्रति घंटा दर",
+    "notes": "टिप्पणियाँ",
+    "parent_name": "अभिभावक का नाम",
+    "parent_email": "अभिभावक का ईमेल",
+    "parent_phone": "अभिभावक का फ़ोन",
+    "billing_address": "बिलिंग पता",
+    "preferred_currency": "पसंदीदा मुद्रा"
+  },
+  "mapping": {
+    "headline": "अपने कॉलम मैप करें",
+    "required_label": "आवश्यक:",
+    "skip": "— इस कॉलम को छोड़ें —",
+    "column_n": "(कॉलम {{n}})",
+    "missing": "किसी कॉलम को मैप करें: {{fields}}।"
+  },
+  "preview": {
+    "headline": "पूर्वावलोकन",
+    "summary": "{{total}} में से पहली {{shown}} पंक्तियाँ दिखा रहे हैं। {{valid}} सही, {{invalid}} में समस्या।",
+    "show_errors": "समस्याएँ दिखाएँ ({{count}})"
+  },
+  "actions": {
+    "importing": "आयात हो रहा है…",
+    "import_n_valid": "{{count}} पंक्ति आयात करें",
+    "import_n_valid_other": "{{count}} पंक्तियाँ आयात करें",
+    "use_different_file": "दूसरी फ़ाइल चुनें"
+  },
+  "errors": {
+    "too_big": "फ़ाइल का आकार {{mb}}MB है — अधिकतम सीमा {{max}}MB।",
+    "parse_failed": "फ़ाइल पढ़ी नहीं जा सकी: {{reason}}।",
+    "empty": "फ़ाइल खाली लगती है।",
+    "no_columns": "फ़ाइल में कोई कॉलम नहीं हैं।",
+    "not_signed_in": "आप साइन इन नहीं हैं।",
+    "commit_failed": "आयात विफल।",
+    "missing_required": "आवश्यक फ़ील्ड गायब: {{fields}}।",
+    "bad_email": "अमान्य ईमेल: \"{{email}}\"।"
+  },
+  "result": {
+    "imported_n": "{{count}} पंक्ति आयात की गई",
+    "imported_n_other": "{{count}} पंक्तियाँ आयात की गईं",
+    "skipped_n": "{{count}} छोड़ी गई",
+    "skipped_n_other": "{{count}} छोड़ी गईं",
+    "row_label": "पंक्ति {{row}}",
+    "and_more": "… और {{count}} अन्य",
+    "download_errors": "त्रुटि रिपोर्ट डाउनलोड करें",
+    "back_to_students": "छात्रों पर वापस जाएँ",
+    "back_to_households": "परिवारों पर वापस जाएँ",
+    "import_another": "एक और फ़ाइल आयात करें",
+    "parent_records_note": "परिवार बना दिए गए और अभिभावक का संपर्क विवरण प्रत्येक परिवार पर सहेजा गया। साइन-इन एक्सेस वाले अभिभावक खाते स्वतः नहीं बनाए जाते — तैयार होने पर अभिभावक को परिवार से आमंत्रित करें।"
+  }
+}

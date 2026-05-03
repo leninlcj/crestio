@@ -1,0 +1,69 @@
+{
+  "page_title": "استيراد البيانات",
+  "page_subtitle": "انقل طلابك والعائلات من جدول بيانات.",
+  "owner_only": "يمكن لمالك المؤسسة فقط تشغيل استيراد جماعي.",
+  "tab": {
+    "students": "الطلاب",
+    "households": "العائلات وأولياء الأمور"
+  },
+  "drop": {
+    "headline": "أفلت ملف CSV هنا، أو انقر للتحميل",
+    "hint": "CSV أو TSV، حتى 10 ميغابايت. نكتشف الفاصل تلقائيًا ونتجاهل الأعمدة الإضافية.",
+    "template_prompt": "تحتاج إلى نقطة بداية؟",
+    "template_link": "تنزيل القالب"
+  },
+  "field": {
+    "name": "اسم الطالب",
+    "household_name": "اسم العائلة",
+    "subjects": "المواد",
+    "year_level": "السنة / الصف",
+    "pay_rate_dollars": "الأجر بالساعة",
+    "notes": "ملاحظات",
+    "parent_name": "اسم ولي الأمر",
+    "parent_email": "بريد ولي الأمر",
+    "parent_phone": "هاتف ولي الأمر",
+    "billing_address": "عنوان الفوترة",
+    "preferred_currency": "العملة المفضلة"
+  },
+  "mapping": {
+    "headline": "اربط أعمدتك",
+    "required_label": "إلزامي:",
+    "skip": "— تخطَّ هذا العمود —",
+    "column_n": "(العمود {{n}})",
+    "missing": "اربط عمودًا بـ: {{fields}}."
+  },
+  "preview": {
+    "headline": "معاينة",
+    "summary": "نعرض أول {{shown}} من أصل {{total}} صفًا. {{valid}} صحيحة، {{invalid}} بها مشكلات.",
+    "show_errors": "إظهار المشكلات ({{count}})"
+  },
+  "actions": {
+    "importing": "جارٍ الاستيراد…",
+    "import_n_valid": "استيراد {{count}} صف",
+    "import_n_valid_other": "استيراد {{count}} صفوف",
+    "use_different_file": "استخدم ملفًا آخر"
+  },
+  "errors": {
+    "too_big": "حجم الملف {{mb}}م.ب — الحد الأقصى {{max}}م.ب.",
+    "parse_failed": "تعذّر قراءة الملف: {{reason}}.",
+    "empty": "يبدو أن الملف فارغ.",
+    "no_columns": "لا توجد أعمدة في الملف.",
+    "not_signed_in": "لم تسجّل الدخول.",
+    "commit_failed": "فشل الاستيراد.",
+    "missing_required": "حقول إلزامية مفقودة: {{fields}}.",
+    "bad_email": "بريد إلكتروني غير صالح: \"{{email}}\"."
+  },
+  "result": {
+    "imported_n": "تم استيراد {{count}} صف",
+    "imported_n_other": "تم استيراد {{count}} صفوف",
+    "skipped_n": "{{count}} متجاهل",
+    "skipped_n_other": "{{count}} متجاهلة",
+    "row_label": "صف {{row}}",
+    "and_more": "… و{{count}} أخرى",
+    "download_errors": "تنزيل تقرير الأخطاء",
+    "back_to_students": "العودة إلى الطلاب",
+    "back_to_households": "العودة إلى العائلات",
+    "import_another": "استيراد ملف آخر",
+    "parent_records_note": "تم إنشاء العائلات وحُفظت بيانات اتصال ولي الأمر على كل عائلة. لا يتم إنشاء حسابات أولياء الأمور بصلاحية تسجيل الدخول تلقائيًا — ادعُهم من العائلة عندما تكون مستعدًا."
+  }
+}

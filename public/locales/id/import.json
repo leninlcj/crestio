@@ -1,0 +1,66 @@
+{
+  "page_title": "Impor data",
+  "page_subtitle": "Pindahkan siswa dan keluarga Anda dari spreadsheet.",
+  "owner_only": "Hanya pemilik organisasi yang dapat menjalankan impor massal.",
+  "tab": {
+    "students": "Siswa",
+    "households": "Keluarga + orang tua"
+  },
+  "drop": {
+    "headline": "Letakkan file CSV di sini, atau klik untuk mengunggah",
+    "hint": "CSV atau TSV, maksimum 10 MB. Kami mendeteksi pemisah secara otomatis dan mengabaikan kolom tambahan.",
+    "template_prompt": "Perlu titik awal?",
+    "template_link": "Unduh templat"
+  },
+  "field": {
+    "name": "Nama siswa",
+    "household_name": "Nama keluarga",
+    "subjects": "Mata pelajaran",
+    "year_level": "Kelas / tingkat",
+    "pay_rate_dollars": "Tarif per jam",
+    "notes": "Catatan",
+    "parent_name": "Nama orang tua",
+    "parent_email": "Email orang tua",
+    "parent_phone": "Telepon orang tua",
+    "billing_address": "Alamat penagihan",
+    "preferred_currency": "Mata uang pilihan"
+  },
+  "mapping": {
+    "headline": "Petakan kolom Anda",
+    "required_label": "Wajib:",
+    "skip": "— Lewati kolom ini —",
+    "column_n": "(kolom {{n}})",
+    "missing": "Petakan kolom ke: {{fields}}."
+  },
+  "preview": {
+    "headline": "Pratinjau",
+    "summary": "Menampilkan {{shown}} pertama dari {{total}} baris. {{valid}} valid, {{invalid}} bermasalah.",
+    "show_errors": "Tampilkan masalah ({{count}})"
+  },
+  "actions": {
+    "importing": "Mengimpor…",
+    "import_n_valid": "Impor {{count}} baris",
+    "use_different_file": "Pakai file lain"
+  },
+  "errors": {
+    "too_big": "Ukuran file {{mb}}MB — batas maksimum {{max}}MB.",
+    "parse_failed": "File tidak dapat dibaca: {{reason}}.",
+    "empty": "File tampak kosong.",
+    "no_columns": "File tidak memiliki kolom.",
+    "not_signed_in": "Anda belum masuk.",
+    "commit_failed": "Impor gagal.",
+    "missing_required": "Kolom wajib hilang: {{fields}}.",
+    "bad_email": "Email tidak valid: \"{{email}}\"."
+  },
+  "result": {
+    "imported_n": "{{count}} baris diimpor",
+    "skipped_n": "{{count}} dilewati",
+    "row_label": "Baris {{row}}",
+    "and_more": "… dan {{count}} lainnya",
+    "download_errors": "Unduh laporan kesalahan",
+    "back_to_students": "Kembali ke siswa",
+    "back_to_households": "Kembali ke keluarga",
+    "import_another": "Impor file lain",
+    "parent_records_note": "Keluarga dibuat dan info kontak orang tua disimpan pada setiap keluarga. Akun orang tua dengan akses login tidak dibuat otomatis — undang orang tua dari halaman keluarga saat Anda siap."
+  }
+}

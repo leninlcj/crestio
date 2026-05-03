@@ -1,0 +1,69 @@
+{
+  "page_title": "Importer des données",
+  "page_subtitle": "Importez vos élèves et foyers depuis une feuille de calcul.",
+  "owner_only": "Seul le propriétaire de l'organisation peut lancer un import en masse.",
+  "tab": {
+    "students": "Élèves",
+    "households": "Foyers + parents"
+  },
+  "drop": {
+    "headline": "Déposez un CSV ici, ou cliquez pour téléverser",
+    "hint": "CSV ou TSV. Jusqu'à 10 Mo. Nous détectons le séparateur automatiquement et ignorons les colonnes en trop.",
+    "template_prompt": "Besoin d'un point de départ ?",
+    "template_link": "Télécharger le modèle"
+  },
+  "field": {
+    "name": "Nom de l'élève",
+    "household_name": "Nom du foyer",
+    "subjects": "Matières",
+    "year_level": "Année / niveau",
+    "pay_rate_dollars": "Tarif horaire",
+    "notes": "Notes",
+    "parent_name": "Nom du parent",
+    "parent_email": "E-mail du parent",
+    "parent_phone": "Téléphone du parent",
+    "billing_address": "Adresse de facturation",
+    "preferred_currency": "Devise préférée"
+  },
+  "mapping": {
+    "headline": "Associez vos colonnes",
+    "required_label": "Obligatoire :",
+    "skip": "— Ignorer cette colonne —",
+    "column_n": "(colonne {{n}})",
+    "missing": "Associez une colonne à : {{fields}}."
+  },
+  "preview": {
+    "headline": "Aperçu",
+    "summary": "{{shown}} premières lignes sur {{total}}. {{valid}} valides, {{invalid}} avec problèmes.",
+    "show_errors": "Afficher les problèmes ({{count}})"
+  },
+  "actions": {
+    "importing": "Import en cours…",
+    "import_n_valid": "Importer {{count}} ligne",
+    "import_n_valid_other": "Importer {{count}} lignes",
+    "use_different_file": "Utiliser un autre fichier"
+  },
+  "errors": {
+    "too_big": "Fichier de {{mb}} Mo — la limite est {{max}} Mo.",
+    "parse_failed": "Impossible de lire le fichier : {{reason}}.",
+    "empty": "Le fichier semble vide.",
+    "no_columns": "Le fichier n'a pas de colonnes.",
+    "not_signed_in": "Vous n'êtes pas connecté.",
+    "commit_failed": "L'import a échoué.",
+    "missing_required": "Champs obligatoires manquants : {{fields}}.",
+    "bad_email": "E-mail non valide : « {{email}} »."
+  },
+  "result": {
+    "imported_n": "{{count}} ligne importée",
+    "imported_n_other": "{{count}} lignes importées",
+    "skipped_n": "{{count}} ignorée",
+    "skipped_n_other": "{{count}} ignorées",
+    "row_label": "Ligne {{row}}",
+    "and_more": "… et {{count}} de plus",
+    "download_errors": "Télécharger le rapport d'erreurs",
+    "back_to_students": "Retour aux élèves",
+    "back_to_households": "Retour aux foyers",
+    "import_another": "Importer un autre fichier",
+    "parent_records_note": "Les foyers ont été créés et les coordonnées du parent enregistrées sur chaque foyer. Les comptes parents avec accès de connexion ne sont pas créés automatiquement — invitez les parents depuis un foyer lorsque vous êtes prêt."
+  }
+}

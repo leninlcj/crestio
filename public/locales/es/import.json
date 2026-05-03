@@ -1,0 +1,69 @@
+{
+  "page_title": "Importar datos",
+  "page_subtitle": "Trae a tus estudiantes y familias desde una hoja de cálculo.",
+  "owner_only": "Solo el propietario de la organización puede ejecutar una importación masiva.",
+  "tab": {
+    "students": "Estudiantes",
+    "households": "Familias + padres"
+  },
+  "drop": {
+    "headline": "Suelta un CSV aquí o haz clic para subir uno",
+    "hint": "CSV o TSV. Hasta 10 MB. Detectamos el delimitador automáticamente e ignoramos columnas extra.",
+    "template_prompt": "¿Necesitas un punto de partida?",
+    "template_link": "Descargar la plantilla"
+  },
+  "field": {
+    "name": "Nombre del estudiante",
+    "household_name": "Nombre de la familia",
+    "subjects": "Materias",
+    "year_level": "Año / grado",
+    "pay_rate_dollars": "Tarifa por hora",
+    "notes": "Notas",
+    "parent_name": "Nombre del padre/madre",
+    "parent_email": "Correo del padre/madre",
+    "parent_phone": "Teléfono del padre/madre",
+    "billing_address": "Dirección de facturación",
+    "preferred_currency": "Moneda preferida"
+  },
+  "mapping": {
+    "headline": "Asigna tus columnas",
+    "required_label": "Obligatorio:",
+    "skip": "— Omitir esta columna —",
+    "column_n": "(columna {{n}})",
+    "missing": "Asigna una columna a: {{fields}}."
+  },
+  "preview": {
+    "headline": "Vista previa",
+    "summary": "Mostrando las primeras {{shown}} de {{total}} filas. {{valid}} válidas, {{invalid}} con problemas.",
+    "show_errors": "Mostrar problemas ({{count}})"
+  },
+  "actions": {
+    "importing": "Importando…",
+    "import_n_valid": "Importar {{count}} fila",
+    "import_n_valid_other": "Importar {{count}} filas",
+    "use_different_file": "Usar otro archivo"
+  },
+  "errors": {
+    "too_big": "El archivo pesa {{mb}}MB — el máximo es {{max}}MB.",
+    "parse_failed": "No se pudo leer el archivo: {{reason}}.",
+    "empty": "El archivo parece vacío.",
+    "no_columns": "El archivo no tiene columnas.",
+    "not_signed_in": "No has iniciado sesión.",
+    "commit_failed": "La importación falló.",
+    "missing_required": "Faltan campos obligatorios: {{fields}}.",
+    "bad_email": "Correo no válido: \"{{email}}\"."
+  },
+  "result": {
+    "imported_n": "Importada {{count}} fila",
+    "imported_n_other": "Importadas {{count}} filas",
+    "skipped_n": "{{count}} omitida",
+    "skipped_n_other": "{{count}} omitidas",
+    "row_label": "Fila {{row}}",
+    "and_more": "… y {{count}} más",
+    "download_errors": "Descargar informe de errores",
+    "back_to_students": "Volver a estudiantes",
+    "back_to_households": "Volver a familias",
+    "import_another": "Importar otro archivo",
+    "parent_records_note": "Las familias se crearon y los datos de contacto del padre/madre quedaron guardados en cada familia. Las cuentas de padre/madre con acceso de inicio de sesión no se crean automáticamente — invítalos desde una familia cuando estés listo."
+  }
+}

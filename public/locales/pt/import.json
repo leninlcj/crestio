@@ -1,0 +1,69 @@
+{
+  "page_title": "Importar dados",
+  "page_subtitle": "Traga seus alunos e famílias de uma planilha.",
+  "owner_only": "Apenas o proprietário da organização pode executar uma importação em massa.",
+  "tab": {
+    "students": "Alunos",
+    "households": "Famílias + responsáveis"
+  },
+  "drop": {
+    "headline": "Solte um CSV aqui ou clique para enviar",
+    "hint": "CSV ou TSV. Até 10 MB. Detectamos o delimitador automaticamente e ignoramos colunas extras.",
+    "template_prompt": "Precisa de um ponto de partida?",
+    "template_link": "Baixar o modelo"
+  },
+  "field": {
+    "name": "Nome do aluno",
+    "household_name": "Nome da família",
+    "subjects": "Matérias",
+    "year_level": "Ano / série",
+    "pay_rate_dollars": "Valor por hora",
+    "notes": "Observações",
+    "parent_name": "Nome do responsável",
+    "parent_email": "E-mail do responsável",
+    "parent_phone": "Telefone do responsável",
+    "billing_address": "Endereço de cobrança",
+    "preferred_currency": "Moeda preferida"
+  },
+  "mapping": {
+    "headline": "Mapeie suas colunas",
+    "required_label": "Obrigatório:",
+    "skip": "— Ignorar esta coluna —",
+    "column_n": "(coluna {{n}})",
+    "missing": "Mapeie uma coluna para: {{fields}}."
+  },
+  "preview": {
+    "headline": "Pré-visualização",
+    "summary": "Mostrando as primeiras {{shown}} de {{total}} linhas. {{valid}} válidas, {{invalid}} com problemas.",
+    "show_errors": "Mostrar problemas ({{count}})"
+  },
+  "actions": {
+    "importing": "Importando…",
+    "import_n_valid": "Importar {{count}} linha",
+    "import_n_valid_other": "Importar {{count}} linhas",
+    "use_different_file": "Usar outro arquivo"
+  },
+  "errors": {
+    "too_big": "O arquivo tem {{mb}}MB — o limite é {{max}}MB.",
+    "parse_failed": "Não foi possível ler o arquivo: {{reason}}.",
+    "empty": "O arquivo parece vazio.",
+    "no_columns": "O arquivo não tem colunas.",
+    "not_signed_in": "Você não está conectado.",
+    "commit_failed": "A importação falhou.",
+    "missing_required": "Campos obrigatórios ausentes: {{fields}}.",
+    "bad_email": "E-mail inválido: \"{{email}}\"."
+  },
+  "result": {
+    "imported_n": "{{count}} linha importada",
+    "imported_n_other": "{{count}} linhas importadas",
+    "skipped_n": "{{count}} ignorada",
+    "skipped_n_other": "{{count}} ignoradas",
+    "row_label": "Linha {{row}}",
+    "and_more": "… e mais {{count}}",
+    "download_errors": "Baixar relatório de erros",
+    "back_to_students": "Voltar para alunos",
+    "back_to_households": "Voltar para famílias",
+    "import_another": "Importar outro arquivo",
+    "parent_records_note": "As famílias foram criadas e os dados de contato do responsável foram salvos em cada família. Contas de responsável com acesso de login não são criadas automaticamente — convide os responsáveis a partir de uma família quando estiver pronto."
+  }
+}

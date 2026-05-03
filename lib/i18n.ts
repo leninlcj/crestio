@@ -62,6 +62,7 @@ export const NAMESPACES = [
   'errors',
   'files',
   'households',
+  'import',
   'invoices',
   'legal',
   'lesson_plans',
