@@ -79,11 +79,11 @@ function TemplatesInner() {
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<IconCalendar />}
-            title={showEnded ? 'No ended templates' : 'No recurring sessions'}
+            title={showEnded ? 'No ended templates.' : 'No recurring sessions.'}
             description={
               showEnded
-                ? 'When you end a template, it will appear here.'
-                : 'Create a template once. We generate the next 8 weeks of sessions automatically — and refresh daily so the calendar stays full.'
+                ? 'When you end a template, it lands here.'
+                : 'A template runs every week, fortnight, or month and creates the next 8 weeks of sessions. Set it once.'
             }
             action={!showEnded ? <Link href="/app/templates/new" className="btn-primary">Create your first</Link> : undefined}
           />

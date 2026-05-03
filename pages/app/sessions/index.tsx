@@ -403,11 +403,22 @@ function SessionsInner() {
           />
         )
       ) : rows.length === 0 ? (
-        <EmptyState
-          icon={tab === 'past' ? <IconArchive /> : <IconClock />}
-          title="No past sessions."
-          description="Once you log a session it lands here."
-        />
+        tab === 'past' ? (
+          <EmptyState
+            icon={<IconArchive />}
+            title="No past sessions yet."
+            description="Once you log one, it lands here."
+            action={
+              <Link href="/app/sessions/new" className="btn-primary text-sm">Log first session</Link>
+            }
+          />
+        ) : (
+          <EmptyState
+            icon={<IconClock />}
+            title="Polish queue is clear."
+            description="When you log a session, polished notes land here."
+          />
+        )
       ) : (
         <SessionsList
           rows={rows}

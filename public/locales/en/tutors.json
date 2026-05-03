@@ -4,12 +4,12 @@
     "title": "Tutors"
   },
   "actions": {
-    "add": "Add tutor",
-    "add_one": "Add a tutor"
+    "add": "Invite a tutor",
+    "add_one": "Invite a tutor"
   },
   "empty": {
-    "title": "No tutors yet",
-    "description": "Add tutors when you bring people on to teach for your business. If you're a solo tutor, you can skip this."
+    "title": "Just you so far.",
+    "description": "Invite a tutor when you're ready to grow."
   },
   "table": {
     "name": "Name",

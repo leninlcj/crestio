@@ -28,9 +28,9 @@
     "placeholder": "Search files by name…"
   },
   "empty": {
-    "student": "No files yet. Upload worksheets, past papers, or notes to share with this student and their parents.",
+    "student": "No files.",
     "session": "No files attached to this session yet.",
-    "library": "No org library files yet. Upload resources here to share with all your tutors."
+    "library": "No files."
   },
   "actions": {
     "rename": "Rename",

@@ -51,7 +51,9 @@ export function AmbientInbox({ className, caption = "Nothing here. Yet." }: Prop
         />
       </div>
       <div className="text-sm text-ink mt-6 font-display">{caption}</div>
-      <div className="text-xs text-ink-muted mt-1">Parent messages will land here.</div>
+      <div className="text-xs text-ink-muted mt-1">
+        Parents reach you here. They get an email; you reply in the app.
+      </div>
       <style jsx>{`
         @keyframes ambient-drift-a {
           0%, 100% { transform: rotate(-8deg) translateY(0); }

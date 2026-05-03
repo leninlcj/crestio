@@ -19,10 +19,10 @@
     "archived": "Archived"
   },
   "empty": {
-    "none": "No households yet",
-    "archived_none": "No archived households",
-    "description": "A household groups siblings under one billing contact. When you link a parent to a student, a household is created automatically.",
-    "create": "Create a household"
+    "none": "No households yet.",
+    "archived_none": "No archived households.",
+    "description": "Households group siblings under one parent for one invoice.",
+    "create": "Add household"
   },
   "common": {
     "loading": "Loading…",

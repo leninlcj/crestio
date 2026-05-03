@@ -77,8 +77,8 @@ function LessonPlansInner() {
         <EmptyState
           icon={<IconBook />}
           title="No lesson plans yet."
-          description="Generate one and use it in a session."
-          action={<Link href="/app/lesson-plans/new" className="btn-primary">{t('actions.generate')}</Link>}
+          description="Generate one with AI in 30 seconds."
+          action={<Link href="/app/lesson-plans/new" className="btn-primary">New plan</Link>}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">

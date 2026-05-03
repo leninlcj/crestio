@@ -16,7 +16,13 @@ import EmptyState from '../EmptyState';
 import { IconFolder } from '../design/icons';
 
 function FilesEmptyState({ message }: { message: string }) {
-  return <EmptyState icon={<IconFolder />} title={message} />;
+  return (
+    <EmptyState
+      icon={<IconFolder />}
+      title={message}
+      description="Drop a PDF here or click Upload. PDFs and images supported. Word, Excel, PowerPoint coming."
+    />
+  );
 }
 
 type FileRow = {
