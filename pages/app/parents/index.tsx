@@ -10,6 +10,7 @@ import { BulkActionBar } from '../../../components/design/BulkActionBar';
 import { Tooltip } from '../../../components/design/Tooltip';
 import { useToast } from '../../../components/design/Toast';
 import { IconUsers } from '../../../components/design/icons';
+import { authFetch } from '../../../lib/authFetch';
 import { supabase } from '../../../lib/supabase';
 import { formatDate } from '../../../lib/utils';
 
@@ -17,12 +18,12 @@ type ParentRow = {
   id: string;
   name: string | null;
   email: string;
+  phone: string | null;
   created_at: string;
-  // Derived
+  household_names: string[];
+  household_ids: string[];
   student_names: string[];
   student_ids: string[];
-  household_name?: string | null;
-  household_id?: string | null;
   invited: boolean;
   accepted: boolean;
 };
@@ -38,78 +39,28 @@ function ParentsInner() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      // Pull links + their student names; group up to a per-parent row.
-      const { data: links } = await supabase
-        .from('parent_student_links')
-        .select('parent_id, student_id, parent:parents!inner(id, name, email, created_at), student:students!inner(id, name, household_id)')
-        .is('revoked_at', null)
-        .limit(1000);
-      // Pull invitations to fold in invitation status (best-effort).
-      const { data: invites } = await supabase
-        .from('parent_invitations')
-        .select('email, accepted_at')
-        .limit(500);
-      // Pull households for naming (best-effort).
-      const { data: households } = await supabase
-        .from('households')
-        .select('id, display_name')
-        .limit(500);
-
-      if (cancelled) return;
-      const householdNameById = new Map<string, string>(
-        ((households ?? []) as any[]).map((h) => [h.id, h.display_name]),
-      );
-
-      const inviteByEmail = new Map<string, { invited: boolean; accepted: boolean }>();
-      for (const inv of (invites ?? []) as any[]) {
-        const cur = inviteByEmail.get(inv.email) ?? { invited: false, accepted: false };
-        cur.invited = true;
-        if (inv.accepted_at) cur.accepted = true;
-        inviteByEmail.set(inv.email, cur);
+      try {
+        const res = await authFetch('/api/parents/list');
+        const payload = await res.json();
+        if (cancelled) return;
+        if (!res.ok) throw new Error(payload?.error ?? 'Failed to load parents.');
+        setRows((payload.parents ?? []) as ParentRow[]);
+      } catch (e: any) {
+        if (cancelled) return;
+        toast.show({ message: e?.message ?? 'Failed to load parents.', tone: 'error' });
+        setRows([]);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-
-      const byParent = new Map<string, ParentRow>();
-      for (const l of (links ?? []) as any[]) {
-        if (!l.parent) continue;
-        const id = l.parent.id;
-        if (!byParent.has(id)) {
-          const inviteState = inviteByEmail.get(l.parent.email) ?? { invited: false, accepted: false };
-          byParent.set(id, {
-            id,
-            name: l.parent.name ?? null,
-            email: l.parent.email,
-            created_at: l.parent.created_at,
-            student_names: [],
-            student_ids: [],
-            household_id: l.student?.household_id ?? null,
-            household_name: l.student?.household_id ? householdNameById.get(l.student.household_id) ?? null : null,
-            invited: inviteState.invited,
-            accepted: inviteState.accepted,
-          });
-        }
-        const row = byParent.get(id)!;
-        if (l.student && !row.student_ids.includes(l.student.id)) {
-          row.student_ids.push(l.student.id);
-          row.student_names.push(l.student.name);
-        }
-      }
-
-      // Sort by accepted desc, then name.
-      const list = Array.from(byParent.values()).sort((a, b) => {
-        if (a.accepted !== b.accepted) return a.accepted ? -1 : 1;
-        return (a.name ?? a.email).localeCompare(b.name ?? b.email);
-      });
-      setRows(list);
-      setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [toast]);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return rows;
     const q = query.toLowerCase();
     return rows.filter((r) =>
-      [r.name, r.email, r.household_name, r.student_names.join(' ')]
+      [r.name, r.email, r.phone, r.household_names.join(' '), r.student_names.join(' ')]
         .filter(Boolean).join(' ').toLowerCase().includes(q),
     );
   }, [rows, query]);
@@ -133,7 +84,6 @@ function ParentsInner() {
     if (!session?.access_token) return;
     let ok = 0;
     for (const t of targets) {
-      // Use the first student as the anchor for the invite.
       const studentId = t.student_ids[0];
       if (!studentId) continue;
       const res = await fetch('/api/parents/invite', {
@@ -149,13 +99,14 @@ function ParentsInner() {
 
   return (
     <Layout title="Parents" subtitle="People">
-      <div className="flex flex-wrap items-center gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-3 mb-4" data-test-id="parents-toolbar">
         <input
           type="search"
           placeholder="Search parents…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="input md:max-w-sm flex-1 min-w-[200px]"
+          data-test-id="parents-search"
         />
       </div>
 
@@ -172,10 +123,10 @@ function ParentsInner() {
         <EmptyState
           icon={<IconUsers />}
           title="No parents yet."
-          description="Parents appear here when you add a parent contact to a student."
+          description="Add a parent contact when creating a student."
         />
       ) : (
-        <div className="card overflow-hidden">
+        <div className="card overflow-hidden" data-test-id="parents-list">
           <ul className="divide-y divide-rule">
             {filtered.map((p) => {
               const isSelected = selected.has(p.id);
@@ -187,6 +138,10 @@ function ParentsInner() {
                 p.accepted ? 'Joined'
                 : p.invited ? 'Invited'
                 : 'Not invited';
+              const studentCount = p.student_ids.length;
+              const householdLabel = p.household_names[0] ?? null;
+              const moreHouseholds = p.household_names.length > 1
+                ? ` +${p.household_names.length - 1}` : '';
               return (
                 <li
                   key={p.id}
@@ -196,6 +151,7 @@ function ParentsInner() {
                   ].join(' ')}
                   onClick={() => toggle(p.id)}
                   style={{ minHeight: 56 }}
+                  data-test-id="parents-row"
                 >
                   <button
                     type="button"
@@ -216,13 +172,13 @@ function ParentsInner() {
                   <div className="flex-1 min-w-0">
                     <div className="text-[13px] text-ink truncate flex items-center gap-2">
                       {p.name ?? p.email.split('@')[0]}
-                      {p.household_name && p.household_id && (
+                      {householdLabel && p.household_ids[0] && (
                         <Link
-                          href={`/app/households/${p.household_id}`}
+                          href={`/app/households/${p.household_ids[0]}`}
                           onClick={(e) => e.stopPropagation()}
                           className="text-2xs text-forest hover:underline"
                         >
-                          · {p.household_name}
+                          · {householdLabel}{moreHouseholds}
                         </Link>
                       )}
                     </div>
@@ -230,12 +186,19 @@ function ParentsInner() {
                       <CopyOnClick value={p.email}>
                         <span className="hover:text-ink transition-colors">{p.email}</span>
                       </CopyOnClick>
-                      {p.student_names.length > 0 && (
+                      {p.phone && (
+                        <>
+                          <span aria-hidden>·</span>
+                          <CopyOnClick value={p.phone}>
+                            <span className="hover:text-ink transition-colors num tabular">{p.phone}</span>
+                          </CopyOnClick>
+                        </>
+                      )}
+                      {studentCount > 0 && (
                         <>
                           <span aria-hidden>·</span>
                           <span className="truncate">
-                            {p.student_names.slice(0, 2).join(', ')}
-                            {p.student_names.length > 2 ? ` +${p.student_names.length - 2}` : ''}
+                            {studentCount} {studentCount === 1 ? 'student' : 'students'}
                           </span>
                         </>
                       )}
@@ -257,6 +220,7 @@ function ParentsInner() {
           type="button"
           onClick={inviteSelected}
           className="text-xs font-medium bg-cream text-forest-ink px-2.5 py-1 rounded-full hover:bg-cream/90 transition-colors duration-100"
+          data-test-id="parents-bulk-invite"
         >
           Send invite to selected
         </button>
