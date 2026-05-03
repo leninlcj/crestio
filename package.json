@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "translate": "tsx scripts/translate-locales.ts",
+    "translate:anthropic": "tsx scripts/translate-locales-anthropic.ts",
     "postinstall": "node scripts/copy-pdf-worker.js"
   },
   "dependencies": {
