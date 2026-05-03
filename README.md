@@ -63,6 +63,16 @@ npm run dev
 
 Sign up at `http://localhost:3000/auth/signup` to bootstrap a user and org — the `handle_new_user` trigger auto-creates the organisation and the 7-day trial.
 
+## Testing
+
+```
+npm run test       # vitest unit suite
+npm run test:e2e   # playwright e2e (needs TEST_SUPABASE_* env)
+npm run test:all   # both
+```
+
+Full conventions, env-var setup, and the production-database safety guard are in [tests/README.md](tests/README.md).
+
 ## Deployment
 
 ```

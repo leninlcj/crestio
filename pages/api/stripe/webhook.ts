@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { getStripe } from '../../../lib/stripe';
+import { verifyStripeWebhook } from '../../../lib/stripe/webhookVerify';
 import { resolvePriceId, PLAN_CATALOGUE } from '../../../lib/plans';
 import type { PlanTier } from '../../../lib/billing';
 import {
@@ -59,14 +60,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Missing signature.' });
   }
 
-  let event: Stripe.Event;
-  try {
-    const stripe = getStripe();
-    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
-  } catch (err: any) {
-    console.error('[stripe/webhook] signature verification failed', err?.message);
-    return res.status(400).json({ error: `Webhook signature verification failed: ${err?.message}` });
+  const verified = verifyStripeWebhook({
+    rawBody,
+    signature,
+    secret: webhookSecret,
+  });
+  if (!verified.ok) {
+    console.error('[stripe/webhook] signature verification failed', verified.error);
+    return res.status(400).json({ error: `Webhook signature verification failed: ${verified.error}` });
   }
+  const event: Stripe.Event = verified.event;
 
   const admin = getAdmin();
   if (!admin) {
