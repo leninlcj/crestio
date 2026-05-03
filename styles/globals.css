@@ -281,6 +281,47 @@
   animation: cmdk-underline 180ms ease-out both;
 }
 
+/* ph7d — Cmd+K palette open animation + cmdk lib styling. */
+@keyframes palette-in-kf {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-palette-in { animation: palette-in-kf 120ms ease-out both; }
+
+.cmdk-root [cmdk-group-heading] {
+  padding: 0.5rem 1rem 0.25rem;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft, #6b6f6a);
+  font-weight: 500;
+}
+.cmdk-root [cmdk-item] {
+  display: block;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink, #1a1f1c);
+  outline: none;
+  transition: background-color 80ms ease-out;
+}
+.cmdk-root [cmdk-item][data-selected='true'] {
+  background-color: var(--rule-soft, #ecede6);
+}
+.cmdk-root [cmdk-item][data-disabled='true'] {
+  opacity: 0.5;
+  cursor: default;
+}
+.cmdk-root [cmdk-empty] {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--ink-muted, #757871);
+  font-size: 13px;
+}
+.cmdk-item-action[data-selected='true'] {
+  background-color: rgba(31, 58, 46, 0.08);
+}
+
 /* Phase 4 — slide-up for bottom drawers. */
 @keyframes slide-up-kf {
   from { opacity: 0; transform: translateY(16px); }

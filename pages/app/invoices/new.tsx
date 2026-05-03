@@ -38,8 +38,13 @@ function NewInvoiceInner() {
       }
       const { data } = await supabase.from('students').select('*').eq('archived', false).order('name');
       setStudents(data ?? []);
+      // Pre-fill student from query (?student=<id>) — used by Cmd+K's "invoice zane".
+      const presetStudent = router.query.student;
+      if (typeof presetStudent === 'string' && (data ?? []).some((s) => s.id === presetStudent)) {
+        setStudentId(presetStudent);
+      }
     })();
-  }, []);
+  }, [router.query.student]);
 
   useEffect(() => {
     if (!studentId) { setSessions([]); setChecked(new Set()); return; }

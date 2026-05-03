@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import { Diff } from '../../../components/design/Diff';
@@ -36,6 +37,8 @@ const BATCH_SIZE = 5;
 function PolishQueueInner() {
   const toast = useToast();
   const undo = useUndo();
+  const router = useRouter();
+  const studentFilter = typeof router.query.student === 'string' ? router.query.student : '';
   const [showSkipped, setShowSkipped] = useState(false);
   const [rows, setRows] = useState<QueueRow[]>([]);
   const [state, setState] = useState<Map<string, RowState>>(new Map());
@@ -72,6 +75,7 @@ function PolishQueueInner() {
         .filter((s) => s.notes_internal && s.notes_internal.trim().length >= 5)
         .filter((s) => !s.notes_parent_facing)
         .filter((s) => showSkipped ? true : !s.polish_skipped)
+        .filter((s) => studentFilter ? s.student_id === studentFilter : true)
         .map((s) => ({
           id: s.id,
           student_id: s.student_id,
@@ -87,7 +91,7 @@ function PolishQueueInner() {
     } finally {
       setLoading(false);
     }
-  }, [showSkipped]);
+  }, [showSkipped, studentFilter]);
 
   useEffect(() => { load(); }, [load]);
 

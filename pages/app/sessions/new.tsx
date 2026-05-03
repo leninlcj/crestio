@@ -185,27 +185,41 @@ function NewSessionInner() {
           setResumeBanner(`You have unfinished changes from ${relativeTime(draft.lastEditedAt)}.`);
         }
       } else {
-        // Preset from ?student=<id>
+        // Preset from ?student=<id>&at=<iso>&duration=<min>
         const presetStudent = router.query.student;
+        const presetAt = router.query.at;
+        const presetDuration = router.query.duration;
         const prefillFocus = router.query.prefill_focus;
         const focusText = typeof prefillFocus === 'string' && prefillFocus.trim()
           ? `Focus from last session: ${prefillFocus}\n\n`
           : '';
+        const presetScheduled = typeof presetAt === 'string'
+          ? toDateTimeLocalInput(presetAt) : null;
+        const presetDurationMin = typeof presetDuration === 'string'
+          ? Number.parseInt(presetDuration, 10) : null;
+
+        const updates: Partial<FormState> = {};
+        if (presetScheduled) updates.scheduled_at = presetScheduled;
+        if (presetDurationMin && Number.isFinite(presetDurationMin) && presetDurationMin > 0) {
+          updates.duration_minutes = presetDurationMin;
+        }
+
         if (typeof presetStudent === 'string') {
           const s = (ss ?? []).find((x) => x.id === presetStudent);
           if (s) {
             const rate = s.hourly_rate_cents ?? p?.default_rate_cents ?? null;
             setForm((f) => ({
               ...f,
+              ...updates,
               student_id: s.id,
               charge_rate: rate ? centsToDollars(rate) : '',
               notes_internal: focusText || f.notes_internal,
             }));
-          } else if (focusText) {
-            setForm((f) => ({ ...f, notes_internal: focusText }));
+          } else if (focusText || Object.keys(updates).length > 0) {
+            setForm((f) => ({ ...f, ...updates, notes_internal: focusText || f.notes_internal }));
           }
-        } else if (focusText) {
-          setForm((f) => ({ ...f, notes_internal: focusText }));
+        } else if (focusText || Object.keys(updates).length > 0) {
+          setForm((f) => ({ ...f, ...updates, notes_internal: focusText || f.notes_internal }));
         }
       }
 

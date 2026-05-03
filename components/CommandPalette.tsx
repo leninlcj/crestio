@@ -1,16 +1,30 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Command } from 'cmdk';
 import { supabase } from '../lib/supabase';
 import { activeLocale } from '../lib/utils';
+import {
+  parseQuickAction,
+  describeAction,
+  actionToHref,
+  type ParsedAction,
+  type StudentLite,
+} from '../lib/cmdkGrammar';
 
-// ----------------------------------------------------------------------
-// Cmd+K command palette.
-// Replaces the legacy GlobalSearch. Sections (in priority order):
-//   1. Quick actions  — Log session, Polish last, Add student, Invoice
-//   2. Jump to        — Today's sessions, Polish queue, Unbilled, etc.
-//   3. Search results — students, sessions, invoices, lesson plans
-// Recents shown when input is empty.
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Cmd+K command palette (ph7d).
+//
+// - Built on the `cmdk` library so we get accessible roving focus, ARIA
+//   roles, and fuzzy matching for free.
+// - Two layers of intelligence:
+//     1) A grammar parser ("log session zane 1h") that emits a top-ranked
+//        result with a deep link to the prefilled form.
+//     2) A debounced server search that fans out across students, sessions,
+//        invoices, and other entities.
+// - Empty state shows Recent (last 5 commands) + Quick actions.
+// - Students are prefetched + cached for 5 minutes so the grammar parser is
+//   instant on every subsequent open.
+// ---------------------------------------------------------------------------
 
 type SearchResults = {
   students: Array<{ id: string; name: string; year_level: string | null; subject: string | null }>;
@@ -28,58 +42,71 @@ const EMPTY_SEARCH: SearchResults = {
   lesson_plans: [], files: [], tags: [],
 };
 
-type Item = {
-  id: string;
-  group: string;
-  label: string;
-  hint?: string;
-  shortcut?: string;
-  href?: string;
-  onSelect?: () => void;
-};
-
-const RECENTS_KEY = 'crestio.cmdk.recents';
-const RECENT_CMDS_KEY = 'crestio.cmdk.recent_commands';
+// Per-user keyed recents — rotated on sign-in so two operators on the same
+// browser don't see each other's history.
+const RECENTS_KEY_PREFIX = 'crestio.cmdk.recents.v2';
 const MAX_RECENTS = 5;
-const MAX_RECENT_CMDS = 6;
+const STUDENTS_CACHE_KEY = 'crestio.cmdk.students_cache.v1';
+const STUDENTS_CACHE_TTL_MS = 5 * 60_000; // 5 minutes per spec
 
-function loadRecents(): Item[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = window.localStorage.getItem(RECENTS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+type RecentEntry = { id: string; label: string; href?: string; group?: string };
+
+function recentsKey(userId: string | null): string {
+  return `${RECENTS_KEY_PREFIX}:${userId ?? 'anon'}`;
 }
 
-function saveRecent(item: Item) {
-  if (typeof window === 'undefined') return;
-  try {
-    const existing = loadRecents().filter((i) => i.id !== item.id);
-    const next = [{ ...item, group: 'Recent' }, ...existing].slice(0, MAX_RECENTS);
-    window.localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
-  } catch {
-    /* ignore */
-  }
-}
-
-type RecentCmd = { label: string; href?: string; onId?: string };
-function loadRecentCmds(): RecentCmd[] {
+function loadRecents(userId: string | null): RecentEntry[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = window.localStorage.getItem(RECENT_CMDS_KEY);
+    const raw = window.localStorage.getItem(recentsKey(userId));
     return raw ? JSON.parse(raw) : [];
   } catch { return []; }
 }
-function saveRecentCmd(item: Item) {
+
+function saveRecent(userId: string | null, entry: RecentEntry) {
   if (typeof window === 'undefined') return;
-  if (!item.label.startsWith('Go to') && item.group !== 'Quick actions' && item.group !== 'Jump to') return;
   try {
-    const existing = loadRecentCmds().filter((c) => c.label !== item.label);
-    const next: RecentCmd[] = [{ label: item.label, href: item.href }, ...existing].slice(0, MAX_RECENT_CMDS);
-    window.localStorage.setItem(RECENT_CMDS_KEY, JSON.stringify(next));
-  } catch { /* */ }
+    const existing = loadRecents(userId).filter((i) => i.label !== entry.label);
+    const next = [entry, ...existing].slice(0, MAX_RECENTS);
+    window.localStorage.setItem(recentsKey(userId), JSON.stringify(next));
+  } catch { /* ignore */ }
+}
+
+function readStudentsCache(): { students: StudentLite[]; at: number } | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(STUDENTS_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed?.at || !Array.isArray(parsed.students)) return null;
+    if (Date.now() - parsed.at > STUDENTS_CACHE_TTL_MS) return null;
+    return parsed;
+  } catch { return null; }
+}
+
+function writeStudentsCache(students: StudentLite[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(STUDENTS_CACHE_KEY, JSON.stringify({ students, at: Date.now() }));
+  } catch { /* ignore */ }
+}
+
+// Sign-out hook lives on the supabase client. When the auth state flips to
+// signed-out we clear the recents + cache so the next user doesn't see them.
+function useClearRecentsOnSignOut() {
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT' && typeof window !== 'undefined') {
+        try {
+          for (const key of Object.keys(window.localStorage)) {
+            if (key.startsWith(RECENTS_KEY_PREFIX)) window.localStorage.removeItem(key);
+          }
+          window.localStorage.removeItem(STUDENTS_CACHE_KEY);
+        } catch { /* */ }
+      }
+    });
+    return () => { sub.subscription.unsubscribe(); };
+  }, []);
 }
 
 export function CommandPalette() {
@@ -87,12 +114,25 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResults>(EMPTY_SEARCH);
-  const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState(0);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [students, setStudents] = useState<StudentLite[]>(() => readStudentsCache()?.students ?? []);
+  const [userId, setUserId] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Cmd+K and event-based open hooks.
+  useClearRecentsOnSignOut();
+
+  // Resolve the current user's id once for recents-key scoping.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!cancelled) setUserId(session?.user?.id ?? null);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Cmd+K toggle + custom event hook (the header search input fires this).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -111,12 +151,6 @@ export function CommandPalette() {
     };
   }, [open]);
 
-  useEffect(() => {
-    if (!open) return;
-    setActive(0);
-    setTimeout(() => inputRef.current?.focus(), 60);
-  }, [open]);
-
   // Reset on route change.
   useEffect(() => {
     const reset = () => { setOpen(false); setQuery(''); setResults(EMPTY_SEARCH); };
@@ -124,491 +158,371 @@ export function CommandPalette() {
     return () => router.events.off('routeChangeStart', reset);
   }, [router.events]);
 
-  // Debounced search.
+  // Prefetch the students list on first open per session, then cache for
+  // 5 minutes — keeps subsequent opens instant for the grammar parser.
+  useEffect(() => {
+    if (!open) return;
+    if (students.length > 0) return;
+    let cancelled = false;
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token || cancelled) return;
+      const { data, error } = await supabase
+        .from('students')
+        .select('id, name')
+        .is('archived', false)
+        .order('name', { ascending: true })
+        .limit(1000);
+      if (cancelled || error) return;
+      const list = ((data ?? []) as any[]).map((s) => ({ id: s.id, name: s.name }));
+      setStudents(list);
+      writeStudentsCache(list);
+    })();
+    return () => { cancelled = true; };
+  }, [open, students.length]);
+
+  // Debounced server search.
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (query.trim().length < 2) {
       setResults(EMPTY_SEARCH);
-      setLoading(false);
+      setSearching(false);
       return;
     }
-    setLoading(true);
+    setSearching(true);
     debounceRef.current = setTimeout(async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.access_token) { setLoading(false); return; }
+        if (!session?.access_token) { setSearching(false); return; }
         const res = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}`, {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
         if (res.ok) setResults(await res.json());
       } finally {
-        setLoading(false);
+        setSearching(false);
       }
     }, 200);
   }, [query]);
 
-  // Static items: Quick actions + Jump to + Go to (settings/help/etc).
-  const staticItems: Item[] = useMemo(() => [
-    // Quick actions
-    { id: 'qa-log',       group: 'Quick actions', label: 'Log session',           shortcut: 'N',  onSelect: () => window.dispatchEvent(new CustomEvent('crestio:open-inline-composer')) },
-    { id: 'qa-new',       group: 'Quick actions', label: 'New session (full form)', shortcut: '⌘⇧N', onSelect: () => router.push('/app/sessions/new') },
-    { id: 'qa-polish',    group: 'Quick actions', label: 'Polish last session',                  onSelect: () => router.push('/app/sessions/polish-queue') },
-    { id: 'qa-student',   group: 'Quick actions', label: 'Add student',                          onSelect: () => router.push('/app/students/new') },
-    { id: 'qa-invoice',   group: 'Quick actions', label: 'Create invoice',                       onSelect: () => router.push('/app/invoices/new') },
-    { id: 'qa-send',      group: 'Quick actions', label: 'Send invoice to parent',               onSelect: () => router.push('/app/invoices') },
+  const parsed = useMemo<ParsedAction>(() => {
+    return parseQuickAction(query, students);
+  }, [query, students]);
 
-    // Jump to
-    { id: 'j-today',      group: 'Jump to', label: "Today's sessions",        href: '/app/sessions?tab=today' },
-    { id: 'j-polish',     group: 'Jump to', label: 'Polish queue',            href: '/app/sessions/polish-queue' },
-    { id: 'j-unbilled',   group: 'Jump to', label: 'Unbilled sessions',       href: '/app/money?tab=invoices&filter=unbilled' },
-    { id: 'j-overdue',    group: 'Jump to', label: 'Overdue invoices',        href: '/app/money?tab=invoices&filter=overdue' },
-    { id: 'j-billing',    group: 'Jump to', label: 'Settings → Billing',      href: '/app/settings/billing' },
+  const recents = useMemo(() => loadRecents(userId), [userId, open]);
 
-    // Go to
-    { id: 'g-settings',   group: 'Go to', label: 'Go to settings',            href: '/app/settings/account' },
-    { id: 'g-billing',    group: 'Go to', label: 'Go to billing',             href: '/app/settings/billing' },
-    { id: 'g-shortcuts',  group: 'Go to', label: 'Go to keyboard shortcuts',  onSelect: () => window.dispatchEvent(new CustomEvent('crestio:open-shortcuts')) },
-    { id: 'g-changelog',  group: 'Go to', label: 'Go to changelog',           href: '/changelog' },
-    { id: 'g-support',    group: 'Go to', label: 'Go to support',             onSelect: () => window.dispatchEvent(new CustomEvent('crestio:open-support')) },
-  ], [router]);
+  function executeRecent(r: RecentEntry) {
+    if (r.href) {
+      saveRecent(userId, r);
+      setOpen(false);
+      router.push(r.href);
+    }
+  }
 
-  // Build full ordered list of items based on query.
-  const items: Item[] = useMemo(() => {
-    if (query.trim().length === 0) {
-      const recents = loadRecents();
-      return [...recents, ...staticItems];
-    }
-
-    const trimmed = query.trim();
-
-    // Slash commands: "/ns" → new session, "/nstu" → new student, etc.
-    if (trimmed.startsWith('/')) {
-      const slash = trimmed.slice(1).toLowerCase();
-      const SLASH_MAP: Record<string, { type: string; label: string }> = {
-        'ns':   { type: 'session',         label: 'New session' },
-        'nstu': { type: 'student',         label: 'New student' },
-        'nh':   { type: 'household',       label: 'New household' },
-        'np':   { type: 'parent',          label: 'New parent' },
-        'ni':   { type: 'invoice',         label: 'New invoice' },
-        'nlp':  { type: 'lesson_plan',     label: 'New lesson plan' },
-        'nf':   { type: 'file',            label: 'New file (upload)' },
-        'nt':   { type: 'template',        label: 'New template' },
-        'nm':   { type: 'message_thread',  label: 'New message thread' },
-      };
-      const matches = Object.entries(SLASH_MAP)
-        .filter(([k]) => k.startsWith(slash) || slash.startsWith(k));
-      if (matches.length > 0) {
-        return matches.map(([k, v]) => ({
-          id: `slash-${k}`,
-          group: 'Slash commands',
-          label: v.label,
-          hint: `/${k}`,
-          onSelect: () => {
-            if (v.type === 'session') {
-              window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'));
-            } else {
-              window.dispatchEvent(new CustomEvent('crestio:open-quick-create', { detail: { type: v.type } }));
-            }
-          },
-        } as Item));
-      }
-    }
-
-    // Math: "= 1 + 2" → calculator
-    if (trimmed.startsWith('=')) {
-      const expr = trimmed.slice(1).trim();
-      const evaled = evalSafe(expr);
-      if (evaled != null) {
-        return [{
-          id: 'math-result',
-          group: 'Math',
-          label: `${expr} = ${evaled}`,
-          hint: 'Press ↵ to copy',
-          onSelect: () => {
-            navigator.clipboard?.writeText(String(evaled)).catch(() => undefined);
-          },
-        }];
-      }
-      return [{
-        id: 'math-empty',
-        group: 'Math',
-        label: 'Type an expression after =',
-      } as Item];
-    }
-
-    // Natural language: "schedule diego tomorrow 4pm" → opens inline composer
-    if (/^(schedule|log|book|new|add)\s+/i.test(trimmed)) {
-      return [{
-        id: 'nl-schedule',
-        group: 'Quick action',
-        label: `Open composer with "${trimmed}"`,
-        onSelect: () => {
-          window.dispatchEvent(new CustomEvent('crestio:open-inline-composer'));
-          // Best-effort: deliver the seed text to the composer via a follow-up event.
-          setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('crestio:seed-inline-composer', { detail: trimmed }));
-          }, 80);
-        },
-      } as Item, ...staticItems.filter((s) => s.label.toLowerCase().includes('log session'))];
-    }
-
-    // Power-user prefix: ":s diego" → only Students. ":i" → only Invoices.
-    // Supported: :s students, :se sessions, :i invoices, :l lesson plans,
-    //            :h households, :f files, :m messages, :t templates, :p parents.
-    let typeFilter: 'students' | 'sessions' | 'invoices' | 'lesson_plans' | null = null;
-    let altRoute: string | null = null;
-    let q = trimmed.toLowerCase();
-    if (trimmed.startsWith(':')) {
-      const m = /^:(\w+)\s*(.*)$/.exec(trimmed);
-      if (m) {
-        const prefix = m[1].toLowerCase();
-        if (prefix.startsWith('se')) typeFilter = 'sessions';
-        else if (prefix.startsWith('s')) typeFilter = 'students';
-        else if (prefix.startsWith('i')) typeFilter = 'invoices';
-        else if (prefix.startsWith('l') || prefix.startsWith('lp')) typeFilter = 'lesson_plans';
-        else if (prefix.startsWith('h')) altRoute = '/app/households';
-        else if (prefix.startsWith('f')) altRoute = '/app/files';
-        else if (prefix.startsWith('m')) altRoute = '/app/messages';
-        else if (prefix.startsWith('t')) altRoute = '/app/templates';
-        else if (prefix.startsWith('p')) altRoute = '/app/parents';
-        q = (m[2] ?? '').trim().toLowerCase();
-      }
-    }
-    if (altRoute) {
-      return [{
-        id: 'altroute',
-        group: 'Jump to',
-        label: `Go to ${altRoute.replace('/app/', '')}`,
-        href: altRoute,
-      } as Item];
-    }
-
-    const filteredStatic = typeFilter
-      ? []
-      : staticItems.filter((i) =>
-          i.label.toLowerCase().includes(q) || (i.hint?.toLowerCase().includes(q) ?? false),
-        );
-
-    const searchItems: Item[] = [];
-    if (typeFilter && q.length === 0) {
-      return [...filteredStatic, { id: 'hint', group: 'Type to filter', label: 'Keep typing to search…' } as Item];
-    }
-    if (!typeFilter || typeFilter === 'students') {
-      results.students.forEach((s) => {
-        searchItems.push({
-          id: `s-${s.id}`,
-          group: 'Students',
-          label: s.name,
-          hint: [s.year_level ? `Year ${s.year_level}` : null, s.subject].filter(Boolean).join(' · '),
-          href: `/app/students/${s.id}`,
-        });
-      });
-    }
-    if (!typeFilter || typeFilter === 'sessions') {
-      results.sessions.forEach((s) => {
-        searchItems.push({
-          id: `ss-${s.id}`,
-          group: 'Sessions',
-          label: `${s.student_name} · ${new Date(s.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })}`,
-          hint: [s.subject, s.topic].filter(Boolean).join(' · ') || s.status,
-          href: `/app/sessions/${s.id}`,
-        });
-      });
-    }
-    if (!typeFilter || typeFilter === 'invoices') {
-      results.invoices.forEach((i) => {
-        searchItems.push({
-          id: `i-${i.id}`,
-          group: 'Invoices',
-          label: `${i.number} · ${i.student_name}`,
-          hint: `${formatCents(i.total_cents)} · ${i.status}`,
-          href: `/app/invoices/${i.id}`,
-        });
-      });
-    }
-    if (!typeFilter || typeFilter === 'lesson_plans') {
-      results.lesson_plans.forEach((p) => {
-        searchItems.push({
-          id: `lp-${p.id}`,
-          group: 'Lesson plans',
-          label: `${p.subject} · ${p.topic}`,
-          hint: [p.student_name, p.year_level ? `Year ${p.year_level}` : null].filter(Boolean).join(' · '),
-          href: `/app/lesson-plans`,
-        });
-      });
-    }
-    if (!typeFilter && results.parents) {
-      results.parents.forEach((p) => {
-        searchItems.push({
-          id: `p-${p.id}`,
-          group: 'Parents',
-          label: p.name ?? p.email ?? 'Parent',
-          hint: p.email ?? undefined,
-          href: `/app/parents`,
-        });
-      });
-    }
-    if (!typeFilter && results.tutors) {
-      results.tutors.forEach((t) => {
-        searchItems.push({
-          id: `t-${t.id}`,
-          group: 'Tutors',
-          label: t.name,
-          hint: t.email ?? undefined,
-          href: `/app/tutors/${t.id}`,
-        });
-      });
-    }
-    if (!typeFilter && results.files) {
-      results.files.forEach((f) => {
-        searchItems.push({
-          id: `f-${f.id}`,
-          group: 'Files',
-          label: f.name,
-          hint: f.mime_type,
-          href: `/files/${f.id}`,
-        });
-      });
-    }
-    if (!typeFilter && results.tags) {
-      results.tags.forEach((t) => {
-        searchItems.push({
-          id: `tg-${t.id}`,
-          group: 'Tags',
-          label: `#${t.name}`,
-          hint: 'Tag',
-        });
-      });
-    }
-
-    return [...filteredStatic, ...searchItems];
-  }, [query, results, staticItems]);
-
-  // Group items in render order while preserving the global index for keyboard nav.
-  const grouped = useMemo(() => {
-    const order: string[] = [];
-    const map = new Map<string, Array<{ item: Item; index: number }>>();
-    items.forEach((item, index) => {
-      if (!map.has(item.group)) {
-        map.set(item.group, []);
-        order.push(item.group);
-      }
-      map.get(item.group)!.push({ item, index });
+  function executeAction(a: ParsedAction) {
+    const href = actionToHref(a);
+    if (!href) return;
+    saveRecent(userId, {
+      id: `action:${a.kind}:${'studentId' in a ? a.studentId ?? '' : ''}`,
+      label: describeAction(a),
+      href,
+      group: 'Quick actions',
     });
-    return order.map((g) => ({ group: g, entries: map.get(g)! }));
-  }, [items]);
-
-  function runItem(item: Item, mode: 'open' | 'newTab' | 'copyLink' = 'open') {
-    saveRecent(item);
-    saveRecentCmd(item);
-    if (mode === 'copyLink' && item.href) {
-      const fullHref = `${window.location.origin}${item.href}`;
-      navigator.clipboard?.writeText(fullHref).catch(() => undefined);
-      setOpen(false);
-      return;
-    }
-    if (mode === 'newTab' && item.href) {
-      window.open(item.href, '_blank');
-      setOpen(false);
-      return;
-    }
     setOpen(false);
-    if (item.onSelect) {
-      item.onSelect();
-    } else if (item.href) {
-      router.push(item.href);
-    }
+    router.push(href);
   }
 
-  const [metaHeld, setMetaHeld] = useState(false);
-  useEffect(() => {
-    if (!open) { setMetaHeld(false); return; }
-    function down(e: KeyboardEvent) {
-      if (e.metaKey || e.ctrlKey) setMetaHeld(true);
-    }
-    function up(e: KeyboardEvent) {
-      if (!e.metaKey && !e.ctrlKey) setMetaHeld(false);
-    }
-    function blur() { setMetaHeld(false); }
-    window.addEventListener('keydown', down);
-    window.addEventListener('keyup', up);
-    window.addEventListener('blur', blur);
-    return () => {
-      window.removeEventListener('keydown', down);
-      window.removeEventListener('keyup', up);
-      window.removeEventListener('blur', blur);
-    };
-  }, [open]);
+  function executeNavigation(href: string, label: string) {
+    saveRecent(userId, { id: `nav:${href}`, label, href, group: 'Pages' });
+    setOpen(false);
+    router.push(href);
+  }
 
-  function onKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setActive((a) => Math.min(items.length - 1, a + 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setActive((a) => Math.max(0, a - 1));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      const target = items[active];
-      if (target) {
-        const mode = (e.metaKey || e.ctrlKey) ? 'newTab' : (e.altKey ? 'copyLink' : 'open');
-        runItem(target, mode);
+  // Students that match the current query — used for the top "Students"
+  // group when the grammar parser doesn't lock in a single result yet.
+  const studentMatches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (q.length < 2) return [];
+    const list: Array<{ student: StudentLite; score: number }> = [];
+    for (const s of students) {
+      if (!s.name) continue;
+      const lower = s.name.toLowerCase();
+      if (lower === q) list.push({ student: s, score: 100 });
+      else if (lower.startsWith(q)) list.push({ student: s, score: 80 });
+      else if (lower.includes(q)) list.push({ student: s, score: 60 });
+      else {
+        const tokens = lower.split(/\s+/);
+        if (tokens.some((t) => t.startsWith(q))) list.push({ student: s, score: 40 });
       }
     }
-  }
+    list.sort((a, b) => b.score - a.score);
+    return list.slice(0, 5).map((x) => x.student);
+  }, [query, students]);
 
   if (!open) return null;
 
-  const totalHits = items.length;
+  const hasParsed = parsed.kind !== 'no_match';
+  const querying = query.trim().length > 0;
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
-      className="fixed inset-0 z-[70] bg-ink/40"
+      className="fixed inset-0 z-[70] bg-ink/40 cmdk-backdrop"
+      data-test-id="cmdk-backdrop"
       onClick={() => setOpen(false)}
     >
       <div
-        className="relative w-full max-w-[600px] mx-auto mt-16 md:mt-24 bg-surface border border-rule rounded-[12px] shadow-lift overflow-hidden animate-palette-in"
+        ref={containerRef}
+        className="relative w-full max-w-[640px] mx-auto mt-16 md:mt-24 bg-surface border border-rule rounded-[12px] shadow-lift overflow-hidden animate-palette-in"
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={onKeyDown}
+        data-test-id="cmdk-modal"
       >
-        <div className="border-b border-rule px-4 py-3 flex items-center gap-3 relative cmdk-input-row">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-ink-soft shrink-0">
-            <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
-          </svg>
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(e) => { setQuery(e.target.value); setActive(0); }}
-            placeholder="Search anything… (or type = for math)"
-            className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-soft"
-          />
-          <kbd className="text-2xs font-mono text-ink-soft border border-rule rounded px-1.5 py-0.5">Esc</kbd>
-          {!loading && totalHits > 0 && query.trim().length > 0 && (
-            <span aria-hidden="true" className="absolute left-3 right-3 bottom-0 h-0.5 bg-forest cmdk-underline-anim origin-left" />
-          )}
-        </div>
+        <Command
+          shouldFilter={false}
+          loop
+          label="Command palette"
+          className="cmdk-root"
+        >
+          <div className="border-b border-rule px-4 py-3 flex items-center gap-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-ink-soft shrink-0">
+              <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+            </svg>
+            <Command.Input
+              autoFocus
+              value={query}
+              onValueChange={setQuery}
+              placeholder='Search anything — try "log session zane 1h"'
+              className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-soft"
+              data-test-id="cmdk-input"
+            />
+            <kbd className="text-2xs font-mono text-ink-soft border border-rule rounded px-1.5 py-0.5">Esc</kbd>
+          </div>
 
-        {query.trim().length === 0 && <RecentCommandsStrip onPick={(href) => { setOpen(false); router.push(href); }} />}
+          <Command.List className="max-h-[60vh] overflow-y-auto py-1" data-test-id="cmdk-list">
+            <Command.Empty className="px-4 py-10 text-sm text-ink-muted text-center" data-test-id="cmdk-empty">
+              {searching ? 'Searching…' : 'No matches.'}
+            </Command.Empty>
 
-        <div className="max-h-[60vh] overflow-y-auto py-1">
-          {totalHits === 0 ? (
-            <div className="px-4 py-10 text-sm text-ink-muted text-center">
-              {loading ? 'Searching…' : 'No matches.'}
-            </div>
-          ) : (
-            grouped.map(({ group, entries }) => (
-              <div key={group}>
-                <div className="px-4 pt-3 pb-1 text-2xs uppercase tracking-widest text-ink-soft font-medium">
-                  {group}
-                </div>
-                <ul role="listbox">
-                  {entries.map(({ item, index }) => {
-                    const isActive = index === active;
-                    return (
-                      <li key={item.id}>
-                        <button
-                          type="button"
-                          onMouseEnter={() => setActive(index)}
-                          onClick={() => runItem(item)}
-                          aria-selected={isActive}
-                          className={[
-                            'w-full text-left px-4 py-2 flex items-center justify-between gap-3 text-sm transition-colors duration-100',
-                            isActive ? 'bg-ruleSoft' : 'hover:bg-ruleSoft/60',
-                          ].join(' ')}
-                        >
-                          <div className="min-w-0">
-                            <div className="text-ink truncate">{item.label}</div>
-                            {item.hint && (
-                              <div className="text-xs text-ink-muted truncate">{item.hint}</div>
-                            )}
-                          </div>
-                          <span className="text-ink-soft shrink-0 flex items-center gap-2">
-                            {item.shortcut && (
-                              <kbd className="text-2xs font-mono border border-rule rounded px-1.5 py-0.5">{item.shortcut}</kbd>
-                            )}
-                            {item.href && metaHeld ? (
-                              <span title="Open in new tab" aria-hidden className="text-forest">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M7 17 17 7M8 7h9v9" />
-                                </svg>
-                              </span>
-                            ) : isActive ? (
-                              <span className="text-2xs font-mono">
-                                <span title="Open">↵</span>
-                                {item.href && <> · <span title="Open in new tab">⌘↵</span></>}
-                                {item.href && <> · <span title="Copy link">⌥↵</span></>}
-                              </span>
-                            ) : (
-                              <span aria-hidden="true">↵</span>
-                            )}
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))
-          )}
-        </div>
+            {/* Empty state: recents + quick action defaults. */}
+            {!querying && (
+              <>
+                {recents.length > 0 && (
+                  <Command.Group heading="Recent" className="cmdk-group" data-test-id="cmdk-group-recent">
+                    {recents.map((r) => (
+                      <Command.Item
+                        key={r.id}
+                        value={`recent:${r.label}`}
+                        onSelect={() => executeRecent(r)}
+                        className="cmdk-item"
+                        data-test-id="cmdk-recent"
+                      >
+                        <PaletteRow label={r.label} hint={r.group} />
+                      </Command.Item>
+                    ))}
+                  </Command.Group>
+                )}
+                <Command.Group heading="Quick actions" className="cmdk-group" data-test-id="cmdk-group-quick">
+                  {QUICK_DEFAULTS.map((q) => (
+                    <Command.Item
+                      key={q.id}
+                      value={`quick:${q.label}`}
+                      onSelect={() => executeNavigation(q.href, q.label)}
+                      className="cmdk-item"
+                      data-test-id="cmdk-quick-action"
+                    >
+                      <PaletteRow label={q.label} hint={q.hint} shortcut={q.shortcut} />
+                    </Command.Item>
+                  ))}
+                </Command.Group>
+              </>
+            )}
 
-        <div className="border-t border-rule px-4 py-2 text-2xs text-ink-soft flex items-center justify-between gap-3 flex-wrap">
-          <span className="flex items-center gap-3">
-            <span><kbd className="font-mono border border-rule rounded px-1">↑↓</kbd> to navigate</span>
-            <span><kbd className="font-mono border border-rule rounded px-1">↵</kbd> to open</span>
-            <span><kbd className="font-mono border border-rule rounded px-1">⎋</kbd> to close</span>
-          </span>
-          <span className="hidden md:inline">
-            <span className="text-ink-muted">tip:</span>{' '}
-            type <kbd className="font-mono border border-rule rounded px-1">:s</kbd> students,{' '}
-            <kbd className="font-mono border border-rule rounded px-1">:i</kbd> invoices,{' '}
-            <kbd className="font-mono border border-rule rounded px-1">:se</kbd> sessions
-          </span>
-        </div>
+            {/* Typed state: parsed action first, then students, sessions, invoices, pages. */}
+            {querying && hasParsed && (
+              <Command.Group heading="Run" className="cmdk-group" data-test-id="cmdk-group-action">
+                <Command.Item
+                  value={`action:${parsed.kind}:${'studentName' in parsed ? parsed.studentName ?? '' : ''}`}
+                  onSelect={() => executeAction(parsed)}
+                  className="cmdk-item cmdk-item-action"
+                  data-test-id="cmdk-parsed-action"
+                >
+                  <PaletteRow
+                    label={describeAction(parsed)}
+                    hint={parsed.kind === 'log_session' ? 'Pre-fills the new-session form' : undefined}
+                    shortcut="↵"
+                  />
+                </Command.Item>
+              </Command.Group>
+            )}
+
+            {querying && studentMatches.length > 0 && (
+              <Command.Group heading="Students" className="cmdk-group" data-test-id="cmdk-group-students">
+                {studentMatches.map((s) => (
+                  <Command.Item
+                    key={`student:${s.id}`}
+                    value={`student:${s.name}`}
+                    onSelect={() => executeNavigation(`/app/students/${s.id}`, s.name)}
+                    className="cmdk-item"
+                    data-test-id="cmdk-student"
+                  >
+                    <PaletteRow label={s.name} hint="Open profile" />
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )}
+
+            {querying && results.sessions.length > 0 && (
+              <Command.Group heading="Sessions" className="cmdk-group" data-test-id="cmdk-group-sessions">
+                {results.sessions.slice(0, 5).map((s) => (
+                  <Command.Item
+                    key={`session:${s.id}`}
+                    value={`session:${s.id}`}
+                    onSelect={() => executeNavigation(
+                      `/app/sessions/${s.id}`,
+                      `${s.student_name} — ${formatSessionDate(s.scheduled_at)}`,
+                    )}
+                    className="cmdk-item"
+                    data-test-id="cmdk-session"
+                  >
+                    <PaletteRow
+                      label={`${s.student_name} · ${formatSessionDate(s.scheduled_at)}`}
+                      hint={[s.subject, s.topic].filter(Boolean).join(' · ') || s.status}
+                    />
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )}
+
+            {querying && results.invoices.length > 0 && (
+              <Command.Group heading="Invoices" className="cmdk-group" data-test-id="cmdk-group-invoices">
+                {results.invoices.slice(0, 5).map((i) => (
+                  <Command.Item
+                    key={`invoice:${i.id}`}
+                    value={`invoice:${i.id}`}
+                    onSelect={() => executeNavigation(
+                      `/app/invoices/${i.id}`,
+                      `Invoice ${i.number} · ${i.student_name}`,
+                    )}
+                    className="cmdk-item"
+                    data-test-id="cmdk-invoice"
+                  >
+                    <PaletteRow
+                      label={`${i.number} · ${i.student_name}`}
+                      hint={`${formatCents(i.total_cents)} · ${i.status}`}
+                    />
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )}
+
+            {querying && (
+              <Command.Group heading="Pages" className="cmdk-group" data-test-id="cmdk-group-pages">
+                {PAGE_TARGETS
+                  .filter((p) => p.label.toLowerCase().includes(query.trim().toLowerCase())
+                              || p.aliases?.some((a) => a.toLowerCase().includes(query.trim().toLowerCase())))
+                  .slice(0, 5)
+                  .map((p) => (
+                    <Command.Item
+                      key={`page:${p.href}`}
+                      value={`page:${p.label}`}
+                      onSelect={() => executeNavigation(p.href, p.label)}
+                      className="cmdk-item"
+                      data-test-id="cmdk-page"
+                    >
+                      <PaletteRow label={p.label} hint={p.hint} />
+                    </Command.Item>
+                  ))}
+              </Command.Group>
+            )}
+
+            {querying && results.parents.length > 0 && (
+              <Command.Group heading="Parents" className="cmdk-group" data-test-id="cmdk-group-parents">
+                {results.parents.slice(0, 5).map((p) => (
+                  <Command.Item
+                    key={`parent:${p.id}`}
+                    value={`parent:${p.id}`}
+                    onSelect={() => executeNavigation('/app/parents', p.name ?? p.email ?? 'Parent')}
+                    className="cmdk-item"
+                    data-test-id="cmdk-parent"
+                  >
+                    <PaletteRow label={p.name ?? p.email ?? 'Parent'} hint={p.email ?? undefined} />
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )}
+          </Command.List>
+
+          <div className="border-t border-rule px-4 py-2 text-2xs text-ink-soft flex items-center justify-between gap-3 flex-wrap">
+            <span className="flex items-center gap-3">
+              <span><kbd className="font-mono border border-rule rounded px-1">↑↓</kbd> navigate</span>
+              <span><kbd className="font-mono border border-rule rounded px-1">↵</kbd> open</span>
+              <span><kbd className="font-mono border border-rule rounded px-1">⎋</kbd> close</span>
+            </span>
+            <span className="hidden md:inline text-ink-muted">
+              try <kbd className="font-mono border border-rule rounded px-1">log session zane 1h</kbd>
+            </span>
+          </div>
+        </Command>
       </div>
     </div>
   );
 }
 
-function formatCents(c: number): string {
-  return new Intl.NumberFormat(activeLocale(), { style: 'currency', currency: 'AUD',
-    maximumFractionDigits: c % 100 === 0 ? 0 : 2 }).format(c / 100);
-}
-
-// Safe expression evaluator. Allow only digits, operators, parens, decimal,
-// whitespace, and the % sign. Reject anything else.
-function evalSafe(expr: string): string | null {
-  if (!expr || !/^[\d+\-*/%() .]+$/.test(expr)) return null;
-  try {
-    // eslint-disable-next-line no-new-func
-    const result = Function(`"use strict"; return (${expr.replace(/%/g, '/100')})`)();
-    if (typeof result !== 'number' || !Number.isFinite(result)) return null;
-    // Round to 4 decimal places.
-    return String(Math.round(result * 10_000) / 10_000);
-  } catch { return null; }
-}
-
-function RecentCommandsStrip({ onPick }: { onPick: (href: string) => void }) {
-  const recents = loadRecentCmds();
-  if (recents.length === 0) return null;
+function PaletteRow({ label, hint, shortcut }: { label: string; hint?: string; shortcut?: string }) {
   return (
-    <div className="px-4 py-2 border-b border-rule flex items-center gap-1.5 flex-wrap">
-      <span className="text-2xs uppercase tracking-widest text-ink-soft mr-1">Recent</span>
-      {recents.map((r) => (
-        <button
-          key={r.label}
-          type="button"
-          onClick={() => r.href && onPick(r.href)}
-          className="text-[11px] px-2 py-0.5 rounded-full bg-ruleSoft text-ink-muted hover:bg-ruleSoft/80 hover:text-ink transition-colors duration-100"
-        >
-          {r.label.replace(/^Go to /, '')}
-        </button>
-      ))}
+    <div className="w-full flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <div className="text-ink truncate">{label}</div>
+        {hint && <div className="text-xs text-ink-muted truncate">{hint}</div>}
+      </div>
+      {shortcut && (
+        <kbd className="text-2xs font-mono text-ink-soft border border-rule rounded px-1.5 py-0.5 shrink-0">
+          {shortcut}
+        </kbd>
+      )}
     </div>
   );
+}
+
+const QUICK_DEFAULTS: Array<{ id: string; label: string; href: string; hint?: string; shortcut?: string }> = [
+  { id: 'q-log',        label: 'Log session',         href: '/app/sessions/new',          hint: 'Pre-fills today',  shortcut: 'N' },
+  { id: 'q-add-stud',   label: 'Add student',         href: '/app/students/new',          hint: 'New student form' },
+  { id: 'q-new-inv',    label: 'New invoice',         href: '/app/invoices/new',          hint: 'Single-student invoice' },
+  { id: 'q-add-par',    label: 'Add parent',          href: '/app/students/new?focus=parent', hint: 'Add parent contact' },
+  { id: 'q-polish',     label: 'Open polish queue',   href: '/app/sessions/polish-queue', hint: 'Sessions waiting on notes' },
+  { id: 'q-today',      label: "Today's sessions",    href: '/app/sessions?tab=today' },
+];
+
+const PAGE_TARGETS: Array<{ label: string; href: string; hint?: string; aliases?: string[] }> = [
+  { label: 'Home',                         href: '/app',                       hint: 'Morning briefing',     aliases: ['dashboard', 'briefing'] },
+  { label: 'Sessions — Today',             href: '/app/sessions?tab=today',    hint: 'Today timeline',       aliases: ['today', 'sessions today'] },
+  { label: 'Sessions — Upcoming',          href: '/app/sessions?tab=upcoming', hint: 'This week + later',    aliases: ['upcoming', 'this week', 'tomorrow'] },
+  { label: 'Sessions — Past',              href: '/app/sessions?tab=past',     hint: 'Logged sessions',      aliases: ['past', 'history'] },
+  { label: 'Sessions — Polish queue',      href: '/app/sessions/polish-queue', hint: 'Notes to polish',      aliases: ['polish', 'queue'] },
+  { label: 'Sessions — Templates',         href: '/app/templates',             hint: 'Recurring schedules',  aliases: ['recurring', 'template'] },
+  { label: 'People — Students',            href: '/app/students',              hint: 'All students',         aliases: ['students', 'roster'] },
+  { label: 'People — Households',          href: '/app/households',            hint: 'Households / families', aliases: ['households', 'families'] },
+  { label: 'People — Parents',             href: '/app/parents',               hint: 'Parent contacts',      aliases: ['parents'] },
+  { label: 'Money — Invoices',             href: '/app/invoices',              hint: 'All invoices',         aliases: ['invoices', 'money'] },
+  { label: 'Money — Batch invoice',        href: '/app/invoices/batch',        hint: 'Bill multiple parents at once', aliases: ['batch', 'bill'] },
+  { label: 'Resources — Lesson plans',     href: '/app/lesson-plans',          hint: 'AI lesson plans',      aliases: ['lesson plans', 'lessons', 'plans'] },
+  { label: 'Resources — Files',            href: '/app/files',                 hint: 'Uploaded files',       aliases: ['files'] },
+  { label: 'Messages',                     href: '/app/messages',              hint: 'Parent threads',       aliases: ['messages', 'inbox'] },
+  { label: 'Settings',                     href: '/app/settings/account',      hint: 'Account & billing',    aliases: ['settings', 'preferences'] },
+  { label: 'Settings — Trash',             href: '/app/settings/trash',        hint: 'Archived & deleted items', aliases: ['trash', 'archived'] },
+];
+
+function formatCents(c: number): string {
+  return new Intl.NumberFormat(activeLocale(), {
+    style: 'currency', currency: 'AUD',
+    maximumFractionDigits: c % 100 === 0 ? 0 : 2,
+  }).format(c / 100);
+}
+
+function formatSessionDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' });
 }
 
 export default CommandPalette;
