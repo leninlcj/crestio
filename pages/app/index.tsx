@@ -31,6 +31,7 @@ import AnniversaryBanner from '../../components/dashboard/AnniversaryBanner';
 import InsightCard from '../../components/dashboard/InsightCard';
 import BatchInvoicingNudge from '../../components/dashboard/BatchInvoicingNudge';
 import CalibrationPill from '../../components/dashboard/CalibrationPill';
+import RightNowCard from '../../components/dashboard/RightNowCard';
 import Tour from '../../components/onboarding/Tour';
 import { pickGreeting, computeStreak } from '../../lib/dashboardGreeting';
 import { pickInsight } from '../../lib/insightCard';
@@ -120,6 +121,26 @@ function compactCurrency(cents: number, currency: string): string {
   return new Intl.NumberFormat(undefined, {
     style: 'currency', currency, notation: 'compact', maximumFractionDigits: 1,
   }).format(cents / 100);
+}
+
+// Greeting sub-line — assembles only the non-zero parts. Falls back to a
+// quiet "All clear" when nothing needs the user's attention right now.
+function buildGreetingSubline(data: TodayPayload): string {
+  const todayCount = data.today?.count ?? 0;
+  const invoiceQueue = (data.invoicing_queue ?? []).reduce((acc, e) => acc + e.session_count, 0);
+  const polishCount = data.polish_queue?.length ?? 0;
+  const parts: string[] = [];
+  if (todayCount > 0) {
+    parts.push(`${todayCount} ${todayCount === 1 ? 'session' : 'sessions'} today`);
+  }
+  if (invoiceQueue > 0) {
+    parts.push(`${invoiceQueue} ${invoiceQueue === 1 ? 'invoice' : 'invoices'} to send`);
+  }
+  if (polishCount > 0) {
+    parts.push(`${polishCount} in polish queue`);
+  }
+  if (parts.length === 0) return 'All clear. Nothing waiting.';
+  return parts.join(', ') + '.';
 }
 
 function DashboardInner() {
@@ -331,14 +352,12 @@ function DashboardInner() {
             )}
             <CalibrationPill editsCount={calibrationCount} />
           </div>
-          <div className="text-sm text-ink-muted mt-1">
+          <div className="text-sm text-ink-muted mt-1" data-test-id="dashboard-greeting-sub">
             {todayLabel}
-            {data?.today && (
+            {data && (
               <>
                 {' · '}
-                {data.today.count === 0
-                  ? 'No sessions today'
-                  : `${data.today.count} ${data.today.count === 1 ? 'session' : 'sessions'} · ${data.today.minutes} min`}
+                {buildGreetingSubline(data)}
               </>
             )}
           </div>
@@ -453,6 +472,14 @@ function DashboardBody({
   return (
     <>
       <OwnerBriefCard brief={payload.owner_brief ?? null} currency={currency} />
+
+      <div className="mb-6 md:mb-8" data-tour="right-now">
+        <RightNowCard
+          nextSession={payload.next_session}
+          todaySessions={payload.today?.sessions ?? []}
+          weekAhead={payload.week_ahead ?? []}
+        />
+      </div>
 
       {/* Stat row. */}
       <div className={`grid grid-cols-2 ${statColCx} gap-3 md:gap-4 mb-8 md:mb-10 stat-grid`}>
@@ -1027,7 +1054,8 @@ function OwnerTeamCard({
         </div>
         <div className={`display-num num text-${tone}`}>{sessions}</div>
         <div className="text-xs text-ink-muted truncate leading-snug">
-          {hoursBilled}h billed · {awaitingNotes} awaiting notes
+          {hoursBilled}h billed
+          {awaitingNotes > 0 && <> · {awaitingNotes} awaiting notes</>}
         </div>
         {data.length > 0 && (
           <div className="mt-1">
@@ -1047,20 +1075,45 @@ type NudgeProps = React.ComponentProps<typeof NudgeCard> & { id?: string };
 
 function buildNudges(p: TodayPayload): NudgeProps[] {
   const out: NudgeProps[] = [];
+  const dayMs = 86_400_000;
+  const now = Date.now();
 
-  if (p.polish_queue.length > 0) {
+  // 1. Sessions completed but not polished, >24h old.
+  const stalePolish = (p.polish_queue ?? []).filter((s) =>
+    now - new Date(s.scheduled_at).getTime() > dayMs);
+  if (stalePolish.length > 0) {
     out.push({
-      id: 'polish_queue',
+      id: 'polish_stale',
       icon: <DotIcon />,
       tone: 'amber',
-      title: `${p.polish_queue.length} session${p.polish_queue.length === 1 ? '' : 's'} ready to polish`,
-      description: p.polish_queue[0].student_name,
+      title: `${stalePolish.length} session${stalePolish.length === 1 ? '' : 's'} waiting on notes`,
+      description: `Oldest is ${stalePolish[stalePolish.length - 1].student_name}.`,
       actionLabel: 'Polish now',
-      actionHref: '/app/sessions?tab=polish-queue',
+      actionHref: '/app/sessions/polish-queue',
     });
   }
 
-  if (p.unpaid_invoices?.oldest_overdue_days > 7) {
+  // 2. Sessions polished but not invoiced, >48h old. (We approximate with
+  //    invoicing_queue since polished == has notes_parent_facing AND only
+  //    polished sessions qualify for one-click invoice send.)
+  const sessionsToInvoice = (p.invoicing_queue ?? [])
+    .reduce((acc, e) => acc + e.session_count, 0);
+  if (sessionsToInvoice > 0) {
+    const total = p.invoicing_queue.reduce((acc, e) => acc + e.total_cents, 0);
+    out.push({
+      id: 'unbilled',
+      icon: <DotIcon />,
+      tone: 'forest',
+      title: `${sessionsToInvoice} unbilled session${sessionsToInvoice === 1 ? '' : 's'} worth ${formatCents(total, p.currency)}`,
+      description: 'Send invoices in one batch.',
+      actionLabel: 'Batch invoice',
+      actionHref: '/app/invoices/batch',
+    });
+  }
+
+  // 3. Invoices sent but unpaid past due date.
+  if ((p.unpaid_invoices?.oldest_overdue_days ?? 0) > 0
+      && (p.unpaid_invoices?.count ?? 0) > 0) {
     out.push({
       id: 'overdue_invoices',
       icon: <DotIcon />,
@@ -1072,21 +1125,7 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
     });
   }
 
-  if (p.invoicing_queue.length > 0) {
-    const total = p.invoicing_queue.reduce((acc, e) => acc + e.total_cents, 0);
-    if (total > 5000) {
-      const sessions = p.invoicing_queue.reduce((acc, e) => acc + e.session_count, 0);
-      out.push({
-        id: 'unbilled',
-        icon: <DotIcon />,
-        tone: 'forest',
-        title: `${sessions} unbilled session${sessions === 1 ? '' : 's'} worth ${formatCents(total, p.currency)}`,
-        actionLabel: 'Create invoices',
-        actionHref: '/app/invoices/batch',
-      });
-    }
-  }
-
+  // 4. Reschedule requests — parent-initiated, waiting on tutor response.
   if (p.reschedule_requests.length > 0) {
     out.push({
       id: 'reschedule',
@@ -1099,15 +1138,18 @@ function buildNudges(p: TodayPayload): NudgeProps[] {
     });
   }
 
+  // 5. Pending homework — chase students still working on assigned tasks.
   if (p.homework_pending && p.homework_pending.length > 0) {
+    const oldest = p.homework_pending[0];
+    const sessionId = (oldest as any).session_id ?? '';
     out.push({
       id: 'homework',
       icon: <DotIcon />,
       tone: 'default',
       title: `${p.homework_pending.length} homework item${p.homework_pending.length === 1 ? '' : 's'} pending`,
       description: 'Check in with students or mark complete.',
-      actionLabel: 'View',
-      actionHref: '/app/sessions',
+      actionLabel: 'Open homework',
+      actionHref: sessionId ? `/app/sessions/${sessionId}#homework` : '/app/sessions',
     });
   }
 
