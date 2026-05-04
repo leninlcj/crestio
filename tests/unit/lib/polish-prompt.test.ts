@@ -103,4 +103,42 @@ describe('buildPolishPrompt', () => {
     expect(p15).toContain('Session length: 15 minutes');
     expect(p120).toContain('Session length: 120 minutes');
   });
+
+  describe('voiceProfile param (14G)', () => {
+    const baseInput = {
+      studentFirstName: 'Sam', yearLevel: '10', subject: 'Maths',
+      durationMinutes: 60, rawNotes: 'covered quadratics', callerLocale: 'en' as const,
+    };
+
+    it('injects the voice guide when present', () => {
+      const guide = 'Prefers short declarative sentences. Never uses exclamation marks.';
+      const prompt = buildPolishPrompt({ ...baseInput, voiceProfile: guide });
+      expect(prompt).toContain("VOICE GUIDE — apply this tutor's editing style:");
+      expect(prompt).toContain(guide);
+      expect(prompt).toContain('Now polish the notes accordingly.');
+      // Voice guide must appear before the per-session context.
+      expect(prompt.indexOf('VOICE GUIDE')).toBeLessThan(prompt.indexOf('Context for this session:'));
+    });
+
+    it('produces output identical to the no-voice path when voiceProfile is undefined', () => {
+      const without = buildPolishPrompt(baseInput);
+      const undef = buildPolishPrompt({ ...baseInput, voiceProfile: undefined });
+      expect(undef).toBe(without);
+      expect(without).not.toContain('VOICE GUIDE');
+    });
+
+    it('produces output identical to the no-voice path when voiceProfile is empty string', () => {
+      const without = buildPolishPrompt(baseInput);
+      const empty = buildPolishPrompt({ ...baseInput, voiceProfile: '' });
+      expect(empty).toBe(without);
+      expect(empty).not.toContain('VOICE GUIDE');
+    });
+
+    it('treats whitespace-only voiceProfile as absent', () => {
+      const without = buildPolishPrompt(baseInput);
+      const ws = buildPolishPrompt({ ...baseInput, voiceProfile: '   \n\t  ' });
+      expect(ws).toBe(without);
+      expect(ws).not.toContain('VOICE GUIDE');
+    });
+  });
 });

@@ -117,6 +117,7 @@ function SessionDetailInner() {
   const [form, setForm] = useState<any>(null);
   const [polishing, setPolishing] = useState(false);
   const [polishError, setPolishError] = useState<string | null>(null);
+  const [voiceProfileStatus, setVoiceProfileStatus] = useState<{ summary: string | null; sample_count: number } | null>(null);
   const [editingShared, setEditingShared] = useState(false);
   const [sendModalOpen, setSendModalOpen] = useState(false);
   const [sendDraftContent, setSendDraftContent] = useState('');
@@ -265,8 +266,16 @@ function SessionDetailInner() {
       const { data: { session: auth } } = await supabase.auth.getSession();
       if (auth) {
         setUserId(auth.user.id);
-        const { data: p } = await supabase.from('profiles').select('currency').eq('id', auth.user.id).single();
+        const { data: p } = await supabase
+          .from('profiles')
+          .select('currency, voice_profile_summary, voice_profile_sample_count')
+          .eq('id', auth.user.id)
+          .single();
         if (p?.currency) setCurrency(p.currency);
+        setVoiceProfileStatus({
+          summary: ((p as any)?.voice_profile_summary as string | null) ?? null,
+          sample_count: ((p as any)?.voice_profile_sample_count as number | null) ?? 0,
+        });
       }
       const [{ data: s }, { data: ss }, { data: ts }] = await Promise.all([
         supabase.from('sessions').select('*, student:students(*), tutor:tutors(*)').eq('id', id).maybeSingle(),
@@ -782,6 +791,11 @@ function SessionDetailInner() {
               {(!form.student_id || !Number(form.duration_minutes)) && (
                 <span className="text-2xs text-ink-soft">
                   {t('sessions:polish_needs_student_duration')}
+                </span>
+              )}
+              {voiceProfileStatus?.summary && (
+                <span className="text-2xs text-forest-ink">
+                  {t('sessions:polish_voice_indicator', { count: voiceProfileStatus.sample_count })}
                 </span>
               )}
             </div>

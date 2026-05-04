@@ -130,6 +130,8 @@
   },
   "polish_error_generic": "Something went wrong. Your notes are still saved — please try again in a moment.",
   "polish_needs_student_duration": "Select a student and duration first.",
+  "polish_voice_indicator_one": "Polishing in your voice ({{count}} edit learned)",
+  "polish_voice_indicator_other": "Polishing in your voice ({{count}} edits learned)",
   "select_student": "Select a student",
   "detail": {
     "when": "When",

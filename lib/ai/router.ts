@@ -17,7 +17,9 @@ export type AITaskType =
   | 'lesson_plan'
   | 'assistant_simple'
   | 'assistant_complex'
-  | 'session_summary';
+  | 'session_summary'
+  | 'voice_diff'
+  | 'voice_profile';
 
 // Pricing (USD per million tokens) as of 2026-04-27. Update when Anthropic
 // changes published rates — the cost column on ai_call_logs is captured at
@@ -36,6 +38,8 @@ export function getModelForTask(task: AITaskType): string {
     case 'polish':
     case 'session_summary':
     case 'assistant_simple':
+    case 'voice_diff':
+    case 'voice_profile':
       return HAIKU_MODEL;
     case 'lesson_plan':
     case 'assistant_complex':

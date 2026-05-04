@@ -1,14 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import { getMembershipForUser } from '../../../lib/membership';
+import { processVoiceSample } from '../../../lib/voice/sample';
 
 // POST /api/sessions/log-polish-edit
-// Tutor-side: log a (raw, edited) pair into session_polish_edits so we
-// can later personalize polish (14G). Edit distance is a Levenshtein
-// approximation — bag-of-words diff is good enough for the calibration
-// signal we're collecting.
+// Tutor-side: log a (raw, edited) pair for AI calibration. Two storage paths:
+//   1. session_polish_edits (jsonb + edit_distance) — original signal, unchanged
+//   2. tutor_voice_samples (text + LLM diff_summary + accepted) — 14G voice learning
 //
-// Body: { session_id: string; raw_polish: any; edited_polish: any }
+// AI work is wrapped so any failure is swallowed — the user's edit save
+// must never fail because Anthropic was slow or down.
+//
+// Body: { session_id: string; raw_polish: any; edited_polish: any; accepted?: boolean }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -32,15 +35,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const membership = await getMembershipForUser(userClient, userId);
   if (!membership) return res.status(403).json({ error: 'No organization membership.' });
 
-  const { session_id, raw_polish, edited_polish } = (req.body ?? {}) as {
+  const { session_id, raw_polish, edited_polish, accepted } = (req.body ?? {}) as {
     session_id?: string;
     raw_polish?: unknown;
     edited_polish?: unknown;
+    accepted?: unknown;
   };
   if (!session_id || typeof session_id !== 'string') return res.status(400).json({ error: 'session_id required' });
   if (!raw_polish || !edited_polish) return res.status(400).json({ error: 'raw_polish and edited_polish required' });
 
-  const distance = approxEditDistance(stringify(raw_polish), stringify(edited_polish));
+  const beforeText = stringify(raw_polish);
+  const afterText = stringify(edited_polish);
+  const distance = approxEditDistance(beforeText, afterText);
+  const acceptedFlag = accepted !== false;
 
   const admin = createClient(url, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
@@ -60,14 +67,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: 'Could not log edit' });
   }
 
-  // Return the running edit count so the dashboard can decide whether to
-  // show the calibration pill (threshold = 20).
   const { count } = await admin
     .from('session_polish_edits')
     .select('id', { count: 'exact', head: true })
     .eq('tutor_id', userId);
 
-  return res.status(200).json({ ok: true, edits_count: count ?? 0 });
+  let voiceSampleCount = 0;
+  let profileRebuilt = false;
+  try {
+    const result = await processVoiceSample({
+      userId,
+      organizationId: membership.organization_id,
+      sessionId: session_id,
+      beforeText,
+      afterText,
+      accepted: acceptedFlag,
+      userClient,
+      admin,
+    });
+    voiceSampleCount = result.sampleCount;
+    profileRebuilt = result.rebuilt;
+  } catch (err) {
+    console.error('[log-polish-edit] voice-sample processing failed (non-fatal)', err);
+  }
+
+  return res.status(200).json({
+    ok: true,
+    edits_count: count ?? 0,
+    voice_sample_count: voiceSampleCount,
+    profile_rebuilt: profileRebuilt,
+  });
 }
 
 function stringify(v: unknown): string {

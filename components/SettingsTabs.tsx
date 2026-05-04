@@ -21,6 +21,7 @@ const TABS: Tab[] = [
   { href: '/app/settings/account', i18nKey: 'account' },
   { href: '/app/settings/organisation', i18nKey: 'organisation', ownerOnly: true },
   { href: '/app/settings/preferences', i18nKey: 'preferences' },
+  { href: '/app/settings/voice', i18nKey: 'voice' },
   { href: '/app/settings/notifications', i18nKey: 'notifications' },
   { href: '/app/settings/billing', i18nKey: 'billing', ownerOnly: true },
   { href: '/app/settings/team', i18nKey: 'team', ownerOnly: true, requires: 'multi_tutor' },

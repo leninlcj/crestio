@@ -4,6 +4,7 @@ import { getMembershipForUser } from '../../../../lib/membership';
 import { sendEmail } from '../../../../lib/email';
 import { buildSessionPolishUpdateEmail } from '../../../../lib/emails/sessionPolishUpdate';
 import { getBaseUrl } from '../../../../lib/stripe';
+import { processVoiceSample } from '../../../../lib/voice/sample';
 
 // POST   /api/sessions/[id]/send-polish-to-parent
 //   Body: { content: string, save_as_official?: boolean }
@@ -144,6 +145,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .from('sessions').update(update).eq('id', sessionId);
   if (updateErr) {
     console.error('[send-polish-to-parent] flag update failed (email did send)', updateErr);
+  }
+
+  // 14G voice learning: compare what we sent against the most recent AI
+  // polish for this session. If they differ (or even if they match — accepted
+  // as-is is still signal), capture a tutor_voice_samples row. Wrapped so a
+  // failure here never breaks the user's send flow.
+  try {
+    const { data: lastPolish } = await admin
+      .from('notes_polish_log')
+      .select('polished_text')
+      .eq('session_id', sessionId)
+      .eq('user_id', userId)
+      .not('polished_text', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const aiPolish = (lastPolish as any)?.polished_text;
+    if (typeof aiPolish === 'string' && aiPolish.trim()) {
+      await processVoiceSample({
+        userId,
+        organizationId: membership.organization_id,
+        sessionId,
+        beforeText: aiPolish,
+        afterText: content,
+        accepted: true,
+        userClient,
+        admin,
+      });
+    }
+  } catch (err) {
+    console.error('[send-polish-to-parent] voice sample capture failed (non-fatal)', err);
   }
 
   return res.status(200).json({

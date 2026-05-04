@@ -51,8 +51,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const membership = await getMembershipForUser(supaClient, userId);
   const { data: callerProfile } = await supaClient
-    .from('profiles').select('locale').eq('id', userId).maybeSingle();
+    .from('profiles').select('locale, voice_profile_summary').eq('id', userId).maybeSingle();
   const callerLocale = isSupportedLocale(callerProfile?.locale) ? callerProfile!.locale! : 'en';
+  const voiceProfile = typeof (callerProfile as any)?.voice_profile_summary === 'string'
+    ? ((callerProfile as any).voice_profile_summary as string)
+    : '';
 
   const billing = await isOrgBillingOk(supaClient, organizationId);
   if (!billing.ok) {
@@ -168,6 +171,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     durationMinutes,
     rawNotes,
     callerLocale: callerLocale as keyof typeof LOCALE_AI_NAME,
+    voiceProfile,
   });
 
   try {
@@ -215,9 +219,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    const logRow: { user_id: string; organization_id: string; session_id?: string } = {
+    const logRow: {
+      user_id: string;
+      organization_id: string;
+      session_id?: string;
+      polished_text?: string;
+    } = {
       user_id: userId,
       organization_id: organizationId,
+      polished_text: polishedNotes,
     };
     if (sessionId) {
       logRow.session_id = sessionId;

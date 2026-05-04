@@ -13,6 +13,11 @@ export type PolishPromptInput = {
   durationMinutes: number;
   rawNotes: string;
   callerLocale: keyof typeof LOCALE_AI_NAME;
+  // Optional per-tutor voice guide distilled from past edits (14G). When
+  // present and non-empty, the model is told to apply this style before
+  // emitting the polish — so the output already matches the tutor's voice.
+  // When absent / empty, the prompt is byte-identical to the original.
+  voiceProfile?: string;
 };
 
 export function buildPolishPrompt(input: PolishPromptInput): string {
@@ -24,6 +29,11 @@ export function buildPolishPrompt(input: PolishPromptInput): string {
 
   const language = LOCALE_AI_NAME[input.callerLocale];
   const australianHint = input.callerLocale === 'en' ? 'Australian English. ' : '';
+
+  const voiceGuide = (input.voiceProfile ?? '').trim();
+  const voiceBlock = voiceGuide
+    ? `\nVOICE GUIDE — apply this tutor's editing style:\n${voiceGuide}\n\nNow polish the notes accordingly.\n`
+    : '';
 
   return `You are a professional tutor polishing rough session notes into a clear report for the student's parent. Parents skim — they want to know what happened, whether their child is progressing, and what's next.
 
@@ -42,7 +52,7 @@ Write in ${language}. Use natural phrasing for that language — do not translat
 ${australianHint}No em-dashes (use commas or periods instead — parents don't notice em-dashes, but they do notice AI patterns). Avoid hollow AI tells like 'engaged well', 'made excellent progress', 'demonstrated strong understanding'. Use specific observations from the notes.
 
 Do NOT start with 'In today's session', 'Today we covered', or similar opener phrases. Vary sentence openings naturally.
-
+${voiceBlock}
 Context for this session:
 ${studentLine}
 Session length: ${input.durationMinutes} minutes
