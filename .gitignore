@@ -49,3 +49,4 @@ public/locales/.cache/
 .claude/
 .claude/
 .env*.local
+.vercel
