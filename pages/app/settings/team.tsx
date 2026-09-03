@@ -9,6 +9,8 @@ import { supabase } from '../../../lib/supabase';
 import { useOrganization } from '../../../lib/organizationContext';
 import { useMembership } from '../../../lib/membershipContext';
 import { planAllowsFeature, maxTutorsForPlan } from '../../../lib/billing';
+import { useIsPlatformOwner } from '../../../lib/useIsPlatformOwner';
+import { effectivePlanTier, AGENCY_MAX_TUTORS } from '../../../lib/agencyPlan';
 import { useLocaleFormatters } from '../../../lib/useLocaleFormatters';
 
 type TeamMember = { user_id: string; role: string; joined_at: string; email: string | null };
@@ -21,9 +23,11 @@ function TeamInner() {
   const { membership } = useMembership();
   const { formatDate, formatMoney } = useLocaleFormatters();
   const isOwner = membership?.role === 'owner';
-  const planTier = organization?.plan_tier ?? 'solo';
+  const platformOwner = useIsPlatformOwner();
+  const agencyOrg = isOwner && platformOwner;
+  const planTier = effectivePlanTier(organization?.plan_tier ?? 'solo', agencyOrg);
   const multiTutorAllowed = planAllowsFeature(planTier, 'multi_tutor');
-  const maxTutors = maxTutorsForPlan(planTier);
+  const maxTutors = agencyOrg ? AGENCY_MAX_TUTORS : maxTutorsForPlan(planTier);
 
   const [team, setTeam] = useState<{
     is_owner: boolean;

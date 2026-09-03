@@ -31,12 +31,15 @@ export default function MarketingFooter(_props: Props = {}) {
             { label: 'Book a consultation', href: '/enquire' },
             { label: 'Become a tutor', href: '/tutors' },
             { label: 'Apply to tutor', href: '/tutors/apply' },
+            { label: 'Tutor agreement', href: '/tutors/agreement' },
             { label: 'Tutor and parent sign in', href: '/auth/signin' },
           ]} />
 
           <FooterColumn title="Company" links={[
             { label: 'About', href: '/about' },
             { label: 'Contact', href: '/contact' },
+            { label: 'Child safe policy', href: '/child-safe' },
+            { label: 'Report a concern', href: '/report' },
             { label: 'Privacy policy', href: '/privacy' },
             { label: 'Terms of service', href: '/terms' },
             { label: 'Cookies', href: '/cookies' },

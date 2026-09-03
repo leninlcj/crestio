@@ -15,6 +15,7 @@ import CommandPalette from './CommandPalette';
 import { NotificationCenter as NotificationBell } from './design/NotificationCenter';
 import { TestAccountBanner, ExemptionOffPill } from './OwnerBanners';
 import { isPlatformOwner } from '../lib/owner';
+import { effectivePlanTier } from '../lib/agencyPlan';
 import LanguageSwitcherModal from './LanguageSwitcherModal';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumb, type Crumb } from './design/Breadcrumb';
@@ -22,6 +23,7 @@ import { TabStrip, type Tab } from './design/TabStrip';
 import { FloatingActionButton } from './design/FloatingActionButton';
 import { Avatar } from './design/Avatar';
 import WhatsNewSection from './WhatsNewSection';
+import TutorAgreementGate from './TutorAgreementGate';
 import { NewItemMenu } from './quickcreate/NewItemMenu';
 
 // Stub changelog — bumped when something user-visible ships. Used by the
@@ -138,6 +140,7 @@ function tabsForPath(pathname: string, _query: Record<string, any>, _opts: { isO
     return [
       { key: 'enquiries',    label: 'Enquiries',          href: '/app/leads',              match: (p) => p === '/app/leads' },
       { key: 'applications', label: 'Tutor applications', href: '/app/leads/applications', match: (p) => p === '/app/leads/applications' },
+      { key: 'incidents',    label: 'Reports',            href: '/app/leads/incidents',    match: (p) => p === '/app/leads/incidents' },
     ];
   }
   // Settings: tabs already exist via SettingsTabs — leave to that component.
@@ -179,12 +182,12 @@ export default function Layout({
   const { organization } = useOrganization();
   const { membership } = useMembership();
   const isOwner = membership?.role === 'owner';
-  const planTier = organization?.plan_tier ?? 'solo';
-  const hasMultiTutor = planAllowsFeature(planTier, 'multi_tutor');
-  const hasHouseholds = planTier !== 'solo';
-
   const businessName = organization?.name ?? 'Crestio';
   const [userEmail, setUserEmail] = useState('');
+  // The agency org (platform owner) is never plan-gated.
+  const planTier = effectivePlanTier(organization?.plan_tier ?? 'solo', isOwner && isPlatformOwner(userEmail));
+  const hasMultiTutor = planAllowsFeature(planTier, 'multi_tutor');
+  const hasHouseholds = planTier !== 'solo';
   const [accountOpen, setAccountOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -324,6 +327,7 @@ export default function Layout({
       <Head>
         <title>{browserTitle}</title>
       </Head>
+      {membership?.role === 'tutor' && <TutorAgreementGate />}
       <a
         href="#crestio-main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-forest focus:text-cream focus:px-3 focus:py-2 focus:rounded focus:text-sm"

@@ -5,6 +5,8 @@ import { useMembership } from '../lib/membershipContext';
 import { useOrganization } from '../lib/organizationContext';
 import { planAllowsFeature } from '../lib/billing';
 import { cx } from '../lib/utils';
+import { useIsPlatformOwner } from '../lib/useIsPlatformOwner';
+import { effectivePlanTier } from '../lib/agencyPlan';
 
 type Tab = {
   href: string;
@@ -39,7 +41,8 @@ export function SettingsTabs() {
   const { membership } = useMembership();
   const { organization } = useOrganization();
   const isOwner = membership?.role === 'owner';
-  const planTier = organization?.plan_tier ?? 'solo';
+  const platformOwner = useIsPlatformOwner();
+  const planTier = effectivePlanTier(organization?.plan_tier ?? 'solo', isOwner && platformOwner);
 
   const tabs = TABS.filter((tab) => {
     if (tab.ownerOnly && !isOwner) return false;

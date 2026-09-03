@@ -7,7 +7,7 @@ import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js'
 type SiblingInvoice = { token: string; number: string; total_cents: number; due_on: string | null };
 
 type PayInfo = {
-  org: { name: string; charges_enabled: boolean; status: string };
+  org: { name: string; charges_enabled: boolean; status: string; agency_note?: string | null };
   invoice: {
     id: string;
     number: string;
@@ -324,6 +324,9 @@ export default function PublicPayPage() {
                   <p className="text-2xs text-ink-soft text-center">
                     Payments are processed by Stripe. Your card details never touch our servers.
                   </p>
+                  {info?.org?.agency_note && (
+                    <p className="text-2xs text-ink-soft text-center leading-relaxed">{info.org.agency_note}</p>
+                  )}
                 </div>
               )}
             </>

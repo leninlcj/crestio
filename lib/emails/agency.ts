@@ -237,3 +237,57 @@ export function buildApplicationAlertEmail(a: ApplicationEmailArgs): Built {
   const text = ascii(`New tutor application\n\n` + facts.map(([k, v]) => `${k}: ${v}`).join('\n') + `\n\nOpen: ${url}\n`);
   return { subject, html, text };
 }
+
+// ---------------------------------------------------------------------------
+// Tutor proposal to a family (sent from Leads once a tutor is assigned).
+// ---------------------------------------------------------------------------
+
+export type TutorProposalArgs = {
+  parentName: string;
+  studentFirstName: string | null;
+  yearLevel: string;
+  subjects: readonly string[];
+  mode: string;
+  tutor: { name: string; bio: string | null; subjects: string[] | null; suburb: string | null; levels: string[] | null };
+  ownerMessage: string | null;
+  proposedTimes: string | null;
+};
+
+export function buildTutorProposalEmail(a: TutorProposalArgs): Built {
+  const first = a.parentName.split(' ')[0] || 'there';
+  const student = a.studentFirstName ?? 'your student';
+  const subjects = subjectLabels(a.subjects).join(' and ');
+  const tutorFirst = a.tutor.name.split(' ')[0];
+  const subject = `A tutor for ${student}: ${a.tutor.name}`;
+  const paragraphs = [
+    `Thanks for your patience. For ${escapeHtml(student)} (${escapeHtml(a.yearLevel)}, ${escapeHtml(subjects)}) I'd like to propose <strong>${escapeHtml(a.tutor.name)}</strong>.`,
+    a.tutor.bio ? escapeHtml(a.tutor.bio) : `${escapeHtml(tutorFirst)} is interviewed, ID-checked and WWCC-verified, and teaches ${escapeHtml(subjects)}.`,
+    a.ownerMessage ? escapeHtml(a.ownerMessage) : '',
+    a.proposedTimes ? `Times that could work for the first lesson: ${escapeHtml(a.proposedTimes)}. Reply with the one that suits, or suggest another.` : `Reply with two or three times that suit for a first lesson and I'll confirm with ${escapeHtml(tutorFirst)}.`,
+    `${escapeHtml(AGENCY.policies.firstLessonGuarantee)} There's no joining fee and no lock-in.`,
+  ].filter(Boolean);
+  const facts: Array<[string, string]> = [
+    ['Tutor', a.tutor.name],
+    ['Teaches', (a.tutor.subjects ?? []).join(', ') || subjects],
+  ];
+  if (a.tutor.levels && a.tutor.levels.length) facts.push(['Levels', a.tutor.levels.join(', ')]);
+  facts.push(['Lessons', modeLabel(a.mode) + (a.tutor.suburb && a.mode !== 'online' ? ` · based in ${a.tutor.suburb}` : '')]);
+  const html = shell({
+    kicker: 'Your tutor match',
+    heading: `Meet ${a.tutor.name}.`,
+    preheader: `A tutor for ${student}: ${a.tutor.name}`,
+    paragraphs,
+    facts,
+    cta: { label: 'See pricing and what is included', url: `${AGENCY.siteUrl}/pricing` },
+  });
+  const text = ascii(
+    `Hi ${first},\n\n` +
+    `Thanks for your patience. For ${student} (${a.yearLevel}, ${subjects}) I'd like to propose ${a.tutor.name}.\n\n` +
+    (a.tutor.bio ? `${a.tutor.bio}\n\n` : '') +
+    (a.ownerMessage ? `${a.ownerMessage}\n\n` : '') +
+    (a.proposedTimes ? `Times that could work for the first lesson: ${a.proposedTimes}. Reply with the one that suits, or suggest another.\n\n` : `Reply with two or three times that suit for a first lesson and I'll confirm with ${tutorFirst}.\n\n`) +
+    `${AGENCY.policies.firstLessonGuarantee} There's no joining fee and no lock-in.\n\n` +
+    facts.map(([k, v]) => `${k}: ${v}`).join('\n') + `\n\n--\n${AGENCY.founder.name} | ${AGENCY.name} | ${AGENCY.siteUrl}\n`,
+  );
+  return { subject, html, text };
+}

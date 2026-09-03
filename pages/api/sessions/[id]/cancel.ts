@@ -3,9 +3,15 @@ import { createClient } from '@supabase/supabase-js';
 import { getMembershipForUser } from '../../../../lib/membership';
 import { logSessionChange, emailParentOfTutorChange, formatAuDateTime } from '../../../../lib/sessionChanges';
 import { createNotification } from '../../../../lib/notifications';
+import { isLateCancellation, LATE_CANCEL_HOURS } from '../../../../lib/lateCancellation';
 
 // POST /api/sessions/[id]/cancel
-// Body: { message?: string }
+// Body: { message?: string, cancelled_by?: 'family' | 'tutor' | 'agency', waive?: boolean }
+//
+// Late-cancellation rule (agency terms): a family cancellation inside the
+// notice window is chargeable — the session is marked late_cancellation and
+// stays billable (the unbilled view includes it) unless the owner waives it.
+// Tutor or agency cancellations are never charged.
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -50,8 +56,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Cannot cancel a completed session.' });
   }
 
+  const cancelledBy: 'family' | 'tutor' | 'agency' =
+    body.cancelled_by === 'family' ? 'family' : body.cancelled_by === 'agency' ? 'agency' : membership.role === 'tutor' ? 'tutor' : (body.cancelled_by === 'tutor' ? 'tutor' : 'family');
+  const late = isLateCancellation(session.scheduled_at, cancelledBy);
+  const waived = membership.role === 'owner' && body.waive === true;
+
   const { error } = await admin.from('sessions').update({
     status: 'cancelled',
+    late_cancellation: late,
+    cancellation_waived: late ? waived : false,
+    cancelled_at: new Date().toISOString(),
+    cancelled_by_user_id: userId,
     proposed_change_by: null,
     proposed_new_start_time: null,
     proposed_new_duration_minutes: null,
@@ -66,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     changedByUserId: userId,
     changeType: 'confirmed_cancel',
     oldStartTime: session.scheduled_at,
-    message: body.message ? String(body.message) : null,
+    message: [body.message ? String(body.message) : null, late ? (waived ? 'Late cancellation — charge waived.' : `Late cancellation by the family — chargeable (${LATE_CANCEL_HOURS}h rule).`) : null].filter(Boolean).join(' ') || null,
   });
 
   await emailParentOfTutorChange(admin, {
@@ -104,5 +119,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('[sessions/cancel] notification fan-out failed', e);
   }
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ late_cancellation: late, cancellation_waived: late ? waived : false, ok: true });
 }

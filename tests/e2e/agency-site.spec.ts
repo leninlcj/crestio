@@ -112,3 +112,29 @@ test.describe('agency site — tutor application', () => {
     await expect(page.getByRole('status')).toContainText(/Thanks, Sam/);
   });
 });
+
+test.describe('agency site — chunk 2 pages', () => {
+  test('tutor agreement, child safe policy and report pages render', async ({ page }) => {
+    for (const [path, heading] of [['/tutors/agreement', /agree to when you tutor/i], ['/child-safe', /child safe policy/i], ['/report', /report a concern/i]] as Array<[string, RegExp]>) {
+      const res = await page.goto(path);
+      expect(res?.status(), path).toBe(200);
+      await expect(page.getByRole('heading', { level: 1 }), path).toContainText(heading);
+    }
+    await page.goto('/tutors/agreement');
+    await expect(page.locator('main')).toContainText('appoint Crestio as your non-exclusive agent');
+  });
+
+  test('report form validates then submits', async ({ page }) => {
+    await page.route('**/api/incidents', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'test', stored: true }) }));
+    await page.goto('/report');
+    await page.getByRole('button', { name: 'Send report' }).click();
+    await expect(page.getByText('Choose what this is about.')).toBeVisible();
+    await page.getByRole('button', { name: /A tutor's conduct/ }).click();
+    await page.fill('#rp-desc', 'The tutor was 40 minutes late to two lessons in a row.');
+    await page.fill('#rp-name', 'Priya Nair');
+    await page.fill('#rp-email', 'priya@example.com');
+    await page.getByRole('button', { name: 'A parent' }).click();
+    await page.getByRole('button', { name: 'Send report' }).click();
+    await expect(page.getByRole('status')).toContainText(/Thank you for telling us/);
+  });
+});

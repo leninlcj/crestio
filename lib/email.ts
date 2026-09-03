@@ -38,12 +38,14 @@ export async function sendEmail({
 
   try {
     const result = await resend.emails.send({
-      from: 'Crestio <support@crestio.ai>',
+      from: process.env.EMAIL_FROM || 'Crestio Tutoring <hello@crestio.ai>',
       to: [to],
       subject,
       html,
       text,
-      replyTo: replyTo || 'support@crestio.ai',
+      // Until hello@crestio.ai has an inbox, replies route to the owner so
+      // nothing a family writes back is lost.
+      replyTo: replyTo || process.env.EMAIL_REPLY_TO || process.env.OWNER_ALERT_EMAIL || 'leninlcj@gmail.com',
     });
 
     if (result.error) {

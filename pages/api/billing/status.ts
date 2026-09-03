@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { isPlatformOwner } from '../../../lib/owner';
 import { createClient } from '@supabase/supabase-js';
 import { getMembershipForUser } from '../../../lib/membership';
 import { daysLeftInTrial } from '../../../lib/billing';
@@ -49,7 +50,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const status = (org.subscription_status ?? 'trialing') as string;
   const days = daysLeftInTrial(org.trial_ends_at);
   const isInTrial = status === 'trialing' && (days ?? 0) > 0;
-  const isActive = status === 'active' || isInTrial;
+  // The agency organisation (platform owner) is exempt from billing — mirrors
+  // org_billing_ok() in the database, so the client never shows a paywall.
+  const exempt = isPlatformOwner(userData.user.email);
+  const isActive = exempt || status === 'active' || isInTrial;
   const cancelAtPeriodEnd = Boolean((org as any).cancel_at_period_end);
 
   const body: Record<string, unknown> = {
@@ -59,6 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     days_left_in_trial: isInTrial ? days : null,
     is_in_trial: isInTrial,
     is_active: isActive,
+    billing_exempt: exempt,
     stripe_customer_id_present: !!org.stripe_customer_id,
     stripe_subscription_id_present: !!org.stripe_subscription_id,
     cancel_at_period_end: cancelAtPeriodEnd,

@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { isPlatformOwner } from '../../../../lib/owner';
+import { agencyInvoiceNote } from '../../../../lib/agency';
 import { createClient } from '@supabase/supabase-js';
 import { checkRateLimit } from '../../../../lib/rateLimit';
 
@@ -36,10 +38,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: org } = await admin
     .from('organizations')
-    .select('id, name, stripe_connect_status, stripe_connect_charges_enabled')
+    .select('id, name, stripe_connect_status, stripe_connect_charges_enabled, owner_user_id')
     .eq('id', (invoice as any).organization_id)
     .maybeSingle();
   if (!org) return res.status(404).json({ error: 'Not found.' });
+
+  // Agency disclosure (introduction-agency model) for the agency org only.
+  let agencyNote: string | null = null;
+  if ((org as any).owner_user_id) {
+    const { data: ownerProfile } = await admin.from('profiles').select('email').eq('id', (org as any).owner_user_id).maybeSingle();
+    if (isPlatformOwner((ownerProfile as any)?.email)) {
+      let lessonTutor: string | null = null;
+      if ((invoice as any).student_id) {
+        const { data: st } = await admin.from('students').select('primary_tutor_id').eq('id', (invoice as any).student_id).maybeSingle();
+        if ((st as any)?.primary_tutor_id) {
+          const { data: tu } = await admin.from('tutors').select('name').eq('id', (st as any).primary_tutor_id).maybeSingle();
+          lessonTutor = (tu as any)?.name ?? null;
+        }
+      }
+      agencyNote = agencyInvoiceNote(lessonTutor);
+    }
+  }
 
   const inv = invoice as {
     id: string;
@@ -91,6 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       name: (org as any).name,
       charges_enabled: Boolean((org as any).stripe_connect_charges_enabled),
       status: (org as any).stripe_connect_status,
+      agency_note: agencyNote,
     },
     invoice: {
       id: inv.id,

@@ -7,6 +7,7 @@ import OwnerOnly from '../../../components/OwnerOnly';
 import Layout from '../../../components/Layout';
 import { supabase } from '../../../lib/supabase';
 import { Tutor, Session } from '../../../lib/types';
+import { TutorVettingCard, VETTING_FORM_FIELDS, vettingFormFromTutor, vettingPatchFromForm } from '../../../components/tutors/TutorVetting';
 import {
   formatCents,
   formatDateTime,
@@ -53,6 +54,7 @@ function TutorDetailInner() {
           subjects: (tu.subjects ?? []).join(', '),
           pay_rate: tu.pay_rate_cents ? centsToDollars(tu.pay_rate_cents) : '',
           notes: tu.notes ?? '',
+          ...vettingFormFromTutor(tu),
         });
       }
       setLoading(false);
@@ -72,6 +74,7 @@ function TutorDetailInner() {
       subjects,
       pay_rate_cents: form.pay_rate ? dollarsToCents(form.pay_rate) : null,
       notes: form.notes || null,
+      ...vettingPatchFromForm(form),
     }).eq('id', tutor.id);
     setSaving(false);
     if (err) { setError(err.message); return; }
@@ -136,6 +139,26 @@ function TutorDetailInner() {
             <textarea rows={3} className="input" value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           </div>
+          <div className="pt-4 border-t border-rule">
+            <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Vetting and matching</div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {VETTING_FORM_FIELDS.map((f) => (
+                <div key={f.key} className={f.wide ? 'md:col-span-2' : ''}>
+                  <label className="label">{f.label}</label>
+                  {f.type === 'select' ? (
+                    <select className="input" value={form[f.key] ?? ''} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}>
+                      <option value="">—</option>
+                      {f.options!.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  ) : f.type === 'textarea' ? (
+                    <textarea rows={3} className="input" value={form[f.key] ?? ''} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })} placeholder={f.placeholder} />
+                  ) : (
+                    <input type={f.type} className="input" value={form[f.key] ?? ''} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })} placeholder={f.placeholder} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
           {error && <div className="text-sm text-claret">{error}</div>}
           <div className="flex items-center justify-between pt-2">
             <div className="flex gap-3">
@@ -177,6 +200,8 @@ function TutorDetailInner() {
               </div>
             </div>
           </div>
+
+          <TutorVettingCard tutor={tutor} onChange={(fresh) => setTutor(fresh as Tutor)} />
 
           {tutor.notes && (
             <div className="card p-6 mb-8">

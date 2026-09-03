@@ -99,8 +99,10 @@ export function SessionDetailModal({ open, onClose, session, onChanged, mode }: 
     });
     if (ok) { onChanged(); onClose(); }
   }
+  const [cancelledBy, setCancelledBy] = useState<'family' | 'tutor' | 'agency'>('family');
+  const [waive, setWaive] = useState(false);
   async function doTutorCancel() {
-    const ok = await call(`/api/sessions/${session!.id}/cancel`, { message });
+    const ok = await call(`/api/sessions/${session!.id}/cancel`, { message, cancelled_by: cancelledBy, waive });
     if (ok) { onChanged(); onClose(); }
   }
   async function doMark(status: 'completed' | 'no_show') {
@@ -293,6 +295,23 @@ export function SessionDetailModal({ open, onClose, session, onChanged, mode }: 
             <div className="text-2xs uppercase tracking-widest text-claret">
               {mode === 'tutor' ? 'Cancel session' : 'Request cancellation'}
             </div>
+            {mode === 'tutor' && (
+              <div>
+                <label className="label">Who is cancelling?</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {([['family', 'The family'], ['tutor', 'The tutor'], ['agency', 'Crestio']] as Array<['family' | 'tutor' | 'agency', string]>).map(([k, l]) => (
+                    <button key={k} type="button" onClick={() => setCancelledBy(k)} aria-pressed={cancelledBy === k}
+                      className={['px-3 py-2 rounded-md border text-sm', cancelledBy === k ? 'bg-forest text-cream border-forest' : 'bg-surface border-rule text-ink hover:bg-ruleSoft'].join(' ')}>{l}</button>
+                  ))}
+                </div>
+                {cancelledBy === 'family' && (
+                  <div className="mt-2 text-2xs text-ink-soft">
+                    A family cancellation inside 24 hours is charged and the tutor is paid.
+                    <label className="flex items-center gap-2 mt-1.5 text-xs text-ink"><input type="checkbox" checked={waive} onChange={(e) => setWaive(e.target.checked)} /> Waive the charge this time</label>
+                  </div>
+                )}
+              </div>
+            )}
             <div>
               <label className="label">{mode === 'tutor' ? 'Reason for parent (optional)' : 'Reason (optional)'}</label>
               <textarea className="input" rows={3} value={message} onChange={(e) => setMessage(e.target.value)} />

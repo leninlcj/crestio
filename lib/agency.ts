@@ -234,6 +234,12 @@ export const TUTOR_PAY_BANDS: Record<Exclude<RateBandKey, 'university'>, { onlin
   ext2: { online: 60, inHome: 70 },
 };
 
+/** Disclosure printed on invoices and the payment page (introduction-agency model). */
+export function agencyInvoiceNote(tutorName: string | null | undefined): string {
+  const who = tutorName ? `${tutorName}, an independent tutor introduced by ${AGENCY.name}` : `your Crestio tutor, an independent tutor introduced by ${AGENCY.name}`;
+  return `Tutoring is provided by ${who}. ${AGENCY.name} collects this payment on the tutor's behalf, pays the tutor their fee, and retains a service fee for matching, administration and payment handling. Questions: ${AGENCY.email}.`;
+}
+
 // ---------------------------------------------------------------------------
 // What is included with every match — shown on pricing and the home page.
 // ---------------------------------------------------------------------------

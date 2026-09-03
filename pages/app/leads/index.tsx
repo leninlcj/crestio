@@ -138,6 +138,14 @@ function LeadsInner() {
     toast.show({ message: 'Household and student created. Invite the parent from People → Parents when ready.', tone: 'success' });
   }
 
+  async function propose(e: Enquiry, tutorId: string, message: string, times: string) {
+    const res = await authFetch(`/api/owner/enquiries/${e.id}/propose`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tutor_id: tutorId, message, proposed_times: times }) });
+    const payload = await res.json().catch(() => ({}));
+    if (!res.ok) { toast.show({ message: payload?.error ?? 'Could not send the proposal.', tone: 'error' }); return; }
+    if (payload.enquiry) patchLocal(e.id, payload.enquiry);
+    toast.show({ message: `Proposal emailed to ${e.email}.`, tone: 'success' });
+  }
+
   return (
     <Layout title="Leads" subtitle="Enquiries" pageTitle="Enquiries · Leads">
       {setupRequired && (
@@ -211,6 +219,7 @@ function LeadsInner() {
             tutors={tutors}
             onUpdate={(body, msg) => update(selected.id, body, msg)}
             onConvert={(mode, rate, tutorId, name) => convert(selected, mode, rate, tutorId, name)}
+            onPropose={(tutorId, message, times) => propose(selected, tutorId, message, times)}
           />
         )}
       </DetailPane>
@@ -218,11 +227,12 @@ function LeadsInner() {
   );
 }
 
-function LeadDetail({ e, tutors, onUpdate, onConvert }: {
+function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
   e: Enquiry;
   tutors: Tutor[];
   onUpdate: (body: Record<string, unknown>, okMessage?: string) => Promise<boolean>;
   onConvert: (mode: 'online' | 'in_home', rateCents: number | null, tutorId: string | null, studentName: string) => Promise<void>;
+  onPropose: (tutorId: string, message: string, times: string) => Promise<void>;
 }) {
   const [notes, setNotes] = useState(e.owner_notes ?? '');
   const [mode, setMode] = useState<'online' | 'in_home'>(e.mode === 'in_home' ? 'in_home' : 'online');
@@ -233,6 +243,9 @@ function LeadDetail({ e, tutors, onUpdate, onConvert }: {
     return e.who === 'me' ? e.parent_name : [e.student_first_name, last].filter(Boolean).join(' ');
   });
   const [busy, setBusy] = useState(false);
+  const [proposeMsg, setProposeMsg] = useState('');
+  const [proposeTimes, setProposeTimes] = useState('');
+  const [proposing, setProposing] = useState(false);
 
   useEffect(() => {
     const r = suggestedRate(e, mode);
@@ -297,6 +310,24 @@ function LeadDetail({ e, tutors, onUpdate, onConvert }: {
         </select>
         {tutors.length === 0 && <p className="mt-1.5 text-2xs text-ink-soft">No tutors yet. Accepted applications appear here.</p>}
       </div>
+
+      {tutorId && !e.converted_at && (
+        <div className="card p-4 space-y-3">
+          <div className="text-2xs uppercase tracking-widest text-ink-soft">Email the family a tutor proposal</div>
+          <div>
+            <label className="label" htmlFor="lead-times">Times that could work (optional)</label>
+            <input id="lead-times" className="input" value={proposeTimes} onChange={(ev) => setProposeTimes(ev.target.value)} placeholder="e.g. Tue 4pm, Thu 5pm, Sat 10am" />
+          </div>
+          <div>
+            <label className="label" htmlFor="lead-propose-msg">A line from you (optional)</label>
+            <textarea id="lead-propose-msg" className="input" rows={2} value={proposeMsg} onChange={(ev) => setProposeMsg(ev.target.value)} placeholder="Why this tutor is the right fit for them." />
+          </div>
+          <p className="text-2xs text-ink-soft">Sends the tutor's name, bio and subjects with the first-lesson guarantee, marks the enquiry contacted, and asks the family to reply with a time. Blocked until the tutor's WWCC is verified.</p>
+          <button type="button" disabled={proposing} className="btn-primary w-full" onClick={async () => { setProposing(true); try { await onPropose(tutorId, proposeMsg, proposeTimes); } finally { setProposing(false); } }}>
+            {proposing ? 'Sending…' : 'Send tutor proposal'}
+          </button>
+        </div>
+      )}
 
       {e.converted_at ? (
         <div className="card p-4 bg-success-soft/40 border-success/30">

@@ -19,6 +19,12 @@ Since 3 September 2026 (agency pivot, chunk 1). The plan and checklist live in `
 | Admin | `/app/leads` (enquiries: status pipeline, notes, assign tutor, convert to household + student) and `/app/leads/applications` (status pipeline, interview time, notes, accept → tutor invitation). Platform-owner only, via `resolveOwnerRequest`. |
 | Tables | `enquiries`, `tutor_applications`, vetting columns on `tutors` — `supabase/migrations/20260903_agency_enquiries_applications.sql` |
 | Redirects for old SaaS URLs | `next.config.js` |
+| Legal documents (tutor agreement, code of conduct, child safe policy) | `lib/agencyLegal.ts` — versioned data; public at `/tutors/agreement`, `/child-safe`; tutors accept in-app via `components/TutorAgreementGate.tsx` → `POST /api/tutors/accept-agreement` |
+| Concerns and complaints | `/report` → `POST /api/incidents` → `/app/leads/incidents` (child-safe scheme records) |
+| Tutor vetting | `components/tutors/TutorVetting.tsx` on the tutor page: WWCC number/expiry/verified, ID, referees, training, insurance, ABN. `GET /api/tutors/me` links `tutors.auth_user_id` by email when the signup trigger did not. Weekly `/api/cron/wwcc-expiry` emails the owner. |
+| Late cancellations | `POST /api/sessions/[id]/cancel` takes `cancelled_by` + `waive`; family cancellations inside 24h are flagged `late_cancellation` and stay billable (view `unbilled_completed_sessions`) |
+| Agency org never plan-gated | `lib/agencyPlan.ts` (`effectivePlanTier`), used by Layout, SettingsTabs, team settings, `/api/tutors/invite`; `/api/billing/status` reports `billing_exempt` |
+| Invoice disclosure (agency model) | `agencyInvoiceNote()` in `lib/agency.ts`, printed on the PDF and the `/pay` page |
 
 ## Environment variables
 
@@ -35,6 +41,7 @@ Since 3 September 2026 (agency pivot, chunk 1). The plan and checklist live in `
 | `STRIPE_WEBHOOK_SECRET` | Vercel (added after first deploy) | Webhook signature verification | Webhook acks 200 but does not persist |
 | `NEXT_PUBLIC_SITE_URL` | Vercel (optional) | Override base URL for Stripe return_url / invite links | Falls back to request host / `https://crestio.ai` |
 | `OWNER_ALERT_EMAIL` | Vercel (optional) | Where new-enquiry and new-application alerts go | Falls back to the platform owner email in `lib/owner.ts` |
+| `EMAIL_FROM` / `EMAIL_REPLY_TO` | Vercel (optional) | Sender identity and reply-to for all outbound email | `Crestio Tutoring <hello@crestio.ai>`; replies route to the owner |
 
 Sanity-check which of these are loaded in the current environment:
 
@@ -54,7 +61,7 @@ All migrations run manually in Supabase SQL Editor. Order matters:
 6. **Session 9** — assistant_conversations, assistant_messages, bump_conversation_timestamps trigger.
 7. **Session 10** — subscription columns on organizations, billing_events table.
 8. **Session 10.5** — `org_billing_ok(uuid)` helper, `cancel_at_period_end` column, billing-gated INSERT policies on students/sessions/invoices/lesson_plans.
-9. Everything under `supabase/migrations/` in filename order; the latest is `20260903_agency_enquiries_applications.sql` (enquiries, tutor_applications, tutor vetting columns).
+9. Everything under `supabase/migrations/` in filename order; the latest are `20260903_agency_enquiries_applications.sql` (enquiries, tutor_applications, tutor vetting columns) and `20260904_agency_chunk2.sql` (agreement/vetting timestamps, late cancellations + view, incidents).
 
 `supabase/schema.sql` is a consolidated reference — it does NOT reflect the production `handle_new_user` trigger (which carries the Session 5 tutor-invitation branch). See Known limitations.
 

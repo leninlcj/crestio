@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { findOrLinkTutorRow } from '../../../lib/tutorIdentity';
 import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -54,6 +55,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const profilesById = new Map(
     (profiles ?? []).map((p) => [p.id, p.email ?? null] as const)
   );
+
+  // Link tutor accounts to their tutors rows by email where the signup
+  // trigger did not (production drift). Cheap; idempotent.
+  for (const m of members ?? []) {
+    if (m.role !== 'tutor') continue;
+    const email = profilesById.get(m.user_id) ?? null;
+    if (!email) continue;
+    try {
+      await findOrLinkTutorRow(admin, { userId: m.user_id, email, organizationId });
+    } catch (e) {
+      console.error('[tutors/team] link failed', e);
+    }
+  }
 
   const nowIso = new Date().toISOString();
   const { data: pending } = await admin
