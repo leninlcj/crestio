@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 import { renderWeeklyDigestHTML } from '../../../lib/emails/weeklyDigest';
 import { getBaseUrl } from '../../../lib/stripe';
 
-// Vercel Cron — runs every hour. We send the digest only when it's
+// Vercel Cron — runs once a day (08:00 UTC). We send the digest only when it's
 // 18:00-18:59 in the tutor's local timezone (column profiles.timezone or
 // org timezone). Dedupe via a per-week marker on the tutor's profile so
 // re-runs (or DST edges) don't double-send.
@@ -47,7 +47,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       local = new Date();
     }
     if (local.getDay() !== 0) { skipped++; continue; }      // not Sunday
-    if (local.getHours() !== 18) { skipped++; continue; }    // not 6pm
+    // Daily cron (Vercel Hobby) fires once at 08:00 UTC = 18:00 AEST / 19:00 AEDT;
+    // accept a 17–19 local window so both halves of the year work.
+    if (local.getHours() < 17 || local.getHours() > 19) { skipped++; continue; }
 
     // Week tag: ISO year-week.
     const weekTag = isoWeekTag(local);

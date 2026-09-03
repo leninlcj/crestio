@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "আপনার Crestio সাবস্ক্রিপশন বাতিল করা হয়েছে",
     "body": "আপনি {{ends_on}} পর্যন্ত অ্যাক্সেস রাখবেন। Settings → Billing থেকে যে কোনো সময় পুনরায় সাবস্ক্রাইব করুন।"
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }

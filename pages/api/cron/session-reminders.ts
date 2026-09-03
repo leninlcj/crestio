@@ -4,10 +4,34 @@ import { createNotification } from '../../../lib/notifications';
 import { formatAuDateTime } from '../../../lib/sessionChanges';
 import { getBaseUrl } from '../../../lib/stripe';
 
-// Vercel Cron → every 15 minutes.
-// Finds sessions ~1 hour out (tutor reminder) and ~24 hours out (parent
-// reminder). Dedupe via notification_dispatch_log so re-runs / overlap
-// windows don't double-fire.
+// Vercel Cron. Two cadences:
+//   * daily (default; Vercel Hobby allows one run per day): runs at 06:00
+//     Sydney. Tutors get a "today at 4:00 pm" reminder for every session on
+//     today's Sydney date; parents get a "tomorrow at 4:00 pm" reminder for
+//     every session on tomorrow's Sydney date.
+//   * frequent (CRON_REMINDER_MODE=frequent, needs a Pro plan and a */15
+//     schedule): the original 45–75 min tutor window and 24h parent window.
+// Dedupe via notification_dispatch_log so re-runs never double-fire.
+const TZ = 'Australia/Sydney';
+
+function sydneyDayBounds(offsetDays: number): { fromIso: string; toIso: string } {
+  // Midnight-to-midnight of (today + offsetDays) in Sydney, expressed in UTC.
+  const nowSyd = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
+  const y = nowSyd.getFullYear();
+  const m = nowSyd.getMonth();
+  const d = nowSyd.getDate() + offsetDays;
+  const localMidnight = new Date(y, m, d, 0, 0, 0, 0);
+  const localNext = new Date(y, m, d + 1, 0, 0, 0, 0);
+  // Convert a Sydney wall-clock time to UTC by measuring the zone offset at that instant.
+  const toUtc = (wall: Date) => {
+    const asUtc = new Date(Date.UTC(wall.getFullYear(), wall.getMonth(), wall.getDate(), wall.getHours(), wall.getMinutes()));
+    const sydAtThat = new Date(asUtc.toLocaleString('en-US', { timeZone: TZ }));
+    const offsetMs = sydAtThat.getTime() - new Date(asUtc.toLocaleString('en-US', { timeZone: 'UTC' })).getTime();
+    return new Date(asUtc.getTime() - offsetMs);
+  };
+  return { fromIso: toUtc(localMidnight).toISOString(), toIso: toUtc(localNext).toISOString() };
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return res.status(500).json({ error: 'Cron not configured.' });
@@ -28,11 +52,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let dupes = 0;
   const errors: string[] = [];
 
-  // ------ 1-hour tutor reminder window (45-75 min ahead) -----------------
+  const frequent = process.env.CRON_REMINDER_MODE === 'frequent';
+
+  // ------ Tutor reminder: today's sessions (daily) or 45–75 min ahead (frequent)
   try {
     const nowMs = Date.now();
-    const fromIso = new Date(nowMs + 45 * 60_000).toISOString();
-    const toIso = new Date(nowMs + 75 * 60_000).toISOString();
+    const { fromIso, toIso } = frequent
+      ? { fromIso: new Date(nowMs + 45 * 60_000).toISOString(), toIso: new Date(nowMs + 75 * 60_000).toISOString() }
+      : { fromIso: new Date(Math.max(nowMs, new Date(sydneyDayBounds(0).fromIso).getTime())).toISOString(), toIso: sydneyDayBounds(0).toIso };
     const { data: sessions } = await admin
       .from('sessions')
       .select('id, scheduled_at, duration_minutes, subject, student:students!inner(id, name), tutor_user_id, status')
@@ -45,11 +72,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await createNotification(admin, {
         userId: s.tutor_user_id,
         type: 'session_reminder_1h',
-        titleKey: 'session_reminder_1h.title',
-        bodyKey: 'session_reminder_1h.body',
+        titleKey: frequent ? 'session_reminder_1h.title' : 'session_reminder_today.title',
+        bodyKey: frequent ? 'session_reminder_1h.body' : 'session_reminder_today.body',
         templateVars: {
           student: s.student?.name ?? 'student',
-          time: formatAuDateTime(s.scheduled_at),
+          time: frequent ? formatAuDateTime(s.scheduled_at) : formatTime(s.scheduled_at),
           duration: s.duration_minutes,
           subject: s.subject ?? '',
         },
@@ -66,11 +93,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     errors.push(`1h:scan:${e?.message ?? 'unknown'}`);
   }
 
-  // ------ 24-hour parent reminder window (23h45–24h15 ahead) -------------
+  // ------ Parent reminder: tomorrow's sessions (daily) or 23h45–24h15 ahead (frequent)
   try {
     const nowMs = Date.now();
-    const fromIso = new Date(nowMs + (23 * 60 + 45) * 60_000).toISOString();
-    const toIso   = new Date(nowMs + (24 * 60 + 15) * 60_000).toISOString();
+    const { fromIso, toIso } = frequent
+      ? { fromIso: new Date(nowMs + (23 * 60 + 45) * 60_000).toISOString(), toIso: new Date(nowMs + (24 * 60 + 15) * 60_000).toISOString() }
+      : sydneyDayBounds(1);
     const { data: sessions } = await admin
       .from('sessions')
       .select('id, scheduled_at, duration_minutes, subject, student:students!inner(id, name), tutor_user_id, status')

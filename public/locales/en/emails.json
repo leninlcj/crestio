@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "Your Crestio subscription has been cancelled",
     "body": "You'll keep access until {{ends_on}}. Re-subscribe any time from Settings → Billing."
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }
