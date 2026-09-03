@@ -45,12 +45,12 @@ export default function CompareCompetitor({ page }: Props) {
 
           <section className="px-6 md:px-12 mb-14 max-w-3xl mx-auto">
             <div className="rounded-md border border-rule bg-surface p-6 md:p-8">
-              <h2 className="font-display text-xl tracking-tightest text-ink mb-4">
+              <h2 className="font-display text-xl tracking-tighter text-ink mb-4">
                 {page.honest.heading}.
               </h2>
               <ul className="space-y-3">
                 {page.honest.cases.map((c, i) => (
-                  <li key={i} className="text-sm text-ink-muted leading-relaxed pl-5 border-l-2 border-amber/40">
+                  <li key={i} className="text-sm text-ink-muted leading-relaxed pl-5 border-l-2 border-amber">
                     {c}
                   </li>
                 ))}
@@ -62,8 +62,8 @@ export default function CompareCompetitor({ page }: Props) {
           </section>
 
           <section className="px-6 md:px-12 mb-14 max-w-3xl mx-auto">
-            <div className="rounded-md border border-forest bg-forest/[0.04] p-6 md:p-8">
-              <h2 className="font-display text-xl tracking-tightest text-forest-ink mb-3">
+            <div className="rounded-md border border-rule bg-forest-soft p-6 md:p-8">
+              <h2 className="font-display text-xl tracking-tighter text-forest-ink mb-3">
                 Switching from {page.competitor}? We'll move you in 24 hours, free.
               </h2>
               <p className="text-sm text-forest-ink/85 leading-relaxed mb-5 max-w-prose">

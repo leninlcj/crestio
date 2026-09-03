@@ -71,7 +71,7 @@ export default function PricingTable({ showHeader = true, showCompareLink = true
             {t('pricing_v2.annual')}
             <span
               className={[
-                'inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] uppercase tracking-widest font-medium',
+                'inline-flex items-center px-1.5 py-0.5 rounded-full text-2xs uppercase tracking-widest font-medium',
                 interval === 'annual' ? 'bg-cream/15 text-cream' : 'bg-amber-soft text-amber-ink',
               ].join(' ')}
             >
@@ -152,12 +152,12 @@ function TierCard({
       className={[
         'flex flex-col relative rounded-md p-7 md:p-8',
         highlight
-          ? 'border border-forest bg-surface shadow-lift pt-14 md:pt-14'
+          ? 'border border-forest bg-surface pt-14 md:pt-14'
           : 'border border-rule bg-surface',
       ].join(' ')}
     >
       {highlight && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-forest text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-medium whitespace-nowrap">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-forest text-cream px-3 py-1 rounded-full text-2xs uppercase tracking-widest font-medium whitespace-nowrap">
           {t('pricing_v2.recommended')}
         </div>
       )}
@@ -171,7 +171,7 @@ function TierCard({
 
       <div className="mb-6">
         <div className="flex items-baseline gap-1">
-          <span className="font-display text-4xl md:text-[2.75rem] tracking-tightest text-ink tabular-nums">
+          <span className="font-display text-4xl md:text-5xl tracking-tightest text-ink tabular-nums">
             {displayPrice}
           </span>
           <span className="text-xs text-ink-muted">{t('pricing_v2.per_month')}</span>
@@ -205,8 +205,8 @@ function TierCard({
         <Link
           href={`/auth/signup?plan=${tier}&interval=${interval}`}
           className={[
-            'w-full text-sm font-medium h-11 inline-flex items-center justify-center rounded-md transition-all duration-150',
-            highlight ? 'btn-primary hover:shadow-lift' : 'btn-secondary',
+            'w-full text-sm',
+            highlight ? 'btn-primary' : 'btn-secondary',
           ].join(' ')}
         >
           {t(`tiers.${tier}.cta`)}
@@ -219,7 +219,7 @@ function TierCard({
         return (
           <a
             href={url}
-            className="block text-center text-2xs text-ink-soft hover:text-ink mt-3 underline underline-offset-2"
+            className="block text-center text-2xs text-ink-muted hover:text-ink mt-3 underline underline-offset-2"
           >
             {t('pricing_v2.pay_now')}
           </a>
@@ -246,11 +246,11 @@ function ComparisonTable() {
         <table className="w-full text-sm">
           <thead className="bg-cream border-b border-rule">
             <tr>
-              <th className="text-left px-4 py-3 text-2xs uppercase tracking-widest text-ink-soft font-medium">
+              <th className="text-left px-4 py-3 text-2xs uppercase tracking-widest text-ink-muted font-medium">
                 {t('compare.feature')}
               </th>
               {(['solo', 'team', 'growth'] as TierKey[]).map((tier) => (
-                <th key={tier} className="text-center px-4 py-3 text-2xs uppercase tracking-widest text-ink-soft font-medium">
+                <th key={tier} className="text-center px-4 py-3 text-2xs uppercase tracking-widest text-ink-muted font-medium">
                   {t(`tiers.${tier}.label`)}
                 </th>
               ))}

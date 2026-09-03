@@ -128,7 +128,7 @@ export function StatCard({ label, value, numericValue, sub, href, tone = 'defaul
       {hover && delta && series && (
         <div
           role="tooltip"
-          className="absolute right-3 top-3 z-10 text-2xs px-2 py-1 rounded border border-rule bg-surface shadow-lift num tabular pointer-events-none"
+          className="absolute right-3 top-3 z-10 text-2xs px-2 py-1 rounded border border-rule bg-surface num tabular pointer-events-none"
         >
           <span className="text-ink font-medium">{delta.cur}</span>
           <span className="text-ink-soft"> · prev </span>

@@ -42,7 +42,7 @@ export default function ForNewTutors() {
                 {t('hero.see_plans')}
               </Link>
             </div>
-            <div className="mt-4 text-2xs uppercase tracking-widest text-ink-soft">{k('micro')}</div>
+            <div className="mt-4 text-2xs uppercase tracking-widest text-ink-muted">{k('micro')}</div>
           </section>
 
           <Block eyebrow={k('what_eyebrow')} heading={k('what_heading')}>
@@ -83,9 +83,9 @@ function Block({
   eyebrow: string; heading: string; children: React.ReactNode; alt?: boolean;
 }) {
   return (
-    <section className={`px-6 md:px-12 py-14 md:py-20 ${alt ? 'bg-surface border-y border-rule' : ''}`}>
+    <section className={`px-6 md:px-12 py-16 md:py-24 ${alt ? 'bg-surface border-y border-rule' : ''}`}>
       <div className="max-w-3xl mx-auto">
-        <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">{eyebrow}</div>
+        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{eyebrow}</div>
         <h2 className="font-display text-2xl md:text-3xl tracking-tighter text-balance mb-6">
           {heading}
         </h2>

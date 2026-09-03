@@ -57,7 +57,7 @@ export default function StickyConversionBar({ heroSelector = 'h1' }: { heroSelec
       role="region"
       aria-label="Conversion bar"
       className={[
-        'fixed top-0 inset-x-0 z-40 bg-cream border-b border-rule transition-transform duration-200 ease-out',
+        'fixed top-16 inset-x-0 z-40 bg-cream border-b border-rule transition-transform duration-200 ease-out',
         visible ? 'translate-y-0' : '-translate-y-full',
       ].join(' ')}
     >

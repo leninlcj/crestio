@@ -26,7 +26,7 @@ import StreakPill from '../../components/dashboard/StreakPill';
 import { RecentlyDeletedCard } from '../../components/dashboard/RecentlyDeletedCard';
 import { MaintenanceSuggestions } from '../../components/dashboard/MaintenanceSuggestions';
 import StreakHeatmapModal from '../../components/dashboard/StreakHeatmapModal';
-import MonthlyImpactCard from '../../components/dashboard/MonthlyImpactCard';
+// MonthlyImpactCard gated off (fabricated stats) — see note in render body. Re-add import when real month-to-date aggregates exist in the dashboard payload.
 import AnniversaryBanner from '../../components/dashboard/AnniversaryBanner';
 import InsightCard from '../../components/dashboard/InsightCard';
 import BatchInvoicingNudge from '../../components/dashboard/BatchInvoicingNudge';
@@ -319,25 +319,16 @@ function DashboardInner() {
   }, [data]);
 
   // Monthly impact card — show on first day of month for 7 days.
-  const monthlyImpact = useMemo(() => {
-    if (!data) return null;
-    const now = new Date();
-    if (now.getDate() > 7) return null;
-    const monthName = now.toLocaleString('en-AU', { month: 'long' });
-    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const previousLabel = lastMonth.toLocaleString('en-AU', { month: 'long' });
-    return {
-      monthLabel: monthName,
-      previousLabel,
-    };
-  }, [data]);
+  // Monthly-impact aggregates intentionally removed: the dashboard payload has
+  // no real month-to-date data, so MonthlyImpactCard (which fabricated its
+  // figures) is gated off below until the API provides true MTD values.
 
   return (
     <Layout pageTitle="Home">
       <div className="px-4 md:px-8 pt-6 md:pt-10 pb-8 md:pb-12 max-w-[1200px] mx-auto">
         <header className="mb-6 md:mb-8">
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-[28px] md:text-[32px] font-display font-semibold tracking-tighter leading-tight m-0">
+            <h1 className="text-3xl md:text-4xl font-display font-semibold tracking-tighter leading-tight m-0">
               {greeting}
             </h1>
             {streakDays >= 3 && (
@@ -371,16 +362,16 @@ function DashboardInner() {
           organizationCreatedAt={(organization as any)?.created_at}
           totalSessions={(data?.today?.series ?? []).reduce((a: number, b: number) => a + b, 0) + (data?.polish?.series ?? []).reduce((a: number, b: number) => a + b, 0)}
         />
-        {monthlyImpact && data && (
-          <MonthlyImpactCard
-            monthLabel={monthlyImpact.monthLabel}
-            sessions={(data.today?.series ?? []).reduce((a: number, b: number) => a + b, 0)}
-            hours={Math.round((data.today?.minutes ?? 0) / 60 * 4.3)}
-            earnedCents={(data.unpaid_invoices?.total_cents ?? 0)}
-            studentsHelped={(data.team_breakdown?.length ?? 5)}
-            currency={data.currency}
-          />
-        )}
+        {/*
+          MonthlyImpactCard is gated off: the dashboard payload exposes no real
+          month-to-date aggregates, so the previous version fabricated every
+          figure — a 7-day series total shown as month "Sessions", today's
+          minutes x4.3 as "Hours", the UNPAID invoice balance mislabelled as
+          "Earned", and the tutor count (?? 5) shown as "Students helped".
+          Re-enable only once the /api dashboard payload returns true MTD
+          values: sessions + logged minutes for the calendar month, PAID
+          invoice totals, and a distinct-student count.
+        */}
         {insight && <InsightCard insight={insight} />}
         {data && (
           <BatchInvoicingNudge
@@ -544,7 +535,7 @@ function DashboardBody({
       <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 md:gap-8">
         {/* Today timeline + Tomorrow at a glance */}
         <section data-tour="today-timeline">
-          <h2 className="text-[15px] font-display font-semibold tracking-tighter mb-3">Today</h2>
+          <h2 className="text-base font-display font-semibold tracking-tighter mb-3">Today</h2>
           <div className="card p-3 md:p-4">
             <TodayTimeline sessions={payload.today?.sessions ?? []} nextId={next?.id ?? null} />
           </div>
@@ -554,7 +545,7 @@ function DashboardBody({
 
         {/* Needs attention */}
         <section className="relative">
-          <h2 className="text-[15px] font-display font-semibold tracking-tighter mb-3">Needs attention</h2>
+          <h2 className="text-base font-display font-semibold tracking-tighter mb-3">Needs attention</h2>
           {visibleNudges.length === 0 ? (
             <div className="card p-5 flex items-center gap-3">
               <div className="w-8 h-8 grid place-items-center rounded-full bg-success-soft text-success-ink shrink-0">
@@ -957,7 +948,7 @@ function WhatChangedFeed({ currency }: { currency: string }) {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-[15px] font-display font-semibold tracking-tighter m-0">What changed</h2>
+        <h2 className="text-base font-display font-semibold tracking-tighter m-0">What changed</h2>
         <div className="flex items-center gap-1 text-2xs">
           {(['all', 'parents', 'money', 'sessions'] as const).map((k) => (
             <button

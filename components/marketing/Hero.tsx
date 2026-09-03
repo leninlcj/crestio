@@ -53,7 +53,7 @@ export default function Hero({
           <span aria-hidden>→</span>
         </Link>
 
-        <h1 className="font-display text-ink leading-[1.05] tracking-tighter font-semibold text-balance text-[36px] sm:text-5xl md:text-6xl lg:text-[56px] mb-5 md:mb-6">
+        <h1 className="font-display text-ink tracking-tighter font-semibold text-balance text-4xl sm:text-5xl md:text-6xl mb-5 md:mb-6">
           {finalHeadline}
         </h1>
 
@@ -64,7 +64,7 @@ export default function Hero({
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-3">
           <Link
             href={finalCtaPrimary.href}
-            className="btn-primary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto sm:min-w-[200px] hover:shadow-lift transition-all duration-200"
+            className="btn-primary px-6 w-full sm:w-auto"
           >
             {finalCtaPrimary.label}
           </Link>
@@ -72,7 +72,7 @@ export default function Hero({
             finalCtaSecondary.href ? (
               <Link
                 href={finalCtaSecondary.href}
-                className="btn-secondary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto sm:min-w-[200px]"
+                className="btn-secondary px-6 w-full sm:w-auto"
               >
                 {finalCtaSecondary.label}
               </Link>
@@ -80,7 +80,7 @@ export default function Hero({
               <button
                 type="button"
                 onClick={finalCtaSecondary.onClick}
-                className="btn-secondary text-sm font-medium px-6 h-11 min-h-[44px] w-full sm:w-auto sm:min-w-[200px]"
+                className="btn-secondary px-6 w-full sm:w-auto"
               >
                 {finalCtaSecondary.label}
               </button>

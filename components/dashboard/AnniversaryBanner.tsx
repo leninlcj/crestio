@@ -26,7 +26,7 @@ export default function AnniversaryBanner({ organizationCreatedAt, totalSessions
 
   return (
     <div className="mb-6 rounded-md border border-forest/30 bg-forest-soft p-5 md:p-6 flex items-start gap-4 animate-fade-in relative">
-      <div className="w-10 h-10 rounded-full bg-forest text-cream grid place-items-center shrink-0" aria-hidden>
+      <div className="w-10 h-10 rounded-full bg-surface text-forest grid place-items-center shrink-0" aria-hidden>
         <span className="font-display text-base tracking-tightest">{anniversary.label.charAt(0).toUpperCase()}</span>
       </div>
       <div className="flex-1 min-w-0">

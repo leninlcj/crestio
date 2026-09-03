@@ -109,7 +109,7 @@ export default function PolishDemo() {
 
       <div className="grid md:grid-cols-2 gap-4 md:gap-6">
         {/* Input column */}
-        <div className="rounded-xl border border-rule bg-surface p-5 md:p-6">
+        <div className="rounded-md border border-rule bg-surface p-5 md:p-6">
           <div className="flex items-center justify-between gap-3 mb-3">
             <label htmlFor="polish-demo-input" className="text-2xs uppercase tracking-widest text-ink-soft">
               {t('polish_demo.input_label')}
@@ -123,7 +123,7 @@ export default function PolishDemo() {
             rows={6}
             spellCheck={false}
             aria-label={t('polish_demo.input_label')}
-            className="w-full text-sm md:text-base text-ink leading-relaxed bg-cream rounded-md border border-rule p-3 md:p-4 resize-y focus:outline-none focus:ring-2 focus:ring-forest/40 focus:border-forest/40 transition-colors min-h-[140px]"
+            className="w-full text-sm md:text-base text-ink leading-relaxed bg-cream rounded-md border border-rule p-3 md:p-4 resize-y focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-colors min-h-[140px]"
           />
 
           <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
@@ -157,7 +157,7 @@ export default function PolishDemo() {
               type="button"
               onClick={handlePolish}
               disabled={isBusy}
-              className="btn-primary text-sm font-medium px-5 h-11 min-h-[44px] inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-primary text-sm font-medium px-5 inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isBusy ? (
                 <>
@@ -172,7 +172,7 @@ export default function PolishDemo() {
         </div>
 
         {/* Output column */}
-        <div className="rounded-xl border border-rule bg-cream p-5 md:p-6 flex flex-col min-h-[260px]">
+        <div className="rounded-md border border-rule bg-cream p-5 md:p-6 flex flex-col min-h-[260px]">
           <div className="flex items-center justify-between gap-3 mb-3">
             <div className="text-2xs uppercase tracking-widest text-ink-soft">
               {t('polish_demo.output_label')}

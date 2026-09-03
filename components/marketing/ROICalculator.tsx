@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import useCountUp from '../../lib/useCountUp';
+import { Trans, useTranslation } from 'react-i18next';
 
 type Currency = 'AUD' | 'USD' | 'GBP' | 'EUR' | 'NZD' | 'CAD' | 'INR' | 'BRL' | 'IDR' | 'MXN' | 'JPY' | 'SGD' | 'HKD';
 
@@ -45,6 +46,7 @@ export default function ROICalculator({
   embed = false,
 }: Props) {
   const router = useRouter();
+  const { t } = useTranslation('marketing');
   const [students, setStudents] = useState<number>(initialStudents ?? 8);
   const [hours, setHours] = useState<number>(initialHours ?? 6);
   const [rate, setRate] = useState<number>(initialRate ?? 60);
@@ -129,12 +131,12 @@ export default function ROICalculator({
     <section className={embed ? '' : 'px-6 md:px-12 py-16 md:py-24 max-w-5xl mx-auto'}>
       {!embed && (
         <div className="text-center mb-10 md:mb-12">
-          <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Calculate your time back</div>
+          <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">{t('roi.eyebrow')}</div>
           <h2 className="font-display text-3xl md:text-4xl tracking-tighter text-ink mb-3 text-balance">
-            What does your Sunday actually cost?
+            {t('roi.heading')}
           </h2>
           <p className="text-sm text-ink-muted max-w-prose mx-auto">
-            Drag the sliders. The numbers update as you go.
+            {t('roi.subheading')}
           </p>
         </div>
       )}
@@ -142,29 +144,29 @@ export default function ROICalculator({
       <div className="grid lg:grid-cols-[1fr_1.1fr] gap-6 md:gap-10">
         <div className="space-y-6">
           <Field
-            label="Students"
+            label={t('roi.label_students')}
             value={students}
             min={1} max={50}
-            unit={students === 1 ? 'student' : 'students'}
+            unit={students === 1 ? t('roi.unit_student') : t('roi.unit_students')}
             onChange={(v) => setStudents(Math.round(v))}
           />
           <Field
-            label="Admin hours / week"
+            label={t('roi.label_hours')}
             value={hours}
             min={0} max={20} step={0.5}
-            unit={hours === 1 ? 'hour' : 'hours'}
+            unit={hours === 1 ? t('roi.unit_hour') : t('roi.unit_hours')}
             onChange={setHours}
           />
           <Field
-            label="Your hourly rate"
+            label={t('roi.label_rate')}
             value={rate}
             min={20} max={300} step={5}
-            unit="per hour"
+            unit={t('roi.per_hour')}
             prefix={currency === 'JPY' || currency === 'INR' || currency === 'IDR' ? `${currency} ` : '$'}
             onChange={(v) => setRate(Math.round(v))}
           />
           <div>
-            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1.5 font-medium">Currency</div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1.5 font-medium">{t('roi.currency_label')}</div>
             <div className="flex flex-wrap gap-1.5">
               {CURRENCIES.map((c) => (
                 <button
@@ -188,38 +190,46 @@ export default function ROICalculator({
           </div>
         </div>
 
-        <div className="rounded-md border border-forest bg-forest/[0.04] p-6 md:p-8 flex flex-col">
-          <div className="text-2xs uppercase tracking-widest text-forest-ink mb-1">If you switched today</div>
+        <div className="rounded-md border border-rule bg-surface p-6 md:p-8 flex flex-col">
+          <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{t('roi.switched_today')}</div>
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-5 mt-4">
-            <Stat label="Hours saved / week" value={`${animatedHoursWeek}h`} />
-            <Stat label="Hours saved / year" value={`${animatedHoursYear}h`} />
-            <Stat label="Time recovered, in money" value={formatMoney(animatedMoney)} bold />
-            <Stat label="Crestio costs" value={`${formatMoney(animatedCost)}/yr`} muted />
+            <Stat label={t('roi.hours_week')} value={`${animatedHoursWeek}h`} />
+            <Stat label={t('roi.hours_year')} value={`${animatedHoursYear}h`} />
+            <Stat label={t('roi.money_recovered')} value={formatMoney(animatedMoney)} bold />
+            <Stat label={t('roi.crestio_costs')} value={`${formatMoney(animatedCost)}/yr`} muted />
           </div>
 
-          <div className="mt-6 pt-5 border-t border-forest/15 text-sm text-forest-ink leading-relaxed">
-            That's <strong className="num tabular">{formatMoney(crestioCost)}</strong> in software for <strong className="num tabular">{formatMoney(moneyValue)}</strong> in time recovered. Roughly{' '}
-            <strong className="num tabular">{Math.round(moneyValue / Math.max(1, crestioCost))}× ROI</strong> on year one.
+          <div className="mt-6 pt-5 border-t border-rule text-sm text-ink leading-relaxed">
+            <Trans
+              i18nKey="roi.summary"
+              ns="marketing"
+              values={{
+                cost: formatMoney(crestioCost),
+                value: formatMoney(moneyValue),
+                multiple: Math.round(moneyValue / Math.max(1, crestioCost)),
+              }}
+              components={{ b: <strong className="num tabular" /> }}
+            />
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Link href="/auth/signup" className="btn-primary text-sm px-5">Start free trial</Link>
+            <Link href="/auth/signup" className="btn-primary text-sm px-5">{t('roi.cta_start')}</Link>
             <button type="button" onClick={copy} className="btn-secondary text-sm px-5 inline-flex items-center gap-2">
               {copied ? (
                 <>
-                  <CheckIcon /> Copied
+                  <CheckIcon /> {t('roi.copied')}
                 </>
               ) : (
                 <>
-                  <ShareIcon /> Share these numbers
+                  <ShareIcon /> {t('roi.share')}
                 </>
               )}
             </button>
           </div>
 
-          <div className="mt-5 text-2xs text-forest-ink/60 leading-relaxed">
-            Estimate based on Crestio reducing admin ~70%. We cap the saving at 80% (you'll always have some admin) and floor at 1 hour (you'll always save something).
+          <div className="mt-5 text-2xs text-ink-muted leading-relaxed">
+            {t('roi.disclaimer')}
           </div>
         </div>
       </div>
@@ -257,7 +267,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         aria-label={label}
-        className="w-full h-1 bg-rule rounded-full appearance-none cursor-pointer accent-forest"
+        className="w-full h-2 bg-rule rounded-full appearance-none cursor-pointer accent-forest focus-visible:ring-2 focus-visible:ring-forest/20"
         style={{
           background: `linear-gradient(to right, var(--color-forest) 0%, var(--color-forest) ${pct}%, var(--color-rule) ${pct}%, var(--color-rule) 100%)`,
         }}
@@ -269,11 +279,11 @@ function Field({
 function Stat({ label, value, bold = false, muted = false }: { label: string; value: string | number; bold?: boolean; muted?: boolean }) {
   return (
     <div>
-      <div className="text-2xs uppercase tracking-widest text-forest-ink/70 mb-1">{label}</div>
+      <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">{label}</div>
       <div className={[
         'tabular-nums leading-none',
         bold ? 'font-display text-3xl md:text-4xl tracking-tightest text-forest-ink' :
-        muted ? 'text-base text-forest-ink/75' :
+        muted ? 'text-base text-ink-muted' :
         'font-display text-2xl md:text-3xl tracking-tightest text-forest-ink',
       ].join(' ')}>
         {value}

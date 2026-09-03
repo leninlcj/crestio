@@ -90,7 +90,7 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
       fullPageHref={invoiceId ? `/app/invoices/${invoiceId}` : undefined}
       title={
         loading || !data ? 'Invoice'
-        : <>{data.number}{' '}<span className="text-ink-soft text-xs font-normal">· {data.household?.display_name ?? data.student?.name ?? '—'}</span></>
+        : <>{data.number}{' '}<span className="text-ink-muted text-xs font-normal">· {data.household?.display_name ?? data.student?.name ?? '—'}</span></>
       }
     >
       {loading || !data ? (
@@ -116,9 +116,9 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
           </div>
 
           <div className="p-5">
-            <div className="text-2xs uppercase tracking-widest text-ink-soft font-medium mb-2">Line items</div>
+            <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium mb-2">Line items</div>
             {items.length === 0 ? (
-              <p className="text-sm text-ink-soft italic">No line items.</p>
+              <p className="text-sm text-ink-muted italic">No line items.</p>
             ) : (
               <ul className="divide-y divide-rule -mx-2">
                 {items.map((it) => (
@@ -126,7 +126,7 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
                     <div className="flex-1 min-w-0 text-xs text-ink truncate">
                       {it.line_item_description}
                     </div>
-                    <div className="text-2xs text-ink-soft tabular">
+                    <div className="text-2xs text-ink-muted tabular">
                       {it.duration_minutes}m · {formatCents(it.hourly_rate_cents, currency)}/h
                     </div>
                     <div className="text-xs text-ink tabular w-20 text-right">
@@ -146,7 +146,7 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
 
           {data.notes && (
             <div className="px-5 pb-5 -mt-2">
-              <div className="text-2xs uppercase tracking-widest text-ink-soft font-medium mb-1">Notes</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium mb-1">Notes</div>
               <p className="text-sm text-ink whitespace-pre-wrap">{data.notes}</p>
             </div>
           )}
@@ -154,11 +154,11 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
           <InvoiceTimeline data={data} />
 
           <div className="px-5 py-4 border-t border-rule flex items-center gap-2">
-            <Link href={`/app/invoices/${data.id}`} className="btn-secondary text-xs" style={{ height: 32, minHeight: 32 }}>
+            <Link href={`/app/invoices/${data.id}`} className="btn-secondary text-xs">
               Open invoice
             </Link>
             {data.status !== 'paid' && data.status !== 'void' && (
-              <button type="button" onClick={markPaid} className="btn-primary text-xs" style={{ height: 32, minHeight: 32 }}>
+              <button type="button" onClick={markPaid} className="btn-primary text-xs">
                 Mark paid
               </button>
             )}
@@ -181,13 +181,13 @@ function InvoiceTimeline({ data }: { data: Detail }) {
   events.sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
   return (
     <div className="px-5 pb-5">
-      <div className="text-2xs uppercase tracking-widest text-ink-soft font-medium mb-2">Timeline</div>
+      <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium mb-2">Timeline</div>
       <ol className="space-y-2 relative pl-3 border-l border-rule">
         {events.map((e, i) => (
           <li key={`${e.label}-${i}`} className="relative">
             <span className="absolute -left-[7px] top-1.5 w-2 h-2 rounded-full bg-forest" aria-hidden="true" />
             <div className="text-sm text-ink">{e.label}</div>
-            <div className="text-2xs text-ink-soft num tabular">
+            <div className="text-2xs text-ink-muted num tabular">
               {formatDate(e.at)}
               {e.actor && <> · {e.actor}</>}
             </div>

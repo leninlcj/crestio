@@ -853,5 +853,29 @@
       "mistakes_4": "Doing all your notes in one Sunday block. Log as you go. Polish later.",
       "cta_heading": "Try the thing tutors with eight students wish they'd had on day one."
     }
+  },
+  "roi": {
+    "eyebrow": "Calculate your time back",
+    "heading": "What does your Sunday actually cost?",
+    "subheading": "Drag the sliders. The numbers update as you go.",
+    "label_students": "Students",
+    "unit_student": "student",
+    "unit_students": "students",
+    "label_hours": "Admin hours / week",
+    "unit_hour": "hour",
+    "unit_hours": "hours",
+    "label_rate": "Your hourly rate",
+    "per_hour": "per hour",
+    "currency_label": "Currency",
+    "switched_today": "If you switched today",
+    "hours_week": "Hours saved / week",
+    "hours_year": "Hours saved / year",
+    "money_recovered": "Time recovered, in money",
+    "crestio_costs": "Crestio costs",
+    "cta_start": "Start free trial",
+    "copied": "Copied",
+    "share": "Share these numbers",
+    "summary": "That's <b>{{cost}}</b> in software for <b>{{value}}</b> in time recovered. Roughly <b>{{multiple}}× ROI</b> on year one.",
+    "disclaimer": "Estimate based on Crestio reducing admin ~70%. We cap the saving at 80% (you'll always have some admin) and floor at 1 hour (you'll always save something)."
   }
 }

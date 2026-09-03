@@ -7,7 +7,7 @@ export default function StreakPill({ days }: Props) {
   if (days < 3) return null;
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-forest/8 text-forest-ink text-2xs font-medium"
+      className="pill-forest gap-1.5"
       title={`You've logged a session every day for ${days} days in a row.`}
     >
       <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-forest" />

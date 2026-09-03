@@ -33,7 +33,7 @@ export default function MigrationBanner({ counter }: Props) {
           <Link
             href="/migrate"
             aria-disabled={isFull}
-            className="btn-primary text-sm px-5 h-11 min-h-[44px] inline-flex items-center"
+            className="btn-primary text-sm px-5 inline-flex items-center"
           >
             {t('migration_banner.cta')}
             <span aria-hidden className="ml-1.5">→</span>

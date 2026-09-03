@@ -12,8 +12,7 @@ export default function HowItWorksVisual({ step }: Props) {
 function ChromeFrame({ children, label }: { children: React.ReactNode; label: string }) {
   return (
     <div
-      className="rounded-xl overflow-hidden border border-rule bg-surface"
-      style={{ filter: 'drop-shadow(0 16px 40px rgba(0,0,0,0.06)) drop-shadow(0 4px 12px rgba(0,0,0,0.04))' }}
+      className="rounded-md overflow-hidden border border-rule bg-surface"
     >
       <div className="bg-cream border-b border-rule px-3 py-2 flex items-center gap-1.5">
         <span className="w-2.5 h-2.5 rounded-full bg-claret/30" />

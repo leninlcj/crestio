@@ -31,9 +31,9 @@ export default function AgingChart({ buckets, currency, selected, onSelect }: Pr
   if (total === 0) return null;
 
   return (
-    <section className="rounded-md border border-rule bg-surface p-5">
+    <section className="card p-4">
       <div className="flex items-baseline justify-between mb-3">
-        <h2 className="text-2xs uppercase tracking-widest text-ink-soft">Aging</h2>
+        <h2 className="text-2xs uppercase tracking-widest text-ink-muted">Aging</h2>
         <span className="text-xs text-ink-muted">
           Total outstanding{' '}
           <span className="font-mono tabular-nums text-ink">{fmt(total, currency)}</span>
@@ -81,7 +81,7 @@ export default function AgingChart({ buckets, currency, selected, onSelect }: Pr
             >
               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: BUCKET_TONES[b] }} />
               <div className="min-w-0">
-                <div className="text-ink-soft uppercase tracking-widest">{b} days</div>
+                <div className="text-ink-muted uppercase tracking-widest">{b} days</div>
                 <div className="font-mono tabular-nums text-ink mt-0.5 truncate">{fmt(value, currency)}</div>
               </div>
             </button>

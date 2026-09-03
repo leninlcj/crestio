@@ -22,7 +22,7 @@ export default function InsightsPanel({ insights }: Props) {
         className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-cream transition-colors"
       >
         <div className="flex items-center gap-3">
-          <span className="text-2xs uppercase tracking-widest text-ink-soft">Insights</span>
+          <span className="text-2xs uppercase tracking-widest text-ink-muted">Insights</span>
           <span className="text-xs text-ink-muted">·</span>
           <span className="text-xs text-ink-muted">{insights.length} this week</span>
         </div>
@@ -33,7 +33,7 @@ export default function InsightsPanel({ insights }: Props) {
           {insights.map((i, idx) => (
             <div key={idx} className="rounded border border-rule bg-cream/60 px-4 py-3">
               <div className="flex items-baseline justify-between gap-2 mb-1">
-                <span className="text-2xs uppercase tracking-widest text-ink-soft truncate">{i.label}</span>
+                <span className="text-2xs uppercase tracking-widest text-ink-muted truncate">{i.label}</span>
                 {i.trend && (
                   <span className={[
                     'text-xs',

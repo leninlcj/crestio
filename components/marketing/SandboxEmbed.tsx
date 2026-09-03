@@ -39,11 +39,10 @@ export default function SandboxEmbed() {
 
       <div
         ref={containerRef}
-        className="relative max-w-5xl mx-auto rounded-xl overflow-hidden border border-rule bg-surface"
+        className="relative max-w-5xl mx-auto rounded-md overflow-hidden border border-rule bg-surface"
         style={{
           aspectRatio: '16 / 9',
           minHeight: 360,
-          filter: 'drop-shadow(0 24px 64px rgba(0,0,0,0.10)) drop-shadow(0 4px 16px rgba(0,0,0,0.04))',
         }}
       >
         <div className="absolute top-0 inset-x-0 z-10 bg-cream border-b border-rule px-4 py-2.5 flex items-center gap-2">
@@ -74,7 +73,7 @@ export default function SandboxEmbed() {
             className="absolute inset-0 z-20 grid place-items-center bg-ink/20 backdrop-blur-[1px] hover:bg-ink/10 transition-colors"
             aria-label="Click to interact with the sandbox"
           >
-            <div className="bg-surface border border-rule rounded-full px-5 py-2.5 shadow-lift flex items-center gap-2.5 group-hover:bg-cream transition-colors">
+            <div className="bg-surface border border-rule rounded-full px-5 py-2.5 flex items-center gap-2.5 group-hover:bg-cream transition-colors">
               <span className="w-2 h-2 rounded-full bg-forest animate-pulse" />
               <span className="text-sm text-ink font-medium">Click to interact</span>
             </div>
