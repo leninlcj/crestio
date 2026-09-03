@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { resolveOwnerRequest } from '../../../../lib/ownerAuth';
 import { getAgencyOrganization } from '../../../../lib/agencyOrg';
+import { isMissingTableError } from '../../../../lib/dbErrors';
 
 // GET /api/owner/enquiries?status=new|contacted|trial_booked|matched|lost|spam|open|all&q=
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -25,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   else if (status !== 'all') query = query.eq('status', status);
 
   const { data, error } = await query;
-  if ((error as any)?.code === '42P01') {
+  if (isMissingTableError(error)) {
     return res.status(200).json({ enquiries: [], tutors: [], setup_required: true, migration: 'supabase/migrations/20260903_agency_enquiries_applications.sql' });
   }
   if (error) return res.status(500).json({ error: error.message });
