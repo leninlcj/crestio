@@ -10,7 +10,7 @@ export default function Document() {
 
         {/* PWA */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#FAF8F4" />
+        <meta name="theme-color" content="#FAFAF8" />
         <meta name="application-name" content="Crestio" />
 
         {/* iOS — Add to Home Screen */}
@@ -25,9 +25,9 @@ export default function Document() {
 
         {/* Open Graph (shows on iMessage, WhatsApp, LinkedIn, Facebook, etc.) */}
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Crestio" />
-        <meta property="og:title" content="Crestio — run your tutoring business with intent" />
-        <meta property="og:description" content="The calm, deliberate software for independent tutors and tutoring businesses. Students, sessions, invoices, lesson plans — one place." />
+        <meta property="og:site_name" content="Crestio Tutoring" />
+        <meta property="og:title" content="Crestio Tutoring — maths and physics tutors, carefully matched" />
+        <meta property="og:description" content="One-on-one maths and physics tutoring for Years 7–12 and the HSC. Sydney in-home and online. Every tutor interviewed, ID-checked and WWCC-verified." />
         <meta property="og:image" content="/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -35,8 +35,8 @@ export default function Document() {
 
         {/* Twitter / X */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Crestio — run your tutoring business with intent" />
-        <meta name="twitter:description" content="The calm, deliberate software for independent tutors and tutoring businesses." />
+        <meta name="twitter:title" content="Crestio Tutoring — maths and physics tutors, carefully matched" />
+        <meta name="twitter:description" content="One-on-one maths and physics tutoring for Years 7–12 and the HSC. Sydney in-home and online." />
         <meta name="twitter:image" content="/og-image.png" />
       </Head>
       <body>
