@@ -29,6 +29,8 @@ export type InvoicePdfArgs = {
       amount_cents: number;
     }>;
   };
+  /** Agency disclosure printed under the note (introduction-agency model). */
+  agencyNote?: string | null;
 };
 
 const A4_W = 595.276;
@@ -154,6 +156,13 @@ export async function renderInvoicePdf(args: InvoicePdfArgs): Promise<Uint8Array
     page.drawText('NOTE', { x: MARGIN, y, size: 8, font: helvBold, color: BRAND.inkSoft });
     y -= 12;
     drawWrapped(page, helv, args.invoice.notes, MARGIN, y, A4_W - MARGIN * 2, 9, 11, BRAND.inkMuted);
+  }
+
+  if (args.agencyNote) {
+    y -= 24;
+    page.drawText('ABOUT THIS INVOICE', { x: MARGIN, y, size: 8, font: helvBold, color: BRAND.inkSoft });
+    y -= 12;
+    drawWrapped(page, helv, args.agencyNote, MARGIN, y, A4_W - MARGIN * 2, 8, 10, BRAND.inkMuted);
   }
 
   // Watermark.

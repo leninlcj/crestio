@@ -71,7 +71,9 @@ export default function ForTutors() {
             </div>
           ))}
         </div>
-        <p className="mt-6 text-sm text-ink-muted">Tutors are engaged as independent contractors. We can help you get an ABN if you do not have one.</p>
+        <p className="mt-6 text-sm text-ink-muted">
+          Tutors are independent contractors introduced to families by Crestio; Crestio collects payment and pays you weekly. The full terms and the fee schedule are in the <Link href="/tutors/agreement" className="text-forest underline underline-offset-2">tutor agreement</Link>. We can help you get an ABN if you do not have one.
+        </p>
       </Section>
 
       <Section id="how" tone="surface" eyebrow="How selection works" heading="Six short stages. About two weeks end to end.">

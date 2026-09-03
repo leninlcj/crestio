@@ -13,6 +13,7 @@ export type UnbilledSession = {
   student_name: string;
   student_hourly_rate_cents: number | null;
   household_id: string | null;
+  late_cancellation?: boolean;
 };
 
 export type GetUnbilledOptions = {
@@ -40,7 +41,7 @@ export async function getUnbilledSessions(
   let q = admin
     .from('unbilled_completed_sessions')
     .select(
-      'id, scheduled_at, duration_minutes, subject, topic, charge_rate_cents, student_id, invoice_id, tutor_user_id, organization_id, student:students!inner(id, name, hourly_rate_cents, household_id, is_test_record)'
+      'id, scheduled_at, duration_minutes, subject, topic, charge_rate_cents, student_id, invoice_id, tutor_user_id, organization_id, status, late_cancellation, student:students!inner(id, name, hourly_rate_cents, household_id, is_test_record)'
     )
     .eq('organization_id', organizationId)
     .gte('scheduled_at', periodStart.toISOString())
@@ -72,6 +73,7 @@ export async function getUnbilledSessions(
       student_name: s.student?.name ?? 'Unknown',
       student_hourly_rate_cents: s.student?.hourly_rate_cents ?? null,
       household_id: s.student?.household_id ?? null,
+      late_cancellation: s.status === 'cancelled' && s.late_cancellation === true,
     });
   }
   return result;

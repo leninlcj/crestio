@@ -23,7 +23,7 @@ const EMAIL = AGENCY.email;
 
 export default function Privacy() {
   return (
-    <LegalPage title="Privacy policy" lastUpdated="3 September 2026" toc={TOC}>
+    <LegalPage title="Privacy policy" lastUpdated="4 September 2026" toc={TOC}>
       <h2 id="who-we-are">Who we are</h2>
       <p>
         {AGENCY.name} (&ldquo;Crestio&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is a tutoring service run by {AGENCY.founder.name} in Sydney, Australia. We match students with tutors, arrange lessons online and in-home, and run the scheduling, lesson notes, invoicing and payments through our own software at crestio.ai.
@@ -55,7 +55,7 @@ export default function Privacy() {
 
       <h2 id="who-we-share-with">Who we share it with</h2>
       <ul>
-        <li><strong>Your matched tutor</strong> receives the details needed to arrange and deliver lessons: student name, year level, subjects, the address for in-home lessons, and your contact details.</li>
+        <li><strong>Your matched tutor</strong> — an independent tutor introduced by Crestio — receives the details needed to arrange and deliver lessons: student name, year level, subjects, the address for in-home lessons, and your contact details. Tutors agree to use them for lessons only.</li>
         <li><strong>Supabase</strong> — authentication and database hosting. Data is stored in Sydney, Australia.</li>
         <li><strong>Vercel</strong> — web hosting.</li>
         <li><strong>Stripe</strong> — payment processing. Stripe sees your name, email and card details; we do not.</li>

@@ -86,6 +86,9 @@ export interface Session {
   charge_rate_cents: number | null;
   pay_rate_cents: number | null;
   status: SessionStatus;
+  late_cancellation?: boolean;
+  cancellation_waived?: boolean;
+  cancelled_at?: string | null;
   homework: string | null;
   homework_description: string | null;
   homework_due_date: string | null;

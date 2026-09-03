@@ -22,14 +22,14 @@ const H = AGENCY.policies.cancellationHours;
 
 export default function Terms() {
   return (
-    <LegalPage title="Terms of service" lastUpdated="3 September 2026" toc={TOC}>
+    <LegalPage title="Terms of service" lastUpdated="4 September 2026" toc={TOC}>
       <p>
         These terms apply to tutoring arranged through {AGENCY.name} (&ldquo;Crestio&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), run by {AGENCY.founder.name} in Sydney, Australia. By booking a tutor or using the app at crestio.ai, you agree to them. Nothing in these terms takes away rights you have under the Australian Consumer Law.
       </p>
 
       <h2 id="what-we-do">What we do</h2>
       <p>
-        Crestio matches students with tutors and arranges one-on-one lessons, online or in-home. We interview and check each tutor, handle scheduling, lesson notes, invoicing and payment, and stay involved for the life of the arrangement. Tutors are engaged by Crestio as independent contractors.
+        Crestio is an introduction and administration agency for tutoring. We find and vet tutors, match a tutor to your child, arrange lessons online or in-home, collect payment, and run the notes, records and communication through the app at crestio.ai. The tutoring itself is provided to you by the tutor, who is an independent tutor introduced by Crestio and acting as your child's tutor under this arrangement. Crestio collects your payment on the tutor's behalf, keeps a service fee for its own work, and pays the tutor. Crestio's own promises to you — vetting, matching, the first-lesson guarantee, replies within a day — are Crestio's and are set out here.
       </p>
 
       <h2 id="matching">Bookings and matching</h2>
@@ -44,9 +44,9 @@ export default function Terms() {
 
       <h2 id="fees">Fees and payment</h2>
       <ul>
-        <li>Rates are published at crestio.ai/pricing and are per hour, per student. The rate that applies is the one shown for the student's level and lesson format at the time of booking. We give at least 30 days' notice of any rate change.</li>
+        <li>Rates are published at crestio.ai/pricing and are per hour, per student, for the student's level and lesson format at the time of booking. Each rate is made up of the tutor's fee and Crestio's service fee; the split is shown on your invoice. We give at least 30 days' notice of any rate change.</li>
         <li>Lessons are invoiced after they are held. Invoices are payable within 7 days by card through the secure payment link, or you may buy a prepaid block of hours in advance, which is drawn down per lesson.</li>
-        <li>Nothing is charged to your card without your authorisation. If you save a card for convenience, we charge it only for lessons held or late cancellations under these terms, and we tell you each time.</li>
+        <li>Crestio collects payment as the tutor's agent and pays the tutor from it. Nothing is charged to your card without your authorisation. If you save a card for convenience, we charge it only for lessons held or late cancellations under these terms, and we tell you each time.</li>
         <li>Longer or shorter lessons are charged pro rata. Travel is included in the in-home rate.</li>
         <li>If an invoice is more than 14 days overdue we may pause lessons until it is paid.</li>
       </ul>
@@ -64,7 +64,7 @@ export default function Terms() {
         <li>Every tutor is 18 or older and holds a NSW Working With Children Check, which we verify with the NSW Office of the Children's Guardian before the tutor meets a student.</li>
         <li>For in-home lessons with a child, a parent or guardian must be home during the lesson. Lessons take place in a shared living area, not a bedroom.</li>
         <li>Tutors follow our code of conduct. Lesson arrangements, changes and payments go through Crestio or the parent — never privately between a tutor and a student.</li>
-        <li>If anything concerns you about a tutor or a lesson, tell us at once at <a href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>. We take it seriously and act quickly.</li>
+        <li>If anything concerns you about a tutor or a lesson, tell us at once at <a href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a> or through <a href="/report">crestio.ai/report</a>. Our <a href="/child-safe">Child Safe Policy</a> sets out how we respond.</li>
       </ul>
 
       <h2 id="accounts">Your account and the app</h2>
@@ -74,12 +74,12 @@ export default function Terms() {
 
       <h2 id="tutors">Tutors</h2>
       <p>
-        Tutors are independent contractors engaged by Crestio, not employees, and not employees or contractors of the family. A separate contractor agreement governs Crestio's relationship with each tutor. Families agree not to engage a Crestio tutor privately for paid tutoring, outside Crestio, for 12 months after their last Crestio lesson; if you would like to change how you work with your tutor, talk to us.
+        Tutors are independent tutors running their own businesses. They are not employees of Crestio, and not employees of yours. Each tutor has agreed to Crestio's Tutor Agreement and Code of Conduct, holds a verified Working With Children Check, and is paid by Crestio from the payment we collect from you. Families agree not to engage a Crestio tutor privately for paid tutoring, outside Crestio, for 12 months after their last Crestio lesson; if you would like to change how you work with your tutor, talk to us.
       </p>
 
       <h2 id="liability">Liability</h2>
       <p>
-        We provide our service with due care and skill. We do not guarantee any particular mark, grade or result — that depends on the student, the school and many things outside a lesson. To the extent the law allows, our liability for any claim relating to our service is limited to re-supplying the service or refunding the amount paid for the lessons in question. Nothing in these terms excludes rights you have under the Australian Consumer Law.
+        Crestio provides its matching, administration and payment services with due care and skill. The tutor is responsible for the lessons they deliver. Neither Crestio nor the tutor guarantees any particular mark, grade or result — that depends on the student, the school and many things outside a lesson. To the extent the law allows, Crestio's liability for any claim relating to its services is limited to re-supplying the service or refunding the Crestio service fee for the lessons in question. Nothing in these terms excludes rights you have under the Australian Consumer Law.
       </p>
 
       <h2 id="ending">Ending the arrangement</h2>

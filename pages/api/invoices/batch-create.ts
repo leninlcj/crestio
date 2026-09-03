@@ -80,7 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { data: sessionRows, error: sErr } = await admin
     .from('sessions')
-    .select('id, status, organization_id, tutor_user_id, invoice_id, scheduled_at, duration_minutes, subject, topic, student_id, charge_rate_cents, student:students!inner(id, name, hourly_rate_cents, household_id)')
+    .select('id, status, organization_id, tutor_user_id, invoice_id, scheduled_at, duration_minutes, subject, topic, student_id, charge_rate_cents, late_cancellation, cancellation_waived, student:students!inner(id, name, hourly_rate_cents, household_id)')
     .in('id', uniqueIds);
   if (sErr) return res.status(500).json({ error: sErr.message });
   if (!sessionRows || sessionRows.length !== uniqueIds.length) {
@@ -94,7 +94,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (s.organization_id !== membership.organization_id) {
       return res.status(403).json({ error: 'Some sessions are not in your organization.' });
     }
-    if (s.status !== 'completed') {
+    const chargeableLateCancel = s.status === 'cancelled' && s.late_cancellation === true && s.cancellation_waived !== true;
+    if (s.status !== 'completed' && !chargeableLateCancel) {
       return res.status(400).json({ error: `Session ${s.id} is not completed.` });
     }
     if (s.invoice_id) {
@@ -211,6 +212,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           s.subject ?? null,
           s.topic ?? null,
           `${s.duration_minutes} min`,
+          s.status === 'cancelled' && s.late_cancellation ? 'Late cancellation (under 24h notice)' : null,
         ].filter(Boolean);
         return {
           session_id: sid,

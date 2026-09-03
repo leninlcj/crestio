@@ -541,6 +541,32 @@ function SessionDetailInner() {
     setSession({ ...session, status });
   }
 
+  // Cancellation goes through the API so the late-cancellation rule and the
+  // parent notification apply. The owner says who cancelled and may waive.
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelBy, setCancelBy] = useState<'family' | 'tutor' | 'agency'>('family');
+  const [cancelWaive, setCancelWaive] = useState(false);
+  const [cancelMsg, setCancelMsg] = useState('');
+  const [cancelBusy, setCancelBusy] = useState(false);
+  async function cancelViaApi() {
+    if (!session) return;
+    setCancelBusy(true);
+    try {
+      const { data: { session: auth } } = await supabase.auth.getSession();
+      const res = await fetch(`/api/sessions/${session.id}/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth?.access_token ?? ''}` },
+        body: JSON.stringify({ message: cancelMsg || undefined, cancelled_by: cancelBy, waive: cancelWaive }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) { setError(payload?.error ?? 'Could not cancel.'); return; }
+      setSession({ ...session, status: 'cancelled', ...(payload.late_cancellation != null ? { late_cancellation: payload.late_cancellation, cancellation_waived: payload.cancellation_waived } : {}) } as typeof session);
+      setCancelOpen(false);
+    } finally {
+      setCancelBusy(false);
+    }
+  }
+
   async function togglePaid() {
     if (!session) return;
     const paid = !session.paid;
@@ -974,6 +1000,11 @@ function SessionDetailInner() {
                       ? (session.paid ? t('sessions:status.paid') : t('sessions:status.unpaid'))
                       : t(`sessions:status.${session.status}` as any)}
                   </span>
+                  {session.status === 'cancelled' && session.late_cancellation && (
+                    <span className={cx('ml-2', session.cancellation_waived ? 'badge-neutral' : 'badge-rust')}>
+                      {session.cancellation_waived ? 'Late cancellation — waived' : 'Late cancellation — chargeable'}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -983,7 +1014,7 @@ function SessionDetailInner() {
             {session.status === 'scheduled' && (
               <>
                 <button onClick={() => setStatus('completed')} className="btn-secondary text-xs">{t('sessions:actions.mark_completed')}</button>
-                <button onClick={() => setStatus('cancelled')} className="btn-ghost text-xs">{t('sessions:actions.cancel_session')}</button>
+                <button onClick={() => setCancelOpen((v) => !v)} className="btn-ghost text-xs">{t('sessions:actions.cancel_session')}</button>
                 <button onClick={() => setStatus('no_show')} className="btn-ghost text-xs">{t('sessions:actions.no_show')}</button>
               </>
             )}
@@ -1010,6 +1041,34 @@ function SessionDetailInner() {
               Make recurring
             </Link>
           </div>
+          {cancelOpen && session.status === 'scheduled' && (
+            <div className="card p-4 mb-8 max-w-xl space-y-3">
+              <div className="text-2xs uppercase tracking-widest text-claret">Cancel this session</div>
+              <div>
+                <label className="label">Who is cancelling?</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {([['family', 'The family'], ['tutor', 'The tutor'], ['agency', 'Crestio']] as Array<['family' | 'tutor' | 'agency', string]>).map(([k, l]) => (
+                    <button key={k} type="button" onClick={() => setCancelBy(k)} aria-pressed={cancelBy === k}
+                      className={['px-3 py-2 rounded-md border text-sm', cancelBy === k ? 'bg-forest text-cream border-forest' : 'bg-surface border-rule text-ink hover:bg-ruleSoft'].join(' ')}>{l}</button>
+                  ))}
+                </div>
+                {cancelBy === 'family' && (
+                  <div className="mt-2 text-2xs text-ink-soft">
+                    A family cancellation inside 24 hours is charged in full and the tutor is paid; the session then appears as unbilled.
+                    {!isTutor && <label className="flex items-center gap-2 mt-1.5 text-xs text-ink"><input type="checkbox" checked={cancelWaive} onChange={(e) => setCancelWaive(e.target.checked)} /> Waive the charge this time</label>}
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="label">Note for the parent (optional)</label>
+                <textarea className="input" rows={2} value={cancelMsg} onChange={(e) => setCancelMsg(e.target.value)} />
+              </div>
+              <div className="flex gap-2">
+                <button type="button" onClick={cancelViaApi} disabled={cancelBusy} className="btn-danger text-xs">{cancelBusy ? 'Cancelling…' : 'Confirm cancellation'}</button>
+                <button type="button" onClick={() => setCancelOpen(false)} className="btn-ghost text-xs">Back</button>
+              </div>
+            </div>
+          )}
 
           <div className="card p-6 mb-4">
             <div className="text-2xs uppercase tracking-widest text-ink-muted mb-4">

@@ -104,6 +104,13 @@ export function describeAction(
     case 'tutor_application.created': return `New tutor application${name ? ` from ${name}` : ''}`;
     case 'tutor_application.updated': return `Updated tutor application${payload.status ? ` (${String(payload.status)})` : ''}`;
     case 'tutor_application.invited': return `Invited ${name || 'applicant'} to join as a tutor`;
+    case 'incident.created':       return `New report${name ? ` from ${name}` : ''}`;
+    case 'incident.updated':       return `Updated report${payload.status ? ` (${String(payload.status)})` : ''}`;
+    case 'tutor.wwcc_verified':    return `Verified WWCC for ${name || 'tutor'}`;
+    case 'tutor.agreement_accepted': return `${name || 'Tutor'} accepted the tutor agreement`;
+    case 'tutor.linked':           return `Linked ${name || 'tutor'} to their account`;
+    case 'session.late_cancelled': return `Late cancellation${name ? ` for ${name}` : ''}`;
+    case 'enquiry.tutor_proposed': return `Proposed a tutor${name ? ` to ${name}` : ''}`;
     default: {
       // "student.archived" → "Student archived"
       const [type, verb] = action.split('.');

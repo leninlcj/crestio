@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { isPlatformOwner } from '../../../lib/owner';
+import { effectivePlanTier, AGENCY_MAX_TUTORS } from '../../../lib/agencyPlan';
 import { createClient } from '@supabase/supabase-js';
 import { randomBytes } from 'crypto';
 import { sendEmail } from '../../../lib/email';
@@ -55,7 +57,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .select('plan_tier')
     .eq('id', organizationId)
     .maybeSingle();
-  const planTier = ((orgRow?.plan_tier as PlanTier | null) ?? 'solo');
+  // The agency organisation (platform owner) is never plan-gated.
+  const agencyOrg = isPlatformOwner(callerEmail);
+  const planTier = effectivePlanTier((orgRow?.plan_tier as PlanTier | null) ?? 'solo', agencyOrg);
   if (!planAllowsFeature(planTier, 'multi_tutor')) {
     return res.status(403).json({
       error: 'Upgrade to Crestio Team to invite tutors.',
@@ -76,7 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .is('revoked_at', null)
     .gt('expires_at', new Date().toISOString());
   const seatsUsed = (tutorCount ?? 0) + (pendingCount ?? 0);
-  const seatCap = maxTutorsForPlan(planTier);
+  const seatCap = agencyOrg ? AGENCY_MAX_TUTORS : maxTutorsForPlan(planTier);
   if (seatsUsed >= seatCap) {
     return res.status(403).json({
       error: `Your ${planTier} plan supports up to ${seatCap} tutor${seatCap === 1 ? '' : 's'}. Upgrade to add more.`,
