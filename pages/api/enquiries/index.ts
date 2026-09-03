@@ -66,10 +66,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
     .select('id')
     .single();
-  if (insertErr || !row) {
+  // Before the migration is applied the table does not exist (42P01). Never
+  // lose an enquiry: fall back to email-only and tell the owner.
+  const tableMissing = (insertErr as any)?.code === '42P01';
+  if ((insertErr || !row) && !tableMissing) {
     console.error('enquiries: insert failed', insertErr);
     return res.status(500).json({ error: 'We could not save your enquiry. Please email us.' });
   }
+  const enquiryId = (row?.id as string | undefined) ?? 'not-saved';
 
   const emailArgs = {
     parentName: v.parent_name,
@@ -82,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     suburb: v.suburb,
     need: v.need,
     message: v.message,
-    enquiryId: row.id as string,
+    enquiryId,
   };
 
   const [confirm, alert] = await Promise.all([
@@ -92,21 +96,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })(),
     (async () => {
       const b = buildEnquiryAlertEmail(emailArgs);
+      if (tableMissing) {
+        b.subject = `[NOT SAVED — run the enquiries migration] ${b.subject}`;
+        b.text = `The enquiries table does not exist yet, so this was emailed only.\n\n${b.text}`;
+      }
       return sendEmail({ to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL, replyTo: v.email, ...b });
     })(),
   ]);
   if (!confirm.success) console.error('enquiries: confirmation email failed', confirm.error);
   if (!alert.success) console.error('enquiries: owner alert failed', alert.error);
 
-  await writeAudit(admin, {
-    organizationId: org.id,
-    actorUserId: null,
-    actorRole: 'system',
-    action: 'enquiry.created',
-    entityType: 'enquiry',
-    entityId: row.id as string,
-    payload: { entity_name: v.parent_name, year_level: v.year_level, subjects: v.subjects, source: v.source },
-  });
+  if (!tableMissing) {
+    await writeAudit(admin, {
+      organizationId: org.id,
+      actorUserId: null,
+      actorRole: 'system',
+      action: 'enquiry.created',
+      entityType: 'enquiry',
+      entityId: enquiryId,
+      payload: { entity_name: v.parent_name, year_level: v.year_level, subjects: v.subjects, source: v.source },
+    });
+  } else {
+    console.error('enquiries: table missing — emailed only. Apply supabase/migrations/20260903_agency_enquiries_applications.sql');
+  }
 
-  return res.status(200).json({ ok: true, id: row.id });
+  return res.status(200).json({ ok: true, id: enquiryId, stored: !tableMissing });
 }

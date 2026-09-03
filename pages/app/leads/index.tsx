@@ -79,6 +79,7 @@ function LeadsInner() {
   const [filter, setFilter] = useState<string>('open');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [setupRequired, setSetupRequired] = useState(false);
 
   const load = useCallback(async (status: string) => {
     setLoading(true);
@@ -88,6 +89,7 @@ function LeadsInner() {
       if (!res.ok) throw new Error(payload?.error ?? 'Failed to load enquiries.');
       setRows(payload.enquiries ?? []);
       setTutors(payload.tutors ?? []);
+      setSetupRequired(!!payload.setup_required);
     } catch (e: any) {
       toast.show({ message: e?.message ?? 'Failed to load enquiries.', tone: 'error' });
     } finally {
@@ -138,6 +140,11 @@ function LeadsInner() {
 
   return (
     <Layout title="Leads" subtitle="Enquiries" pageTitle="Enquiries · Leads">
+      {setupRequired && (
+        <div className="card p-4 mb-4 bg-amber-soft/60 border-amber/40 text-sm text-amber-ink" role="status">
+          The enquiries table does not exist yet. Enquiries are being emailed to you in the meantime. Run <code className="font-mono text-xs">supabase/migrations/20260903_agency_enquiries_applications.sql</code> in the Supabase SQL editor to start storing them here.
+        </div>
+      )}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <FilterChips
           ariaLabel="Filter enquiries"

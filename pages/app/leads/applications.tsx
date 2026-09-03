@@ -60,6 +60,7 @@ function ApplicationsInner() {
   const [filter, setFilter] = useState('open');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [setupRequired, setSetupRequired] = useState(false);
 
   const load = useCallback(async (status: string) => {
     setLoading(true);
@@ -68,6 +69,7 @@ function ApplicationsInner() {
       const payload = await res.json();
       if (!res.ok) throw new Error(payload?.error ?? 'Failed to load applications.');
       setRows(payload.applications ?? []);
+      setSetupRequired(!!payload.setup_required);
     } catch (e: any) {
       toast.show({ message: e?.message ?? 'Failed to load applications.', tone: 'error' });
     } finally {
@@ -117,6 +119,11 @@ function ApplicationsInner() {
 
   return (
     <Layout title="Leads" subtitle="Tutor applications" pageTitle="Tutor applications · Leads">
+      {setupRequired && (
+        <div className="card p-4 mb-4 bg-amber-soft/60 border-amber/40 text-sm text-amber-ink" role="status">
+          The applications table does not exist yet. Applications are being emailed to you in the meantime. Run <code className="font-mono text-xs">supabase/migrations/20260903_agency_enquiries_applications.sql</code> in the Supabase SQL editor to start storing them here.
+        </div>
+      )}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <FilterChips
           ariaLabel="Filter applications"
