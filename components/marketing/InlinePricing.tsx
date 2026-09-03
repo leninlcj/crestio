@@ -52,12 +52,12 @@ function TierCard({ tier, href, highlight }: { tier: TierKey; href: string; high
       className={[
         'relative flex flex-col rounded-md p-6 md:p-7',
         highlight
-          ? 'border border-forest bg-surface shadow-lift pt-12 md:pt-12'
+          ? 'border border-forest bg-surface pt-12 md:pt-12'
           : 'border border-rule bg-surface',
       ].join(' ')}
     >
       {highlight && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-forest text-cream px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-medium whitespace-nowrap">
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-forest text-cream px-3 py-1 rounded-full text-2xs uppercase tracking-widest font-medium whitespace-nowrap">
           {t('inline_pricing.recommended')}
         </div>
       )}
@@ -91,8 +91,8 @@ function TierCard({ tier, href, highlight }: { tier: TierKey; href: string; high
       <Link
         href={href}
         className={[
-          'w-full text-sm font-medium h-11 min-h-[44px] inline-flex items-center justify-center rounded-md transition-all duration-150',
-          highlight ? 'btn-primary hover:shadow-lift' : 'btn-secondary',
+          'w-full',
+          highlight ? 'btn-primary' : 'btn-secondary',
         ].join(' ')}
       >
         {t(`inline_pricing.${tier}.cta`)}

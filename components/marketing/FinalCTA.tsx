@@ -17,13 +17,8 @@ export default function FinalCTA({
   const { t } = useTranslation('marketing');
 
   return (
-    <section className="px-6 md:px-12 py-20 md:py-28 relative overflow-hidden">
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(31,58,46,0.04) 100%)' }}
-      />
-      <div className="relative max-w-2xl mx-auto text-center">
+    <section className="px-6 md:px-12 py-20 md:py-28">
+      <div className="max-w-2xl mx-auto text-center">
         <h2 className="font-display text-3xl md:text-5xl tracking-tighter text-ink mb-5 text-balance leading-[1.1]">
           {heading ?? t('final_cta_v2.heading')}
         </h2>
@@ -34,7 +29,7 @@ export default function FinalCTA({
           <Link
             href={primaryHref}
             data-cta="final"
-            className="btn-primary text-sm font-medium px-6 h-11 min-w-[200px] hover:shadow-lift transition-all duration-200"
+            className="btn-primary px-6"
           >
             {primaryLabel ?? t('final_cta_v2.primary')}
           </Link>

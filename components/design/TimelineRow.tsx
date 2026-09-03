@@ -21,7 +21,7 @@ export function TimelineRow({ time, title, subtitle, status, href, onOpen, state
   const inner = (
     <div
       className={[
-        'group flex items-center gap-4 px-3 py-3 rounded-md border-l-2 transition-colors duration-100',
+        'group relative flex items-center gap-4 px-3 py-3 rounded-md border-l-2 transition-colors duration-100',
         isCurrent ? 'border-forest bg-forest-soft/40' : 'border-transparent hover:bg-ruleSoft/60',
         isPast ? 'opacity-60' : '',
       ].join(' ')}
@@ -30,14 +30,24 @@ export function TimelineRow({ time, title, subtitle, status, href, onOpen, state
         {time}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm text-ink font-medium truncate">{title}</div>
+        {(href || onOpen) ? (
+          <Link
+            href={href ?? '#'}
+            onClick={handleClick}
+            className="block text-sm text-ink font-medium truncate rounded-md before:content-[''] before:absolute before:inset-0 before:rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/40"
+          >
+            {title}
+          </Link>
+        ) : (
+          <div className="text-sm text-ink font-medium truncate">{title}</div>
+        )}
         {subtitle && (
           <div className="text-xs text-ink-muted truncate">{subtitle}</div>
         )}
       </div>
       {actions && (
         <div
-          className="hidden md:flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-100 shrink-0"
+          className="flex items-center gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity duration-100 shrink-0 relative z-10"
           onClick={(e) => e.stopPropagation()}
         >
           {actions}
@@ -54,17 +64,9 @@ export function TimelineRow({ time, title, subtitle, status, href, onOpen, state
     }
   }
 
-  if (href || onOpen) {
-    return (
-      <Link
-        href={href ?? '#'}
-        onClick={handleClick}
-        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 rounded-md"
-      >
-        {inner}
-      </Link>
-    );
-  }
+  // The row's click target is the stretched title <Link> (before:inset-0),
+  // so the whole row is clickable without nesting the action <Link>s inside
+  // an outer anchor. Actions sit above the overlay via relative z-10.
   return inner;
 }
 

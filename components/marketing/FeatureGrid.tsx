@@ -26,7 +26,7 @@ export default function FeatureGrid() {
         {FEATURES.map((f) => (
           <article
             key={f.key}
-            className="rounded-md border border-rule bg-surface p-6 transition-colors duration-100 hover:bg-cream"
+            className="rounded-md border border-rule bg-surface p-6 transition-colors duration-100 hover:bg-ruleSoft/40"
           >
             <div className="text-forest mb-4">
               <FeatureIcon name={f.icon} />

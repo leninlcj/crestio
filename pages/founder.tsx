@@ -26,11 +26,11 @@ export default function FounderPage({ notes }: Props) {
             <div className="flex items-center gap-4 mb-6">
               <FounderAvatar />
               <div>
-                <div className="text-2xs uppercase tracking-widest text-ink-soft mb-0.5">Founder</div>
-                <div className="font-display text-lg tracking-tightest text-ink">Lenin</div>
+                <div className="text-2xs uppercase tracking-widest text-ink-muted mb-0.5">Founder</div>
+                <div className="font-display text-lg tracking-tighter text-ink">Lenin</div>
               </div>
             </div>
-            <h1 className="font-display text-4xl md:text-5xl tracking-tighter mb-4 leading-[1.05] text-balance">
+            <h1 className="font-display text-4xl md:text-5xl tracking-tighter mb-4 text-balance">
               From the founder.
             </h1>
             <p className="text-base text-ink-muted leading-relaxed max-w-prose">
@@ -63,7 +63,7 @@ function FounderAvatar() {
   // TODO: replace with founder photo at /public/marketing/lenin-founder.jpg
   // when available. Until then, render initial-only avatar.
   return (
-    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-forest-soft text-forest-ink grid place-items-center font-display text-xl md:text-2xl tracking-tightest shrink-0" aria-hidden>
+    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-forest-soft text-forest-ink grid place-items-center font-display text-xl md:text-2xl tracking-tighter shrink-0" aria-hidden>
       L
     </div>
   );

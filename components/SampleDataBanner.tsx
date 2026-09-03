@@ -49,7 +49,7 @@ export default function SampleDataBanner() {
   return (
     <div className={
       'flex items-center justify-between gap-3 p-3 rounded text-sm border ' +
-      (hasReal ? 'bg-yellow-50 border-yellow-300 text-yellow-900' : 'bg-forest-soft border-forest/20 text-forest-ink')
+      (hasReal ? 'bg-amber-soft border-amber/40 text-amber-ink' : 'bg-forest-soft border-forest/20 text-forest-ink')
     }>
       <span>
         {hasReal
@@ -59,7 +59,7 @@ export default function SampleDataBanner() {
       <button
         onClick={clear}
         disabled={busy}
-        className="text-xs underline underline-offset-2"
+        className="btn-secondary"
       >
         {busy ? 'Clearing…' : 'Clear sample data'}
       </button>

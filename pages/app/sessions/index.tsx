@@ -286,7 +286,7 @@ function SessionsInner() {
             key={tt.key}
             href={tt.href}
             className={cx(
-              'px-3 py-1.5 text-xs rounded-md transition-colors duration-100 whitespace-nowrap',
+              'px-3 py-2 text-xs rounded-md transition-colors duration-100 whitespace-nowrap',
               tab === tt.key
                 ? 'text-ink font-medium bg-ruleSoft/70'
                 : 'text-ink-muted hover:text-ink hover:bg-ruleSoft/40',
@@ -297,7 +297,7 @@ function SessionsInner() {
         ))}
         <Link
           href="/app/templates"
-          className="px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-ruleSoft/40 rounded-md whitespace-nowrap"
+          className="px-3 py-2 text-xs text-ink-muted hover:text-ink hover:bg-ruleSoft/40 rounded-md whitespace-nowrap"
         >
           Templates
         </Link>
@@ -452,7 +452,7 @@ function SessionsInner() {
                 <button
                   type="button"
                   onClick={() => setBulkDrawer({ kind: 'invoice-combine' })}
-                  className="text-xs font-medium bg-cream text-forest-ink px-2.5 py-1 rounded-full hover:bg-cream/90 transition-colors duration-100"
+                  className="text-xs font-medium bg-cream text-forest-ink px-3 py-1 rounded-full hover:bg-cream/90 transition-colors duration-100"
                 >
                   Create one invoice for these {selectedRows.length} sessions
                 </button>
@@ -460,14 +460,14 @@ function SessionsInner() {
               <button
                 type="button"
                 onClick={() => setBulkDrawer({ kind: 'invoice' })}
-                className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
+                className="text-xs text-cream/90 hover:text-cream px-3 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
               >
                 Create invoices
               </button>
               <button
                 type="button"
                 onClick={() => setBulkDrawer({ kind: 'polish' })}
-                className="text-xs text-cream/90 hover:text-cream px-2.5 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
+                className="text-xs text-cream/90 hover:text-cream px-3 py-1 rounded-full hover:bg-cream/10 transition-colors duration-100"
               >
                 Polish all
               </button>
@@ -604,7 +604,13 @@ function SessionListRow({
   return (
     <ContextMenu items={menuItems}>
       <li
+        role="button"
+        tabIndex={0}
         onClick={() => onOpen(row.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(row.id); }
+        }}
+        aria-label={`Open session for ${row.student?.name ?? 'session'}`}
         className={cx(
           'group relative flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-ruleSoft/40 transition-colors duration-100',
           isActive && 'bg-ruleSoft/30',
@@ -631,15 +637,15 @@ function SessionListRow({
         </button>
         <div className="w-20 shrink-0 text-xs text-ink-muted num tabular">
           {formatTime(row.scheduled_at)}
-          <div className="text-2xs text-ink-soft">{formatDate(row.scheduled_at, { day: 'numeric', month: 'short' })}</div>
+          <div className="text-2xs text-ink-muted">{formatDate(row.scheduled_at, { day: 'numeric', month: 'short' })}</div>
         </div>
         <Avatar name={row.student?.name ?? '?'} size={20} className="shrink-0" />
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] text-ink truncate flex items-center gap-1.5">
+          <div className="text-sm text-ink truncate flex items-center gap-1.5">
             {row.student?.name ?? '—'}
             <PipelineIcons row={row} />
           </div>
-          <div className="text-2xs text-ink-soft truncate">
+          <div className="text-2xs text-ink-muted truncate">
             {[row.subject, row.topic, `${row.duration_minutes}m`].filter(Boolean).join(' · ')}
             {row.tutor?.name && <span> · {row.tutor.name}</span>}
           </div>
@@ -656,7 +662,7 @@ function SessionListRow({
             <StatusPill tone={tone as any}>{label}</StatusPill>
           </div>
         )}
-        <div className="w-20 shrink-0 text-right text-[13px] num tabular text-ink">
+        <div className="w-20 shrink-0 text-right text-sm num tabular text-ink">
           {formatCents(sessionAmount(row), currency)}
         </div>
       </li>
@@ -872,7 +878,7 @@ function ViewToggle({ value, onChange }: { value: 'day' | 'week'; onChange: (v: 
           aria-pressed={value === v}
           className={cx(
             'px-3 py-1 text-xs rounded transition-colors duration-100 capitalize',
-            value === v ? 'bg-surface text-ink font-medium shadow-sm' : 'text-ink-muted hover:text-ink',
+            value === v ? 'bg-surface text-ink font-medium' : 'text-ink-muted hover:text-ink',
           )}
         >
           {v}
@@ -913,7 +919,7 @@ function DateStrip({
       <button
         type="button"
         onClick={() => { const d = new Date(activeDate); d.setDate(d.getDate() - 1); onChange(d); }}
-        className="shrink-0 w-7 h-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
+        className="shrink-0 w-8 h-8 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
         aria-label="Previous day"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -969,7 +975,7 @@ function DateStrip({
       <button
         type="button"
         onClick={() => { const d = new Date(activeDate); d.setDate(d.getDate() + 1); onChange(d); }}
-        className="shrink-0 w-7 h-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
+        className="shrink-0 w-8 h-8 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
         aria-label="Next day"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
@@ -979,7 +985,7 @@ function DateStrip({
           type="button"
           onClick={() => setMonthOpen((v) => !v)}
           aria-label="Pick month"
-          className="w-7 h-7 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
+          className="w-8 h-8 grid place-items-center rounded text-ink-muted hover:bg-ruleSoft"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>
@@ -1053,7 +1059,7 @@ function DayWrappedCard({ rows, activeDate, currency }: { rows: SessionRow[]; ac
           <path d="M5 13l4 4L19 7"/>
         </svg>
       </div>
-      <h2 className="font-display text-2xl tracking-tightest text-ink mb-2">Today is wrapped.</h2>
+      <h2 className="font-display text-2xl tracking-tighter text-ink mb-2">Today is wrapped.</h2>
       <p className="text-sm text-ink-muted mb-1 num tabular">
         {total} {total === 1 ? 'session' : 'sessions'} · {Math.round(totalMins / 60 * 10) / 10} hours · {formatCents(totalCents, currency)} earned.
       </p>

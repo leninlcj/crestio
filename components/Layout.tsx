@@ -266,6 +266,17 @@ export default function Layout({
     return () => router.events.off('routeChangeStart', handle);
   }, [router.events]);
 
+  // Close mobile drawers on Escape — matches the modal/drawer convention
+  // (see ConfirmDrawer, LanguageSwitcherModal).
+  useEffect(() => {
+    if (!mobileNavOpen && !moreOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') { setMobileNavOpen(false); setMoreOpen(false); }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileNavOpen, moreOpen]);
+
   async function signOut() {
     await supabase.auth.signOut();
     router.push('/');
@@ -318,7 +329,7 @@ export default function Layout({
             </span>
           </Link>
 
-          <nav className="flex-1 py-3 px-2 xl:px-2 space-y-0.5">
+          <nav className="flex-1 py-3 px-2 xl:px-2 space-y-1">
             {nav.map((item) => {
               const active = item.match(router.pathname);
               const showBadge = item.href === '/app/messages' && messagesUnread.total > 0;
@@ -329,6 +340,7 @@ export default function Layout({
                   key={item.href}
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
+                  aria-label={t(item.labelKey)}
                   title={t(item.labelKey)}
                   className={cx(
                     'group relative flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors duration-100',
@@ -340,13 +352,13 @@ export default function Layout({
                   <span
                     aria-hidden="true"
                     className={cx(
-                      'absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-forest transition-opacity duration-100',
+                      'absolute left-0 top-1 bottom-1 w-0.5 rounded-r bg-forest transition-opacity duration-100',
                       active ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                   <span
                     className={cx(
-                      'shrink-0 grid place-items-center w-7 h-7 rounded-md transition-colors duration-100',
+                      'shrink-0 grid place-items-center w-8 h-8 rounded-md transition-colors duration-100',
                       active ? 'bg-forest-soft text-forest' : 'text-ink-muted group-hover:text-ink',
                     )}
                   >
@@ -359,7 +371,7 @@ export default function Layout({
                   {showBadge && (
                     <span
                       className={cx(
-                        'hidden xl:inline-flex ml-auto items-center justify-center text-2xs font-medium rounded-full px-1.5 min-w-[18px] h-[18px]',
+                        'hidden xl:inline-flex ml-auto items-center justify-center text-2xs font-medium rounded-full px-1.5 min-w-4 h-4',
                         messagesUnread.hasUrgent ? 'bg-claret text-white' : 'bg-forest text-white',
                       )}
                       aria-label={`${messagesUnread.total} unread messages`}
@@ -374,7 +386,7 @@ export default function Layout({
 
           <div className="border-t border-rule p-2 xl:p-3">
             <div className="hidden xl:flex items-center justify-between mb-2 px-1">
-              <span className="text-2xs uppercase tracking-widest text-ink-soft font-medium">
+              <span className="text-2xs uppercase tracking-widest text-ink-muted font-medium">
                 {planTier === 'solo' ? 'Solo' : planTier === 'team' ? 'Team' : 'Trial'}
               </span>
               {isOwner && (
@@ -403,7 +415,7 @@ export default function Layout({
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent('crestio:open-search'))}
-                className="hidden md:flex items-center gap-2 w-full max-w-[340px] px-3 h-9 rounded-md border border-rule bg-surface hover:bg-ruleSoft/60 transition-colors duration-100 text-left"
+                className="hidden md:flex items-center gap-2 w-full max-w-[340px] px-3 h-10 rounded-md border border-rule bg-surface hover:bg-ruleSoft/60 transition-colors duration-100 text-left"
                 aria-label="Open command palette"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-ink-soft shrink-0">
@@ -489,7 +501,7 @@ export default function Layout({
                         {subtitle}
                       </div>
                     )}
-                    <h1 className="text-[24px] font-display font-semibold tracking-tighter text-ink leading-tight m-0">
+                    <h1 className="text-2xl font-display font-semibold tracking-tighter text-ink leading-tight m-0">
                       {title}
                     </h1>
                   </div>
@@ -548,6 +560,9 @@ export default function Layout({
               <div
                 className="absolute top-0 bottom-0 left-0 w-[280px] bg-surface shadow-lift animate-fade-in flex flex-col"
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Main menu"
               >
                 <div className="px-5 h-14 flex items-center border-b border-rule">
                   <span className="font-display text-xl tracking-tighter">
@@ -582,8 +597,11 @@ export default function Layout({
           {moreOpen && (
             <div className="md:hidden fixed inset-0 z-40 bg-ink/40 animate-fade-in" onClick={() => setMoreOpen(false)}>
               <div
-                className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-[12px] shadow-lift pb-safe"
+                className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-xl shadow-lift pb-safe"
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-label="More"
               >
                 <div className="h-1 w-10 bg-rule rounded-full mx-auto my-3" />
                 <div className="px-5 pb-4 divide-y divide-ruleSoft">
@@ -691,7 +709,7 @@ function AccountDropdown({
             className="absolute right-0 top-full mt-1 z-50 w-72 bg-surface border border-rule rounded-md shadow-lift py-1 animate-fade-in"
           >
             <div className="px-3 py-2 border-b border-rule">
-              <div className="text-2xs uppercase tracking-widest text-ink-soft mb-0.5 font-medium">{t('nav.signed_in_as')}</div>
+              <div className="text-2xs uppercase tracking-widest text-ink-muted mb-0.5 font-medium">{t('nav.signed_in_as')}</div>
               <div className="text-xs text-ink truncate">{email}</div>
             </div>
             <WhatsNewSection onClose={() => setOpen(false)} />
@@ -713,7 +731,7 @@ function AccountDropdown({
             )}
             {isPlatformOwner && (
               <div className="border-t border-rule mt-1 pt-1">
-                <div className="px-3 pb-1 text-2xs uppercase tracking-widest text-ink-soft font-medium">{t('nav.owner_tools')}</div>
+                <div className="px-3 pb-1 text-2xs uppercase tracking-widest text-ink-muted font-medium">{t('nav.owner_tools')}</div>
                 <Link href="/app/owner/test-accounts" className="block px-3 py-2 text-sm text-ink hover:bg-ruleSoft" role="menuitem">
                   {t('nav.test_accounts')}
                 </Link>

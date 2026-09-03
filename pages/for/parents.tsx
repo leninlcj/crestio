@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
 import MarketingNav from '../../components/marketing/MarketingNav';
@@ -31,7 +32,7 @@ export default function ForParents() {
             <p className="text-base md:text-lg text-ink-muted leading-relaxed text-balance max-w-2xl mx-auto mb-3">
               {k('sub')}
             </p>
-            <div className="text-2xs uppercase tracking-widest text-ink-soft">
+            <div className="text-2xs uppercase tracking-widest text-ink-muted">
               {k('micro')}
             </div>
           </section>
@@ -57,9 +58,12 @@ export default function ForParents() {
               <h2 className="font-display text-2xl md:text-3xl tracking-tighter text-ink mb-4 text-balance">
                 {k('cta_heading')}
               </h2>
-              <p className="text-base text-ink-muted leading-relaxed">
+              <p className="text-base text-ink-muted leading-relaxed mb-8">
                 {k('cta_body')}
               </p>
+              <Link href="/pricing" className="btn-primary px-6">
+                {t('hero.see_plans')}
+              </Link>
             </div>
           </section>
         </main>
@@ -78,7 +82,7 @@ function Block({
   return (
     <section className={`px-6 md:px-12 py-16 md:py-24 ${alt ? 'bg-surface border-y border-rule' : ''}`}>
       <div className="max-w-3xl mx-auto">
-        <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">{eyebrow}</div>
+        <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{eyebrow}</div>
         <h2 className="font-display text-2xl md:text-3xl tracking-tighter text-balance mb-6">
           {heading}
         </h2>

@@ -34,7 +34,7 @@ export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Pr
           ) : (
             <span aria-hidden />
           )}
-          <div className="flex items-center gap-3 text-2xs uppercase tracking-widest text-ink-soft">
+          <div className="flex items-center gap-3 text-2xs uppercase tracking-widest text-ink-muted">
             <span>Built on</span>
             <Link href="/security#vendor-stack" className="hover:text-ink transition-colors">Supabase</Link>
             <span aria-hidden>·</span>
@@ -62,7 +62,7 @@ export default function MarketingFooter({ shipVelocity = SHIP_VELOCITY_90D }: Pr
                 ].join(' ')}
                 aria-hidden
               />
-              <span className="text-ink-soft uppercase tracking-widest">
+              <span className="text-ink-muted uppercase tracking-widest">
                 {healthy === false ? t('footer_v2.status_down') : t('footer_v2.status_ok')}
               </span>
             </Link>

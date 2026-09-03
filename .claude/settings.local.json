@@ -9,7 +9,8 @@
       "Bash(grep -n \"item.label\\\\|{ href: '/app/sessions', label:\\\\|moreNav\" /Users/leninjoaquin/Projects/crestio/components/Layout.tsx)",
       "Bash(python3 *)",
       "Bash(npx tsc *)",
-      "Bash(npx tsx *)"
+      "Bash(npx tsx *)",
+      "Bash(npx vitest *)"
     ]
   }
 }

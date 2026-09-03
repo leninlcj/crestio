@@ -102,11 +102,11 @@ export default function MarketingNav() {
 
         <div className="hidden lg:flex shrink-0">
           {signedIn ? (
-            <Link href="/app" className="btn-primary text-xs px-4 py-2 min-h-[auto]">
+            <Link href="/app" className="btn-primary text-xs px-4">
               {t('nav.go_to_dashboard')}
             </Link>
           ) : (
-            <Link href="/auth/signup" className="btn-primary text-xs px-4 py-2 min-h-[auto]">
+            <Link href="/auth/signup" className="btn-primary text-xs px-4">
               {t('nav.start_trial')}
             </Link>
           )}
@@ -194,12 +194,20 @@ function DropdownTrigger({
   links: NavLink[];
 }) {
   return (
-    <div className="relative" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div
+      className="relative"
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onFocus={onEnter}
+      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) onLeave(); }}
+    >
       <button
         type="button"
         className="text-sm text-ink-muted hover:text-ink transition-colors flex items-center gap-1"
         aria-expanded={open}
         aria-haspopup="true"
+        onClick={() => (open ? onLeave() : onEnter())}
+        onKeyDown={(e) => { if (e.key === 'Escape') onLeave(); }}
       >
         {label}
         <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-150 ${open ? 'rotate-180' : ''}`}>

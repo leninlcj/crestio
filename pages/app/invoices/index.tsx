@@ -252,7 +252,7 @@ function InvoicesInner() {
 
       {suggestion && (
         <div className="mb-4 card p-3 md:p-4 border-amber/40 bg-amber-soft/30 flex items-center gap-3 flex-wrap">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-ink shrink-0">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-ink shrink-0">
             <path d="M12 2v4M12 18v4M5 12H1M23 12h-4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>
           </svg>
           <div className="flex-1 min-w-0 text-sm leading-snug">
@@ -262,7 +262,6 @@ function InvoicesInner() {
           <Link
             href={`/app/invoices/batch?household_id=${suggestion.household_id}&combine=1`}
             className="btn-primary text-xs"
-            style={{ height: 32, minHeight: 32 }}
           >
             Create invoice
           </Link>
@@ -275,7 +274,6 @@ function InvoicesInner() {
               setSuggestion(null);
             }}
             className="btn-ghost text-xs"
-            style={{ height: 32, minHeight: 32 }}
           >
             Snooze
           </button>
@@ -312,7 +310,6 @@ function InvoicesInner() {
               type="button"
               onClick={() => setStatus([])}
               className="btn-ghost text-xs"
-              style={{ height: 32, minHeight: 32 }}
             >
               Clear
             </button>
@@ -485,7 +482,7 @@ function InvoiceRow({
           'shrink-0 w-4 h-4 rounded border grid place-items-center transition-all duration-100',
           isSelected
             ? 'bg-forest border-forest text-cream'
-            : 'border-rule opacity-0 group-hover:opacity-100',
+            : 'border-rule opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100',
         )}
       >
         {isSelected && (
@@ -496,10 +493,10 @@ function InvoiceRow({
       </button>
       <div className="font-mono text-2xs text-ink-muted shrink-0 w-20 truncate num tabular">{invoice.number}</div>
       <div className="flex-1 min-w-0">
-        <div className="text-[13px] text-ink truncate">
+        <div className="text-sm text-ink truncate">
           {invoice.household?.display_name ?? invoice.student?.name ?? '—'}
         </div>
-        <div className="text-2xs text-ink-soft truncate num tabular">
+        <div className="text-2xs text-ink-muted truncate num tabular">
           Issued {formatDate(invoice.issued_on)}
           {invoice.due_on && <> · Due {formatDate(invoice.due_on)}</>}
         </div>
@@ -530,9 +527,9 @@ function InvoiceRow({
         {invoice.status === 'overdue' && (
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-claret overdue-dot-pulse" aria-hidden="true" />
         )}
-        <StatusPill tone={tone as any}>{invoice.status}</StatusPill>
+        <StatusPill tone={tone as any}>{invoice.status.toUpperCase()}</StatusPill>
       </span>
-      <div className="w-20 shrink-0 text-right text-[13px] num tabular text-ink">
+      <div className="w-20 shrink-0 text-right text-sm num tabular text-ink">
         {formatCents(invoice.total_cents, currency, { showZero: true })}
       </div>
     </li>
