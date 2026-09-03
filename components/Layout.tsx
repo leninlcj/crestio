@@ -67,7 +67,7 @@ type NavItem = {
   labelKey: string;
   match: (p: string) => boolean;
   icon: () => JSX.Element;
-  requires?: 'multi_tutor' | 'team_tab' | 'money_owner';
+  requires?: 'multi_tutor' | 'team_tab' | 'money_owner' | 'platform_owner';
 };
 
 // Desktop nav order (matches spec):
@@ -81,6 +81,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/app/lesson-plans', labelKey: 'nav.resources', match: (p) => p.startsWith('/app/lesson-plans') || p.startsWith('/app/files') || p === '/app/resources', icon: IconBook },
   { href: '/app/messages',     labelKey: 'nav.messages',  match: (p) => p.startsWith('/app/messages'),                      icon: IconChat },
   { href: '/app/tutors',       labelKey: 'nav.team',      match: (p) => p.startsWith('/app/tutors') || p === '/app/team' || p === '/app/payouts', icon: IconTeam, requires: 'team_tab' },
+  { href: '/app/leads',        labelKey: 'nav.leads',     match: (p) => p.startsWith('/app/leads'),                         icon: IconInbox, requires: 'platform_owner' },
   { href: '/app/settings/account', labelKey: 'nav.settings', match: (p) => p.startsWith('/app/settings'),                   icon: IconGear },
 ];
 
@@ -132,6 +133,13 @@ function tabsForPath(pathname: string, _query: Record<string, any>, _opts: { isO
       { key: 'payouts', label: 'Payouts to tutors',href: '/app/payouts', match: (p) => p === '/app/payouts' },
     ];
   }
+  // Leads: Enquiries, Tutor applications (agency owner only)
+  if (pathname.startsWith('/app/leads')) {
+    return [
+      { key: 'enquiries',    label: 'Enquiries',          href: '/app/leads',              match: (p) => p === '/app/leads' },
+      { key: 'applications', label: 'Tutor applications', href: '/app/leads/applications', match: (p) => p === '/app/leads/applications' },
+    ];
+  }
   // Settings: tabs already exist via SettingsTabs — leave to that component.
   return null;
 }
@@ -153,6 +161,7 @@ function defaultPageTitle(pathname: string): string {
   if (pathname.startsWith('/app/files')) return 'Resources';
   if (pathname.startsWith('/app/messages')) return 'Messages';
   if (pathname.startsWith('/app/tutors')) return 'Team';
+  if (pathname.startsWith('/app/leads')) return 'Leads';
   if (pathname.startsWith('/app/settings')) return 'Settings';
   return 'Crestio';
 }
@@ -206,13 +215,18 @@ export default function Layout({
     return () => { cancelled = true; clearInterval(id); };
   }, []);
 
+  const platformOwner = isPlatformOwner(userEmail);
   const nav = useMemo(() => NAV_ITEMS.filter((item) => {
     if (item.requires === 'team_tab') {
       // Team sidebar entry: owner on multi-tutor plan.
       return isOwner && hasMultiTutor;
     }
+    if (item.requires === 'platform_owner') {
+      // Agency leads: enquiries and tutor applications.
+      return isOwner && platformOwner;
+    }
     return true;
-  }), [isOwner, hasMultiTutor]);
+  }), [isOwner, hasMultiTutor, platformOwner]);
 
   useEffect(() => {
     let cancelled = false;
@@ -247,6 +261,9 @@ export default function Layout({
     ...(isOwner && hasMultiTutor ? [
       { href: '/app/tutors', label: t('nav.tutors') },
       { href: '/app/payouts', label: t('nav.payouts') },
+    ] : []),
+    ...(isOwner && platformOwner ? [
+      { href: '/app/leads', label: t('nav.leads') },
     ] : []),
     { href: '/app/settings/account', label: t('nav.settings') },
   ];
@@ -823,6 +840,13 @@ function IconTeam() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/>
       <path d="M3 19a6 6 0 0 1 12 0"/><path d="M15 19a4 4 0 0 1 6.5-3.1"/>
+    </svg>
+  );
+}
+function IconInbox() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 13l2.5-8h13L21 13"/><path d="M3 13v6h18v-6"/><path d="M3 13h5l1.5 3h5L16 13h5"/>
     </svg>
   );
 }

@@ -15,6 +15,8 @@ export default defineConfig({
   ],
   use: {
     baseURL,
+    // Optional: point at a preinstalled Chromium (sandboxes without network).
+    ...(process.env.PW_CHROMIUM_PATH ? { launchOptions: { executablePath: process.env.PW_CHROMIUM_PATH } } : {}),
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

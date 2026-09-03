@@ -71,7 +71,8 @@
     "test_accounts": "Comptes d'essai",
     "more": "Plus",
     "assistant": "Assistant",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "leads": "Leads"
   },
   "search_ui": {
     "placeholder": "Rechercher…",

@@ -76,7 +76,8 @@
     "test_accounts": "Test accounts",
     "more": "More",
     "assistant": "Assistant",
-    "search": "Search"
+    "search": "Search",
+    "leads": "Leads"
   },
   "search_ui": {
     "placeholder": "Search…",

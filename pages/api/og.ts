@@ -45,7 +45,7 @@ function defaultTitleFor(type: OgVariant): string {
     case 'referral_share': return 'Try Crestio with me.';
     case 'marketing':
     default:
-      return 'Run your tutoring practice — finally without the spreadsheet.';
+      return 'The right tutor, matched to your child.';
   }
 }
 
@@ -53,7 +53,7 @@ function defaultSubtitleFor(type: OgVariant): string {
   switch (type) {
     case 'pricing': return '7-day trial. Cancel anytime. Parents pay by card.';
     case 'comparison': return 'A side-by-side that doesn\'t bury the trade-offs.';
-    case 'marketing': return 'Log a session in 8 seconds. Polish notes that read like you wrote them. Get paid by card.';
+    case 'marketing': return 'Maths and physics, Years 7–12 and the HSC. Sydney in-home and online.';
     default: return '';
   }
 }

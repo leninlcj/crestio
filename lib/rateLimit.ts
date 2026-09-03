@@ -44,4 +44,7 @@ export const LIMITS = {
   owner_admin: { limit: 30, windowMs: 60 * 1000 },
   files_upload: { limit: 30, windowMs: 60 * 60 * 1000 },
   files_view_url: { limit: 600, windowMs: 60 * 60 * 1000 },
+  // Public agency forms, keyed by IP.
+  enquiry:           { limit: 5,  windowMs: 60 * 60 * 1000 },
+  tutor_application: { limit: 3,  windowMs: 60 * 60 * 1000 },
 } as const;

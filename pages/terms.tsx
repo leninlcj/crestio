@@ -1,139 +1,97 @@
 import type { GetStaticProps } from 'next';
 import LegalPage from '../components/LegalPage';
 import { serverSideTranslations } from '../lib/i18nServer';
+import { AGENCY } from '../lib/agency';
 
 const TOC = [
-  { id: 'agreement', label: 'Agreement' },
-  { id: 'who-can-use', label: 'Who can use Crestio' },
-  { id: 'your-account', label: 'Your account' },
-  { id: 'your-content', label: 'Your content' },
-  { id: 'uploaded-content', label: 'User uploaded content' },
-  { id: 'acceptable-use', label: 'Acceptable use' },
-  { id: 'billing', label: 'Subscription and billing' },
-  { id: 'ai-content', label: 'AI-generated content' },
-  { id: 'availability', label: 'Service availability' },
-  { id: 'termination', label: 'Termination' },
-  { id: 'disclaimer', label: 'Disclaimer and limitation of liability' },
-  { id: 'governing-law', label: 'Governing law' },
-  { id: 'changes', label: 'Changes to these terms' },
+  { id: 'what-we-do', label: 'What we do' },
+  { id: 'matching', label: 'Bookings and matching' },
+  { id: 'guarantee', label: 'First-lesson guarantee' },
+  { id: 'fees', label: 'Fees and payment' },
+  { id: 'cancellations', label: 'Cancellations and rescheduling' },
+  { id: 'safety', label: 'Safety and conduct' },
+  { id: 'accounts', label: 'Your account and the app' },
+  { id: 'tutors', label: 'Tutors' },
+  { id: 'liability', label: 'Liability' },
+  { id: 'ending', label: 'Ending the arrangement' },
+  { id: 'law', label: 'Governing law' },
   { id: 'contact', label: 'Contact' },
 ];
 
+const H = AGENCY.policies.cancellationHours;
+
 export default function Terms() {
   return (
-    <LegalPage title="Terms of service" lastUpdated="2 May 2026 (sole-founder voice clarified)" toc={TOC}>
-      <h2 id="agreement">Agreement</h2>
+    <LegalPage title="Terms of service" lastUpdated="3 September 2026" toc={TOC}>
       <p>
-        By creating a Crestio account, you agree to these terms. Read them carefully. If you don't agree, don't use the service.
+        These terms apply to tutoring arranged through {AGENCY.name} (&ldquo;Crestio&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), run by {AGENCY.founder.name} in Sydney, Australia. By booking a tutor or using the app at crestio.ai, you agree to them. Nothing in these terms takes away rights you have under the Australian Consumer Law.
       </p>
 
-      <h2 id="who-can-use">Who can use Crestio</h2>
+      <h2 id="what-we-do">What we do</h2>
       <p>
-        You must be at least 18 years old and have the legal authority to enter into contracts in your country.
+        Crestio matches students with tutors and arranges one-on-one lessons, online or in-home. We interview and check each tutor, handle scheduling, lesson notes, invoicing and payment, and stay involved for the life of the arrangement. Tutors are engaged by Crestio as independent contractors.
       </p>
 
-      <h2 id="your-account">Your account</h2>
+      <h2 id="matching">Bookings and matching</h2>
+      <p>
+        You tell us the year level, subject and preferred format; we propose a tutor. There is no charge to enquire and no charge until a lesson is held. A booking exists once you accept a proposed tutor and a first lesson time. Ongoing lessons are booked as a recurring weekly slot unless we agree otherwise.
+      </p>
+
+      <h2 id="guarantee">First-lesson guarantee</h2>
+      <p>
+        {AGENCY.policies.firstLessonGuarantee} To use the guarantee, tell us before the second lesson with that tutor. The guarantee applies once per tutor match.
+      </p>
+
+      <h2 id="fees">Fees and payment</h2>
       <ul>
-        <li>You're responsible for your account security.</li>
-        <li>Don't share credentials with anyone else.</li>
-        <li>Notify us immediately if you suspect unauthorised access.</li>
-        <li>Crestio may suspend accounts that violate these terms, with notice where possible.</li>
+        <li>Rates are published at crestio.ai/pricing and are per hour, per student. The rate that applies is the one shown for the student's level and lesson format at the time of booking. We give at least 30 days' notice of any rate change.</li>
+        <li>Lessons are invoiced after they are held. Invoices are payable within 7 days by card through the secure payment link, or you may buy a prepaid block of hours in advance, which is drawn down per lesson.</li>
+        <li>Nothing is charged to your card without your authorisation. If you save a card for convenience, we charge it only for lessons held or late cancellations under these terms, and we tell you each time.</li>
+        <li>Longer or shorter lessons are charged pro rata. Travel is included in the in-home rate.</li>
+        <li>If an invoice is more than 14 days overdue we may pause lessons until it is paid.</li>
       </ul>
 
-      <h2 id="your-content">Your content</h2>
-      <p>
-        You own the content you add to Crestio — student records, session notes, lesson plans, invoices, and messages. By using Crestio, you grant us a limited license to store, display, and process this content solely to provide the service to you.
-      </p>
-
-      <h2 id="uploaded-content">User uploaded content</h2>
-      <p>
-        Crestio lets tutors upload files — PDFs, images, and other documents — to share with their students and the parents linked to those students. By uploading a file, you warrant that:
-      </p>
+      <h2 id="cancellations">Cancellations and rescheduling</h2>
       <ul>
-        <li>You hold all necessary rights to share the file (copyright, model release, parental consent for any image of a child, etc).</li>
-        <li>The file does not infringe any third party's rights and does not contain unlawful, harmful, or harassing material.</li>
-        <li>You have permission from the relevant parents to share files concerning their children.</li>
-      </ul>
-      <p>
-        You retain ownership of files you upload. By uploading, you grant Crestio a limited licence to store, process, and deliver the file to the people you have explicitly linked to (your students' parents, your organisation's tutors). You agree to indemnify Crestio against any third-party claim arising from a file you upload.
-      </p>
-      <p>
-        <strong>Takedown.</strong> If you believe a file on Crestio infringes your rights or contains harmful material, email <a href="mailto:lenin@crestio.ai">lenin@crestio.ai</a> with the file URL or a description, the rights you hold, and your contact details. Crestio will review within 5 business days and remove or restrict access where appropriate.
-      </p>
-      <p>
-        Crestio does not actively review uploaded files. Crestio may remove files that violate these terms or applicable law.
-      </p>
-
-      <h2 id="acceptable-use">Acceptable use</h2>
-      <p>You agree not to:</p>
-      <ul>
-        <li>Use Crestio for illegal purposes.</li>
-        <li>Add student or parent information without appropriate consent.</li>
-        <li>Share your account with others (team accounts exist for this purpose).</li>
-        <li>Attempt to access other users' data.</li>
-        <li>Upload harmful code, executables, or files that attempt to disrupt the service.</li>
-        <li>Upload material you do not have the right to share.</li>
-        <li>Attempt to bypass the file viewer's access controls (signed URLs, watermarks, view restrictions).</li>
-        <li>Resell access to Crestio.</li>
+        <li>Give at least {H} hours' notice to cancel or reschedule a lesson at no charge.</li>
+        <li>A lesson cancelled with less than {H} hours' notice, or a student who does not attend, is charged at the full rate, because the tutor is paid for the time they held for you. We may waive this at our discretion for illness or emergencies.</li>
+        <li>If a tutor cancels or does not attend, you are not charged, and we offer a replacement time or a replacement tutor.</li>
+        <li>Online lessons start at the booked time; the lesson length is not extended for a late start by the student.</li>
       </ul>
 
-      <h2 id="billing">Subscription and billing</h2>
-      <p>Crestio is a paid service. Available plans:</p>
+      <h2 id="safety">Safety and conduct</h2>
       <ul>
-        <li><strong>Solo</strong> — $24 AUD per month, or $240 AUD per year (saves 2 months).</li>
-        <li><strong>Team</strong> — $59 AUD per month, or $590 AUD per year (saves 2 months).</li>
-        <li><strong>Growth</strong> — tailored pricing for larger practices. Contact us.</li>
+        <li>Every tutor is 18 or older and holds a NSW Working With Children Check, which we verify with the NSW Office of the Children's Guardian before the tutor meets a student.</li>
+        <li>For in-home lessons with a child, a parent or guardian must be home during the lesson. Lessons take place in a shared living area, not a bedroom.</li>
+        <li>Tutors follow our code of conduct. Lesson arrangements, changes and payments go through Crestio or the parent — never privately between a tutor and a student.</li>
+        <li>If anything concerns you about a tutor or a lesson, tell us at once at <a href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>. We take it seriously and act quickly.</li>
       </ul>
+
+      <h2 id="accounts">Your account and the app</h2>
       <p>
-        New Solo accounts get a 7-day free trial. New Team accounts get a 14-day free trial. No payment method is required to create an account or start a trial. If you choose a paid subscription, Stripe collects your payment method and charges you according to the plan and billing interval you select.
-      </p>
-      <p>
-        You can cancel anytime from the billing portal. Access continues until the end of your paid billing period. No refunds for partial months except where required by law.
-      </p>
-      <p>
-        Prices are in Australian Dollars, inclusive of GST where applicable. Crestio may change prices with at least 30 days' email notice; changes apply at your next billing cycle.
+        Parents and students may be given access to the Crestio app to see lessons, notes, homework, files and invoices. You are responsible for keeping your sign-in details private. Files and notes shared through the app are for the student's own use and may not be redistributed. Our <a href="/privacy">privacy policy</a> explains what we collect and how we use it.
       </p>
 
-      <h2 id="ai-content">AI-generated content</h2>
+      <h2 id="tutors">Tutors</h2>
       <p>
-        Some Crestio features use AI to help you — polishing notes, suggesting lesson plans, and powering the in-app assistant. AI output can contain errors. You are responsible for reviewing all AI-generated content before sharing it with parents, students, or using it with learners. Crestio makes no warranty about the quality, accuracy, or appropriateness of AI-generated content.
+        Tutors are independent contractors engaged by Crestio, not employees, and not employees or contractors of the family. A separate contractor agreement governs Crestio's relationship with each tutor. Families agree not to engage a Crestio tutor privately for paid tutoring, outside Crestio, for 12 months after their last Crestio lesson; if you would like to change how you work with your tutor, talk to us.
       </p>
 
-      <h2 id="availability">Service availability</h2>
+      <h2 id="liability">Liability</h2>
       <p>
-        Crestio aims to be available at all times, but doesn't guarantee uninterrupted access. Maintenance happens, and occasional outages happen. Crestio is not liable for brief periods of unavailability.
+        We provide our service with due care and skill. We do not guarantee any particular mark, grade or result — that depends on the student, the school and many things outside a lesson. To the extent the law allows, our liability for any claim relating to our service is limited to re-supplying the service or refunding the amount paid for the lessons in question. Nothing in these terms excludes rights you have under the Australian Consumer Law.
       </p>
 
-      <h2 id="termination">Termination</h2>
+      <h2 id="ending">Ending the arrangement</h2>
       <p>
-        You can delete your account anytime from settings. Crestio may suspend or terminate accounts that violate these terms, with notice where possible. On termination, your data is removed per the privacy policy.
+        There is no lock-in. You can pause or stop at any time by telling us, with at least {H} hours' notice before the next lesson. Unused prepaid hours are refunded on request. We may end an arrangement if these terms are breached, if a tutor's safety or wellbeing is at risk, or if invoices remain unpaid.
       </p>
 
-      <h2 id="disclaimer">Disclaimer and limitation of liability</h2>
-      <p>
-        Crestio is provided "as is" and "as available" without warranties of any kind, whether express or implied, including but not limited to merchantability, fitness for a particular purpose, or non-infringement.
-      </p>
-      <p>
-        To the maximum extent permitted by law, Crestio's total liability to you for any claim arising out of or relating to these terms or the service is limited to the fees you paid to Crestio in the 12 months preceding the claim. Crestio is not liable for indirect, incidental, special, consequential, or punitive damages.
-      </p>
-      <p>
-        Nothing in these terms excludes any rights you have under the Australian Consumer Law or equivalent mandatory consumer protection laws in your country.
-      </p>
-
-      <h2 id="governing-law">Governing law</h2>
-      <p>
-        These terms are governed by the laws of New South Wales, Australia. Disputes will be resolved in the courts of New South Wales unless your local consumer protection laws require otherwise.
-      </p>
-
-      <h2 id="changes">Changes to these terms</h2>
-      <p>
-        Crestio may update these terms. Material changes will be notified by email at least 14 days in advance. Continuing to use Crestio after changes take effect means you accept the new terms.
-      </p>
+      <h2 id="law">Governing law</h2>
+      <p>These terms are governed by the laws of New South Wales, Australia.</p>
 
       <h2 id="contact">Contact</h2>
-      <p>
-        Questions: <a href="mailto:lenin@crestio.ai">lenin@crestio.ai</a>.
-      </p>
+      <p>{AGENCY.name} · Sydney, NSW, Australia · <a href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>.</p>
     </LegalPage>
   );
 }

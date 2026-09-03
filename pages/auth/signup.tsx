@@ -1,230 +1,51 @@
-import { useEffect, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import type { GetStaticProps } from 'next';
-import { useTranslation } from 'react-i18next';
-import { supabase } from '../../lib/supabase';
-import { readReferralCookie, clearReferralCookie } from '../../lib/referralCookie';
-import { normaliseCode } from '../../lib/referralCode';
-import { serverSideTranslations } from '../../lib/i18nServer';
-import { PLAN_CATALOGUE, formatPlanPrice, type BillingInterval } from '../../lib/plans';
-import type { PlanTier } from '../../lib/billing';
+import { AGENCY } from '../../lib/agency';
 
-const isPlanTier = (value: unknown): value is PlanTier => (
-  value === 'solo' || value === 'team' || value === 'growth'
-);
+// Public signup is closed. Crestio runs as an agency: tutors join by
+// invitation (/tutor/accept), parents by invitation (/parent/accept), and
+// students through their parent. Anyone landing here is pointed to the
+// right door.
 
-const isBillingInterval = (value: unknown): value is BillingInterval => (
-  value === 'monthly' || value === 'annual'
-);
-
-export default function SignUp() {
-  const router = useRouter();
-  const { t } = useTranslation('auth');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [referralCode, setReferralCode] = useState('');
-  const [showReferralField, setShowReferralField] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [sentConfirmation, setSentConfirmation] = useState(false);
-  const selectedPlan = isPlanTier(router.query.plan) ? router.query.plan : null;
-  const selectedInterval = isBillingInterval(router.query.interval) ? router.query.interval : 'monthly';
-  const selectedPlanEntry = selectedPlan ? PLAN_CATALOGUE[selectedPlan] : null;
-
-  // Pre-fill referral code from the cookie captured by ReferralCapture.
-  useEffect(() => {
-    const cached = readReferralCookie();
-    if (cached) {
-      setReferralCode(cached);
-      setShowReferralField(true);
-    }
-  }, []);
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    const { data, error: err } = await supabase.auth.signUp({ email, password });
-
-    if (err) {
-      setLoading(false);
-      setError(err.message);
-      return;
-    }
-
-    if (!data.session) {
-      setLoading(false);
-      setSentConfirmation(true);
-      return;
-    }
-
-    try {
-      await fetch('/api/onboarding/detect-region', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${data.session.access_token}`,
-        },
-        body: JSON.stringify({}),
-      });
-    } catch { /* ignore */ }
-
-    const code = normaliseCode(referralCode);
-    if (code) {
-      try {
-        const res = await fetch('/api/referrals/record-signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${data.session.access_token}`,
-          },
-          body: JSON.stringify({ code }),
-        });
-        const payload = await res.json().catch(() => ({}));
-        if (payload?.recorded) clearReferralCookie();
-      } catch { /* ignore */ }
-    }
-
-    setLoading(false);
-    router.push('/app/onboarding/plan');
-  }
-
+export default function SignUpClosed() {
   return (
     <div className="min-h-screen bg-cream flex flex-col">
       <Head>
-        <title>{t('signup.page_title')}</title>
+        <title>Sign up · {AGENCY.name}</title>
+        <meta name="robots" content="noindex" />
       </Head>
-      <div className="flex-1 flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-[400px]">
-          <Link href="/" className="block mx-auto mb-10 font-display text-2xl tracking-tighter text-center">
-            crest<span className="italic text-forest">io</span>
-          </Link>
-
-          {sentConfirmation ? (
-            <>
-              <h1 className="text-[24px] font-display font-semibold tracking-tighter mb-1 m-0">
-                {t('signup.confirm_title')}
-              </h1>
-              <p className="text-sm text-ink-muted mb-6 leading-relaxed">
-                {t('signup.confirm_body', { email })}
-              </p>
-              <Link href="/auth/signin" className="btn-secondary w-full">
-                {t('signup.back_to_sign_in')}
-              </Link>
-            </>
-          ) : (
-            <>
-              <h1 className="text-[24px] font-display font-semibold tracking-tighter mb-1 m-0">
-                Create your account
-              </h1>
-              <p className="text-sm text-ink-muted mb-8">
-                {selectedPlanEntry
-                  ? `Start ${selectedPlanEntry.label} — no card required.`
-                  : 'Start your free trial — no card required.'}
-              </p>
-
-              {selectedPlanEntry && (
-                <div className="card mb-6 p-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="text-xs font-semibold uppercase tracking-widest text-ink-soft">
-                        Selected plan
-                      </div>
-                      <div className="mt-1 text-base font-semibold text-ink">
-                        {selectedPlanEntry.label}
-                      </div>
-                      <p className="mt-1 text-xs leading-5 text-ink-muted">
-                        {selectedPlanEntry.pitch}
-                      </p>
-                    </div>
-                    <span className="pill-forest">
-                      {selectedPlanEntry.trialDays}-day trial
-                    </span>
-                  </div>
-                  <div className="mt-4 border-t border-rule pt-3 text-sm text-ink-muted">
-                    Then <span className="font-semibold text-ink">{formatPlanPrice(selectedPlanEntry.tier, selectedInterval)}</span>
-                    . Cancel before billing starts.
-                  </div>
-                </div>
-              )}
-
-              <form onSubmit={onSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="signup-email" className="label">{t('signup.email')}</label>
-                  <input
-                    id="signup-email"
-                    type="email" name="email" autoComplete="email"
-                    required autoFocus
-                    value={email} onChange={(e) => setEmail(e.target.value)}
-                    className="input"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="signup-password" className="label">{t('signup.password')}</label>
-                  <input
-                    id="signup-password"
-                    type="password" name="new-password" autoComplete="new-password"
-                    required minLength={8}
-                    value={password} onChange={(e) => setPassword(e.target.value)}
-                    className="input"
-                  />
-                  <div className="text-xs text-ink-soft mt-1.5">{t('signup.password_hint')}</div>
-                </div>
-
-                {!showReferralField ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowReferralField(true)}
-                    className="text-xs text-forest hover:text-forest-ink underline underline-offset-2 block"
-                  >
-                    {t('signup.referral_prompt')}
-                  </button>
-                ) : (
-                  <div>
-                    <label htmlFor="signup-referral" className="label">
-                      {t('signup.referral_label')} <span className="text-ink-soft normal-case font-normal">{t('signup.referral_optional')}</span>
-                    </label>
-                    <input
-                      id="signup-referral"
-                      type="text"
-                      name="referral-code"
-                      value={referralCode}
-                      onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                      placeholder="CRESTIO-XXXXYYYY"
-                      className="input font-mono tracking-wide uppercase"
-                      autoComplete="off"
-                    />
-                    <div className="text-xs text-ink-soft mt-1.5">
-                      {t('signup.referral_hint')}
-                    </div>
-                  </div>
-                )}
-
-                {error && <div className="text-xs text-claret">{error}</div>}
-
-                <button type="submit" disabled={loading} className="btn-primary w-full">
-                  {loading ? t('signup.submitting') : t('signup.submit')}
-                </button>
-              </form>
-
-              <div className="mt-8 text-sm text-ink-muted text-center">
-                {t('signup.already_have_account')}{' '}
-                <Link href="/auth/signin" className="text-forest underline underline-offset-2">
-                  {t('signup.sign_in_link')}
-                </Link>
-              </div>
-            </>
-          )}
+      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-rule">
+        <Link href="/" className="font-display text-2xl tracking-tightest">
+          crest<span className="italic text-forest">io</span>
+        </Link>
+        <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink">Sign in</Link>
+      </nav>
+      <main className="flex-1 flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-md">
+          <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Accounts are by invitation</div>
+          <h1 className="font-display text-3xl md:text-4xl tracking-tighter text-ink text-balance mb-4">There is no public sign-up.</h1>
+          <p className="text-sm text-ink-muted leading-relaxed mb-8">
+            Crestio accounts are created when you join us. Tutors receive an invitation after their application is accepted; parents receive one when their child is matched with a tutor.
+          </p>
+          <div className="space-y-3">
+            <Link href="/enquire" className="card p-4 block hover:bg-ruleSoft/40 transition-colors">
+              <div className="text-sm font-medium text-ink">Looking for a tutor?</div>
+              <div className="text-xs text-ink-muted mt-0.5">Book a free consultation and we will match your child with a tutor.</div>
+            </Link>
+            <Link href="/tutors/apply" className="card p-4 block hover:bg-ruleSoft/40 transition-colors">
+              <div className="text-sm font-medium text-ink">Want to tutor with us?</div>
+              <div className="text-xs text-ink-muted mt-0.5">Apply in five minutes. We read every application personally.</div>
+            </Link>
+            <Link href="/auth/signin" className="card p-4 block hover:bg-ruleSoft/40 transition-colors">
+              <div className="text-sm font-medium text-ink">Already have an account?</div>
+              <div className="text-xs text-ink-muted mt-0.5">Tutors sign in here; parents sign in at <span className="text-forest">/parent/signin</span>.</div>
+            </Link>
+          </div>
+          <p className="mt-8 text-2xs text-ink-soft">
+            Expecting an invitation that has not arrived? Email <a className="underline underline-offset-2" href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>.
+          </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: {
-    ...serverSideTranslations(locale, ['auth']),
-  },
-});
