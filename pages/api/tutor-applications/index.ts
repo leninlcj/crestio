@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // One open application per email: a second submission updates the first
   // instead of creating a duplicate the owner has to dedupe by hand.
-  const { data: existing } = await admin
+  const { data: existing, error: existingErr } = await admin
     .from('tutor_applications')
     .select('id, status')
     .eq('organization_id', org.id)
@@ -75,8 +75,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ip_hash: ipHash,
   };
 
-  let id: string | null = null;
-  if (existing?.id) {
+  // Before the migration is applied the table does not exist (42P01): email only.
+  const tableMissing = (existingErr as any)?.code === '42P01';
+  let id: string = 'not-saved';
+  if (tableMissing) {
+    console.error('tutor-applications: table missing — emailed only. Apply supabase/migrations/20260903_agency_enquiries_applications.sql');
+  } else if (existing?.id) {
     const { error } = await admin.from('tutor_applications').update(fields).eq('id', existing.id);
     if (error) {
       console.error('tutor-applications: update failed', error);
@@ -112,22 +116,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     applicationId: id,
   };
 
+  const alertEmail = buildApplicationAlertEmail(emailArgs);
+  if (tableMissing) {
+    alertEmail.subject = `[NOT SAVED — run the applications migration] ${alertEmail.subject}`;
+    alertEmail.text = `The tutor_applications table does not exist yet, so this was emailed only.\n\n${alertEmail.text}`;
+  }
   const [confirm, alert] = await Promise.all([
     sendEmail({ to: v.email, ...buildApplicationReceivedEmail(emailArgs) }),
-    sendEmail({ to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL, replyTo: v.email, ...buildApplicationAlertEmail(emailArgs) }),
+    sendEmail({ to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL, replyTo: v.email, ...alertEmail }),
   ]);
   if (!confirm.success) console.error('tutor-applications: confirmation email failed', confirm.error);
   if (!alert.success) console.error('tutor-applications: owner alert failed', alert.error);
 
-  await writeAudit(admin, {
-    organizationId: org.id,
-    actorUserId: null,
-    actorRole: 'system',
-    action: existing?.id ? 'tutor_application.updated' : 'tutor_application.created',
-    entityType: 'tutor_application',
-    entityId: id,
-    payload: { entity_name: v.full_name, subjects: v.subjects, suburb: v.suburb, source: v.source },
-  });
+  if (!tableMissing) {
+    await writeAudit(admin, {
+      organizationId: org.id,
+      actorUserId: null,
+      actorRole: 'system',
+      action: existing?.id ? 'tutor_application.updated' : 'tutor_application.created',
+      entityType: 'tutor_application',
+      entityId: id,
+      payload: { entity_name: v.full_name, subjects: v.subjects, suburb: v.suburb, source: v.source },
+    });
+  }
 
-  return res.status(200).json({ ok: true, id });
+  return res.status(200).json({ ok: true, id, stored: !tableMissing });
 }

@@ -26,6 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   else if (status !== 'all') query = query.eq('status', status);
 
   const { data, error } = await query;
+  if ((error as any)?.code === '42P01') {
+    return res.status(200).json({ applications: [], pay_bands: TUTOR_PAY_BANDS, setup_required: true, migration: 'supabase/migrations/20260903_agency_enquiries_applications.sql' });
+  }
   if (error) return res.status(500).json({ error: error.message });
 
   let rows = data ?? [];
