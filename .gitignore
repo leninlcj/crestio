@@ -50,3 +50,6 @@ public/locales/.cache/
 .claude/
 .env*.local
 .vercel
+
+# local sync bundles
+.sync/
