@@ -8,6 +8,7 @@ import { sendEmail } from '../../../lib/email';
 import { buildEnquiryReceivedEmail, buildEnquiryAlertEmail } from '../../../lib/emails/agency';
 import { writeAudit } from '../../../lib/audit';
 import { OWNER_EMAIL } from '../../../lib/owner';
+import { isMissingTableError } from '../../../lib/dbErrors';
 
 // Public: a family enquiry from /enquire. Writes via the service role (the
 // table has no INSERT policy), emails the family a confirmation and the
@@ -38,14 +39,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
   });
 
+  // Never lose an enquiry. If the agency organisation cannot be resolved or
+  // the table does not exist yet, fall back to email-only and flag it.
   const org = await getAgencyOrganization(admin);
-  if (!org) {
-    console.error('enquiries: agency organization not found');
-    return res.status(500).json({ error: 'We could not save your enquiry. Please email us.' });
-  }
+  if (!org) console.error('enquiries: agency organization not found — emailing only');
 
   const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 32);
-  const { data: row, error: insertErr } = await admin
+  const { data: row, error: insertErr } = org ? await admin
     .from('enquiries')
     .insert({
       organization_id: org.id,
@@ -65,10 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ip_hash: ipHash,
     })
     .select('id')
-    .single();
-  // Before the migration is applied the table does not exist (42P01). Never
-  // lose an enquiry: fall back to email-only and tell the owner.
-  const tableMissing = (insertErr as any)?.code === '42P01';
+    .single() : { data: null, error: null };
+  const tableMissing = !org || isMissingTableError(insertErr);
   if ((insertErr || !row) && !tableMissing) {
     console.error('enquiries: insert failed', insertErr);
     return res.status(500).json({ error: 'We could not save your enquiry. Please email us.' });
@@ -97,8 +95,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     (async () => {
       const b = buildEnquiryAlertEmail(emailArgs);
       if (tableMissing) {
-        b.subject = `[NOT SAVED — run the enquiries migration] ${b.subject}`;
-        b.text = `The enquiries table does not exist yet, so this was emailed only.\n\n${b.text}`;
+        b.subject = `[NOT SAVED${org ? ' — run the enquiries migration' : ' — agency organisation not found'}] ${b.subject}`;
+        b.text = `${org ? 'The enquiries table does not exist yet' : 'The agency organisation could not be resolved'}, so this was emailed only.\n\n${b.text}`;
       }
       return sendEmail({ to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL, replyTo: v.email, ...b });
     })(),
@@ -106,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!confirm.success) console.error('enquiries: confirmation email failed', confirm.error);
   if (!alert.success) console.error('enquiries: owner alert failed', alert.error);
 
-  if (!tableMissing) {
+  if (!tableMissing && org) {
     await writeAudit(admin, {
       organizationId: org.id,
       actorUserId: null,
