@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "Sua assinatura do Crestio foi cancelada",
     "body": "Você manterá o acesso até {{ends_on}}. Renove sua assinatura a qualquer momento em Configurações → Cobrança."
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }

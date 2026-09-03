@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "Langganan Crestio Anda telah dibatalkan",
     "body": "Anda akan tetap memiliki akses hingga {{ends_on}}. Anda dapat berlangganan kembali kapan saja melalui Pengaturan → Tagihan."
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }

@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "आपकी Crestio सदस्यता रद्द कर दी गई है",
     "body": "आपके पास {{ends_on}} तक पहुँच बनी रहेगी। सेटिंग्स → बिलिंग से कभी भी फिर से सदस्यता लें।"
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }
