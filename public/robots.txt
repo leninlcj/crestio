@@ -1,37 +1,20 @@
-# Crestio — robots.txt
-# Marketing surfaces are crawl-allowed; the authenticated app and
-# parent portal are not. Sandbox is no-index (set in HTML head too).
+# Crestio Tutoring — robots.txt
+# Public agency pages are crawl-allowed; the app, portals, auth, payment
+# links and API are not.
 
 User-agent: *
 Allow: /
-Allow: /pricing
-Allow: /changelog
-Allow: /roadmap
-Allow: /founder
-Allow: /security
-Allow: /status
-Allow: /brand
-Allow: /developers
-Allow: /customers
-Allow: /customers/
-Allow: /compare/
-Allow: /for/
-Allow: /migrate
-Allow: /roi
-Allow: /about
-Allow: /contact
-Allow: /privacy
-Allow: /terms
-
 Disallow: /app
 Disallow: /app/
 Disallow: /parent
 Disallow: /parent/
-Disallow: /sandbox
+Disallow: /student
+Disallow: /student/
 Disallow: /api/
 Disallow: /auth/
 Disallow: /pay/
 Disallow: /tutor/accept
 Disallow: /files/
+Disallow: /welcome
 
 Sitemap: https://crestio.ai/sitemap.xml

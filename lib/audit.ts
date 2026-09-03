@@ -98,6 +98,12 @@ export function describeAction(
     case 'purge.completed':        return `Permanently deleted ${count ?? 'items'}`;
     case 'bulk.sessions.polished': return `Polished ${count ?? 'multiple'} sessions`;
     case 'bulk.invoices.sent':     return `Sent ${count ?? 'multiple'} invoices`;
+    case 'enquiry.created':        return `New enquiry${name ? ` from ${name}` : ''}`;
+    case 'enquiry.updated':        return `Updated enquiry${payload.status ? ` (${String(payload.status).replace(/_/g, ' ')})` : ''}`;
+    case 'enquiry.converted':      return `Converted enquiry${name ? ` from ${name}` : ''} to a household`;
+    case 'tutor_application.created': return `New tutor application${name ? ` from ${name}` : ''}`;
+    case 'tutor_application.updated': return `Updated tutor application${payload.status ? ` (${String(payload.status)})` : ''}`;
+    case 'tutor_application.invited': return `Invited ${name || 'applicant'} to join as a tutor`;
     default: {
       // "student.archived" → "Student archived"
       const [type, verb] = action.split('.');

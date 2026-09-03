@@ -71,7 +71,8 @@
     "test_accounts": "পরীক্ষামূলক অ্যাকাউন্ট",
     "more": "আরও",
     "assistant": "সহকারী",
-    "search": "অনুসন্ধান করুন"
+    "search": "অনুসন্ধান করুন",
+    "leads": "Leads"
   },
   "search_ui": {
     "placeholder": "অনুসন্ধান…",

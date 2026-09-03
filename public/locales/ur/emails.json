@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "آپ کی کریسٹو سبسکرپشن منسوخ کر دی گئی ہے",
     "body": "آپ کے پاس رسائی '{{ends_on}}' تک رہے گی۔  سیٹنگز → بلنگ سے کسی بھی وقت دوبارہ سبسکرائب کریں۔"
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }

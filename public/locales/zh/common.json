@@ -71,7 +71,8 @@
     "test_accounts": "测试账户",
     "more": "更多",
     "assistant": "助手",
-    "search": "搜索"
+    "search": "搜索",
+    "leads": "Leads"
   },
   "search_ui": {
     "placeholder": "搜索…",

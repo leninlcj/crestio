@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "Votre abonnement à Crestio a été résilié",
     "body": "Vous conserverez votre accès jusqu'au {{ends_on}}. Vous pouvez vous réabonner à tout moment depuis Paramètres → Facturation."
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }

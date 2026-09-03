@@ -1,6 +1,24 @@
 # Crestio
 
-Calm, deliberate software for independent tutors and small tutoring businesses. Next.js 14 (Pages Router) + Supabase, deployed to Vercel at [crestio.ai](https://crestio.ai). Owner/tutor organisation model with an AI assistant, parent portal, and Stripe subscription billing.
+**Crestio Tutoring** — a Sydney maths and physics tutoring agency — and the software it runs on. Next.js 14 (Pages Router) + Supabase, deployed to Vercel at [crestio.ai](https://crestio.ai).
+
+- **crestio.ai** is the agency website: how it works, subjects, pricing, enquiry form (`/enquire`), tutor application (`/tutors/apply`).
+- **crestio.ai/app** is the operations system the agency runs on: owner/tutor app, parent portal (`/parent`), student portal (`/student`), scheduling, session notes with AI polish, invoicing, Stripe Connect card payments.
+- Public SaaS signup is closed (`/auth/signup` is a closed notice). Tutors and parents join by invitation.
+
+Since 3 September 2026 (agency pivot, chunk 1). The plan and checklist live in `~/LENIN_OS/05_CRESTIO/00_START_HERE.md`.
+
+## Agency pieces
+
+| Thing | Where |
+| --- | --- |
+| Public facts (subjects, rate card, policies, FAQ, tutor pay bands) | `lib/agency.ts` — the single source of truth |
+| Form validation | `lib/agencyForms.ts` (unit-tested in `tests/unit/lib/agency-forms.test.ts`) |
+| Public forms | `POST /api/enquiries`, `POST /api/tutor-applications` (service role, IP rate-limited, honeypot) |
+| Emails | `lib/emails/agency.ts` — family confirmation + owner alert, applicant confirmation + owner alert. Owner alerts go to `OWNER_ALERT_EMAIL` or the platform owner email. |
+| Admin | `/app/leads` (enquiries: status pipeline, notes, assign tutor, convert to household + student) and `/app/leads/applications` (status pipeline, interview time, notes, accept → tutor invitation). Platform-owner only, via `resolveOwnerRequest`. |
+| Tables | `enquiries`, `tutor_applications`, vetting columns on `tutors` — `supabase/migrations/20260903_agency_enquiries_applications.sql` |
+| Redirects for old SaaS URLs | `next.config.js` |
 
 ## Environment variables
 
@@ -16,6 +34,7 @@ Calm, deliberate software for independent tutors and small tutoring businesses. 
 | `STRIPE_PRICE_ID` | Vercel | Single $19/month price id | Checkout fails |
 | `STRIPE_WEBHOOK_SECRET` | Vercel (added after first deploy) | Webhook signature verification | Webhook acks 200 but does not persist |
 | `NEXT_PUBLIC_SITE_URL` | Vercel (optional) | Override base URL for Stripe return_url / invite links | Falls back to request host / `https://crestio.ai` |
+| `OWNER_ALERT_EMAIL` | Vercel (optional) | Where new-enquiry and new-application alerts go | Falls back to the platform owner email in `lib/owner.ts` |
 
 Sanity-check which of these are loaded in the current environment:
 
@@ -35,6 +54,7 @@ All migrations run manually in Supabase SQL Editor. Order matters:
 6. **Session 9** — assistant_conversations, assistant_messages, bump_conversation_timestamps trigger.
 7. **Session 10** — subscription columns on organizations, billing_events table.
 8. **Session 10.5** — `org_billing_ok(uuid)` helper, `cancel_at_period_end` column, billing-gated INSERT policies on students/sessions/invoices/lesson_plans.
+9. Everything under `supabase/migrations/` in filename order; the latest is `20260903_agency_enquiries_applications.sql` (enquiries, tutor_applications, tutor vetting columns).
 
 `supabase/schema.sql` is a consolidated reference — it does NOT reflect the production `handle_new_user` trigger (which carries the Session 5 tutor-invitation branch). See Known limitations.
 

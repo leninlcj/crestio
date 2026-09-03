@@ -88,5 +88,9 @@
   "subscription_cancelled": {
     "title": "您的 Crestio 订阅已被取消",
     "body": "您将保留访问权限直至 {{ends_on}}。您可随时通过“设置”→“账单”重新订阅。"
+  },
+  "session_reminder_today": {
+    "title": "Session with {{student}} today at {{time}}",
+    "body": "{{student}} at {{time}}. {{duration}} min, {{subject}}."
   }
 }

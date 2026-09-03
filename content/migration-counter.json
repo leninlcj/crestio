@@ -1,5 +1,0 @@
-{
-  "spots_taken": 0,
-  "total_spots": 100,
-  "_note": "Manually increment spots_taken when a real migration completes. Stays at 0 until then."
-}

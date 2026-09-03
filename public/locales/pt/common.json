@@ -71,7 +71,8 @@
     "test_accounts": "Contas de teste",
     "more": "Mais",
     "assistant": "Assistente",
-    "search": "Pesquisar"
+    "search": "Pesquisar",
+    "leads": "Leads"
   },
   "search_ui": {
     "placeholder": "Pesquisar…",
