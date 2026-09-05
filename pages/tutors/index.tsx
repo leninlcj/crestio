@@ -72,7 +72,7 @@ export default function ForTutors() {
           ))}
         </div>
         <p className="mt-6 text-sm text-ink-muted">
-          Tutors are independent contractors introduced to families by Crestio; Crestio collects payment and pays you weekly. The full terms and the fee schedule are in the <Link href="/tutors/agreement" className="text-forest underline underline-offset-2">tutor agreement</Link>. We can help you get an ABN if you do not have one.
+          Tutors are independent contractors introduced to families by Crestio; Crestio collects payment and pays you weekly. The full terms and the fee schedule are in the <Link href="/tutors/agreement" className="text-forest underline underline-offset-2">tutor agreement</Link>, and the day-to-day detail is in the <Link href="/tutors/handbook" className="text-forest underline underline-offset-2">tutor handbook</Link>. We can help you get an ABN if you do not have one.
         </p>
       </Section>
 

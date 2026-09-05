@@ -24,6 +24,7 @@ export default function MarketingFooter(_props: Props = {}) {
             { label: 'Maths tutoring', href: '/maths-tutoring' },
             { label: 'Physics tutoring', href: '/physics-tutoring' },
             { label: 'Where we tutor', href: '/tutoring' },
+            { label: 'Summer programs', href: '/programs' },
             { label: 'Pricing', href: '/pricing' },
             { label: 'FAQ', href: '/faq' },
             { label: 'En español', href: '/es' },
@@ -34,6 +35,7 @@ export default function MarketingFooter(_props: Props = {}) {
             { label: 'Become a tutor', href: '/tutors' },
             { label: 'Apply to tutor', href: '/tutors/apply' },
             { label: 'Tutor agreement', href: '/tutors/agreement' },
+            { label: 'Tutor handbook', href: '/tutors/handbook' },
             { label: 'Tutor and parent sign in', href: '/auth/signin' },
           ]} />
 

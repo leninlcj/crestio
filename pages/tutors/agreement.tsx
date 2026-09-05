@@ -26,7 +26,7 @@ export default function TutorAgreementPage() {
           <h2 className="font-display text-2xl md:text-3xl tracking-tighter text-ink mb-4">{CODE_OF_CONDUCT.title}</h2>
           <LegalDocBody doc={CODE_OF_CONDUCT} />
         </div>
-        <p className="mt-8 text-sm text-ink-muted">Ready? <Link href="/tutors/apply" className="text-forest underline underline-offset-2">Apply to tutor</Link>.</p>
+        <p className="mt-8 text-sm text-ink-muted">How this works day to day is in the <Link href="/tutors/handbook" className="text-forest underline underline-offset-2">tutor handbook</Link>. Ready? <Link href="/tutors/apply" className="text-forest underline underline-offset-2">Apply to tutor</Link>.</p>
       </article>
     </AgencyPage>
   );

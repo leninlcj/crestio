@@ -4,6 +4,7 @@ import { AgencyPage } from '../components/agency/AgencyPage';
 import { EnquiryForm } from '../components/agency/EnquiryForm';
 import { AGENCY, SUBJECT_KEYS, YEAR_LEVELS, type SubjectKey } from '../lib/agency';
 import { breadcrumb } from '../lib/agencySchema';
+import { programByKey } from '../lib/programs';
 
 export default function Enquire() {
   const router = useRouter();
@@ -13,6 +14,11 @@ export default function Enquire() {
   const modeParam = typeof router.query.mode === 'string' ? router.query.mode : undefined;
   const mode = modeParam === 'online' || modeParam === 'in_home' || modeParam === 'either' ? modeParam : undefined;
   const suburb = typeof router.query.suburb === 'string' ? router.query.suburb.slice(0, 80) : undefined;
+  // /programs links here with ?program=<key>: the year and a first line of the
+  // message are filled in so the family only adds contact details.
+  const program = typeof router.query.program === 'string' ? programByKey(router.query.program) : undefined;
+  const initialYear = year ?? program?.enquiryYear;
+  const initialMessage = program?.enquiryMessage;
 
   return (
     <AgencyPage
@@ -32,6 +38,12 @@ export default function Enquire() {
               A quick, no-obligation chat about what your child needs. Then we find the right tutor. There is no charge to enquire and no lock-in.
             </p>
             <dl className="space-y-4 text-sm">
+              {program && (
+                <div>
+                  <dt className="font-medium text-ink">Asking about the {program.name}</dt>
+                  <dd className="text-ink-muted">{program.window}. The details are on the <Link href={`/programs#${program.key}`} className="text-forest underline underline-offset-2">programs page</Link>.</dd>
+                </div>
+              )}
               <div>
                 <dt className="font-medium text-ink">You will hear back within a day</dt>
                 <dd className="text-ink-muted">From {AGENCY.founder.firstName}, the founder, not a call centre.</dd>
@@ -47,7 +59,7 @@ export default function Enquire() {
             </dl>
           </div>
           <div className="lg:col-span-8">
-            {router.isReady && <EnquiryForm key={`${year ?? ''}-${subjectParam ?? ''}-${mode ?? ''}-${suburb ?? ''}`} initialYear={year} initialSubjects={subjects} initialMode={mode} initialSuburb={suburb} />}
+            {router.isReady && <EnquiryForm key={`${initialYear ?? ''}-${subjectParam ?? ''}-${mode ?? ''}-${suburb ?? ''}-${program?.key ?? ''}`} initialYear={initialYear} initialSubjects={subjects} initialMode={mode} initialSuburb={suburb} initialMessage={initialMessage} />}
           </div>
         </div>
       </section>
