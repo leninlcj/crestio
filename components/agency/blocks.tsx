@@ -295,12 +295,55 @@ export function TutorBand() {
 // Reviews: only ever real ones. Empty until the first families are in.
 // ---------------------------------------------------------------------------
 
-export function ReviewsBand() {
+export type ReviewCard = {
+  id: string;
+  rating: number;
+  body: string;
+  reviewer_name: string;
+  reviewer_suburb: string | null;
+  student_year_level: string | null;
+  subject: string | null;
+};
+
+// Real reviews only. `reviews` comes from getStaticProps (lib/reviews.ts,
+// approved and consented rows); with none, the band says so plainly.
+export function ReviewsBand({ reviews = [] }: { reviews?: ReviewCard[] }) {
+  if (reviews.length === 0) {
+    return (
+      <Section eyebrow="What families say" heading="No reviews yet. We would rather wait for real ones." tone="surface">
+        <p className="text-sm text-ink-muted leading-relaxed max-w-2xl">
+          Crestio is new. Reviews from the first families will appear here as they come in, in their own words and with their permission. We will not write them ourselves.
+        </p>
+      </Section>
+    );
+  }
+  const heading = reviews.length === 1 ? 'One family so far, in their own words.' : `${reviews.length} families, in their own words.`;
   return (
-    <Section eyebrow="What families say" heading="No reviews yet. We would rather wait for real ones." tone="surface">
-      <p className="text-sm text-ink-muted leading-relaxed max-w-2xl">
-        Crestio is new. Reviews from the first families will appear here as they come in, in their own words and with their permission. We will not write them ourselves.
+    <Section eyebrow="What families say" heading={heading} tone="surface">
+      <p className="text-sm text-ink-muted leading-relaxed max-w-2xl mb-8">
+        Every review here was written by a parent after at least four lessons and is shown with their permission, unedited. Names are first names only.
       </p>
+      <ul className="grid md:grid-cols-2 gap-4">
+        {reviews.map((r) => (
+          <li key={r.id} className="rounded-md border border-rule bg-bg p-6 flex flex-col">
+            <div className="flex items-center gap-2 mb-3" role="img" aria-label={`Rated ${r.rating} out of 5`}>
+              <span className="flex gap-1" aria-hidden>
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <span key={n} className={`block h-2.5 w-2.5 rounded-sm ${n <= r.rating ? 'bg-forest' : 'bg-rule'}`} />
+                ))}
+              </span>
+              <span className="text-2xs text-ink-soft">{r.rating} out of 5</span>
+            </div>
+            <blockquote className="text-base text-ink leading-relaxed flex-1 whitespace-pre-line">{r.body}</blockquote>
+            <footer className="mt-4 text-xs text-ink-muted">
+              <span className="text-ink font-medium">{r.reviewer_name}</span>
+              {[r.reviewer_suburb, r.student_year_level, r.subject].filter(Boolean).map((part) => (
+                <span key={String(part)}> · {part}</span>
+              ))}
+            </footer>
+          </li>
+        ))}
+      </ul>
     </Section>
   );
 }

@@ -22,6 +22,8 @@ export type InvoicePdfArgs = {
     total_cents: number;
     subtotal_cents: number;
     tax_cents: number;
+    /** Prepaid credit drawn against this invoice (chunk 5). Shown as a deduction. */
+    credit_applied_cents?: number;
     line_items: Array<{
       description: string;
       qty: number;              // hours
@@ -134,8 +136,13 @@ export async function renderInvoicePdf(args: InvoicePdfArgs): Promise<Uint8Array
     y -= 14;
     drawRow(page, helv, helvBold, 'Tax', formatMoney(args.invoice.tax_cents, args.invoice.currency), y, false);
   }
+  const credit = args.invoice.credit_applied_cents ?? 0;
+  if (credit > 0) {
+    y -= 14;
+    drawRow(page, helv, helvBold, 'Prepaid credit applied', `-${formatMoney(credit, args.invoice.currency)}`, y, false);
+  }
   y -= 18;
-  drawRow(page, helv, helvBold, 'TOTAL', formatMoney(args.invoice.total_cents, args.invoice.currency), y, true);
+  drawRow(page, helv, helvBold, credit > 0 && args.invoice.total_cents === 0 ? 'TOTAL DUE (paid from credit)' : 'TOTAL', formatMoney(args.invoice.total_cents, args.invoice.currency), y, true);
 
   // Payment.
   if (args.invoice.payment_link_url && args.invoice.status !== 'paid') {

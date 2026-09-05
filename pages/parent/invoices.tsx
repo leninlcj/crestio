@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import AuthGuardParent from '../../components/AuthGuardParent';
 import ParentLayout from '../../components/parent/ParentLayout';
 import AutoPayCard from '../../components/parent/AutoPayCard';
+import { PrepaidCreditCard } from '../../components/parent/PrepaidCreditCard';
 import { supabase } from '../../lib/supabase';
 import { useLocaleFormatters } from '../../lib/useLocaleFormatters';
 
@@ -19,6 +20,8 @@ type InvoiceRow = {
   household_id: string | null;
   household_name: string | null;
   is_batch_generated: boolean;
+  credit_applied_cents: number;
+  is_prepaid_block: boolean;
 };
 
 function Inner() {
@@ -38,7 +41,7 @@ function Inner() {
       }
       const { data } = await supabase
         .from('invoices')
-        .select('id, number, issued_on, due_on, total_cents, status, student_id, household_id, is_batch_generated, student:students(name), household:households(display_name)')
+        .select('*, student:students(name), household:households(display_name)')
         .order('issued_on', { ascending: false });
       setInvoices(((data ?? []) as any[]).map((i) => ({
         id: i.id,
@@ -52,6 +55,8 @@ function Inner() {
         household_id: i.household_id,
         household_name: i.household?.display_name ?? null,
         is_batch_generated: !!i.is_batch_generated,
+        credit_applied_cents: i.credit_applied_cents ?? 0,
+        is_prepaid_block: !!i.is_prepaid_block,
       })));
       setLoading(false);
     })();
@@ -74,6 +79,12 @@ function Inner() {
           {t('invoices_page.sub_v2', { paid: paid.length, unpaid: unpaid.length })}
         </p>
       </div>
+
+      {!loading && (
+        <div className="mb-6">
+          <PrepaidCreditCard />
+        </div>
+      )}
 
       {loading ? (
         <div className="space-y-2 animate-pulse">
@@ -161,13 +172,17 @@ function InvoiceCard({ inv, formatAud, formatDate, t }: { inv: InvoiceRow; forma
           <div className="flex items-center gap-2">
             {overdue && <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-claret overdue-dot-pulse" />}
             <span className="font-mono text-sm text-ink">{inv.number}</span>
-            {inv.is_batch_generated && (
+            {inv.is_batch_generated && !inv.is_prepaid_block && (
               <span className="badge-neutral text-2xs">{t('invoices_page.family_badge')}</span>
+            )}
+            {inv.is_prepaid_block && (
+              <span className="badge-forest text-2xs">{t('invoices_page.prepaid_badge', { defaultValue: 'Prepaid block' })}</span>
             )}
           </div>
           <div className="text-2xs text-ink-soft mt-0.5">
             {inv.household_name ? <>{inv.household_name} · </> : inv.student_name ? <>{inv.student_name} · </> : null}
             {issuedText}{dueText}
+            {inv.credit_applied_cents > 0 && <> · {t('invoices_page.credit_applied', { amount: formatAud(inv.credit_applied_cents), defaultValue: '{{amount}} paid from prepaid credit' })}</>}
           </div>
         </div>
         <div className="flex items-center gap-3">

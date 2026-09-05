@@ -17,13 +17,23 @@ type Args = {
   invoiceId: string;
   studentId: string | null;
   ownerUserId: string;
+  /** The lesson value on the invoice (subtotal), before any prepaid credit was applied. */
   totalCents: number;
   currency: string;
+  isPrepaidBlock?: boolean;
+  prepaidHours?: number | null;
 };
 
 type SessionRow = { id: string; duration_minutes: number | null; pay_rate_cents: number | null; tutor_id: string | null };
 
 export async function buildAgencyInvoiceNote(admin: Admin, args: Args): Promise<string> {
+  // A prepaid block buys credit; the tutor fee split is shown on the lesson
+  // invoices the credit later pays for.
+  if (args.isPrepaidBlock) {
+    const hours = args.prepaidHours != null && args.prepaidHours > 0 ? `${args.prepaidHours} ${args.prepaidHours === 1 ? 'hour' : 'hours'} of` : '';
+    return `This invoice buys ${hours ? `${hours} ` : ''}prepaid lesson credit. ${AGENCY.name} holds the amount on the tutor's behalf until each lesson is delivered; every lesson invoice paid from the credit shows the tutor's fee and ${AGENCY.name}'s service fee. Unused credit is refundable on request. Questions: ${AGENCY.email}.`;
+  }
+
   // Sessions linked to this invoice, through invoice_sessions or sessions.invoice_id.
   const ids = new Set<string>();
   const { data: links } = await admin.from('invoice_sessions').select('session_id').eq('invoice_id', args.invoiceId);

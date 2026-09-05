@@ -190,7 +190,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // --- Create invoices + invoice_sessions atomically-ish ---
   // Supabase doesn't expose transactions; if something fails partway we roll
   // back the rows we created so far via DELETE.
-  const created: Array<{ id: string; household_id: string; total_cents: number; number: string; session_count: number }> = [];
+  const created: Array<{ id: string; household_id: string; total_cents: number; subtotal_cents: number; credit_applied_cents: number; status: string; number: string; session_count: number }> = [];
   let runningNumber = existingCount ?? 0;
 
   try {
@@ -273,10 +273,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         throw new Error(`Invoice line items: ${lineErr.message}`);
       }
 
+      // The database applies any prepaid credit when the invoice is issued
+      // (chunk 5 triggers), so read the totals back from the row, not from
+      // the subtotal we computed.
+      const issuedTotal: number = typeof invoice.total_cents === 'number' ? invoice.total_cents : subtotal;
+      const creditApplied: number = typeof invoice.credit_applied_cents === 'number' ? invoice.credit_applied_cents : 0;
+
       created.push({
         id: invoice.id,
         household_id: h.household_id,
-        total_cents: subtotal,
+        total_cents: issuedTotal,
+        subtotal_cents: subtotal,
+        credit_applied_cents: creditApplied,
+        status: invoice.status,
         number: invoiceNumber,
         session_count: lineItems.length,
       });
@@ -297,7 +306,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 student_or_household: householdName,
                 session_count: lineItems.length,
                 count_suffix: lineItems.length === 1 ? '' : 's',
-                amount: formatCents(subtotal),
+                amount: creditApplied > 0
+                  ? `${formatCents(issuedTotal)} due (${formatCents(creditApplied)} paid from prepaid credit)`
+                  : formatCents(subtotal),
               },
               linkUrl: `/parent/invoices`,
               context: { invoice_id: invoice.id, household_id: h.household_id },
@@ -324,6 +335,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     mode,
     invoices: created,
     total_cents: created.reduce((a, c) => a + c.total_cents, 0),
+    subtotal_cents: created.reduce((a, c) => a + c.subtotal_cents, 0),
+    credit_applied_cents: created.reduce((a, c) => a + c.credit_applied_cents, 0),
   });
 }
 

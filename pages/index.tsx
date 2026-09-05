@@ -1,8 +1,12 @@
+import type { GetStaticProps } from 'next';
 import { AgencyPage } from '../components/agency/AgencyPage';
-import { Hero, HowItWorks, SubjectGrid, WhyCrestio, PricingSummary, TutorBand, ReviewsBand, FaqList, FinalBand } from '../components/agency/blocks';
+import { Hero, HowItWorks, SubjectGrid, WhyCrestio, PricingSummary, TutorBand, ReviewsBand, FaqList, FinalBand, type ReviewCard } from '../components/agency/blocks';
 import { agencyOrganizationSchema, tutoringServiceSchema, agencyFaqSchema } from '../lib/agencySchema';
+import { loadPublicReviews } from '../lib/publicReviews';
 
-export default function Home() {
+type Props = { reviews: ReviewCard[] };
+
+export default function Home({ reviews }: Props) {
   return (
     <AgencyPage
       title="Maths and physics tutoring in Sydney and online | Crestio Tutoring"
@@ -22,9 +26,16 @@ export default function Home() {
       <WhyCrestio />
       <PricingSummary />
       <TutorBand />
-      <ReviewsBand />
+      <ReviewsBand reviews={reviews} />
       <FaqList />
       <FinalBand />
     </AgencyPage>
   );
 }
+
+// Approved reviews are read at build time and refreshed hourly; approving or
+// hiding one in the app also revalidates this page straight away.
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const reviews = await loadPublicReviews();
+  return { props: { reviews }, revalidate: 3600 };
+};

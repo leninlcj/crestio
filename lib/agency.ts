@@ -237,6 +237,32 @@ export const TUTOR_PAY_BANDS: Record<Exclude<RateBandKey, 'university'>, { onlin
   ext2: { online: 60, inHome: 70 },
 };
 
+// ---------------------------------------------------------------------------
+// Prepaid blocks, referral credit and reviews. Questionnaire defaults G7 and
+// the review engine from 01_BUSINESS_RISK_AND_MONEY.md; change here only.
+// ---------------------------------------------------------------------------
+
+/** A family can pay ten hours up front at 5% off; each lesson is drawn from the credit. */
+export const PREPAID_BLOCK = {
+  hours: 10,
+  discountPercent: 5,
+} as const;
+
+/** A family that refers another gets a credit once the new family has had this many lessons. */
+export const REFERRAL = {
+  creditCents: 5000,
+  afterLessons: 3,
+} as const;
+
+/** When and how families are asked for a review. Nothing shows on the site until the owner approves it. */
+export const REVIEWS = {
+  askAfterLessons: 4,
+  minDaysSinceFirstLesson: 14,
+  reminderAfterDays: 7,
+  /** Google Business Profile "write a review" link. Null until the profile exists; then the thank-you page offers it. */
+  googleReviewUrl: null as string | null,
+} as const;
+
 /** Disclosure printed on invoices and the payment page (introduction-agency model). */
 export function agencyInvoiceNote(tutorName: string | null | undefined): string {
   const who = tutorName ? `${tutorName}, an independent tutor introduced by ${AGENCY.name}` : `your Crestio tutor, an independent tutor introduced by ${AGENCY.name}`;
@@ -289,7 +315,7 @@ export const FAQS: readonly Faq[] = [
   },
   {
     q: 'How do I pay?',
-    a: `By card, after each lesson, through a secure payment link, or in prepaid blocks if you prefer. Nothing is charged to your card without your say-so.`,
+    a: `By card, after each lesson, through a secure payment link. Or buy a block of ${PREPAID_BLOCK.hours} hours up front at ${PREPAID_BLOCK.discountPercent}% off and each lesson is drawn from it; your parent portal shows what is left. Nothing is charged to your card without your say-so.`,
   },
   {
     q: 'Which subjects and year levels do you cover?',

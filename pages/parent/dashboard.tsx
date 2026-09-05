@@ -9,6 +9,7 @@ import { useParentContext } from '../../components/parent/ParentContext';
 import NextSessionCard from '../../components/parent/NextSessionCard';
 import LatestSessionCard from '../../components/parent/LatestSessionCard';
 import BalanceCard from '../../components/parent/BalanceCard';
+import { PrepaidCreditCard } from '../../components/parent/PrepaidCreditCard';
 import StudentRow from '../../components/parent/StudentRow';
 import ActivityFeed from '../../components/parent/ActivityFeed';
 import FirstTimeWelcome from '../../components/parent/FirstTimeWelcome';
@@ -142,6 +143,8 @@ function ParentDashboardContents() {
               <LatestSessionCard studentIds={studentIds} />
               <BalanceCard outstandingCents={overview.stats.outstanding_cents} unpaidCount={unpaidCount} />
             </div>
+
+            <PrepaidCreditCard compact />
 
             <section id="students">
               <div className="flex items-baseline justify-between mb-3">

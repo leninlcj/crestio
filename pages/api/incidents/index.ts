@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { validateIncident, INCIDENT_CATEGORIES } from '../../../lib/incidentForms';
 import { clientIp } from '../../../lib/agencyForms';
 import { getAgencyOrganization } from '../../../lib/agencyOrg';
-import { checkRateLimit } from '../../../lib/rateLimit';
+import { checkRateLimitShared } from '../../../lib/rateLimit';
 import { sendEmail } from '../../../lib/email';
 import { isMissingTableError } from '../../../lib/dbErrors';
 import { writeAudit } from '../../../lib/audit';
@@ -18,8 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) return res.status(500).json({ error: 'Server misconfigured.' });
 
+  const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
   const ip = clientIp(req.headers, req.socket?.remoteAddress ?? 'unknown');
-  const rl = checkRateLimit({ key: `incident:${ip}`, limit: 5, windowMs: 60 * 60 * 1000 });
+  const rl = await checkRateLimitShared(admin, { key: `incident:${ip}`, limit: 5, windowMs: 60 * 60 * 1000 });
   if (!rl.allowed) return res.status(429).json({ error: 'Too many reports from this connection. Email us instead.', retry_after_seconds: rl.retry_after_seconds });
 
   const validated = validateIncident(req.body);
@@ -29,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const v = validated.value;
 
-  const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
   const org = await getAgencyOrganization(admin);
 
   let id = 'not-saved';

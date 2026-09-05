@@ -141,6 +141,7 @@ function tabsForPath(pathname: string, _query: Record<string, any>, _opts: { isO
       { key: 'enquiries',    label: 'Enquiries',          href: '/app/leads',              match: (p) => p === '/app/leads' },
       { key: 'applications', label: 'Tutor applications', href: '/app/leads/applications', match: (p) => p === '/app/leads/applications' },
       { key: 'incidents',    label: 'Reports',            href: '/app/leads/incidents',    match: (p) => p === '/app/leads/incidents' },
+      { key: 'reviews',      label: 'Reviews',            href: '/app/leads/reviews',      match: (p) => p === '/app/leads/reviews' },
     ];
   }
   // Settings: tabs already exist via SettingsTabs — leave to that component.

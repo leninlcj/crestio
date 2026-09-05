@@ -12,6 +12,11 @@ type PayInfo = {
     id: string;
     number: string;
     total_cents: number;
+    subtotal_cents?: number;
+    credit_applied_cents?: number;
+    is_prepaid_block?: boolean;
+    prepaid_face_value_cents?: number | null;
+    prepaid_hours?: number | null;
     currency: string;
     status: string;
     due_on: string | null;
@@ -209,6 +214,18 @@ export default function PublicPayPage() {
                 <div className="text-2xs text-ink-muted">
                   Issued {formatDate(info.invoice.issued_on)}{info.invoice.due_on ? ` · due ${formatDate(info.invoice.due_on)}` : ''}
                 </div>
+                {(info.invoice.credit_applied_cents ?? 0) > 0 && (
+                  <div className="mt-3 pt-3 border-t border-rule text-sm text-ink-muted space-y-1">
+                    <div className="flex justify-between gap-3"><span>Lessons</span><span className="font-mono num text-ink">{formatAmount(info.invoice.subtotal_cents ?? info.invoice.total_cents + (info.invoice.credit_applied_cents ?? 0), info.invoice.currency)}</span></div>
+                    <div className="flex justify-between gap-3"><span>Prepaid credit applied</span><span className="font-mono num text-ink">-{formatAmount(info.invoice.credit_applied_cents ?? 0, info.invoice.currency)}</span></div>
+                    <div className="flex justify-between gap-3 font-medium text-ink"><span>{info.invoice.total_cents === 0 ? 'Paid from credit' : 'Amount due'}</span><span className="font-mono num">{formatAmount(info.invoice.total_cents, info.invoice.currency)}</span></div>
+                  </div>
+                )}
+                {info.invoice.is_prepaid_block && (
+                  <div className="mt-3 pt-3 border-t border-rule text-sm text-ink-muted leading-relaxed">
+                    Prepaid block: {info.invoice.prepaid_hours ? `${info.invoice.prepaid_hours} hours of` : ''} lesson credit{info.invoice.prepaid_face_value_cents ? ` worth ${formatAmount(info.invoice.prepaid_face_value_cents, info.invoice.currency)}` : ''}. Once paid, each lesson is drawn from the credit and your invoices show what is left. Unused credit is refundable on request.
+                  </div>
+                )}
 
                 {info.sibling_invoices.length > 0 && isPayable && !intentResult && (
                   <div className="mt-5 pt-5 border-t border-rule">

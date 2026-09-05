@@ -164,7 +164,9 @@
     "issued_label": "Issued {{date}}",
     "due_label": "Due {{date}}",
     "status_paid": "Paid",
-    "status_overdue": "Overdue"
+    "status_overdue": "Overdue",
+    "prepaid_badge": "Prepaid block",
+    "credit_applied": "{{amount}} paid from prepaid credit"
   },
   "invoice_detail": {
     "back": "← Invoices",
@@ -185,7 +187,12 @@
     "notes": "Notes",
     "download_print": "Download / print",
     "em_dash": "–",
-    "pay_now": "Pay now"
+    "pay_now": "Pay now",
+    "lessons_total": "Lessons",
+    "credit_applied": "Prepaid credit applied",
+    "paid_from_credit": "Paid from credit",
+    "amount_due": "Amount due",
+    "prepaid_block_note": "This invoice buys {{hours}} hours of lesson credit worth {{value}}. Once it is paid, each lesson is drawn from the credit and your invoices show what is left."
   },
   "messages_page": {
     "kicker": "Messages",
@@ -309,5 +316,19 @@
     "create": "Create parent account",
     "creating": "Creating account…",
     "create_failed": "Could not create account."
+  },
+  "credit": {
+    "eyebrow": "Prepaid credit",
+    "covers": "Covers about {{count}} lessons at your current rate.",
+    "covers_one": "Covers about one lesson at your current rate.",
+    "negative": "A refunded block had already been used. We will be in touch to settle the difference.",
+    "none": "No prepaid credit. Lessons are invoiced after they happen.",
+    "show_history": "Show history",
+    "hide_history": "Hide history",
+    "offer": "Buy {{hours}} hours up front at {{pct}}% off. Each lesson is drawn from the credit, every invoice shows what is left, and unused credit is refundable.",
+    "buy_for": "{{hours}} hours for {{name}}: {{price}}",
+    "creating": "One moment",
+    "buy_hint": "Opens a secure card payment page. Nothing is charged until you pay there.",
+    "created_no_link": "The invoice was created. Open it under Invoices to pay."
   }
 }

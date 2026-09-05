@@ -1,5 +1,5 @@
 import { LegalArticle } from '../components/agency/LegalArticle';
-import { AGENCY } from '../lib/agency';
+import { AGENCY, PREPAID_BLOCK, REFERRAL } from '../lib/agency';
 
 const TOC = [
   { id: 'what-we-do', label: 'What we do' },
@@ -24,7 +24,7 @@ export default function Terms() {
       title="Terms of service"
       description="The terms for tutoring arranged through Crestio Tutoring: matching, the first-lesson guarantee, fees and payment, cancellations, safety, and how to end the arrangement."
       path="/terms"
-      lastUpdated="5 September 2026"
+      lastUpdated="6 September 2026"
       toc={TOC}
     >
       <p>
@@ -50,6 +50,8 @@ export default function Terms() {
       <ul>
         <li>Rates are published at crestio.ai/pricing and are per hour, per student, for the student's level and lesson format at the time of booking. Each rate is made up of the tutor's fee and Crestio's service fee; the tutor's fee for your lessons is shown on your invoice. We give at least 30 days' notice of any rate change.</li>
         <li>Lessons are invoiced after they are held. Invoices are payable within 7 days by card through the secure payment link, or you may buy a prepaid block of hours in advance, which is drawn down per lesson.</li>
+        <li>A prepaid block is {PREPAID_BLOCK.hours} hours of lesson credit at {PREPAID_BLOCK.discountPercent}% off your hourly rate, paid in advance. The credit is applied automatically to each lesson invoice as it is issued and each invoice shows what was used and what remains. Crestio holds prepaid amounts on the tutor's behalf until each lesson is delivered. Unused credit is refunded in full on request; where a block was bought at a discount, the refund is the amount you paid less the full undiscounted value of the lessons already taken.</li>
+        <li>Referral credit: when a family you refer completes {REFERRAL.afterLessons} lessons with Crestio, ${REFERRAL.creditCents / 100} of lesson credit is added to your account. Referral credit is applied to lesson invoices, has no cash value and is not refunded.</li>
         <li>Crestio collects payment as the tutor's agent and pays the tutor from it. Nothing is charged to your card without your authorisation. If you save a card for convenience, we charge it only for lessons held or late cancellations under these terms, and we tell you each time.</li>
         <li>Longer or shorter lessons are charged pro rata. Travel is included in the in-home rate.</li>
         <li>If an invoice is more than 14 days overdue we may pause lessons until it is paid.</li>

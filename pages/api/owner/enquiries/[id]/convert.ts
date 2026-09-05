@@ -92,11 +92,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 2) Household.
   const householdName = enq.who === 'me' ? parentName : (lastName ? `${lastName} family` : `${parentName} family`);
-  const { data: household, error: hErr } = await admin
-    .from('households')
-    .insert({ organization_id: org.id, display_name: householdName, billing_email: parentEmail, notes: enq.message ? `From enquiry: ${enq.message}` : null })
-    .select('id')
-    .single();
+  const householdRow: Record<string, unknown> = {
+    organization_id: org.id,
+    display_name: householdName,
+    billing_email: parentEmail,
+    notes: enq.message ? `From enquiry: ${enq.message}` : null,
+    // Spanish enquiries (from /es) keep their language for later emails such as review requests.
+    preferred_language: String(enq.source ?? '').startsWith('es:') ? 'es' : 'en',
+  };
+  let { data: household, error: hErr } = await admin.from('households').insert(householdRow).select('id').single();
+  if (hErr && /preferred_language|column|schema cache/i.test(hErr.message)) {
+    // Chunk 5 migration not run yet: create the household without the language.
+    delete householdRow.preferred_language;
+    ({ data: household, error: hErr } = await admin.from('households').insert(householdRow).select('id').single());
+  }
   if (hErr || !household) return res.status(500).json({ error: hErr?.message ?? 'Could not create household.' });
 
   const { error: linkErr } = await admin
