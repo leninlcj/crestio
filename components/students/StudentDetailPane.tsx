@@ -256,7 +256,7 @@ export function StudentDetailPane({ open, studentId, onClose, currency, isOwner 
               ) : (
                 <MiniStat label="" value="" hint="" />
               )}
-              <MiniStat label="Avg" value={stats.avg_minutes ? formatDuration(stats.avg_minutes) : '—'} hint="Avg per session" />
+              <MiniStat label="Avg" value={stats.avg_minutes ? formatDuration(stats.avg_minutes) : '–'} hint="Avg per session" />
             </div>
           )}
 
@@ -326,7 +326,7 @@ export function StudentDetailPane({ open, studentId, onClose, currency, isOwner 
                       ? (student.hourly_rate_cents / 100).toFixed(0)
                       : ''}
                     placeholder="0"
-                    display={(v) => v ? formatCents(parseInt(v, 10) * 100, currency) + '/hr' : '—'}
+                    display={(v) => v ? formatCents(parseInt(v, 10) * 100, currency) + '/hr' : '–'}
                     onSave={(text) => {
                       const n = parseFloat(text);
                       patchStudent({ hourly_rate_cents: Number.isFinite(n) ? Math.round(n * 100) : null });
@@ -343,7 +343,7 @@ export function StudentDetailPane({ open, studentId, onClose, currency, isOwner 
               </Field>
               <Field label="Parent">
                 <div className="text-sm text-ink">
-                  {student.parent_name ?? <span className="text-ink-soft">—</span>}
+                  {student.parent_name ?? <span className="text-ink-soft">–</span>}
                 </div>
                 {student.parent_email && (
                   <div className="text-xs text-ink-muted">{student.parent_email}</div>
@@ -395,7 +395,7 @@ export function StudentDetailPane({ open, studentId, onClose, currency, isOwner 
                         </div>
                         <SessionPipelineDots row={s} />
                         <div className="flex-1 min-w-0 text-xs text-ink truncate">
-                          {s.subject ?? '—'} · {s.duration_minutes}m
+                          {s.subject ?? '–'} · {s.duration_minutes}m
                         </div>
                         <StatusPill
                           tone={
@@ -594,7 +594,7 @@ function MiniStat({ label, value, hint }: { label: string; value: string; hint: 
   return (
     <Tooltip label={hint}>
       <div className="rounded p-2 hover:bg-ruleSoft/40 transition-colors duration-100 text-center cursor-default">
-        <div className="text-sm text-ink font-medium num tabular">{value || '—'}</div>
+        <div className="text-sm text-ink font-medium num tabular">{value || '–'}</div>
         <div className="text-2xs uppercase tracking-widest text-ink-soft mt-0.5">{label}</div>
       </div>
     </Tooltip>

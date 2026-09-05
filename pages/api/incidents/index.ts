@@ -60,19 +60,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const catLabel = INCIDENT_CATEGORIES.find((c) => c.key === v.category)?.label ?? v.category;
   const lines = [
     `Category: ${catLabel}`,
-    `From: ${v.reporter_name} (${v.reporter_role}) — ${v.reporter_email}${v.reporter_phone ? ` — ${v.reporter_phone}` : ''}`,
+    `From: ${v.reporter_name} (${v.reporter_role}), ${v.reporter_email}${v.reporter_phone ? `, ${v.reporter_phone}` : ''}`,
     v.occurred_at ? `When: ${new Date(v.occurred_at).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })}` : null,
     v.who ? `About: ${v.who}` : null,
     '',
     v.description,
     '',
-    stored ? `Open: ${AGENCY.siteUrl}/app/leads/incidents?incident=${id}` : 'NOT SAVED — the incidents table does not exist yet; run the chunk 2 migration.',
+    stored ? `Open: ${AGENCY.siteUrl}/app/leads/incidents?incident=${id}` : 'NOT SAVED: the incidents table does not exist yet; run the chunk 2 migration.',
   ].filter((l) => l !== null).join('\n');
   const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const alert = await sendEmail({
     to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL,
     replyTo: v.reporter_email,
-    subject: `[${v.category === 'safety' ? 'SAFETY ' : ''}Report] ${catLabel} — ${v.reporter_name}`,
+    subject: `[${v.category === 'safety' ? 'SAFETY ' : ''}Report] ${catLabel}, from ${v.reporter_name}`,
     text: lines,
     html: `<pre style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;white-space:pre-wrap;font-size:14px;line-height:1.5">${esc(lines)}</pre>`,
   });
@@ -80,7 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await sendEmail({
     to: v.reporter_email,
-    subject: 'We received your report — Crestio Tutoring',
+    subject: 'We received your report',
     text: `Hi ${v.reporter_name.split(' ')[0]},\n\nThank you for telling us. Your report has gone directly to ${AGENCY.founder.name}, who will reply within one business day. If a child is in immediate danger, call 000. The NSW Child Protection Helpline is 132 111.\n\n--\n${AGENCY.name} | ${AGENCY.siteUrl}\n`,
     html: `<p>Hi ${esc(v.reporter_name.split(' ')[0])},</p><p>Thank you for telling us. Your report has gone directly to ${esc(AGENCY.founder.name)}, who will reply within one business day.</p><p>If a child is in immediate danger, call 000. The NSW Child Protection Helpline is 132 111.</p><p style="color:#666;font-size:12px">${esc(AGENCY.name)} · <a href="${AGENCY.siteUrl}">crestio.ai</a></p>`,
   });

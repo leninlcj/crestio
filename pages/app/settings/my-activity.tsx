@@ -19,7 +19,7 @@ function MyActivityInner() {
     <Layout pageTitle="My activity" title="My activity" subtitle="Settings">
       <SettingsTabs />
       <p className="text-sm text-ink-muted mb-4">
-        Every action you've taken. This is just for you — owners see the same view across the whole organization.
+        Every action you've taken. This is just for you; owners see the same view across the whole organization.
       </p>
       {userId ? <AuditLogPage scope="self" selfUserId={userId} /> : <div className="text-sm text-ink-muted">Loading…</div>}
     </Layout>

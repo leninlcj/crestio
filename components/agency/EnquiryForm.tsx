@@ -174,7 +174,7 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
         ))}
       </ol>
 
-      {/* Honeypot — hidden from people, filled by bots. */}
+      {/* Honeypot: hidden from people, filled by bots. */}
       <div className="hidden" aria-hidden>
         <label>Website<input type="text" tabIndex={-1} autoComplete="off" value={state.website} onChange={(e) => set('website', e.target.value)} /></label>
       </div>
@@ -291,7 +291,7 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
             <textarea id="enq-message" className="input" rows={4} value={state.message} onChange={(e) => set('message', e.target.value)} placeholder="Current marks, what is going wrong, preferred days and times, anything that helps us choose well." />
           </div>
           <p className="text-2xs text-ink-soft leading-relaxed">
-            By sending, you agree to our <Link href="/privacy" className="underline underline-offset-2">privacy policy</Link>. We never share your details beyond your matched tutor.
+            By sending, you agree to our <Link href="/privacy" className="underline underline-offset-2">privacy policy</Link>. Your details are used to match a tutor and are shared only with the tutor we match.
           </p>
         </fieldset>
       )}

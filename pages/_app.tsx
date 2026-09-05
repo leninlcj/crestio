@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Per-request fresh instance on the server (no cross-request leakage); on
   // the client we patch the singleton synchronously and reuse it. Pages that
-  // don't preload translations (e.g. /app routes) get the bare singleton —
+  // don't preload translations (e.g. /app routes) get the bare singleton;
   // LocaleProvider boots it via initI18n() in its useEffect as before.
   const i18nInstance =
     typeof window === 'undefined'
@@ -57,7 +57,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta
           name="description"
-          content="The calm, deliberate software for independent tutors and tutoring businesses."
+          content="One-on-one maths and physics tutoring in Sydney and online, Years 7 to 12 and the HSC. Every tutor interviewed, ID-checked and WWCC-verified."
         />
       </Head>
       <I18nextProvider i18n={i18nInstance}>

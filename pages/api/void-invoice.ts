@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const visible = (rows ?? []).filter((r: any) =>
     r.organization_id === membership.organization_id && r.status !== 'paid'
   );
-  if (visible.length === 0) return res.status(404).json({ error: 'Nothing to void (paid invoices cannot be voided — refund instead).' });
+  if (visible.length === 0) return res.status(404).json({ error: 'Nothing to void (paid invoices cannot be voided; refund instead).' });
 
   const visibleIds = visible.map((r: any) => r.id);
   const now = new Date().toISOString();

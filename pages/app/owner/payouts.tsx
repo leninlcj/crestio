@@ -47,9 +47,9 @@ function fmt(cents: number, currency: string): string {
   catch { return `$${(cents / 100).toFixed(2)}`; }
 }
 function fmtDate(s: string | number | null): string {
-  if (s == null) return '—';
+  if (s == null) return '–';
   const d = typeof s === 'number' ? new Date(s * 1000) : new Date(s);
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return '–';
   return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
@@ -215,7 +215,7 @@ function PayoutsInner() {
                   <div className="text-2xs text-ink-muted mb-1">Available</div>
                   <div className="font-display text-2xl tracking-tightest num">
                     {status.balance.available.length === 0
-                      ? '—'
+                      ? '–'
                       : status.balance.available
                           .map((b) => fmt(b.amount, b.currency.toUpperCase()))
                           .join(' · ')}
@@ -225,7 +225,7 @@ function PayoutsInner() {
                   <div className="text-2xs text-ink-muted mb-1">Pending</div>
                   <div className="font-display text-2xl tracking-tightest num">
                     {status.balance.pending.length === 0
-                      ? '—'
+                      ? '–'
                       : status.balance.pending
                           .map((b) => fmt(b.amount, b.currency.toUpperCase()))
                           .join(' · ')}

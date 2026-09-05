@@ -1,6 +1,4 @@
-import type { GetStaticProps } from 'next';
-import LegalPage from '../components/LegalPage';
-import { serverSideTranslations } from '../lib/i18nServer';
+import { LegalArticle } from '../components/agency/LegalArticle';
 import { AGENCY } from '../lib/agency';
 
 const TOC = [
@@ -23,7 +21,13 @@ const EMAIL = AGENCY.email;
 
 export default function Privacy() {
   return (
-    <LegalPage title="Privacy policy" lastUpdated="4 September 2026" toc={TOC}>
+    <LegalArticle
+      title="Privacy policy"
+      description="What Crestio Tutoring collects from parents, students and tutors, why, who it is shared with, where it is stored, and your rights under the Australian Privacy Act."
+      path="/privacy"
+      lastUpdated="5 September 2026"
+      toc={TOC}
+    >
       <h2 id="who-we-are">Who we are</h2>
       <p>
         {AGENCY.name} (&ldquo;Crestio&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is a tutoring service run by {AGENCY.founder.name} in Sydney, Australia. We match students with tutors, arrange lessons online and in-home, and run the scheduling, lesson notes, invoicing and payments through our own software at crestio.ai.
@@ -50,18 +54,18 @@ export default function Privacy() {
         <li>To keep the service secure and to meet our legal obligations.</li>
       </ul>
       <p>
-        Lesson notes may be tidied using an AI writing assistant before they are sent to you. The note is written by the tutor; the assistant improves the wording. We do not use your information for advertising and we do not sell it to anyone.
+        Lesson notes may be tidied by a writing assistant (Anthropic's Claude) before they are sent to you. The note is written by the tutor; the assistant improves the wording. We do not use your information for advertising and we do not sell it to anyone.
       </p>
 
       <h2 id="who-we-share-with">Who we share it with</h2>
       <ul>
-        <li><strong>Your matched tutor</strong> — an independent tutor introduced by Crestio — receives the details needed to arrange and deliver lessons: student name, year level, subjects, the address for in-home lessons, and your contact details. Tutors agree to use them for lessons only.</li>
-        <li><strong>Supabase</strong> — authentication and database hosting. Data is stored in Sydney, Australia.</li>
-        <li><strong>Vercel</strong> — web hosting.</li>
-        <li><strong>Stripe</strong> — payment processing. Stripe sees your name, email and card details; we do not.</li>
-        <li><strong>Resend</strong> — sends our emails (confirmations, lesson notes, invoices).</li>
-        <li><strong>Anthropic</strong> (United States) — the AI writing assistant used to tidy lesson notes. Note content is sent only when a tutor uses that feature. Under Anthropic's commercial terms, content is not used to train their models.</li>
-        <li><strong>NSW Office of the Children's Guardian</strong> — we verify tutors' Working With Children Check details through the official online verification service.</li>
+        <li><strong>Your matched tutor</strong>, an independent tutor introduced by Crestio, receives the details needed to arrange and deliver lessons: student name, year level, subjects, the address for in-home lessons, and your contact details. Tutors agree to use them for lessons only.</li>
+        <li><strong>Supabase</strong>: authentication and database hosting. Data is stored in Sydney, Australia.</li>
+        <li><strong>Vercel</strong>: web hosting.</li>
+        <li><strong>Stripe</strong>: payment processing. Stripe sees your name, email and card details; we do not.</li>
+        <li><strong>Resend</strong>: sends our emails (confirmations, lesson notes, invoices).</li>
+        <li><strong>Anthropic</strong> (United States): the writing assistant used to tidy lesson notes. Note content is sent only when a tutor uses that feature. Under Anthropic's commercial terms, content is not used to train their models.</li>
+        <li><strong>NSW Office of the Children's Guardian</strong>: we verify tutors' Working With Children Check details through the official online verification service.</li>
       </ul>
       <p>We do not share your information with anyone else unless the law requires it.</p>
 
@@ -83,7 +87,7 @@ export default function Privacy() {
 
       <h2 id="where-data-lives">Where your information is stored</h2>
       <p>
-        Our database is hosted by Supabase on servers in Sydney, Australia, with encrypted backups. Information sent to service providers travels over encrypted connections. Files uploaded to the app are stored privately in Sydney and can be seen only by the tutors in our team and the parents and students linked to them.
+        Our database is hosted by Supabase on servers in Sydney, Australia, and is encrypted at rest. Information sent to service providers travels over encrypted connections. Files uploaded to the app are stored privately in Sydney and can be seen only by the tutors in our team and the parents and students linked to them.
       </p>
 
       <h2 id="retention">How long we keep it</h2>
@@ -118,12 +122,6 @@ export default function Privacy() {
 
       <h2 id="contact">Contact</h2>
       <p>{AGENCY.name} · Sydney, NSW, Australia · <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
-    </LegalPage>
+    </LegalArticle>
   );
 }
-
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: {
-    ...serverSideTranslations(locale, ['legal']),
-  },
-});

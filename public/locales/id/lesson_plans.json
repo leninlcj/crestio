@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "Mata pelajaran dan topik wajib diisi untuk menghasilkan.",
       "not_signed_in": "Belum masuk.",
-      "no_organisation": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi support@crestio.ai.",
+      "no_organisation": "Tidak ada organisasi yang terhubung dengan akun Anda. Hubungi hello@crestio.ai.",
       "server_returned": "Server mengembalikan {{status}}",
       "server_returned_with_text": "Server mengembalikan pesan \"{{status}}\": {{text}}",
       "no_plan": "Server tidak menemukan rencana pelajaran.",

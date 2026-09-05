@@ -250,7 +250,7 @@ async function callPolishLLM(args: {
     subject || '',
   ].filter(Boolean).join(', ');
 
-  const prompt = `You are a professional tutor polishing rough session notes into a clear report for the student's parent. Parents skim — they want to know what happened, whether their child is progressing, and what's next.
+  const prompt = `You are a professional tutor polishing rough session notes into a clear report for the student's parent. Parents skim, they want to know what happened, whether their child is progressing, and what's next.
 
 Write in flowing prose. Short paragraphs (2-4 sentences). No bullets, no headings, no numbered lists. Do not invent details not present in the source notes.
 
@@ -464,7 +464,7 @@ export async function previewUpdateStudent(
   }
 
   if (diff.length === 0) {
-    return { kind: 'failure', message: 'Nothing to change — those values already match.' };
+    return { kind: 'failure', message: 'Nothing to change; those values already match.' };
   }
 
   return {
@@ -791,7 +791,7 @@ async function draftParentUpdate(args: {
 
   const prompt = `You are writing a short parent portal update from a tutor. Use Australian English (mum, maths, colour). The parent will read this on the portal.
 
-Style: ${toneGuide} No emoji. No salutation ("Hi there") and no sign-off ("Cheers, [name]") — the portal already shows who it's from. Refer to the student by first name. Plain, observational. No fillers like "productive session" or "solid foundation". Never invent specifics.
+Style: ${toneGuide} No emoji. No salutation ("Hi there") and no sign-off ("Cheers, [name]"), the portal already shows who it's from. Refer to the student by first name. Plain, observational. No fillers like "productive session" or "solid foundation". Never invent specifics.
 
 Student: ${studentFirstName}${yearLevel ? `, Year ${yearLevel}` : ''}
 Recent sessions:

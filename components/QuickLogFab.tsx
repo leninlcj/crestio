@@ -221,7 +221,7 @@ export function QuickLogFab({ visible = true }: { visible?: boolean }) {
                   className="input"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Optional — you can add more later."
+                  placeholder="Optional: you can add more later."
                 />
               </div>
 

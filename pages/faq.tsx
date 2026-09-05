@@ -7,7 +7,7 @@ export default function FaqPage() {
   return (
     <AgencyPage
       title="FAQ"
-      description="How matching works, where we cover, tutor checks, pricing, the first-lesson guarantee, cancellations and payment — answered plainly."
+      description="How matching works, where we cover, tutor checks, pricing, the first-lesson guarantee, cancellations and payment, answered plainly."
       path="/faq"
       ogTitle="Good questions, answered plainly."
       jsonLd={[agencyFaqSchema(FAQS), breadcrumb([{ name: 'Home', url: '/' }, { name: 'FAQ', url: '/faq' }])]}

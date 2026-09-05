@@ -149,7 +149,7 @@ Two or three things students typically get wrong and how to address them.
 ## Homework
 One homework task, specific and assignable.
 
-Keep it concrete, avoid filler. Write the entire plan in ${aiLanguageName}, using natural phrasing for that language — section headings translated too. Do not include meta-commentary or explain what you are doing — just produce the plan.`;
+Keep it concrete, avoid filler. Write the entire plan in ${aiLanguageName}, using natural phrasing for that language, section headings translated too. Do not include meta-commentary or explain what you are doing, just produce the plan.`;
 
   try {
     const aiResult = await callAI({

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // The public agency site. No database needed: the API calls the forms make
 // are intercepted so the client flow is tested deterministically.
 
-test.describe('agency site — pages', () => {
+test.describe('agency site: pages', () => {
   test('home renders the hero, rate card and enquiry CTA', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/right tutor/i);
@@ -30,6 +30,43 @@ test.describe('agency site — pages', () => {
     }
   });
 
+  test('rendered pages carry no em dashes, badges or emoji', async ({ request }) => {
+    for (const path of ['/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement', '/faq', '/about', '/contact', '/enquire', '/privacy', '/terms', '/cookies', '/child-safe', '/report', '/auth/signin', '/auth/signup']) {
+      const res = await request.get(path);
+      expect(res.status(), path).toBe(200);
+      const html = await res.text();
+      expect(html, `${path} contains an em dash`).not.toContain('\u2014');
+      expect(html, `${path} contains a badge`).not.toMatch(/made with|built with|powered by/i);
+      expect(html, `${path} contains emoji`).not.toMatch(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
+    }
+  });
+
+  test('favicon, manifest and PNG Open Graph image are served', async ({ request }) => {
+    const ico = await request.get('/favicon.ico');
+    expect(ico.status()).toBe(200);
+    expect(ico.headers()['content-type']).toMatch(/icon/);
+    const svg = await request.get('/favicon.svg');
+    expect(svg.status()).toBe(200);
+    const manifest = await request.get('/manifest.json');
+    expect(manifest.status()).toBe(200);
+    expect(await manifest.text()).toContain('Crestio Tutoring');
+    const og = await request.get('/api/og?type=marketing&title=Test');
+    expect(og.status()).toBe(200);
+    expect(og.headers()['content-type']).toContain('image/png');
+    const bad = await request.get('/api/og?type=nope');
+    expect(bad.status()).toBe(400);
+  });
+
+  test('every public page sets a description, canonical URL and absolute og:image', async ({ request }) => {
+    for (const path of ['/', '/pricing', '/privacy', '/terms', '/cookies']) {
+      const html = await (await request.get(path)).text();
+      expect(html, path).toMatch(/<meta name="description" content="[^"]{40,}"/);
+      expect(html, path).toContain(`<link rel="canonical" href="https://crestio.ai${path === '/' ? '' : path}"`);
+      expect(html, path).toMatch(/<meta property="og:image" content="https:\/\/crestio\.ai\/api\/og\?/);
+      expect(html, path).toContain('<link rel="icon" href="/favicon.ico"');
+    }
+  });
+
   test('sitemap lists the agency pages only', async ({ request }) => {
     const res = await request.get('/sitemap.xml');
     expect(res.status()).toBe(200);
@@ -41,7 +78,7 @@ test.describe('agency site — pages', () => {
   });
 });
 
-test.describe('agency site — enquiry form', () => {
+test.describe('agency site: enquiry form', () => {
   test('walks all six steps, validates, and shows the success state', async ({ page }) => {
     await page.route('**/api/enquiries', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'test' }) }));
     await page.goto('/enquire');
@@ -92,7 +129,7 @@ test.describe('agency site — enquiry form', () => {
   });
 });
 
-test.describe('agency site — tutor application', () => {
+test.describe('agency site: tutor application', () => {
   test('validates required fields then submits', async ({ page }) => {
     await page.route('**/api/tutor-applications', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'test' }) }));
     await page.goto('/tutors/apply');
@@ -113,7 +150,7 @@ test.describe('agency site — tutor application', () => {
   });
 });
 
-test.describe('agency site — chunk 2 pages', () => {
+test.describe('agency site: chunk 2 pages', () => {
   test('tutor agreement, child safe policy and report pages render', async ({ page }) => {
     for (const [path, heading] of [['/tutors/agreement', /agree to when you tutor/i], ['/child-safe', /child safe policy/i], ['/report', /report a concern/i]] as Array<[string, RegExp]>) {
       const res = await page.goto(path);

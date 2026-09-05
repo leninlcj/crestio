@@ -42,7 +42,7 @@ export default function BillingRequiredModal() {
         <h2 className="font-display text-2xl tracking-tightest text-ink mb-3">{headline}</h2>
         {isOwner ? (
           <p className="text-sm text-ink-muted mb-5">
-            Subscribe to keep using Crestio — $19/month, cancel anytime.
+            Subscribe to keep using Crestio: $19 a month, cancel any time.
           </p>
         ) : (
           <p className="text-sm text-ink-muted mb-5">

@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Never lose an enquiry. If the agency organisation cannot be resolved or
   // the table does not exist yet, fall back to email-only and flag it.
   const org = await getAgencyOrganization(admin);
-  if (!org) console.error('enquiries: agency organization not found — emailing only');
+  if (!org) console.error('enquiries: agency organization not found; emailing only');
 
   const ipHash = createHash('sha256').update(ip).digest('hex').slice(0, 32);
   const { data: row, error: insertErr } = org ? await admin
@@ -95,7 +95,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     (async () => {
       const b = buildEnquiryAlertEmail(emailArgs);
       if (tableMissing) {
-        b.subject = `[NOT SAVED${org ? ' — run the enquiries migration' : ' — agency organisation not found'}] ${b.subject}`;
+        b.subject = `[NOT SAVED${org ? ': run the enquiries migration' : ': agency organisation not found'}] ${b.subject}`;
         b.text = `${org ? 'The enquiries table does not exist yet' : 'The agency organisation could not be resolved'}, so this was emailed only.\n\n${b.text}`;
       }
       return sendEmail({ to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL, replyTo: v.email, ...b });
@@ -115,7 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       payload: { entity_name: v.parent_name, year_level: v.year_level, subjects: v.subjects, source: v.source },
     });
   } else {
-    console.error('enquiries: table missing — emailed only. Apply supabase/migrations/20260903_agency_enquiries_applications.sql');
+    console.error('enquiries: table missing; emailed only. Apply supabase/migrations/20260903_agency_enquiries_applications.sql');
   }
 
   return res.status(200).json({ ok: true, id: enquiryId, stored: !tableMissing });

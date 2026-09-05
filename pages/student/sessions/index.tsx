@@ -100,7 +100,7 @@ function Inner() {
                     <div className="text-2xs text-ink-soft tabular">{formatTime(s.scheduled_at)} · {s.duration_minutes}m</div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm text-ink truncate">{s.subject ?? '—'}</div>
+                    <div className="text-sm text-ink truncate">{s.subject ?? '–'}</div>
                     <div className="text-2xs text-ink-soft truncate">{s.topic ?? ''}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">

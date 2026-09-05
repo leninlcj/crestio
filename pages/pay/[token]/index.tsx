@@ -30,7 +30,7 @@ function formatAmount(cents: number, currency: string): string {
 }
 
 function formatDate(s: string | null): string {
-  if (!s) return '—';
+  if (!s) return '–';
   try {
     return new Date(s).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
   } catch {

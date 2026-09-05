@@ -105,10 +105,10 @@ export function TutorVettingCard({ tutor, onChange }: { tutor: AnyTutor; onChang
           label="Working With Children Check"
           field="wwcc_verified_at"
           value={
-            !tutor.wwcc_number ? 'No WWCC number on file — add it in Edit.'
-            : wwccDays != null && wwccDays < 0 ? `Expired ${formatDate(tutor.wwcc_expiry)} — stand down until renewed.`
+            !tutor.wwcc_number ? 'No WWCC number on file. Add it in Edit.'
+            : wwccDays != null && wwccDays < 0 ? `Expired ${formatDate(tutor.wwcc_expiry)}. Stand down until renewed.`
             : tutor.wwcc_verified_at ? `${tutor.wwcc_number} · verified ${formatDate(tutor.wwcc_verified_at)}${tutor.wwcc_expiry ? ` · expires ${formatDate(tutor.wwcc_expiry)}` : ''}${wwccDays != null && wwccDays <= 60 ? ` · ${wwccDays} days left` : ''}`
-            : `${tutor.wwcc_number} on file — verify it at the Office of the Children's Guardian, then record it here.`
+            : `${tutor.wwcc_number} on file. Verify it at the Office of the Children's Guardian, then record it here.`
           }
           ok={!!tutor.wwcc_number && !!tutor.wwcc_verified_at && !(wwccDays != null && wwccDays < 0) && wwccTone !== 'amber'}
           action={tutor.wwcc_number ? () => stamp('wwcc_verified_at', 'WWCC verification') : undefined}
@@ -116,11 +116,11 @@ export function TutorVettingCard({ tutor, onChange }: { tutor: AnyTutor; onChang
         />
         <Row label="Photo ID sighted" field="id_checked_at" value={tutor.id_checked_at ? `Checked ${formatDate(tutor.id_checked_at)}` : 'Not yet'} ok={!!tutor.id_checked_at} action={() => stamp('id_checked_at', 'ID check')} actionLabel="Mark checked" />
         <Row label="Referees spoken to" field="references_checked_at" value={tutor.references_checked_at ? `Checked ${formatDate(tutor.references_checked_at)}` : 'Not yet'} ok={!!tutor.references_checked_at} action={() => stamp('references_checked_at', 'Reference check')} actionLabel="Mark checked" />
-        <Row label="Child-safe e-learning (OCG)" field="training_completed_at" value={tutor.training_completed_at ? `Completed ${formatDate(tutor.training_completed_at)}` : 'Not yet — tutor sends you the certificate'} ok={!!tutor.training_completed_at} action={() => stamp('training_completed_at', 'Training')} actionLabel="Mark completed" />
-        <Row label="Tutor agreement" value={tutor.agreement_accepted_at ? `Accepted ${formatDate(tutor.agreement_accepted_at)} (v${tutor.agreement_version ?? TUTOR_AGREEMENT_VERSION})` : 'Not yet — the tutor accepts it on first sign-in to the app'} ok={!!tutor.agreement_accepted_at} />
-        <Row label="Code of conduct" value={tutor.conduct_accepted_at ? `Accepted ${formatDate(tutor.conduct_accepted_at)}` : 'Not yet — accepted with the agreement'} ok={!!tutor.conduct_accepted_at} />
-        <Row label="Public liability insurance" value={tutor.insurance_expiry ? `Expires ${formatDate(tutor.insurance_expiry)}${insDays != null && insDays < 0 ? ' — expired' : ''}` : 'Not recorded (required for in-home lessons unless the agency policy covers tutors)'} ok={!!tutor.insurance_expiry && !(insDays != null && insDays < 0)} />
-        <Row label="ABN" value={tutor.abn ? tutor.abn : 'Not recorded — without an ABN, 47% must be withheld from payments'} ok={!!tutor.abn} />
+        <Row label="Child-safe e-learning (OCG)" field="training_completed_at" value={tutor.training_completed_at ? `Completed ${formatDate(tutor.training_completed_at)}` : 'Not yet. The tutor sends you the certificate'} ok={!!tutor.training_completed_at} action={() => stamp('training_completed_at', 'Training')} actionLabel="Mark completed" />
+        <Row label="Tutor agreement" value={tutor.agreement_accepted_at ? `Accepted ${formatDate(tutor.agreement_accepted_at)} (v${tutor.agreement_version ?? TUTOR_AGREEMENT_VERSION})` : 'Not yet. The tutor accepts it on first sign-in to the app'} ok={!!tutor.agreement_accepted_at} />
+        <Row label="Code of conduct" value={tutor.conduct_accepted_at ? `Accepted ${formatDate(tutor.conduct_accepted_at)}` : 'Not yet. Accepted with the agreement'} ok={!!tutor.conduct_accepted_at} />
+        <Row label="Public liability insurance" value={tutor.insurance_expiry ? `Expires ${formatDate(tutor.insurance_expiry)}${insDays != null && insDays < 0 ? ' (expired)' : ''}` : 'Not recorded (required for in-home lessons unless the agency policy covers tutors)'} ok={!!tutor.insurance_expiry && !(insDays != null && insDays < 0)} />
+        <Row label="ABN" value={tutor.abn ? tutor.abn : 'Not recorded. Without an ABN, 47% must be withheld from payments'} ok={!!tutor.abn} />
       </div>
       {(tutor.suburb || tutor.mode || (tutor.levels ?? []).length > 0 || tutor.bio) && (
         <div className="mt-4 pt-4 border-t border-rule text-sm text-ink-muted space-y-1">

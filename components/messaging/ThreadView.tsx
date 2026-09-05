@@ -368,7 +368,7 @@ function SuggestedReply({
   if (!last || last.sender_type === 'tutor' || last.deleted) return null;
   const ageHours = (Date.now() - new Date(last.created_at).getTime()) / 3_600_000;
   if (ageHours < 24) return null;
-  const template = `Thanks for your note — got it. I'll follow up in our next session and let you know how it goes.`;
+  const template = `Thanks for your note, got it. I'll follow up in our next session and let you know how it goes.`;
   return (
     <button
       type="button"

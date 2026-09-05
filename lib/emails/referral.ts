@@ -18,7 +18,7 @@ function wrapHtml(body: string): string {
   ${body}
   <hr style="border:none;border-top:1px solid #E8E3DB;margin:24px 0;"/>
   <div style="font-size:11px;color:#908A82;line-height:1.6;">
-    The Crestio team · <a href="mailto:support@crestio.ai" style="color:#908A82;">support@crestio.ai</a>
+    The Crestio team · <a href="mailto:hello@crestio.ai" style="color:#908A82;">hello@crestio.ai</a>
   </div>
 </div>
 </body></html>`;
@@ -46,7 +46,7 @@ export function buildReferrerRewardEmail(args: {
   const amount = formatAud(args.creditAmountCents);
   const subject = `You just earned ${amount} off your next Crestio month`;
   const text =
-    `${name} just joined Crestio using your referral code. When their first paid month is processed, ${amount} will be credited toward your next invoice. Thanks for sharing Crestio — we appreciate it.\n\nThe Crestio team`;
+    `${name} just joined Crestio using your referral code. When their first paid month is processed, ${amount} will be credited toward your next invoice. Thanks for sharing Crestio, we appreciate it.\n\nThe Crestio team`;
   const html = wrapHtml(
     `<h1 style="font-family:Fraunces,serif;font-size:24px;font-weight:500;letter-spacing:-0.04em;margin:0 0 14px 0;">
       Thanks for sharing Crestio.
@@ -55,7 +55,7 @@ export function buildReferrerRewardEmail(args: {
       <strong>${escapeHtml(name)}</strong> just joined Crestio using your referral code.
     </p>
     <p style="font-size:14px;line-height:1.6;color:#1A1815;">
-      When their first paid month is processed, <strong>${amount}</strong> will be credited toward your next invoice. No action needed — the credit applies automatically.
+      When their first paid month is processed, <strong>${amount}</strong> will be credited toward your next invoice. No action needed; the credit applies automatically.
     </p>
     <p style="font-size:14px;line-height:1.6;color:#1A1815;">
       We appreciate it.
@@ -71,7 +71,7 @@ export function buildRefereeWelcomeEmail(args: {
   creditAmountCents: number;
 }): EmailPayload {
   const amount = formatAud(args.creditAmountCents);
-  const subject = 'Welcome to Crestio — 25% off your first month';
+  const subject = 'Welcome to Crestio: 25% off your first month';
   const text =
     `You signed up using a referral from another Crestio user. Once your trial converts, ${amount} will be automatically applied to your first paid month. Questions? Just reply to this email.\n\nThe Crestio team`;
   const html = wrapHtml(
@@ -82,7 +82,7 @@ export function buildRefereeWelcomeEmail(args: {
       You signed up using a referral from another Crestio user. Once your trial converts, <strong>${amount}</strong> will be automatically applied to your first paid month. No coupon code to enter.
     </p>
     <p style="font-size:14px;line-height:1.6;color:#1A1815;">
-      Questions? Just reply to this email — a person reads every message.
+      Questions? Just reply to this email. A person reads every message.
     </p>`,
   );
   return { subject, html, text };
@@ -98,16 +98,16 @@ export function buildReferrerAtCapEmail(args: {
 }): EmailPayload {
   const subject = "You've hit this year's referral cap";
   const text =
-    `You've earned the maximum 10 referral credits for ${args.year}. Your cap resets on ${args.resetDateDisplay}.\n\nThanks for being one of our most-engaged users. If you have more people to share with, feel free — they'll still get 25% off their first month, and your cap resets in ${args.daysUntilReset} days.\n\nThe Crestio team`;
+    `You've earned the maximum 10 referral credits for ${args.year}. Your cap resets on ${args.resetDateDisplay}.\n\nThanks for being one of our most-engaged users. If you have more people to share with, feel free, they'll still get 25% off their first month, and your cap resets in ${args.daysUntilReset} days.\n\nThe Crestio team`;
   const html = wrapHtml(
     `<h1 style="font-family:Fraunces,serif;font-size:24px;font-weight:500;letter-spacing:-0.04em;margin:0 0 14px 0;">
-      Cap reached — nicely done.
+      Cap reached: nicely done.
     </h1>
     <p style="font-size:14px;line-height:1.6;color:#1A1815;">
       You've earned the maximum 10 referral credits for ${args.year}. Your cap resets on <strong>${escapeHtml(args.resetDateDisplay)}</strong>.
     </p>
     <p style="font-size:14px;line-height:1.6;color:#1A1815;">
-      Thanks for being one of our most-engaged users. If you have more people to share with, feel free — they'll still get 25% off their first month, and your cap resets in ${args.daysUntilReset} days.
+      Thanks for being one of our most-engaged users. If you have more people to share with, feel free, they'll still get 25% off their first month, and your cap resets in ${args.daysUntilReset} days.
     </p>`,
   );
   return { subject, html, text };

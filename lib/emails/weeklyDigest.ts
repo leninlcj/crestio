@@ -14,7 +14,7 @@ export type WeeklyDigestData = {
 };
 
 export function renderWeeklyDigestHTML(d: WeeklyDigestData): { subject: string; html: string; text: string } {
-  const subject = `Your week — ${d.sessions_count} ${d.sessions_count === 1 ? 'session' : 'sessions'}, ${d.hours}h, ${d.earned_label}`;
+  const subject = `Your week: ${d.sessions_count} ${d.sessions_count === 1 ? 'session' : 'sessions'}, ${d.hours}h, ${d.earned_label}`;
 
   const max = Math.max(1, ...d.per_day_counts);
   const bars = d.per_day_counts.map((n, i) => {
@@ -28,7 +28,7 @@ export function renderWeeklyDigestHTML(d: WeeklyDigestData): { subject: string; 
   }).join('');
 
   const nudgesHTML = d.nudges.length === 0
-    ? `<p style="font-size:14px;color:#6B6F6A;margin:0;">All caught up — enjoy the rest of your Sunday.</p>`
+    ? `<p style="font-size:14px;color:#6B6F6A;margin:0;">All caught up. Enjoy the rest of your Sunday.</p>`
     : `<ul style="margin:0;padding-left:20px;color:#0F1714;font-family:Arial,sans-serif;font-size:14px;line-height:1.6;">
         ${d.nudges.map((n) => `<li style="margin-bottom:6px;">${escapeHtml(n)}</li>`).join('')}
       </ul>`;
@@ -41,7 +41,7 @@ export function renderWeeklyDigestHTML(d: WeeklyDigestData): { subject: string; 
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;background-color:#FFFFFF;border:1px solid #EAEAE6;border-radius:8px;">
 <tr><td style="padding:32px 32px 0;">
   <p style="font-family:Arial,sans-serif;font-size:13px;color:#A0A39E;margin:0 0 8px;text-transform:uppercase;letter-spacing:1.5px;">Sunday digest</p>
-  <h1 style="font-family:Georgia,serif;font-size:28px;color:#0F1714;margin:0 0 6px;font-weight:600;letter-spacing:-0.5px;">Hi ${escapeHtml(d.tutor_first_name)} — your week.</h1>
+  <h1 style="font-family:Georgia,serif;font-size:28px;color:#0F1714;margin:0 0 6px;font-weight:600;letter-spacing:-0.5px;">Hi ${escapeHtml(d.tutor_first_name)}, your week.</h1>
 </td></tr>
 <tr><td style="padding:24px 32px 0;">
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -92,9 +92,9 @@ export function renderWeeklyDigestHTML(d: WeeklyDigestData): { subject: string; 
   const text = [
     `Hi ${d.tutor_first_name},`,
     '',
-    `Your week — ${d.sessions_count} ${d.sessions_count === 1 ? 'session' : 'sessions'}, ${d.hours} hours, ${d.earned_label}.`,
+    `Your week: ${d.sessions_count} ${d.sessions_count === 1 ? 'session' : 'sessions'}, ${d.hours} hours, ${d.earned_label}.`,
     '',
-    ...(d.nudges.length === 0 ? ['All caught up — enjoy the rest of your Sunday.'] : ['Worth a look:', ...d.nudges.map((n) => `- ${n}`)]),
+    ...(d.nudges.length === 0 ? ['All caught up. Enjoy the rest of your Sunday.'] : ['Worth a look:', ...d.nudges.map((n) => `- ${n}`)]),
     '',
     `Plan next week: ${d.app_url}/app`,
   ].join('\n');

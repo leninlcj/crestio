@@ -110,7 +110,7 @@ export function AssistantLauncher() {
   // Hide rules.
   const onMobileDashboard = isMobile && router.pathname === '/app';
   if (onMobileDashboard) return null;         // quick-log FAB owns this slot
-  if (isMobile && isOpen) return null;         // panel covers viewport — avoid flicker
+  if (isMobile && isOpen) return null;         // panel covers viewport, avoid flicker
   if (isMobile && keyboardOpen) return null;   // don't float over the keyboard
 
   // Sizing + positioning per spec. Explicit pixel values — Tailwind's

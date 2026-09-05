@@ -227,7 +227,7 @@ function SessionDetailInner() {
       try {
         payload = await res.json();
       } catch {
-        setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+        setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
         return;
       }
       if (res.status === 429) {
@@ -235,12 +235,12 @@ function SessionDetailInner() {
         return;
       }
       if (!res.ok) {
-        setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+        setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
         return;
       }
       const text = typeof payload?.polishedNotes === 'string' ? payload.polishedNotes : '';
       if (!text) {
-        setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+        setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
         return;
       }
       // Auto-share: write locally so the UI reflects what the API just persisted.
@@ -253,7 +253,7 @@ function SessionDetailInner() {
       }
       setEditingShared(false);
     } catch {
-      setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+      setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
     } finally {
       setPolishing(false);
     }
@@ -361,7 +361,7 @@ function SessionDetailInner() {
       const dateStr = form.scheduled_at
         ? new Date(form.scheduled_at).toLocaleDateString(activeLocale(), { day: 'numeric', month: 'short' })
         : '';
-      const label = student ? `${student.name} — ${dateStr}` : `Session — ${dateStr}`;
+      const label = student ? `${student.name} · ${dateStr}` : `Session · ${dateStr}`;
       saveDraft(
         existingSessionDraftKey(session.id),
         {
@@ -973,8 +973,8 @@ function SessionDetailInner() {
             <div className="card p-6">
               <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('sessions:detail.what')}</div>
               <div className="text-sm">
-                <div className="text-ink">{session.subject ?? '—'}</div>
-                <div className="text-ink-muted">{session.topic ?? '—'}</div>
+                <div className="text-ink">{session.subject ?? '–'}</div>
+                <div className="text-ink-muted">{session.topic ?? '–'}</div>
                 <div className="text-ink-muted mt-2">
                   {session.tutor?.name
                     ? t('sessions:detail.tutor_with', { name: session.tutor.name })
@@ -1002,7 +1002,7 @@ function SessionDetailInner() {
                   </span>
                   {session.status === 'cancelled' && session.late_cancellation && (
                     <span className={cx('ml-2', session.cancellation_waived ? 'badge-neutral' : 'badge-rust')}>
-                      {session.cancellation_waived ? 'Late cancellation — waived' : 'Late cancellation — chargeable'}
+                      {session.cancellation_waived ? 'Late cancellation (waived)' : 'Late cancellation (chargeable)'}
                     </span>
                   )}
                 </div>

@@ -13,9 +13,9 @@
     "resend_pending": "Sending…",
     "resend_done": "Sent. Check your inbox in a minute.",
     "resend_rate_limited": "Already sent recently. Try again in {{minutes}} minutes.",
-    "resend_failed": "Couldn't resend. Try again or email support@crestio.ai.",
+    "resend_failed": "Couldn't resend. Try again or email hello@crestio.ai.",
     "spam_hint": "If it isn't there in a minute, check your spam folder.",
-    "support_line": "Stuck? Email support@crestio.ai and we'll sort it out."
+    "support_line": "Stuck? Email hello@crestio.ai and we'll sort it out."
   },
   "logged_in": {
     "heading": "You're already signed in.",
@@ -24,7 +24,7 @@
   },
   "unpaid": {
     "heading": "Your payment didn't complete.",
-    "body": "Stripe didn't return a successful payment for this checkout. If your card was charged, email support@crestio.ai with the time you paid and we'll sort it out.",
+    "body": "Stripe didn't return a successful payment for this checkout. If your card was charged, email hello@crestio.ai with the time you paid and we'll sort it out.",
     "back_to_pricing": "Back to pricing"
   },
   "missing": {
@@ -34,6 +34,6 @@
   },
   "error": {
     "heading": "Something went wrong.",
-    "body": "We couldn't look up your payment right now. Refresh in a moment, or email support@crestio.ai if it keeps happening."
+    "body": "We couldn't look up your payment right now. Refresh in a moment, or email hello@crestio.ai if it keeps happening."
   }
 }

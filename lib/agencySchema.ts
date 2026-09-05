@@ -39,8 +39,8 @@ export function tutoringServiceSchema(subject: 'maths' | 'physics' | 'all') {
       name: 'Hourly rates',
       itemListElement: RATE_CARD.flatMap((b) => {
         const offers: Array<Record<string, unknown>> = [];
-        if (b.online != null) offers.push({ '@type': 'Offer', name: `${b.label} — online`, price: String(b.online), priceCurrency: 'AUD', priceSpecification: { '@type': 'UnitPriceSpecification', price: String(b.online), priceCurrency: 'AUD', unitText: 'HOUR' } });
-        if (b.inHome != null) offers.push({ '@type': 'Offer', name: `${b.label} — in-home`, price: String(b.inHome), priceCurrency: 'AUD', priceSpecification: { '@type': 'UnitPriceSpecification', price: String(b.inHome), priceCurrency: 'AUD', unitText: 'HOUR' } });
+        if (b.online != null) offers.push({ '@type': 'Offer', name: `${b.label} (online)`, price: String(b.online), priceCurrency: 'AUD', priceSpecification: { '@type': 'UnitPriceSpecification', price: String(b.online), priceCurrency: 'AUD', unitText: 'HOUR' } });
+        if (b.inHome != null) offers.push({ '@type': 'Offer', name: `${b.label} (in-home)`, price: String(b.inHome), priceCurrency: 'AUD', priceSpecification: { '@type': 'UnitPriceSpecification', price: String(b.inHome), priceCurrency: 'AUD', unitText: 'HOUR' } });
         return offers;
       }),
     },

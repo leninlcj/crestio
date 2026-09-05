@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "مضمون اور موضوع پیدا کرنے کے لیے ضروری ہیں۔",
       "not_signed_in": "سائن ان نہیں ہوا۔",
-      "no_organisation": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: support@crestio.ai۔",
+      "no_organisation": "آپ کے اکاؤنٹ سے کوئی تنظیم منسلک نہیں ہے۔ رابطہ کریں: hello@crestio.ai۔",
       "server_returned": "سرور نے {{status}} واپس کیا",
       "server_returned_with_text": "سرور نے درج ذیل پیغام واپس کیا: {{text}}",
       "no_plan": "سرور نے کوئی منصوبہ واپس نہیں کیا۔",

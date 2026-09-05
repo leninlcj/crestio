@@ -94,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (mode === 'reply') {
     const incoming = typeof body.incomingText === 'string' ? body.incomingText.trim() : '';
     if (!incoming) return res.status(400).json({ error: 'incomingText required for reply mode.' });
-    const replyPrompt = `You are a tutor replying to a parent message. The parent wrote:\n"""\n${incoming}\n"""\n\nWrite a short, warm acknowledgement (1-2 sentences, max 200 chars). Confirm you've seen the message, and indicate next steps if the parent asked a question. No greeting like "Hi [name]" — go straight to the point. No sign-off.`;
+    const replyPrompt = `You are a tutor replying to a parent message. The parent wrote:\n"""\n${incoming}\n"""\n\nWrite a short, warm acknowledgement (1-2 sentences, max 200 chars). Confirm you've seen the message, and indicate next steps if the parent asked a question. No greeting like "Hi [name]", go straight to the point. No sign-off.`;
     try {
       const aiResult = await callAI({
         task: 'polish',

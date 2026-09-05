@@ -158,8 +158,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .from('students').select('name').eq('id', session.student_id).maybeSingle();
     const name = student?.name ?? 'your child';
     const subjectLine = isReschedule
-      ? `Reschedule request declined — ${name}'s session stays as scheduled`
-      : `Cancellation request declined — ${name}'s session stays as scheduled`;
+      ? `Reschedule request declined: ${name}'s session stays as scheduled`
+      : `Cancellation request declined: ${name}'s session stays as scheduled`;
     const { sendEmail } = await import('../../../../lib/email');
     const { data: parentLinks } = await admin
       .from('parent_student_links')

@@ -114,10 +114,10 @@ function IncidentDetail({ r, onUpdate }: { r: Incident; onUpdate: (body: Record<
       <dl>
         {[
           ['Received', formatDateTime(r.created_at)],
-          ['From', `${r.reporter_name ?? '—'} (${r.reported_by_role})`],
-          ['Email', r.reporter_email ?? '—'],
-          ['Occurred', r.occurred_at ? formatDateTime(r.occurred_at) : '—'],
-          ['Closed', r.closed_at ? formatDateTime(r.closed_at) : '—'],
+          ['From', `${r.reporter_name ?? 'Anonymous'} (${r.reported_by_role})`],
+          ['Email', r.reporter_email ?? 'Not given'],
+          ['Occurred', r.occurred_at ? formatDateTime(r.occurred_at) : 'Not given'],
+          ['Closed', r.closed_at ? formatDateTime(r.closed_at) : 'Open'],
         ].map(([k, v]) => (
           <div key={k} className="flex items-start justify-between gap-4 py-2 border-b border-rule last:border-b-0">
             <dt className="text-xs text-ink-muted w-24 shrink-0">{k}</dt><dd className="text-sm text-ink text-right break-words">{v}</dd>

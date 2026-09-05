@@ -161,7 +161,7 @@ function DashboardInner() {
   // One-time welcome toast after onboarding completes.
   useEffect(() => {
     if (router.query.welcome === '1' || router.query.welcome === 'sample') {
-      toast.show({ message: 'Welcome — press ⌘K anytime to find anything.', tone: 'info', durationMs: 6000 });
+      toast.show({ message: 'Welcome. Press ⌘K any time to find anything.', tone: 'info', durationMs: 6000 });
       const url = new URL(window.location.href);
       url.searchParams.delete('welcome');
       window.history.replaceState({}, '', url.toString());
@@ -365,7 +365,7 @@ function DashboardInner() {
         {/*
           MonthlyImpactCard is gated off: the dashboard payload exposes no real
           month-to-date aggregates, so the previous version fabricated every
-          figure — a 7-day series total shown as month "Sessions", today's
+          figure: a 7-day series total shown as month "Sessions", today's
           minutes x4.3 as "Hours", the UNPAID invoice balance mislabelled as
           "Earned", and the tutor count (?? 5) shown as "Students helped".
           Re-enable only once the /api dashboard payload returns true MTD
@@ -1174,7 +1174,7 @@ function OwnerBriefCard({ brief, currency }: { brief: OwnerBrief | null; currenc
           <ul className="space-y-0.5">
             {brief.actions.map((a, i) => (
               <li key={i} className="text-xs text-ink">
-                <strong>{a.tutor_name}</strong> · {a.student_name} <span className="text-ink-muted">— {a.reason}</span>
+                <strong>{a.tutor_name}</strong> · {a.student_name} <span className="text-ink-muted">· {a.reason}</span>
               </li>
             ))}
           </ul>
@@ -1269,7 +1269,7 @@ function StateOfTheAppBanners({ payload }: { payload: TodayPayload | null }) {
   if (todaySeries.length === 7 && todaySeries.every((v) => v === 0)) {
     banners.push(
       <Banner key="cold" id="cold-welcome-back" tone="amber">
-        Welcome back. No sessions logged this week — schedule your next one.
+        Welcome back. No sessions logged this week. Schedule your next one.
       </Banner>,
     );
   }

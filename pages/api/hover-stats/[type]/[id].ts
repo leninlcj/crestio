@@ -92,9 +92,9 @@ async function studentStats(admin: SupabaseClient, id: string, orgId: string) {
 
   const stats: Stat[] = [
     { label: 'Sessions, 30d', value: String(count30 ?? 0) },
-    { label: 'Last session', value: lastSess?.scheduled_at ? formatRelative(lastSess.scheduled_at) : '—' },
+    { label: 'Last session', value: lastSess?.scheduled_at ? formatRelative(lastSess.scheduled_at) : '–' },
     { label: 'Outstanding', value: formatCents(balance) },
-    { label: 'Parent', value: s.parent_name ?? '—' },
+    { label: 'Parent', value: s.parent_name ?? '–' },
   ];
   return {
     label: s.name,
@@ -129,9 +129,9 @@ async function parentStats(admin: SupabaseClient, id: string, orgId: string) {
     sublabel: p.email,
     stats: [
       { label: 'Students', value: String(accessible.length) },
-      { label: 'Names', value: studentNames || '—' },
+      { label: 'Names', value: studentNames || '–' },
       { label: 'Outstanding', value: formatCents(balance) },
-      { label: 'Last invoice', value: lastInvoice ? formatRelative(lastInvoice + 'T00:00:00Z') : '—' },
+      { label: 'Last invoice', value: lastInvoice ? formatRelative(lastInvoice + 'T00:00:00Z') : '–' },
     ],
     lastActivity: lastInvoice,
     status: p.archived_at ? 'archived' : 'active',
@@ -173,7 +173,7 @@ async function sessionStats(admin: SupabaseClient, id: string, orgId: string) {
     stats: [
       { label: 'Duration', value: `${(s as any).duration_minutes ?? 60} min` },
       { label: 'Status', value: (s as any).status },
-      { label: 'Tutor', value: (s as any).tutor?.name ?? '—' },
+      { label: 'Tutor', value: (s as any).tutor?.name ?? '–' },
       { label: 'Polished', value: (s as any).notes_polished_by_ai ? 'Yes' : 'No' },
     ],
     lastActivity: (s as any).scheduled_at,
@@ -193,7 +193,7 @@ async function invoiceStats(admin: SupabaseClient, id: string, orgId: string) {
     stats: [
       { label: 'Status', value: i.status },
       { label: 'Amount', value: formatCents(i.total_cents) },
-      { label: 'Due', value: i.due_on ? formatDate(i.due_on) : '—' },
+      { label: 'Due', value: i.due_on ? formatDate(i.due_on) : '–' },
     ],
     lastActivity: i.issued_on,
     status: (i as any).deleted_at ? 'deleted' : i.status,
@@ -226,7 +226,7 @@ async function lessonPlanStats(admin: SupabaseClient, id: string, orgId: string)
     label: p.topic,
     sublabel: p.subject,
     stats: [
-      { label: 'Year', value: p.year_level ?? '—' },
+      { label: 'Year', value: p.year_level ?? '–' },
       { label: 'Duration', value: `${p.duration_minutes ?? 60} min` },
       { label: 'AI', value: p.generated_by_ai ? 'Yes' : 'No' },
     ],
@@ -263,7 +263,7 @@ function formatCents(c: number): string {
 }
 function formatBytes(bytes: number | null | undefined): string {
   const n = Number(bytes ?? 0);
-  if (n <= 0) return '—';
+  if (n <= 0) return '–';
   if (n < 1024) return `${n} B`;
   if (n < 1024 ** 2) return `${(n / 1024).toFixed(1)} KB`;
   if (n < 1024 ** 3) return `${(n / 1024 ** 2).toFixed(1)} MB`;

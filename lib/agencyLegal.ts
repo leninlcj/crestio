@@ -11,9 +11,9 @@
 
 import { AGENCY, TUTOR_PAY_BANDS } from './agency';
 
-export const TUTOR_AGREEMENT_VERSION = '2026-09-04';
-export const CODE_OF_CONDUCT_VERSION = '2026-09-04';
-export const CHILD_SAFE_POLICY_VERSION = '2026-09-04';
+export const TUTOR_AGREEMENT_VERSION = '2026-09-05';
+export const CODE_OF_CONDUCT_VERSION = '2026-09-05';
+export const CHILD_SAFE_POLICY_VERSION = '2026-09-05';
 
 export type LegalSection = { id: string; heading: string; paragraphs?: string[]; bullets?: string[] };
 export type LegalDoc = { title: string; kicker: string; version: string; intro: string; sections: LegalSection[] };
@@ -63,7 +63,7 @@ export const TUTOR_AGREEMENT: LegalDoc = {
         'You use your own equipment: computer, internet connection, materials, and transport for in-home lessons.',
         `You give at least ${H} hours' notice to Crestio and the family if you must cancel a lesson, and arrange a make-up time where possible. Repeated late cancellations are grounds for ending this agreement.`,
         'After every lesson you record a short note in the Crestio app within 24 hours: what was covered, what was strong, what is next, any homework set. Crestio sends it to the family.',
-        'Lesson arrangements, changes and anything to do with payment go through Crestio or the parent — never directly between you and a student.',
+        'Lesson arrangements, changes and anything to do with payment go through Crestio or the parent, never directly between you and a student.',
       ],
     },
     {
@@ -128,7 +128,7 @@ export const TUTOR_AGREEMENT: LegalDoc = {
     },
     {
       id: 'schedule',
-      heading: 'Schedule — tutor fees',
+      heading: 'Schedule: tutor fees',
       paragraphs: [
         'Per hour of lesson delivered. Confirmed in writing for each student before you accept them.',
       ],
@@ -233,7 +233,7 @@ export const CHILD_SAFE_POLICY: LegalDoc = {
       id: 'concerns',
       heading: 'Raising a concern or complaint',
       paragraphs: [
-        `Anyone — a parent, a student, a tutor or a member of the public — can raise a concern by emailing ${AGENCY.email} or using the report form at crestio.ai/report. Concerns go directly to the founder and are logged, investigated and answered. A student who feels unsafe can tell a parent, the founder, or a trusted adult, and will be believed and helped.`,
+        `Anyone, whether a parent, a student, a tutor or a member of the public, can raise a concern by emailing ${AGENCY.email} or using the report form at crestio.ai/report. Concerns go directly to the founder and are logged, investigated and answered. A student who feels unsafe can tell a parent, the founder, or a trusted adult, and will be believed and helped.`,
         'If a child is in immediate danger, call 000. Concerns about a child\'s safety can also be reported to the NSW Child Protection Helpline on 132 111. Complaints about how Crestio handled a concern can be made to the NSW Office of the Children\'s Guardian.',
       ],
     },

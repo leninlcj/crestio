@@ -123,7 +123,7 @@ function InvoiceDetailInner() {
               id: l.id,
               session_id: l.session_id,
               student_id: l.student_id,
-              student_name: studentById.get(l.student_id)?.name ?? '—',
+              student_name: studentById.get(l.student_id)?.name ?? '–',
               scheduled_at: s?.scheduled_at ?? '',
               duration_minutes: l.duration_minutes,
               subject: s?.subject ?? null,
@@ -169,7 +169,7 @@ function InvoiceDetailInner() {
     }
     return Array.from(map.entries()).map(([student_id, items]) => ({
       student_id,
-      student_name: items[0]?.student_name ?? '—',
+      student_name: items[0]?.student_name ?? '–',
       items,
       subtotal: items.reduce((a, i) => a + i.amount_cents, 0),
     }));
@@ -377,7 +377,7 @@ function InvoiceDetailInner() {
                   {g.items.map((l) => (
                     <tr key={l.id} className="border-b border-ruleSoft">
                       <td className="py-3 text-sm text-ink">
-                        {l.scheduled_at ? formatDateTime(l.scheduled_at) : '—'}
+                        {l.scheduled_at ? formatDateTime(l.scheduled_at) : '–'}
                       </td>
                       <td className="py-3 text-sm text-ink-muted">
                         {[l.subject, l.topic].filter(Boolean).join(' · ') || 'Tutoring session'}
@@ -475,24 +475,24 @@ function InvoiceDetailInner() {
               <dt className="text-ink-muted">Status</dt>
               <dd className="text-ink">{invoice.status === 'paid' ? 'Paid' : invoice.status}</dd>
               <dt className="text-ink-muted">Paid on</dt>
-              <dd className="text-ink">{payment.paid_at ? formatDate(payment.paid_at) : '—'}</dd>
+              <dd className="text-ink">{payment.paid_at ? formatDate(payment.paid_at) : '–'}</dd>
               <dt className="text-ink-muted">Card</dt>
               <dd className="text-ink">
                 {payment.payment_method_brand
                   ? `${payment.payment_method_brand.toUpperCase()} ····${payment.payment_method_last4}`
-                  : '—'}
+                  : '–'}
               </dd>
               <dt className="text-ink-muted">Platform fee</dt>
               <dd className="text-ink font-mono">
-                {payment.platform_fee_amount != null ? formatCents(payment.platform_fee_amount, currency) : '—'}
+                {payment.platform_fee_amount != null ? formatCents(payment.platform_fee_amount, currency) : '–'}
               </dd>
               <dt className="text-ink-muted">Stripe fee</dt>
               <dd className="text-ink font-mono">
-                {payment.stripe_fee_amount != null ? formatCents(payment.stripe_fee_amount, currency) : '—'}
+                {payment.stripe_fee_amount != null ? formatCents(payment.stripe_fee_amount, currency) : '–'}
               </dd>
               <dt className="text-ink-muted">Net to you</dt>
               <dd className="text-ink font-mono">
-                {payment.net_amount_to_org != null ? formatCents(payment.net_amount_to_org, currency, { showZero: true }) : '—'}
+                {payment.net_amount_to_org != null ? formatCents(payment.net_amount_to_org, currency, { showZero: true }) : '–'}
               </dd>
               <dt className="text-ink-muted">PaymentIntent</dt>
               <dd className="font-mono text-2xs text-ink-soft truncate">{payment.stripe_payment_intent_id}</dd>

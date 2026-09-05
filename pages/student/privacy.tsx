@@ -18,7 +18,7 @@ export default function StudentPrivacy() {
             <h2 className="font-display text-xl mb-2">Who keeps your information</h2>
             <p>
               Your tutor's practice keeps your information. Crestio is the software they use, but the
-              data is theirs — they decide what to do with it. We never sell anything about you.
+              data is theirs: they decide what to do with it. We never sell anything about you.
             </p>
           </section>
 

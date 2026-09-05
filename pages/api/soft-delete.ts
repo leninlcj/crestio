@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
     if (blockers.length > 0) {
       return res.status(400).json({
-        error: 'Sent or paid invoices cannot be deleted — void them instead.',
+        error: 'Sent or paid invoices cannot be deleted. Void them instead.',
         blocked_ids: blockers.map((b: any) => b.id),
       });
     }

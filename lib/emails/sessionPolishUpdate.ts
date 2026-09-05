@@ -37,7 +37,7 @@ const RULE = '#EAEAE6';
 
 export function buildSessionPolishUpdateEmail(args: Args): Built {
   const greeting = args.parentName ? `Hi ${args.parentName.split(' ')[0]},` : 'Hi,';
-  const subjectLine = `${args.studentFirstName}'s session notes — ${args.sessionDateLabel}`;
+  const subjectLine = `${args.studentFirstName}'s session notes, ${args.sessionDateLabel}`;
   const subjectSuffix = args.subject ? ` (${args.subject})` : '';
 
   const text =

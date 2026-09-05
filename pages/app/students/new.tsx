@@ -68,7 +68,7 @@ function NewStudentInner() {
     }
     const organizationId = await getCurrentOrganizationId();
     if (!organizationId) {
-      setError('No organisation is linked to your account. Contact support@crestio.ai.');
+      setError('No organisation is linked to your account. Contact hello@crestio.ai.');
       setLoading(false);
       return;
     }

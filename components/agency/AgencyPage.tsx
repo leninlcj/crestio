@@ -19,7 +19,8 @@ type Props = {
 export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, jsonLd = [], noSuffix, noIndex, children }: Props) {
   const fullTitle = noSuffix ? title : `${title} · ${AGENCY.name}`;
   const url = `${AGENCY.siteUrl}${path === '/' ? '' : path}`;
-  const og = `/api/og?type=marketing&title=${encodeURIComponent(ogTitle ?? title)}&subtitle=${encodeURIComponent(ogSubtitle ?? description)}`;
+  // Absolute URL: Facebook, LinkedIn and iMessage ignore relative og:image values.
+  const og = `${AGENCY.siteUrl}/api/og?type=marketing&title=${encodeURIComponent(ogTitle ?? title)}&subtitle=${encodeURIComponent(ogSubtitle ?? description)}`;
   return (
     <>
       <Head>
@@ -27,6 +28,7 @@ export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, json
         <meta name="description" content={description} />
         <link rel="canonical" href={url} />
         {noIndex && <meta name="robots" content="noindex, nofollow" />}
+        <meta property="og:type" content="website" />
         <meta property="og:title" content={fullTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={url} />

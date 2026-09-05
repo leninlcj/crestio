@@ -138,7 +138,7 @@ export const ENTITY_SPECS: Record<EntityType, EntitySpec> = {
   },
   message: {
     table: 'messages',
-    orgColumn: 'organization_id', // not actually on messages — handled via thread join
+    orgColumn: 'organization_id', // not actually on messages, handled via thread join
     lifecycle: ['soft-delete'],
     label: 'message',
     labelPlural: 'messages',

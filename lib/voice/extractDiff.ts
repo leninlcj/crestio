@@ -20,7 +20,7 @@ export function buildDiffPrompt(before: string, after: string, locale: Supported
 
   return `You analyse how a tutor edits AI-polished session notes so we can learn the tutor's voice.
 
-In one short phrase (max ${MAX_OUTPUT_WORDS} words), describe how the second text differs in style from the first. Focus on tone, sentence length, formality, punctuation, vocabulary. Ignore content changes — only describe stylistic edits.
+In one short phrase (max ${MAX_OUTPUT_WORDS} words), describe how the second text differs in style from the first. Focus on tone, sentence length, formality, punctuation, vocabulary. Ignore content changes, only describe stylistic edits.
 
 If the texts are essentially the same, reply exactly: no meaningful style change.
 

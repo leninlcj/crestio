@@ -137,7 +137,7 @@ function renderHeader(page: any, helv: PDFFont, helvBold: PDFFont, args: TermRep
   y -= 16;
   page.drawText(args.student_name, { x: MARGIN, y, size: 22, font: helvBold, color: BRAND.ink });
   y -= 16;
-  page.drawText(`${formatDateLabel(args.term_start)} — ${formatDateLabel(args.term_end)}`, {
+  page.drawText(`${formatDateLabel(args.term_start)} to ${formatDateLabel(args.term_end)}`, {
     x: MARGIN, y, size: 9, font: helv, color: BRAND.inkMuted,
   });
   return y - 16;

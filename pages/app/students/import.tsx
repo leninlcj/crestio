@@ -19,7 +19,7 @@ type FieldKey =
   | 'notes';
 
 const FIELD_LABELS: Record<FieldKey, string> = {
-  skip: '— Skip this column —',
+  skip: 'Skip this column',
   name: 'Name (required)',
   subject: 'Subject (required)',
   year: 'Year / Grade',
@@ -71,7 +71,7 @@ function ImportInner() {
   function handleFile(file: File) {
     setError(null);
     if (file.size > MAX_FILE_BYTES) {
-      setError(`File is ${(file.size / 1024 / 1024).toFixed(1)}MB — max is 5MB.`);
+      setError(`File is ${(file.size / 1024 / 1024).toFixed(1)}MB; the maximum is 5MB.`);
       return;
     }
     Papa.parse<string[]>(file, {
@@ -243,7 +243,7 @@ function ImportInner() {
               Don&apos;t have a file ready?{' '}
               <a href="/sample-students.csv" download className="underline text-forest">
                 Download the sample CSV
-              </a>{' '}— it has all the optional columns filled in.
+              </a>{' '}with all the optional columns filled in.
             </div>
           </>
         ) : (

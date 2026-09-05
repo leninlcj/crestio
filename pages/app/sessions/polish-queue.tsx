@@ -139,7 +139,7 @@ function PolishQueueInner() {
     if (polished) {
       updateRow(row.id, { phase: 'done', polishedText: polished, editedText: polished });
     } else {
-      updateRow(row.id, { phase: 'idle', error: 'Could not polish — try again.' });
+      updateRow(row.id, { phase: 'idle', error: 'Could not polish. Try again.' });
     }
   }
 

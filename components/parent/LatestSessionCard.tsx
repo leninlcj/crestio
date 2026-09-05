@@ -38,7 +38,7 @@ export default function LatestSessionCard({ studentIds }: Props) {
         setLatest({
           id: row.id,
           student_id: row.student_id,
-          student_name: row.student?.name ?? '—',
+          student_name: row.student?.name ?? '–',
           scheduled_at: row.scheduled_at,
           notes_parent_facing: row.notes_parent_facing,
         });
@@ -110,7 +110,7 @@ function LatestSessionPending({ studentIds }: { studentIds: string[] }) {
         .limit(1);
       if (cancelled) return;
       const row = (data ?? [])[0] as any;
-      if (row) setPending({ student_name: row.student?.name ?? '—', scheduled_at: row.scheduled_at });
+      if (row) setPending({ student_name: row.student?.name ?? '–', scheduled_at: row.scheduled_at });
     })();
     return () => { cancelled = true; };
   }, [studentIds.join(',')]); // eslint-disable-line react-hooks/exhaustive-deps

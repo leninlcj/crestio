@@ -5,10 +5,10 @@ import { SUBJECTS } from '../lib/agency';
 import { tutoringServiceSchema, breadcrumb, agencyFaqSchema } from '../lib/agencySchema';
 
 const MATHS_FAQ = [
-  { q: 'My child is in Year 9 and has "always been bad at maths". Can this be fixed?', a: 'Usually, yes — and usually the problem is two or three missing links from earlier years (fractions, negative numbers, algebra basics) that make everything after them feel impossible. The first lesson finds those links. Fix them and the current work gets easier fast.' },
+  { q: 'My child is in Year 9 and has "always been bad at maths". Can this be fixed?', a: 'Usually, yes. Usually the problem is two or three missing links from earlier years (fractions, negative numbers, algebra basics) that make everything after them feel impossible. The first lesson finds those links. Fix them and the current work gets easier fast.' },
   { q: 'Which HSC maths course should my child do?', a: 'Standard 2 suits students who want a solid, practical maths mark without calculus. Advanced is the gateway to engineering, science, commerce and most STEM degrees. Extension 1 and 2 are for students who enjoy the subject and want the scaling. We will give you an honest read after the first couple of lessons.' },
   { q: 'Do you help with assessments and past papers?', a: 'Yes. In Years 11 and 12 the lessons follow the school\'s assessment calendar: concepts first, then past-paper practice under timed conditions, then a debrief on the exact marks lost and why.' },
-  { q: 'Do you cover the new NSW syllabus?', a: 'Yes. Our tutors work from the current NESA syllabuses for Stage 4, Stage 5 and Stage 6 and use the school\'s textbook and notation so nothing is taught twice in two different ways.' },
+  { q: 'Do you cover the new NSW syllabus?', a: 'Yes. Lessons follow the current NESA syllabuses for Stage 4, Stage 5 and Stage 6 and use the school\'s textbook and notation, so nothing is taught twice in two different ways.' },
 ];
 
 export default function MathsTutoring() {
@@ -27,7 +27,7 @@ export default function MathsTutoring() {
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">Mathematics · Years 7–12 · Sydney & online</div>
           <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">Maths tutoring that starts where your child actually is.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed mb-7">
-            Most maths trouble is a few missing links from earlier years. The first lesson finds them. Then a tutor who is strong in the exact course — Year 7 through to Extension 2 — builds forward from there, one week at a time.
+            Most maths trouble is a few missing links from earlier years. The first lesson finds them. Then a tutor who is strong in the exact course, from Year 7 through to Extension 2, builds forward from there, one week at a time.
           </p>
           <CtaRow />
         </div>

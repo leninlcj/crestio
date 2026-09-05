@@ -212,7 +212,7 @@ function Editor({
             <ul className="mt-2 grid grid-cols-2 gap-1 text-2xs">
               {Object.entries(TEMPLATE_VARS_CATALOG[kind]?.vars ?? {}).map(([k, v]) => (
                 <li key={k}>
-                  <code className="text-forest">{`{{${k}}}`}</code> — {v}
+                  <code className="text-forest">{`{{${k}}}`}</code>: {v}
                 </li>
               ))}
             </ul>
@@ -220,7 +220,7 @@ function Editor({
           {bodyText && (
             <div>
               <div className="text-2xs uppercase tracking-widest text-ink-muted mb-1">Preview with sample data</div>
-              <div className="border border-rule rounded bg-ruleSoft/30 p-3 text-sm whitespace-pre-wrap text-ink">{preview || '—'}</div>
+              <div className="border border-rule rounded bg-ruleSoft/30 p-3 text-sm whitespace-pre-wrap text-ink">{preview || '–'}</div>
             </div>
           )}
           <label className="flex items-center gap-2 text-sm">

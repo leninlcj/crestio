@@ -49,7 +49,7 @@ export function buildWelcomeEmail({
     `Your ${planLabel} (${billingIntervalLabel}) subscription is active. Click the link below to sign in and finish setting up your account.\n\n` +
     `${magicLinkUrl}\n\n` +
     `This link is for ${recipientEmail} and expires in 1 hour. If you didn't sign up, ignore this email.\n\n` +
-    `Need help? Reply to this email or write to support@crestio.ai.\n\n` +
+    `Need help? Reply to this email or write to hello@crestio.ai.\n\n` +
     `--\n` +
     `Crestio | Made in Sydney | https://crestio.ai\n`;
 
@@ -86,7 +86,7 @@ export function buildWelcomeEmail({
           <tr>
             <td style="padding:0 0 28px 0;">
               <p style="margin:0;font-family:${FONT_BODY};font-size:16px;line-height:1.6;color:${INK};">
-                Your <strong>${safePlan}</strong> subscription (${safeInterval}) is active. Click below to sign in and finish setting up your account — adding students, logging your first session, and inviting your first parent only takes a couple of minutes.
+                Your <strong>${safePlan}</strong> subscription (${safeInterval}) is active. Click below to sign in and finish setting up your account, adding students, logging your first session, and inviting your first parent only takes a couple of minutes.
               </p>
             </td>
           </tr>

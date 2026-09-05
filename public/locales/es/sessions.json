@@ -60,7 +60,7 @@
   "errors": {
     "not_signed_in": "No has iniciado sesión.",
     "select_at_least_one": "Selecciona al menos una sesión.",
-    "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Contacta con support@crestio.ai."
+    "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Contacta con hello@crestio.ai."
   },
   "subtitle_session": "Sesión",
   "title_new": "Registrar sesión",

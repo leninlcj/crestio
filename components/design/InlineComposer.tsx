@@ -205,7 +205,7 @@ export function InlineComposer() {
           ref={inputRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Try: 'Diego — math — 4pm Tuesday — 1h'"
+          placeholder="Try: 'Diego, maths, 4pm Tuesday, 1h'"
           rows={1}
           className="w-full resize-none px-5 py-4 text-[15px] text-ink placeholder:text-ink-soft outline-none bg-transparent"
           style={{ minHeight: 56 }}
@@ -277,7 +277,7 @@ export function InlineComposer() {
             {!matchedStudent
               ? 'Pick a student to continue.'
               : !parsed.when
-              ? 'Add a time — try "tomorrow 3pm".'
+              ? 'Add a time: try "tomorrow 3pm".'
               : 'Looks good.'}
           </span>
           <button

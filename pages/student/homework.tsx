@@ -61,7 +61,7 @@ function Inner() {
             {open.map((s) => (
               <section key={s.id} className="card p-5">
                 <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">
-                  {formatDate(s.scheduled_at)} · {s.subject ?? '—'}
+                  {formatDate(s.scheduled_at)} · {s.subject ?? '–'}
                 </div>
                 <ul className="space-y-2">
                   {s.homework.filter((h) => !h.done).map((h) => (

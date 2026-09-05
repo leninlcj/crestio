@@ -9,7 +9,7 @@ type View = 'day' | 'week';
 
 type Props = {
   sessions: CalendarSession[];
-  date: Date; // anchor date — for week, the Monday start is derived
+  date: Date; // anchor date, for week, the Monday start is derived
   view: View;
   // History to infer most-likely "next session" hour for the empty hint.
   history?: Array<{ scheduled_at: string }>;

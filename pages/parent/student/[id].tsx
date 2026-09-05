@@ -189,7 +189,7 @@ function ParentStudentInner() {
   const calendarSessions: CalendarSession[] = useMemo(() => sessions.map((s) => ({
     id: s.id,
     student_id: s.student_id,
-    student_name: student?.name ?? '—',
+    student_name: student?.name ?? '–',
     subject: s.subject,
     scheduled_at: s.scheduled_at,
     duration_minutes: s.duration_minutes,
@@ -234,10 +234,10 @@ function ParentStudentInner() {
             <div className="mb-8">
               <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">{t('student.student')}</div>
               <h1 className="font-display text-4xl md:text-5xl tracking-tightest mb-2">
-                {student?.name ?? '—'}
+                {student?.name ?? '–'}
               </h1>
               <div className="text-sm text-ink-muted">
-                {[yl, subject].filter(Boolean).join(' · ') || '—'}
+                {[yl, subject].filter(Boolean).join(' · ') || '–'}
               </div>
             </div>
 
@@ -596,7 +596,7 @@ function SessionsTab({
                   <div className="text-sm text-forest-ink/80 mt-2">{[s.subject, s.topic].filter(Boolean).join(' · ')}</div>
                 )}
                 {s.status === 'pending_change' && (
-                  <div className="text-2xs text-amber-ink mt-2">Change requested — awaiting tutor response</div>
+                  <div className="text-2xs text-amber-ink mt-2">Change requested; awaiting tutor response</div>
                 )}
               </button>
             ))}
@@ -864,7 +864,7 @@ function HomeworkCheckRow({
           <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap break-words">{text}</p>
           {due && (
             <div className={`text-2xs mt-1 ${overdue ? 'text-rust' : 'text-ink-muted'}`}>
-              {overdue ? 'Overdue — was due ' : 'Due '}
+              {overdue ? 'Overdue: was due ' : 'Due '}
               {new Date(due).toLocaleDateString(activeLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}
             </div>
           )}

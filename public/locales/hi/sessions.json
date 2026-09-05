@@ -60,7 +60,7 @@
   "errors": {
     "not_signed_in": "साइन इन नहीं किए गए।",
     "select_at_least_one": "कम से कम एक सेशन चुनें।",
-    "no_organisation": "आपके खाते से कोई संगठन जुड़ा नहीं है। support@crestio.ai से संपर्क करें।"
+    "no_organisation": "आपके खाते से कोई संगठन जुड़ा नहीं है। hello@crestio.ai से संपर्क करें।"
   },
   "subtitle_session": "सेशन",
   "title_new": "सेशन लॉग करें",

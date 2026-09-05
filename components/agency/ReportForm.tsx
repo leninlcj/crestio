@@ -81,7 +81,7 @@ export function ReportForm() {
         <legend className="font-display text-xl tracking-tighter text-ink mb-3">What happened?</legend>
         <div>
           <label htmlFor="rp-desc" className={label}>Describe it in your own words</label>
-          <textarea id="rp-desc" className="input" rows={6} value={s.description} onChange={(e) => set('description', e.target.value)} placeholder="Who, what, where. As much or as little as you want to share now — we will follow up." />
+          <textarea id="rp-desc" className="input" rows={6} value={s.description} onChange={(e) => set('description', e.target.value)} placeholder="Who, what, where. As much or as little as you want to share now. We will follow up." />
           {err('description')}
         </div>
         <div className="grid sm:grid-cols-2 gap-4">

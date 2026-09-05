@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Could not read body.' });
   }
   if (!webhookSecret) {
-    console.warn('[connect-webhook] STRIPE_CONNECT_WEBHOOK_SECRET not set — acknowledging without verification');
+    console.warn('[connect-webhook] STRIPE_CONNECT_WEBHOOK_SECRET not set, acknowledging without verification');
     return res.status(200).json({ received: true, verified: false });
   }
   if (!signature || typeof signature !== 'string') {
@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const admin = getAdmin();
   if (!admin) {
-    console.error('[connect-webhook] missing service role — skipping persist');
+    console.error('[connect-webhook] missing service role, skipping persist');
     return res.status(200).json({ received: true, persisted: false });
   }
 

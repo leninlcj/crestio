@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   const org = await getAgencyOrganization(admin);
-  if (!org) console.error('tutor-applications: agency organization not found — emailing only');
+  if (!org) console.error('tutor-applications: agency organization not found; emailing only');
 
   // One open application per email: a second submission updates the first
   // instead of creating a duplicate the owner has to dedupe by hand.
@@ -77,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const tableMissing = !org || isMissingTableError(existingErr);
   let id: string = 'not-saved';
   if (tableMissing) {
-    console.error('tutor-applications: table missing — emailed only. Apply supabase/migrations/20260903_agency_enquiries_applications.sql');
+    console.error('tutor-applications: table missing; emailed only. Apply supabase/migrations/20260903_agency_enquiries_applications.sql');
   } else if (existing?.id) {
     const { error } = await admin.from('tutor_applications').update(fields).eq('id', existing.id);
     if (error) {
@@ -116,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const alertEmail = buildApplicationAlertEmail(emailArgs);
   if (tableMissing) {
-    alertEmail.subject = `[NOT SAVED${org ? ' — run the applications migration' : ' — agency organisation not found'}] ${alertEmail.subject}`;
+    alertEmail.subject = `[NOT SAVED${org ? ': run the applications migration' : ': agency organisation not found'}] ${alertEmail.subject}`;
     alertEmail.text = `${org ? 'The tutor_applications table does not exist yet' : 'The agency organisation could not be resolved'}, so this was emailed only.\n\n${alertEmail.text}`;
   }
   const [confirm, alert] = await Promise.all([

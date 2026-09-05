@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'PATCH') {
-    return res.status(501).json({ error: 'Email change requires verification — coming soon.' });
+    return res.status(501).json({ error: 'Email change requires verification and is not available yet.' });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

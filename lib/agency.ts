@@ -1,4 +1,4 @@
-// Crestio Tutoring — single source of truth for the agency's public facts.
+// Crestio Tutoring: single source of truth for the agency's public facts.
 //
 // Everything the public site, the enquiry form, the tutor application form,
 // invoices and the admin screens say about subjects, levels, rates and
@@ -219,7 +219,7 @@ export function rateBandForYearLevel(year: string): RateBandKey | null {
 }
 
 export function formatRate(dollars: number | null, fromPrice = false): string {
-  if (dollars == null) return '—';
+  if (dollars == null) return 'Not offered';
   return `${fromPrice ? 'from ' : ''}$${dollars}`;
 }
 
@@ -241,12 +241,12 @@ export function agencyInvoiceNote(tutorName: string | null | undefined): string 
 }
 
 // ---------------------------------------------------------------------------
-// What is included with every match — shown on pricing and the home page.
+// What is included with every match. Shown on pricing and the home page.
 // ---------------------------------------------------------------------------
 
 export const INCLUDED = [
   'A tutor matched to your child, not assigned from a list',
-  'First lesson guaranteed — re-match or refund',
+  'First lesson guaranteed: re-match or refund',
   'The same tutor every week',
   'A short written note after every lesson',
   'No joining fee, no lock-in, cancel any time',
@@ -265,8 +265,8 @@ export const FAQS: readonly Faq[] = [
     a: `You tell us the year level, the subject and whether you want lessons online or at home. We hand-pick a tutor for that subject and that student, from tutors we have interviewed and checked ourselves. If the fit is not right after the first lesson, we re-match you.`,
   },
   {
-    q: 'Online or in-home — which should I choose, and where do you cover?',
-    a: `Online works anywhere in Australia and is the most popular option. In-home covers Sydney, and we match by suburb to keep your tutor local — ${AGENCY.serviceArea.inHomeFocus} are the best covered. You can switch between online and in-home whenever you like.`,
+    q: 'Online or in-home: which should I choose, and where do you cover?',
+    a: `Online works anywhere in Australia and is the most popular option. In-home covers Sydney, and we match by suburb to keep your tutor local; ${AGENCY.serviceArea.inHomeFocus} are the best covered. You can switch between online and in-home whenever you like.`,
   },
   {
     q: 'Are the tutors safe and qualified?',
@@ -286,11 +286,11 @@ export const FAQS: readonly Faq[] = [
   },
   {
     q: 'How do I pay?',
-    a: `By card, after each lesson, through a secure payment link — or in prepaid blocks if you prefer. Nothing is charged to your card without your say-so.`,
+    a: `By card, after each lesson, through a secure payment link, or in prepaid blocks if you prefer. Nothing is charged to your card without your say-so.`,
   },
   {
     q: 'Which subjects and year levels do you cover?',
-    a: `Mathematics from Year 7 to Year 12, including Standard 2, Advanced, Extension 1 and Extension 2, and Physics for Years 11 and 12. University maths and physics by arrangement. If you need something else, ask — if we cannot cover it well, we will say so.`,
+    a: `Mathematics from Year 7 to Year 12, including Standard 2, Advanced, Extension 1 and Extension 2, and Physics for Years 11 and 12. University maths and physics by arrangement. If you need something else, ask. If we cannot cover it well, we will say so.`,
   },
 ] as const;
 

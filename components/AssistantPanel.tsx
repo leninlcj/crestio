@@ -320,7 +320,7 @@ function PanelContent({ onClose }: { onClose: () => void }) {
               : pendingAction
               ? 'Waiting for your confirmation above…'
               : atLimit
-              ? 'Daily limit reached — resets at midnight.'
+              ? 'Daily limit reached: resets at midnight.'
               : 'Type a message. Enter to send.'
           }
           className="input w-full text-sm"
@@ -735,7 +735,7 @@ function previewHeading(preview: AnyPreview): string {
     }
     case 'create_batch_invoices': {
       const p = preview as CreateBatchInvoicesPreview;
-      return `Invoice ${p.households.length} household${p.households.length === 1 ? '' : 's'} — ${p.period_label}`;
+      return `Invoice ${p.households.length} household${p.households.length === 1 ? '' : 's'} for ${p.period_label}`;
     }
   }
 }
@@ -901,9 +901,9 @@ function UpdateStudentBody({ p }: { p: UpdateStudentPreview }) {
         <div key={c.field} className="grid grid-cols-[auto_1fr] gap-2 items-baseline">
           <span className="text-ink-muted">{c.field_label}:</span>
           <span>
-            <span className="text-ink-muted line-through">{c.from ?? '—'}</span>
+            <span className="text-ink-muted line-through">{c.from ?? '–'}</span>
             <span className="mx-1 text-ink-soft">→</span>
-            <span className="text-ink">{c.to ?? '—'}</span>
+            <span className="text-ink">{c.to ?? '–'}</span>
           </span>
         </div>
       ))}
@@ -987,7 +987,7 @@ function SendParentUpdateBody({ p }: { p: SendParentUpdatePreview }) {
       <div className="text-2xs text-ink-muted italic">
         {p.parent_has_portal_access
           ? `This will appear in the parent portal next time ${p.parent_name ?? 'the parent'} logs in. No email will be sent.`
-          : `This will be saved, but the parent has no portal access yet — they won't see it until they're invited.`}
+          : `This will be saved, but the parent has no portal access yet; they won't see it until they're invited.`}
       </div>
     </div>
   );

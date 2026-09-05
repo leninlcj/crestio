@@ -23,7 +23,7 @@ export default function StudentRow({ student, lastSessionDate }: Props) {
       <div className="flex-1 min-w-0">
         <div className="text-base font-medium text-ink truncate">{student.name}</div>
         <div className="text-2xs text-ink-soft mt-0.5 truncate">
-          {[student.year_level, student.subjects?.[0]].filter(Boolean).join(' · ') || '—'}
+          {[student.year_level, student.subjects?.[0]].filter(Boolean).join(' · ') || '–'}
           {lastSessionDate && (
             <>
               {' · '}

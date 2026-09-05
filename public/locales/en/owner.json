@@ -17,8 +17,8 @@
       "col_email": "Email",
       "col_created": "Created",
       "col_last_login": "Last login",
-      "name_dash": "—",
-      "last_login_dash": "—",
+      "name_dash": "–",
+      "last_login_dash": "–",
       "login_busy": "…",
       "login_button": "Log in as test",
       "delete_button": "Delete",
@@ -31,14 +31,14 @@
       "role_parent": "Parent (portal)",
       "name_label": "Name",
       "name_placeholder": "e.g. Test Tutor Mai",
-      "email_label": "Email (optional — auto-generated if blank)",
+      "email_label": "Email (optional; auto-generated if blank)",
       "email_placeholder": "test-tutor-abc123@crestio.test",
       "submit": "Create test account",
       "creating": "Creating…",
       "success_title": "Test account created.",
       "success_email_label": "Email:",
       "success_password_label": "Initial password:",
-      "success_hint": "Save this password now — it's shown once. Or click \"Log in as test\" in the table above to get a magic-link login."
+      "success_hint": "Save this password now; it's shown once. Or click \"Log in as test\" in the table above to get a magic-link login."
     },
     "recent": {
       "heading": "Recent test sessions",

@@ -158,6 +158,6 @@
   "errors": {
     "select_at_least_one": "请至少选择一个课程。",
     "not_signed_in": "未登录。",
-    "no_organisation": "您的账户未关联任何组织。请联系 support@crestio.ai。"
+    "no_organisation": "您的账户未关联任何组织。请联系 hello@crestio.ai。"
   }
 }

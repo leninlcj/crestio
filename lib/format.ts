@@ -17,7 +17,7 @@ export function formatMoney(
   currency: string = 'AUD',
   locale: string = activeLocale(),
 ): string {
-  if (cents === null || cents === undefined) return '—';
+  if (cents === null || cents === undefined) return '–';
   const fractionDigits = cents % 100 === 0 ? 0 : 2;
   try {
     return new Intl.NumberFormat(locale, {
@@ -40,7 +40,7 @@ export function formatMoneyCompact(
   currency: string = 'AUD',
   locale: string = activeLocale(),
 ): string {
-  if (cents === null || cents === undefined) return '—';
+  if (cents === null || cents === undefined) return '–';
   if (Math.abs(cents) < 100_000) return formatMoney(cents, currency, locale);
   try {
     return new Intl.NumberFormat(locale, {
@@ -56,7 +56,7 @@ export function formatMoneyCompact(
 
 /** 45m, 1h, 1h 30m, 2h. */
 export function formatDuration(minutes: number | null | undefined): string {
-  if (minutes === null || minutes === undefined || Number.isNaN(minutes)) return '—';
+  if (minutes === null || minutes === undefined || Number.isNaN(minutes)) return '–';
   const m = Math.max(0, Math.round(minutes));
   if (m < 60) return `${m}m`;
   const h = Math.floor(m / 60);
@@ -72,9 +72,9 @@ export function formatRelativeDate(
   date: string | Date | null | undefined,
   locale: string = activeLocale(),
 ): string {
-  if (!date) return '—';
+  if (!date) return '–';
   const d = typeof date === 'string' ? new Date(date) : date;
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return '–';
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -105,9 +105,9 @@ export function formatTime(
   date: string | Date | null | undefined,
   locale: string = activeLocale(),
 ): string {
-  if (!date) return '—';
+  if (!date) return '–';
   const d = typeof date === 'string' ? new Date(date) : date;
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return '–';
   return new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit' }).format(d);
 }
 
@@ -115,7 +115,7 @@ export function formatTime(
 
 /** Light-touch phone formatter — pretty if E.164, raw otherwise. */
 export function formatPhone(raw: string | null | undefined): string {
-  if (!raw) return '—';
+  if (!raw) return '–';
   const digits = raw.replace(/[^\d+]/g, '');
   // US/CA: +1XXXXXXXXXX → +1 (XXX) XXX-XXXX
   const us = /^\+1(\d{3})(\d{3})(\d{4})$/.exec(digits);
@@ -151,7 +151,7 @@ export function formatList(
 
 /** Whole numbers with grouping. 1,234. */
 export function formatCount(n: number | null | undefined, locale: string = activeLocale()): string {
-  if (n === null || n === undefined) return '—';
+  if (n === null || n === undefined) return '–';
   return new Intl.NumberFormat(locale).format(n);
 }
 

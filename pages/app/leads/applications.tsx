@@ -220,9 +220,9 @@ function ApplicationDetail({ a, onUpdate, onInvite }: {
         {row('Subjects', subjectLabels(a.subjects).join(', '))}
         {row('Lessons', `${MODE_LABEL[a.mode]}${a.has_transport === true ? ' · own transport' : a.has_transport === false ? ' · public transport' : ''}`)}
         {row('WWCC', `${WWCC_LABEL[a.wwcc_status]}${a.wwcc_number ? ` · ${a.wwcc_number}` : ''}`)}
-        {row('ABN', a.abn ?? '—')}
-        {row('CV', a.cv_url ? <a className="text-forest underline underline-offset-2" href={a.cv_url} target="_blank" rel="noopener noreferrer">Open link</a> : '—')}
-        {row('Source', a.source ?? '—')}
+        {row('ABN', a.abn ?? 'Not given')}
+        {row('CV', a.cv_url ? <a className="text-forest underline underline-offset-2" href={a.cv_url} target="_blank" rel="noopener noreferrer">Open link</a> : 'None')}
+        {row('Source', a.source ?? 'Direct')}
       </dl>
 
       <div>

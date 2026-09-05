@@ -147,7 +147,7 @@ function TutorDetailInner() {
                   <label className="label">{f.label}</label>
                   {f.type === 'select' ? (
                     <select className="input" value={form[f.key] ?? ''} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}>
-                      <option value="">—</option>
+                      <option value="">–</option>
                       {f.options!.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                     </select>
                   ) : f.type === 'textarea' ? (

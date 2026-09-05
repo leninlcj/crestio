@@ -28,7 +28,7 @@ export function ReferralCapture() {
         if (cancelled) return;
         if (payload?.valid === true) {
           writeReferralCookie(code);
-          setBanner("You've been invited by a Crestio user — you'll get 25% off your first paid month.");
+          setBanner("You've been invited by a Crestio user. You'll get 25% off your first paid month.");
           setTimeout(() => setBanner(null), 10_000);
         }
       } catch { /* silent */ }

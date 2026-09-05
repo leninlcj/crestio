@@ -7,7 +7,7 @@ export default function PolishStatsFooter({ polishedThisMonth, averageSeconds }:
   if (polishedThisMonth === 0 && averageSeconds === null) return null;
   const avgLabel =
     averageSeconds === null
-      ? '—'
+      ? '–'
       : averageSeconds < 60
       ? `${Math.round(averageSeconds)}s`
       : `${Math.round(averageSeconds / 6) / 10} min`;

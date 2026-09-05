@@ -81,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     changedByUserId: userId,
     changeType: 'confirmed_cancel',
     oldStartTime: session.scheduled_at,
-    message: [body.message ? String(body.message) : null, late ? (waived ? 'Late cancellation — charge waived.' : `Late cancellation by the family — chargeable (${LATE_CANCEL_HOURS}h rule).`) : null].filter(Boolean).join(' ') || null,
+    message: [body.message ? String(body.message) : null, late ? (waived ? 'Late cancellation, charge waived.' : `Late cancellation by the family, chargeable (${LATE_CANCEL_HOURS}h rule).`) : null].filter(Boolean).join(' ') || null,
   });
 
   await emailParentOfTutorChange(admin, {

@@ -61,7 +61,7 @@ function DataInner() {
           <h2 className="text-[16px] font-display font-semibold tracking-tightest mb-1">Delete your account</h2>
           <p className="text-sm text-ink-muted leading-relaxed mb-4">
             This permanently removes your profile, sessions, students, invoices, files, and messages.
-            Anything paid via Stripe stays in Stripe — you'll keep access there. There is no undo.
+            Anything paid via Stripe stays in Stripe; you'll keep access there. There is no undo.
           </p>
           <label className="label">Type DELETE to confirm</label>
           <input

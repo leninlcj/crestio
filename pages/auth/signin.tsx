@@ -145,7 +145,7 @@ export default function SignIn() {
                     className="text-2xs text-ink-soft hover:text-ink"
                     aria-label={t('signin.dismiss')}
                   >
-                    ✕
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 6l12 12M6 18L18 6" /></svg>
                   </button>
                 </div>
               )}
@@ -198,10 +198,10 @@ export default function SignIn() {
               </form>
 
               <div className="mt-8 text-sm text-ink-muted text-center">
-                {t('signin.no_account_prompt')}{' '}
-                <Link href="/auth/signup" className="text-forest underline underline-offset-2">
-                  {t('signin.create_one')}
-                </Link>
+                {t('signin.by_invitation')}{' '}
+                <Link href="/enquire" className="text-forest underline underline-offset-2">{t('signin.find_a_tutor')}</Link>
+                {' · '}
+                <Link href="/tutors/apply" className="text-forest underline underline-offset-2">{t('signin.apply_to_tutor')}</Link>
               </div>
             </>
           ) : (
@@ -253,14 +253,11 @@ export default function SignIn() {
         </div>
         </div>
         <aside className="hidden lg:flex items-center justify-center px-12 py-16 border-l border-rule bg-surface">
-          <figure className="max-w-md">
-            <blockquote className="font-display text-2xl text-ink leading-snug tracking-tighter italic">
-              “I built Crestio because every Sunday I was opening three different spreadsheets to do the same thing. So I built the tool that does the same thing in eight seconds.”
-            </blockquote>
-            <figcaption className="text-xs text-ink-muted mt-4 not-italic">
-              — Lenin, founder · HSC English tutor, Sydney
-            </figcaption>
-          </figure>
+          <div className="max-w-md">
+            <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">{t('signin.aside_kicker')}</div>
+            <p className="font-display text-2xl text-ink leading-snug tracking-tighter mb-6">{t('signin.aside_heading')}</p>
+            <p className="text-sm text-ink-muted leading-relaxed">{t('signin.aside_body')}</p>
+          </div>
         </aside>
       </div>
     </div>

@@ -139,7 +139,7 @@ export function MaintenanceSuggestions() {
       <summary className="cursor-pointer flex items-center justify-between text-sm text-ink list-none">
         <span className="flex items-center gap-2">
           <span className="text-2xs uppercase tracking-widest text-ink-muted">Maintenance</span>
-          <span className="text-2xs text-ink-soft">— {suggestions.length} suggestion{suggestions.length === 1 ? '' : 's'}</span>
+          <span className="text-2xs text-ink-soft">· {suggestions.length} suggestion{suggestions.length === 1 ? '' : 's'}</span>
         </span>
         <span className="flex items-center gap-2">
           <button
@@ -167,7 +167,7 @@ export function MaintenanceSuggestions() {
               {s.kind === 'stale_student' ? (
                 <>
                   <strong className="text-ink">{s.name}</strong>{' '}
-                  hasn't had a session — last one was{' '}
+                  hasn't had a session; the last one was{' '}
                   {formatDaysAgo(s.days_inactive ?? 0)}.
                 </>
               ) : s.kind === 'never_tutored' ? (

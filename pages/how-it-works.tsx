@@ -11,7 +11,7 @@ const DETAIL = [
   },
   {
     title: 'The match',
-    body: `We choose from tutors we have interviewed ourselves — strong results in the exact subject, a Working With Children Check we have verified, and a manner that suits the student. For in-home lessons we match by suburb so the tutor is local. You get a name and a short profile within ${AGENCY.policies.matchWithinDays} days.`,
+    body: `We choose from tutors we have interviewed ourselves: strong results in the exact subject, a Working With Children Check we have verified, and a manner that suits the student. For in-home lessons we match by suburb so the tutor is local. You get a name and a short profile within ${AGENCY.policies.matchWithinDays} days.`,
   },
   {
     title: 'The first lesson',

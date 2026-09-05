@@ -26,7 +26,7 @@ const SECTIONS = [
       "Google Calendar's mobile apps can't add a URL-based calendar directly. Instead:",
       'Open calendar.google.com on any computer.',
       "Follow the steps in 'Google Calendar on a computer' above.",
-      'Once the calendar is added on desktop, it syncs automatically to Google Calendar on your phone — no extra setup needed.',
+      'Once the calendar is added on desktop, it syncs automatically to Google Calendar on your phone; no extra setup needed.',
     ],
   },
   {

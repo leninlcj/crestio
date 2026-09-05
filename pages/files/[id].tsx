@@ -280,7 +280,7 @@ function FileViewerInner() {
                 {t('viewer.idle_title', { defaultValue: 'Still here?' })}
               </p>
               <p className="text-sm text-cream/70 mb-5">
-                {t('viewer.idle_body', { defaultValue: "Refresh to keep viewing — your tutor's signed URL has been idle for a while." })}
+                {t('viewer.idle_body', { defaultValue: "Refresh to keep viewing; the link has been idle for a while." })}
               </p>
               <button
                 type="button"

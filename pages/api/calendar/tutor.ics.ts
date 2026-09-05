@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   const ics = buildIcs({
-    calendarName: 'Crestio — Your sessions',
+    calendarName: 'Crestio · Your sessions',
     calendarDescription: 'Tutoring sessions synced from Crestio.',
     events,
   });

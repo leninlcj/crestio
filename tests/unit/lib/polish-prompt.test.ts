@@ -113,7 +113,7 @@ describe('buildPolishPrompt', () => {
     it('injects the voice guide when present', () => {
       const guide = 'Prefers short declarative sentences. Never uses exclamation marks.';
       const prompt = buildPolishPrompt({ ...baseInput, voiceProfile: guide });
-      expect(prompt).toContain("VOICE GUIDE — apply this tutor's editing style:");
+      expect(prompt).toContain("VOICE GUIDE: apply this tutor's editing style:");
       expect(prompt).toContain(guide);
       expect(prompt).toContain('Now polish the notes accordingly.');
       // Voice guide must appear before the per-session context.

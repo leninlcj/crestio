@@ -119,7 +119,7 @@ export default function StudentAccept() {
               </h1>
               <p className="text-sm text-ink-muted leading-relaxed mb-8">
                 {info.tutorBusinessName} invited you to your student portal.
-                Set up your account below — it takes about a minute.
+                Set up your account below. It takes about a minute.
               </p>
 
               <form onSubmit={onSubmit} className="space-y-4">

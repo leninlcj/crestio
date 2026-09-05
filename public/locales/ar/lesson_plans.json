@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "يجب تحديد المادة والموضوع لإجراء الإنشاء.",
       "not_signed_in": "لم يتم تسجيل الدخول.",
-      "no_organisation": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ support@crestio.ai.",
+      "no_organisation": "لا توجد أي مؤسسة مرتبطة بحسابك. يرجى الاتصال بـ hello@crestio.ai.",
       "server_returned": "أعاد الخادم {{status}}",
       "server_returned_with_text": "أعاد الخادم {{status}}: {{text}}",
       "no_plan": "لم يعرض الخادم أي خطة.",

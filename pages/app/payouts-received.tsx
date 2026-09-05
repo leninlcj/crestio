@@ -129,7 +129,7 @@ function PreSetupExplainer() {
           <ul className="text-sm text-ink-muted space-y-1.5 mb-4">
             <li className="flex items-start gap-2">
               <Bullet />
-              <span>No card details needed for the parent — they pay with one tap.</span>
+              <span>No card details needed for the parent; they pay with one tap.</span>
             </li>
             <li className="flex items-start gap-2">
               <Bullet />

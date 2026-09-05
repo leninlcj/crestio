@@ -81,7 +81,7 @@ export async function buildNotificationEmail(args: {
   <hr style="border:none;border-top:1px solid #E8E3DB;margin:22px 0;"/>
   <p style="color:#908A82;font-size:11px;line-height:1.6;margin:0;">
     <a href="${settingsUrl}" style="color:#908A82;">${manageLabel}</a>
-    · <a href="mailto:support@crestio.ai" style="color:#908A82;">support@crestio.ai</a>
+    · <a href="mailto:hello@crestio.ai" style="color:#908A82;">hello@crestio.ai</a>
   </p>
 </div>
 </body></html>`;

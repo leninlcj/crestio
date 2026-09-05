@@ -147,7 +147,7 @@ const TEMPLATES: Record<PolishStyle, ((p: ParsedNotes) => string)[]> = {
       const name = p.student ?? 'Your child';
       const sessionFocus = p.topic ? `${p.topic}` : `today's content`;
       const conf = p.confidence ? `${titleCase(p.pronoun)} showed real fluency on ${p.confidence}` : `${titleCase(p.pronoun)} brought genuine focus`;
-      const strug = p.struggle ? ` and we worked through ${p.struggle} together — that piece is starting to click` : '';
+      const strug = p.struggle ? ` and we worked through ${p.struggle} together, that piece is starting to click` : '';
       const hw = p.homework ? `For homework, ${p.homework}.` : '';
       return `${name} and I covered ${sessionFocus} this session. ${conf}${strug}. ${hw} Looking forward to the next one.`.trim();
     },
@@ -156,14 +156,14 @@ const TEMPLATES: Record<PolishStyle, ((p: ParsedNotes) => string)[]> = {
       const focus = p.topic ?? 'the planned material';
       const intro = `Today's lesson focused on ${focus} with ${name}.`;
       const conf = p.confidence ? ` ${titleCase(p.pronoun)} is confident with ${p.confidence}` : '';
-      const strug = p.struggle ? `${conf ? ' and' : ` ${titleCase(p.pronoun)} is`} working through ${p.struggle} — exactly where we want to be at this stage` : conf ? '.' : '.';
+      const strug = p.struggle ? `${conf ? ' and' : ` ${titleCase(p.pronoun)} is`} working through ${p.struggle}, exactly where we want to be at this stage` : conf ? '.' : '.';
       const hw = p.homework ? ` Homework: ${p.homework}.` : '';
       return `${intro}${conf}${strug}.${hw} Will pick up from there next time.`.replace(/\.\.+/g, '.');
     },
     (p) => {
       const name = p.student ?? 'Your child';
       const focus = p.topic ? ` on ${p.topic}` : '';
-      const conf = p.confidence ? ` — particularly with ${p.confidence}` : '';
+      const conf = p.confidence ? `, particularly with ${p.confidence}` : '';
       const strug = p.struggle ? ` The ${p.struggle} piece needs a bit more attention, which we'll keep returning to.` : '';
       const hw = p.homework ? ` Homework set: ${p.homework}.` : '';
       return `Strong session with ${name} today. We made good headway${focus}${conf}.${strug}${hw} See ${p.pronoun === 'they' ? 'them' : p.pronoun === 'she' ? 'her' : 'him'} next week.`.trim();
@@ -203,7 +203,7 @@ const TEMPLATES: Record<PolishStyle, ((p: ParsedNotes) => string)[]> = {
         ? `The win: ${p.confidence} is locked in, which matters because that's the foundation everything else builds on.`
         : `${titleCase(p.pronoun)} brought consistent focus throughout, which always lifts what's possible in 60 minutes.`;
       const strug = p.struggle
-        ? ` The frontier: ${p.struggle} — ${p.pronoun} ${p.pronoun === 'they' ? 'have' : 'has'} the language but not yet the reflex, which is normal at this stage.`
+        ? ` The frontier: ${p.struggle}, ${p.pronoun} ${p.pronoun === 'they' ? 'have' : 'has'} the language but not yet the reflex, which is normal at this stage.`
         : '';
       const hw = p.homework ? ` Homework: ${p.homework}.` : '';
       const close = p.struggle
@@ -216,10 +216,10 @@ const TEMPLATES: Record<PolishStyle, ((p: ParsedNotes) => string)[]> = {
       const focus = p.topic ?? 'the planned content';
       const intro = `I worked with ${name} today on ${focus}. There were a couple of clear takeaways.`;
       const a = p.confidence
-        ? ` First, ${p.pronoun} ${p.pronoun === 'they' ? 'have' : 'has'} internalised ${p.confidence} — the kind of thing that doesn't need re-teaching, just maintenance.`
+        ? ` First, ${p.pronoun} ${p.pronoun === 'they' ? 'have' : 'has'} internalised ${p.confidence}, the kind of thing that doesn't need re-teaching, just maintenance.`
         : ` First, ${p.pronoun} ${p.pronoun === 'they' ? 'are' : 'is'} engaging directly with the material rather than pattern-matching, which is the whole game.`;
       const b = p.struggle
-        ? ` Second, ${p.struggle} is genuinely the next thing — the conceptual scaffolding is right, the execution is half a beat behind.`
+        ? ` Second, ${p.struggle} is genuinely the next thing, the conceptual scaffolding is right, the execution is half a beat behind.`
         : '';
       const hw = p.homework ? ` We agreed on homework: ${p.homework}.` : '';
       return `${intro}${a}${b}${hw} I'll come into next session with the mid-step that always trips students up.`.trim();
@@ -228,7 +228,7 @@ const TEMPLATES: Record<PolishStyle, ((p: ParsedNotes) => string)[]> = {
       const name = p.student ?? 'Your child';
       const focus = p.topic ?? 'today\'s topic';
       const strengths = p.confidence ? `Strengths: ${p.confidence} is consistent, even with the harder examples.` : `Strengths: ${p.pronoun === 'they' ? 'their' : p.pronoun === 'she' ? 'her' : 'his'} thinking is clear when ${p.pronoun} ${p.pronoun === 'they' ? 'work' : 'works'} through problems aloud.`;
-      const areas = p.struggle ? ` Areas: ${p.struggle} still needs one more pass — the framework is there, the execution is half a beat behind.` : '';
+      const areas = p.struggle ? ` Areas: ${p.struggle} still needs one more pass, the framework is there, the execution is half a beat behind.` : '';
       const hw = p.homework ? ` For homework, ${p.homework}.` : '';
       return `${name} and ${focus} today. ${strengths}${areas}${hw} I'll come in next time with a couple of warm-up problems on the trickier part and we'll keep moving.`.trim();
     },

@@ -323,7 +323,7 @@ function NewSessionInner() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { setError('Not signed in.'); setLoading(false); return; }
     const organizationId = await getCurrentOrganizationId();
-    if (!organizationId) { setError('No organisation is linked to your account. Contact support@crestio.ai.'); setLoading(false); return; }
+    if (!organizationId) { setError('No organisation is linked to your account. Contact hello@crestio.ai.'); setLoading(false); return; }
 
     // tutor_user_id: for tutors, always themselves. For owners, use the selected
     // tutor's auth_user_id if any, otherwise themselves.
@@ -415,7 +415,7 @@ function NewSessionInner() {
       try {
         payload = await res.json();
       } catch {
-        setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+        setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
         return;
       }
       if (res.status === 429) {
@@ -423,19 +423,19 @@ function NewSessionInner() {
         return;
       }
       if (!res.ok) {
-        setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+        setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
         return;
       }
       const text = typeof payload?.polishedNotes === 'string' ? payload.polishedNotes : '';
       if (!text) {
-        setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+        setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
         return;
       }
       setForm((f) => ({ ...f, notes_parent_facing: text }));
       setPolishAccepted(true);
       setEditingShared(false);
     } catch {
-      setPolishError('Something went wrong. Your notes are still saved — please try again in a moment.');
+      setPolishError('Something went wrong. Your notes are still saved. Please try again in a moment.');
     } finally {
       setPolishing(false);
     }

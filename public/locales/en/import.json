@@ -28,7 +28,7 @@
   "mapping": {
     "headline": "Map your columns",
     "required_label": "Required:",
-    "skip": "— Skip this column —",
+    "skip": "Skip this column",
     "column_n": "(column {{n}})",
     "missing": "Map a column to: {{fields}}."
   },
@@ -44,7 +44,7 @@
     "use_different_file": "Use a different file"
   },
   "errors": {
-    "too_big": "File is {{mb}}MB — max is {{max}}MB.",
+    "too_big": "File is {{mb}}MB; the maximum is {{max}}MB.",
     "parse_failed": "Could not parse the file: {{reason}}.",
     "empty": "The file looks empty.",
     "no_columns": "The file has no columns.",
