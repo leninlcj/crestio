@@ -113,7 +113,7 @@ export const TUTOR_HANDBOOK: LegalDoc = {
       id: 'problems',
       heading: '9. When something goes wrong',
       bullets: [
-        'The student will not engage: say so honestly in the note, and tell Crestio. A different approach or a different tutor is a normal fix, not a failure.',
+        'The student will not engage: say so plainly in the note, and tell Crestio. A different approach or a different tutor is a normal fix, not a failure.',
         'A family asks to pay you directly or to book you outside Crestio: say no politely and refer them to Crestio. The agreement covers this for 12 months after your last Crestio lesson with them.',
         'You want to stop with a family: 14 days\' notice to Crestio, and deliver the lessons already booked.',
         'You are sick on lesson day: tell Crestio and the family as early as you can and offer a make-up.',
