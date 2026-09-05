@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { AGENCY, SUBJECTS, YEAR_LEVELS, NEEDS, type SubjectKey } from '../../lib/agency';
 import { EMAIL_RE } from '../../lib/agencyForms';
 import { enquiryCopy, type EnquiryLang } from '../../lib/enquiryCopy';
+import { currentSource, sessionStorageOrNull } from '../../lib/attribution';
 
 type Who = 'my_child' | 'me' | 'someone_else';
 type Mode = 'online' | 'in_home' | 'either';
@@ -34,30 +35,16 @@ function subjectsForYear(year: string): typeof SUBJECTS[number][] {
   return [...SUBJECTS];
 }
 
-function readSource(lang: EnquiryLang): string | null {
-  if (typeof window === 'undefined') return null;
-  const p = new URLSearchParams(window.location.search);
-  const utm = p.get('utm_source') || p.get('src') || p.get('ref');
-  let source = 'direct';
-  if (utm) source = utm.slice(0, 100);
-  else {
-    try {
-      const ref = document.referrer ? new URL(document.referrer).hostname : '';
-      if (ref && !ref.endsWith('crestio.ai')) source = `referrer:${ref}`.slice(0, 100);
-    } catch { /* ignore */ }
-  }
-  return lang === 'es' ? `es:${source}` : source;
-}
-
 export type EnquiryFormProps = {
   initialYear?: string;
   initialSubjects?: SubjectKey[];
   initialMode?: Mode;
   initialSuburb?: string;
+  initialMessage?: string;   // e.g. the name of a program the family is asking about
   lang?: EnquiryLang;
 };
 
-export function EnquiryForm({ initialYear, initialSubjects, initialMode, initialSuburb, lang = 'en' }: EnquiryFormProps) {
+export function EnquiryForm({ initialYear, initialSubjects, initialMode, initialSuburb, initialMessage, lang = 'en' }: EnquiryFormProps) {
   const c = enquiryCopy(lang);
   const [state, setState] = useState<State>({
     ...EMPTY,
@@ -65,6 +52,7 @@ export function EnquiryForm({ initialYear, initialSubjects, initialMode, initial
     subjects: initialSubjects ?? [],
     mode: initialMode ?? '',
     suburb: initialSuburb ?? '',
+    message: initialMessage ?? '',
   });
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -142,7 +130,7 @@ export function EnquiryForm({ initialYear, initialSubjects, initialMode, initial
           student_first_name: state.who === 'me' ? null : state.student_first_name,
           message: state.message,
           website: state.website,
-          source: readSource(lang),
+          source: typeof window === 'undefined' ? null : currentSource(window, sessionStorageOrNull(), lang),
           page_path: typeof window !== 'undefined' ? window.location.pathname : null,
         }),
       });

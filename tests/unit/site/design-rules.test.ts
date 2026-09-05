@@ -13,7 +13,8 @@ const PUBLIC_DIRS = ['components/agency', 'components/marketing'];
 const PUBLIC_FILES = [
   'pages/index.tsx', 'pages/how-it-works.tsx', 'pages/maths-tutoring.tsx', 'pages/physics-tutoring.tsx',
   'pages/pricing.tsx', 'pages/tutors/index.tsx', 'pages/tutors/apply.tsx', 'pages/tutors/agreement.tsx',
-  'pages/enquire.tsx', 'pages/faq.tsx', 'pages/about.tsx', 'pages/contact.tsx', 'pages/child-safe.tsx',
+  'pages/enquire.tsx', 'pages/faq.tsx', 'pages/about.tsx', 'pages/programs.tsx', 'pages/tutors/handbook.tsx',
+  'pages/tutoring/index.tsx', 'pages/tutoring/[suburb].tsx', 'pages/es.tsx', 'lib/programs.ts', 'lib/tutorHandbook.ts', 'lib/suburbs.ts', 'lib/enquiryCopy.ts', 'pages/contact.tsx', 'pages/child-safe.tsx',
   'pages/report.tsx', 'pages/privacy.tsx', 'pages/terms.tsx', 'pages/cookies.tsx', 'pages/auth/signup.tsx',
   'pages/auth/signin.tsx', 'pages/404.tsx', 'pages/500.tsx', 'pages/_document.tsx', 'pages/_app.tsx',
   'lib/agency.ts', 'lib/agencyLegal.ts', 'lib/agencySchema.ts', 'lib/agencyForms.ts', 'lib/emails/agency.ts',

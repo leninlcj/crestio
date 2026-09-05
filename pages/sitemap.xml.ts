@@ -15,6 +15,8 @@ const STATIC_PATHS: Array<{ path: string; changefreq: string; priority: string }
   { path: '/enquire', changefreq: 'monthly', priority: '0.8' },
   { path: '/tutors', changefreq: 'monthly', priority: '0.7' },
   { path: '/tutors/apply', changefreq: 'monthly', priority: '0.6' },
+  { path: '/tutors/handbook', changefreq: 'monthly', priority: '0.4' },
+  { path: '/programs', changefreq: 'monthly', priority: '0.8' },
   { path: '/faq', changefreq: 'monthly', priority: '0.6' },
   { path: '/about', changefreq: 'monthly', priority: '0.5' },
   { path: '/contact', changefreq: 'yearly', priority: '0.4' },

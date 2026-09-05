@@ -17,7 +17,7 @@ const AppProviders = dynamic(() => import('../components/AppProviders').then((m)
 const PUBLIC_PATHS = new Set([
   '/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement',
   '/enquire', '/faq', '/about', '/contact', '/child-safe', '/report', '/privacy', '/terms', '/cookies', '/es',
-  '/tutoring', '/tutoring/[suburb]', '/auth/signup', '/404', '/500',
+  '/tutoring', '/tutoring/[suburb]', '/programs', '/tutors/handbook', '/auth/signup', '/404', '/500',
 ]);
 
 export function isPublicPath(pathname: string): boolean {

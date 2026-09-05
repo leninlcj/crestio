@@ -147,11 +147,85 @@ test.describe('agency site: chunk 3 pages', () => {
   });
 });
 
+test.describe('agency site: chunk 4 pages', () => {
+  test('programs page prices both programs from the rate card and links to the enquiry form', async ({ page, request }) => {
+    await page.goto('/programs');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Four summer lessons');
+    await expect(page.getByRole('heading', { name: /January HSC head start/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Year 10 to 11 maths bridging/ })).toBeVisible();
+    const html = await (await request.get('/programs')).text();
+    for (const price of ['$380', '$440', '$500', '$320']) expect(html).toContain(price);
+    expect(html).toContain('/enquire?program=hsc-head-start');
+    expect(html).toContain('/enquire?program=year-11-bridging');
+    expect(html).toContain('"FAQPage"');
+    expect(html).not.toContain('\u2014');
+  });
+
+  test('a program link prefills the year and the message on the enquiry form', async ({ page }) => {
+    await page.goto('/enquire?program=hsc-head-start');
+    await expect(page.getByText('Asking about the January HSC head start')).toBeVisible();
+    const next = () => page.getByRole('button', { name: 'Continue →' }).click();
+    await page.getByRole('button', { name: 'My child' }).click();
+    await next();
+    await expect(page.getByRole('button', { name: 'Year 12' })).toHaveAttribute('aria-pressed', 'true');
+    await next();
+    await page.getByRole('button', { name: /Physics/ }).click();
+    await next();
+    await page.getByRole('button', { name: 'Online', exact: true }).click();
+    await next();
+    await next();
+    await expect(page.locator('#enq-message')).toHaveValue(/January HSC head start/);
+  });
+
+  test('an enquiry made after landing with UTM tags is attributed to them', async ({ page }) => {
+    let body: any = null;
+    await page.route('**/api/enquiries', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'x' }) });
+    });
+    await page.goto('/tutoring/hurstville?utm_source=google&utm_medium=cpc&utm_campaign=hsc-maths');
+    await page.locator('a[href*="/enquire?mode=in_home&suburb=Hurstville"]').first().click();
+    await expect(page).toHaveURL(/\/enquire\?mode=in_home&suburb=Hurstville/);
+    const next = () => page.getByRole('button', { name: 'Continue →' }).click();
+    await page.getByRole('button', { name: 'My child' }).click();
+    await next();
+    await page.getByRole('button', { name: 'Year 11' }).click();
+    await next();
+    await page.getByRole('button', { name: /Physics/ }).click();
+    await next();
+    await next();
+    await next();
+    await page.fill('#enq-name', 'Priya Nair');
+    await page.fill('#enq-email', 'priya@example.com');
+    await page.getByRole('button', { name: 'Send enquiry →' }).click();
+    await expect(page.getByRole('status')).toContainText(/Thanks, Priya/);
+    expect(body?.source).toBe('google/cpc/hsc-maths');
+    expect(body?.suburb).toBe('Hurstville');
+  });
+
+  test('the tutor handbook renders its ten sections and is linked from the tutors page', async ({ page, request }) => {
+    await page.goto('/tutors/handbook');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('day to day');
+    await expect(page.locator('article h2')).toHaveCount(10);
+    const html = await (await request.get('/tutors/handbook')).text();
+    expect(html).toContain('132 111');
+    expect(html).not.toContain('\u2014');
+    await page.goto('/tutors');
+    await expect(page.locator('a[href="/tutors/handbook"]').first()).toBeVisible();
+  });
+
+  test('sitemap includes the programs page and the handbook', async ({ request }) => {
+    const xml = await (await request.get('/sitemap.xml')).text();
+    expect(xml).toContain('<loc>https://crestio.ai/programs</loc>');
+    expect(xml).toContain('<loc>https://crestio.ai/tutors/handbook</loc>');
+  });
+});
+
 test.describe('agency site: mobile', () => {
   test.use({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
 
   test('no horizontal overflow on a phone, and the menu opens', async ({ page }) => {
-    for (const path of ['/', '/pricing', '/enquire', '/tutoring/hurstville', '/es', '/tutors/apply']) {
+    for (const path of ['/', '/pricing', '/enquire', '/tutoring/hurstville', '/es', '/tutors/apply', '/programs', '/tutors/handbook']) {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);

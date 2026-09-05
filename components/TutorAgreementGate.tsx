@@ -52,7 +52,7 @@ export default function TutorAgreementGate() {
         <div className="px-6 pt-6 pb-4 border-b border-rule">
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">Before you start</div>
           <h2 id="tutor-agreement-title" className="font-display text-2xl tracking-tighter text-ink">Read and accept the tutor agreement and code of conduct.</h2>
-          <p className="text-sm text-ink-muted mt-1">Version {TUTOR_AGREEMENT_VERSION}. Takes about ten minutes. You can read them again any time at crestio.ai/tutors/agreement.</p>
+          <p className="text-sm text-ink-muted mt-1">Version {TUTOR_AGREEMENT_VERSION}. Takes about ten minutes. You can read them again any time at crestio.ai/tutors/agreement, and the day-to-day detail is at crestio.ai/tutors/handbook.</p>
         </div>
         <div className="overflow-y-auto px-6 py-5 space-y-8">
           <section>

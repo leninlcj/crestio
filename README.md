@@ -33,6 +33,9 @@ Since 3 September 2026 (agency pivot, chunk 1). The plan and checklist live in `
 | Weekly snapshots | `/api/cron/data-snapshot` (Sunday 16:00 UTC) copies every table to the private `snapshots` bucket, keeps 8; `GET/POST /api/owner/snapshots`; card in Settings > Data. Not a substitute for Supabase Pro backups |
 | Public pages stay light | `pages/_app.tsx` renders the public routes with no app providers; `components/AppProviders.tsx` is loaded only for the app, portals and sign-in |
 | Search Console | `AGENCY.googleSiteVerification` or `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` renders the verification meta tag |
+| Summer programs | `lib/programs.ts` (two programs, priced as the rate card times four) rendered by `pages/programs.tsx`; `/enquire?program=<key>` prefills the year and the message |
+| Tutor handbook | `lib/tutorHandbook.ts`, versioned like the legal documents, public at `/tutors/handbook`; prints cleanly for the onboarding pack |
+| Enquiry attribution | `lib/attribution.ts`: the first public page view in a tab stores the source (UTM source/medium/campaign, `src`/`ref` tag, `gclid`, outside referrer) in `sessionStorage`; the enquiry form sends it. Ads and print use `?utm_*` or `?src=` on their landing URLs |
 
 ## Design rules
 

@@ -1,8 +1,9 @@
 import Head from 'next/head';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import MarketingNav from '../marketing/MarketingNav';
 import MarketingFooter from '../marketing/MarketingFooter';
 import { AGENCY } from '../../lib/agency';
+import { rememberSource, sessionStorageOrNull } from '../../lib/attribution';
 
 type Props = {
   title: string;              // browser tab + og:title; " · Crestio Tutoring" appended unless noSuffix
@@ -20,6 +21,9 @@ type Props = {
 
 export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, jsonLd = [], noSuffix, noIndex, lang = 'en', alternates = [], children }: Props) {
   const fullTitle = noSuffix ? title : `${title} · ${AGENCY.name}`;
+  // Remember where this visit came from (UTM, src tag, ad click, outside
+  // referrer) so an enquiry made later in the visit is attributed to it.
+  useEffect(() => { rememberSource(window, sessionStorageOrNull()); }, [path]);
   const url = `${AGENCY.siteUrl}${path === '/' ? '' : path}`;
   // Absolute URL: Facebook, LinkedIn and iMessage ignore relative og:image values.
   const og = `${AGENCY.siteUrl}/api/og?type=marketing&title=${encodeURIComponent(ogTitle ?? title)}&subtitle=${encodeURIComponent(ogSubtitle ?? description)}`;
