@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { isPlatformOwner } from '../../../../lib/owner';
 import { buildAgencyInvoiceNote } from '../../../../lib/agencyInvoice';
 import { createClient } from '@supabase/supabase-js';
-import { checkRateLimit } from '../../../../lib/rateLimit';
+import { checkRateLimitShared } from '../../../../lib/rateLimit';
 
 // GET /api/pay/[token]
 // Public — no auth. Returns the org/invoice info needed to render the
@@ -10,9 +10,16 @@ import { checkRateLimit } from '../../../../lib/rateLimit';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return res.status(500).json({ error: 'Server misconfigured.' });
+  const admin = createClient(url, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+
   const fwd = (req.headers['x-forwarded-for'] as string | undefined) ?? '';
   const ip = fwd.split(',')[0]?.trim() || (req.socket.remoteAddress ?? 'unknown');
-  const rl = checkRateLimit({ key: `pay_view:${ip}`, limit: 10, windowMs: 60 * 1000 });
+  const rl = await checkRateLimitShared(admin, { key: `pay_view:${ip}`, limit: 30, windowMs: 60 * 1000 });
   if (!rl.allowed) {
     return res.status(429).json({ error: 'rate_limit', retry_after_seconds: rl.retry_after_seconds });
   }
@@ -22,16 +29,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(404).json({ error: 'Not found.' });
   }
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) return res.status(500).json({ error: 'Server misconfigured.' });
-  const admin = createClient(url, serviceKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-  });
-
   const { data: invoice } = await admin
     .from('invoices')
-    .select('id, organization_id, number, total_cents, status, currency, due_on, issued_on, payment_token, household_id, student_id')
+    .select('*')
     .eq('payment_token', tokenParam)
     .maybeSingle();
   if (!invoice) return res.status(404).json({ error: 'Not found.' });
@@ -52,8 +52,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         invoiceId: (invoice as any).id,
         studentId: (invoice as any).student_id ?? null,
         ownerUserId: (org as any).owner_user_id,
-        totalCents: (invoice as any).total_cents ?? 0,
+        totalCents: (invoice as any).subtotal_cents ?? (invoice as any).total_cents ?? 0,
         currency: (invoice as any).currency ?? 'AUD',
+        isPrepaidBlock: Boolean((invoice as any).is_prepaid_block),
+        prepaidHours: (invoice as any).prepaid_hours != null ? Number((invoice as any).prepaid_hours) : null,
       });
     }
   }
@@ -62,6 +64,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     id: string;
     number: string;
     total_cents: number;
+    subtotal_cents: number | null;
+    credit_applied_cents: number | null;
+    is_prepaid_block: boolean | null;
+    prepaid_face_value_cents: number | null;
+    prepaid_hours: number | string | null;
     status: string;
     currency: string;
     due_on: string | null;
@@ -114,6 +121,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id: inv.id,
       number: inv.number,
       total_cents: inv.total_cents,
+      subtotal_cents: inv.subtotal_cents ?? inv.total_cents,
+      credit_applied_cents: inv.credit_applied_cents ?? 0,
+      is_prepaid_block: Boolean(inv.is_prepaid_block),
+      prepaid_face_value_cents: inv.prepaid_face_value_cents ?? null,
+      prepaid_hours: inv.prepaid_hours != null ? Number(inv.prepaid_hours) : null,
       currency: inv.currency,
       status: inv.status,
       due_on: inv.due_on,

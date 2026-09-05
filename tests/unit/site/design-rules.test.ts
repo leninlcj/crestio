@@ -136,7 +136,9 @@ describe('design rules: copy', () => {
   });
 
   it('no invented counters, ratings or testimonials', () => {
-    const patterns = [/\d[\d,]*\+\s*(students|families|tutors|parents|lessons|hours)/i, /\d+(\.\d+)?\s*\/\s*5/, /★|⭐/, /trusted by/i, /join \d/i, /\d+%\s*(of parents|satisfaction|success)/i, /<blockquote/];
+    // A blockquote may only render data (an expression such as {r.body}); a
+    // blockquote with literal text inside it is a written testimonial.
+    const patterns = [/\d[\d,]*\+\s*(students|families|tutors|parents|lessons|hours)/i, /\d+(\.\d+)?\s*\/\s*5/, /★|⭐/, /trusted by/i, /join \d/i, /\d+%\s*(of parents|satisfaction|success)/i, /<blockquote[^>]*>\s*[^{<\s]/, /<blockquote[^>]*>\s*$/m];
     const offenders: string[] = [];
     for (const f of files) {
       const text = fs.readFileSync(f, 'utf8');

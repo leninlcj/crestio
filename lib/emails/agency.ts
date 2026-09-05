@@ -4,9 +4,9 @@
 
 import { AGENCY, NEEDS, subjectLabels } from '../agency';
 
-type Built = { subject: string; html: string; text: string };
+export type Built = { subject: string; html: string; text: string };
 
-function escapeHtml(s: string): string {
+export function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -23,7 +23,7 @@ const INK_MUTED = '#6b6b66';
 const FOREST = '#1a3a2a';
 const RULE = '#e8e3d8';
 
-type ShellArgs = {
+export type ShellArgs = {
   kicker: string;
   heading: string;
   preheader: string;
@@ -32,7 +32,7 @@ type ShellArgs = {
   facts?: Array<[string, string]>; // label, value (escaped inside)
 };
 
-function shell({ kicker, heading, preheader, paragraphs, cta, facts }: ShellArgs): string {
+export function shell({ kicker, heading, preheader, paragraphs, cta, facts }: ShellArgs): string {
   const factsHtml = facts && facts.length > 0
     ? `<tr><td style="padding:0 0 24px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${RULE};border-radius:6px;">` +
       facts.map(([k, v]) =>
@@ -73,7 +73,7 @@ function shell({ kicker, heading, preheader, paragraphs, cta, facts }: ShellArgs
 }
 
 // Plaintext must stay pure ASCII (see parentInvitation.ts for why).
-function ascii(s: string): string {
+export function ascii(s: string): string {
   return s.replace(/[\u2013\u2014]/g, '-').replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\u00B7/g, '-').replace(/[^\x00-\x7F]/g, '');
 }
 

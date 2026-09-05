@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { AgencyPage, Section, CtaRow } from '../components/agency/AgencyPage';
 import { RateTable, FinalBand } from '../components/agency/blocks';
-import { AGENCY, INCLUDED, FAQS } from '../lib/agency';
+import { AGENCY, INCLUDED, FAQS, PREPAID_BLOCK, REFERRAL } from '../lib/agency';
 import { tutoringServiceSchema, breadcrumb, agencyFaqSchema } from '../lib/agencySchema';
 
 const PRICING_FAQ = FAQS.filter((f) => /cost|cancellation|pay|guarantee/i.test(f.q));
@@ -42,9 +42,10 @@ export default function Pricing() {
       </section>
 
       <Section tone="surface" eyebrow="The fine print, in plain words" heading="How paying works.">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            ['Pay as you go', 'After each lesson you get an invoice with a secure card link. Or buy a prepaid block of hours and we draw it down. Nothing is charged to your card without your say-so.'],
+            ['Pay as you go', 'After each lesson you get an invoice with a secure card link. Nothing is charged to your card without your say-so.'],
+            [`Prepaid block, ${PREPAID_BLOCK.discountPercent}% off`, `Buy ${PREPAID_BLOCK.hours} hours up front at ${PREPAID_BLOCK.discountPercent}% off your hourly rate. Each lesson is drawn from the credit, every invoice shows what is left, and unused credit is refundable. Refer another family and you get $${REFERRAL.creditCents / 100} of lesson credit once they have had ${REFERRAL.afterLessons} lessons.`],
             [`${AGENCY.policies.cancellationHours}-hour cancellations`, `Tell us ${AGENCY.policies.cancellationHours} hours before a lesson and we reschedule at no charge. Inside ${AGENCY.policies.cancellationHours} hours the lesson is charged, so the tutor is paid for the time they held for you.`],
             ['First lesson guaranteed', AGENCY.policies.firstLessonGuarantee + ' Just tell us before the second lesson.'],
           ].map(([t, b]) => (

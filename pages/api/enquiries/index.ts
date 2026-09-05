@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { validateEnquiry, clientIp } from '../../../lib/agencyForms';
 import { getAgencyOrganization } from '../../../lib/agencyOrg';
-import { checkRateLimit, LIMITS } from '../../../lib/rateLimit';
+import { checkRateLimitShared, LIMITS } from '../../../lib/rateLimit';
 import { sendEmail } from '../../../lib/email';
 import { buildEnquiryReceivedEmail, buildEnquiryAlertEmail } from '../../../lib/emails/agency';
 import { writeAudit } from '../../../lib/audit';
@@ -21,8 +21,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) return res.status(500).json({ error: 'Server misconfigured.' });
 
+  const admin = createClient(url, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+
   const ip = clientIp(req.headers, req.socket?.remoteAddress ?? 'unknown');
-  const rl = checkRateLimit({ key: `enquiry:${ip}`, limit: LIMITS.enquiry.limit, windowMs: LIMITS.enquiry.windowMs });
+  const rl = await checkRateLimitShared(admin, { key: `enquiry:${ip}`, limit: LIMITS.enquiry.limit, windowMs: LIMITS.enquiry.windowMs });
   if (!rl.allowed) {
     return res.status(429).json({ error: 'Too many enquiries from this connection. Email us instead.', retry_after_seconds: rl.retry_after_seconds });
   }
@@ -34,10 +38,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Check the highlighted fields.', fields: validated.errors });
   }
   const v = validated.value;
-
-  const admin = createClient(url, serviceKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-  });
 
   // Never lose an enquiry. If the agency organisation cannot be resolved or
   // the table does not exist yet, fall back to email-only and flag it.

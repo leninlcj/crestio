@@ -356,7 +356,19 @@ function InvoiceDetailInner() {
           </div>
         </div>
 
-        {householdContext ? (
+        {invoice.is_prepaid_block ? (
+          <div className="mb-8 rounded border border-rule bg-forest-soft/30 p-5">
+            <div className="text-2xs uppercase tracking-widest text-forest-ink mb-1">Prepaid block</div>
+            <div className="text-sm text-ink">
+              {invoice.prepaid_hours ? `${Number(invoice.prepaid_hours)} hours of lesson credit` : 'Lesson credit'}
+              {invoice.prepaid_face_value_cents ? ` worth ${formatCents(invoice.prepaid_face_value_cents, currency)}` : ''}, sold for {formatCents(invoice.total_cents, currency, { showZero: true })}.
+              {invoice.status === 'paid' ? ' Paid: the credit is on the household\'s ledger.' : ' The credit is added to the household\'s ledger when this invoice is paid.'}
+            </div>
+            {invoice.household_id && (
+              <Link href={`/app/households/${invoice.household_id}`} className="mt-3 inline-block text-xs text-forest underline underline-offset-2">Open the household's credit</Link>
+            )}
+          </div>
+        ) : householdContext ? (
           <table className="w-full mb-8">
             <thead>
               <tr className="border-b border-rule">
@@ -402,9 +414,23 @@ function InvoiceDetailInner() {
               ))}
             </tbody>
             <tfoot>
+              {(invoice.credit_applied_cents ?? 0) > 0 && (
+                <>
+                  <tr>
+                    <td colSpan={2}></td>
+                    <td className="py-1.5 text-right text-2xs uppercase tracking-widest text-ink-muted">Lessons</td>
+                    <td className="py-1.5 text-sm font-mono num text-right">{formatCents(invoice.subtotal_cents, currency, { showZero: true })}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}></td>
+                    <td className="py-1.5 text-right text-2xs uppercase tracking-widest text-ink-muted">Prepaid credit</td>
+                    <td className="py-1.5 text-sm font-mono num text-right">-{formatCents(invoice.credit_applied_cents ?? 0, currency, { showZero: true })}</td>
+                  </tr>
+                </>
+              )}
               <tr>
                 <td colSpan={2}></td>
-                <td className="py-3 text-right text-2xs uppercase tracking-widest text-ink-muted">Total</td>
+                <td className="py-3 text-right text-2xs uppercase tracking-widest text-ink-muted">{(invoice.credit_applied_cents ?? 0) > 0 && invoice.total_cents === 0 ? 'Paid from credit' : 'Total'}</td>
                 <td className="py-3 font-display text-2xl tracking-tightest text-right num">
                   {formatCents(invoice.total_cents, currency, { showZero: true })}
                 </td>
@@ -436,9 +462,23 @@ function InvoiceDetailInner() {
               ))}
             </tbody>
             <tfoot>
+              {(invoice.credit_applied_cents ?? 0) > 0 && (
+                <>
+                  <tr>
+                    <td colSpan={2}></td>
+                    <td className="py-1.5 text-right text-2xs uppercase tracking-widest text-ink-muted">Lessons</td>
+                    <td className="py-1.5 text-sm font-mono num text-right">{formatCents(invoice.subtotal_cents, currency, { showZero: true })}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}></td>
+                    <td className="py-1.5 text-right text-2xs uppercase tracking-widest text-ink-muted">Prepaid credit</td>
+                    <td className="py-1.5 text-sm font-mono num text-right">-{formatCents(invoice.credit_applied_cents ?? 0, currency, { showZero: true })}</td>
+                  </tr>
+                </>
+              )}
               <tr>
                 <td colSpan={2}></td>
-                <td className="py-3 text-right text-2xs uppercase tracking-widest text-ink-muted">Total</td>
+                <td className="py-3 text-right text-2xs uppercase tracking-widest text-ink-muted">{(invoice.credit_applied_cents ?? 0) > 0 && invoice.total_cents === 0 ? 'Paid from credit' : 'Total'}</td>
                 <td className="py-3 font-display text-2xl tracking-tightest text-right num">
                   {formatCents(invoice.total_cents, currency, { showZero: true })}
                 </td>

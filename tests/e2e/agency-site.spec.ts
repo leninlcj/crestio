@@ -31,7 +31,7 @@ test.describe('agency site: pages', () => {
   });
 
   test('rendered pages carry no em dashes, badges or emoji', async ({ request }) => {
-    for (const path of ['/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement', '/faq', '/about', '/contact', '/enquire', '/privacy', '/terms', '/cookies', '/child-safe', '/report', '/auth/signin', '/auth/signup']) {
+    for (const path of ['/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement', '/faq', '/about', '/contact', '/enquire', '/privacy', '/terms', '/cookies', '/child-safe', '/report', '/auth/signin', '/auth/signup', '/review/abcdefghijklmnopqrstuvwxyz012345']) {
       const res = await request.get(path);
       expect(res.status(), path).toBe(200);
       const html = await res.text();
@@ -353,5 +353,74 @@ test.describe('agency site: chunk 2 pages', () => {
     await page.getByRole('button', { name: 'A parent' }).click();
     await page.getByRole('button', { name: 'Send report' }).click();
     await expect(page.getByRole('status')).toContainText(/Thank you for telling us/);
+  });
+});
+
+test.describe('agency site: chunk 5', () => {
+  const token = 'abcdefghijklmnopqrstuvwxyz012345';
+
+  test('pricing states the prepaid block and referral terms from the config', async ({ page }) => {
+    await page.goto('/pricing');
+    await expect(page.locator('main')).toContainText('Prepaid block, 5% off');
+    await expect(page.locator('main')).toContainText('10 hours up front');
+    await expect(page.locator('main')).toContainText('$50 of lesson credit');
+    await page.goto('/terms');
+    await expect(page.locator('main')).toContainText('Unused credit is refunded in full');
+  });
+
+  test('the home page shows the honest empty state when there are no approved reviews', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('main')).toContainText('No reviews yet. We would rather wait for real ones.');
+    await expect(page.locator('main')).not.toContainText(/out of 5/);
+  });
+
+  test('a family writes a review in English through the private link', async ({ page }) => {
+    await page.route(`**/api/review/${token}`, async (route) => {
+      if (route.request().method() === 'GET') {
+        return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ state: 'open', language: 'en', student_first_name: 'Amy', tutor_first_name: 'Lenin', google_review_url: null }) });
+      }
+      const body = route.request().postDataJSON();
+      expect(body.rating).toBe(5);
+      expect(body.consent_public).toBe(true);
+      expect(body.reviewer_name).toBe('Priya, parent of a Year 11 student');
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, google_review_url: null, language: 'en' }) });
+    });
+    const res = await page.goto(`/review/${token}`);
+    expect(res?.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('How is tutoring going?');
+    await expect(page.locator('main')).toContainText("Amy's lessons with Lenin");
+    // Validation first.
+    await page.getByRole('button', { name: 'Send review' }).click();
+    await expect(page.getByText('Choose a rating from 1 to 5.')).toBeVisible();
+    await page.getByRole('radio', { name: '5' }).click();
+    await page.fill('#review-body', 'Amy went from dreading maths to asking for extra problems. Lenin explains things twice, two different ways.');
+    await page.fill('#review-name', 'Priya, parent of a Year 11 student');
+    await page.fill('#review-suburb', 'Hurstville');
+    await page.getByRole('button', { name: 'Send review' }).click();
+    await expect(page.getByRole('status')).toContainText('Thank you.');
+    const html = await page.content();
+    expect(html).not.toContain('—');
+  });
+
+  test('the review page speaks Spanish when the family does, and closes politely once used', async ({ page }) => {
+    await page.route(`**/api/review/${token}`, (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ state: 'open', language: 'es', student_first_name: 'Mateo', tutor_first_name: null, google_review_url: null }) }));
+    await page.goto(`/review/${token}`);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('¿Cómo van las clases?');
+    await expect(page.getByRole('button', { name: 'Enviar reseña' })).toBeVisible();
+
+    await page.unroute(`**/api/review/${token}`);
+    await page.route(`**/api/review/${token}`, (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ state: 'done', language: 'en', student_first_name: null, tutor_first_name: null, google_review_url: null }) }));
+    await page.goto(`/review/${token}`);
+    await expect(page.getByRole('status')).toContainText('This review has already been sent.');
+  });
+
+  test('an unknown review link says so without leaking anything', async ({ page, request }) => {
+    await page.route(`**/api/review/${token}`, (route) => route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ error: 'not_found' }) }));
+    await page.goto(`/review/${token}`);
+    await expect(page.getByRole('status')).toContainText('This link is not valid or has expired.');
+    const bad = await request.get('/api/review/short');
+    expect(bad.status()).toBe(404);
+    const html = await (await request.get(`/review/${token}`)).text();
+    expect(html).toContain('noindex');
   });
 });

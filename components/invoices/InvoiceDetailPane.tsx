@@ -26,6 +26,9 @@ type Detail = {
   sent_at: string | null;
   paid_at: string | null;
   is_batch_generated: boolean;
+  credit_applied_cents?: number | null;
+  is_prepaid_block?: boolean | null;
+  prepaid_hours?: number | string | null;
   household: { id: string; display_name: string } | null;
   student: { id: string; name: string } | null;
 };
@@ -59,7 +62,7 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
       const [{ data: inv }, { data: lines }] = await Promise.all([
         supabase
           .from('invoices')
-          .select('id, number, status, issued_on, due_on, subtotal_cents, total_cents, notes, sent_at, paid_at, is_batch_generated, household:households(id,display_name), student:students(id,name)')
+          .select('*, household:households(id,display_name), student:students(id,name)')
           .eq('id', invoiceId)
           .maybeSingle(),
         supabase
@@ -118,7 +121,9 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
           <div className="p-5">
             <div className="text-2xs uppercase tracking-widest text-ink-muted font-medium mb-2">Line items</div>
             {items.length === 0 ? (
-              <p className="text-sm text-ink-muted italic">No line items.</p>
+              data.is_prepaid_block
+                ? <p className="text-sm text-ink">Prepaid block{data.prepaid_hours ? `: ${Number(data.prepaid_hours)} hours of lesson credit` : ''}. The credit is added to the family's ledger when this invoice is paid.</p>
+                : <p className="text-sm text-ink-muted italic">No line items.</p>
             ) : (
               <ul className="divide-y divide-rule -mx-2">
                 {items.map((it) => (
@@ -136,8 +141,20 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
                 ))}
               </ul>
             )}
+            {(data.credit_applied_cents ?? 0) > 0 && (
+              <>
+                <div className="flex items-center justify-between border-t border-rule pt-3 mt-3 text-sm">
+                  <span className="text-ink-muted">Lessons</span>
+                  <span className="text-ink tabular">{formatCents(data.subtotal_cents, currency, { showZero: true })}</span>
+                </div>
+                <div className="flex items-center justify-between pt-1 text-sm">
+                  <span className="text-ink-muted">Prepaid credit applied</span>
+                  <span className="text-ink tabular">-{formatCents(data.credit_applied_cents ?? 0, currency, { showZero: true })}</span>
+                </div>
+              </>
+            )}
             <div className="flex items-center justify-between border-t border-rule pt-3 mt-3 text-sm">
-              <span className="text-ink-muted">Total</span>
+              <span className="text-ink-muted">{(data.credit_applied_cents ?? 0) > 0 && data.total_cents === 0 ? 'Total due (paid from credit)' : 'Total'}</span>
               <span className="font-medium text-ink tabular">
                 {formatCents(data.total_cents, currency, { showZero: true })}
               </span>

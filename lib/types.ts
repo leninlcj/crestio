@@ -152,6 +152,12 @@ export interface Invoice {
   billing_period_start: string | null;
   billing_period_end: string | null;
   is_batch_generated: boolean;
+  /** Prepaid credit drawn against this invoice when it was issued (chunk 5). */
+  credit_applied_cents?: number;
+  /** True for an invoice that buys prepaid lesson credit rather than billing lessons. */
+  is_prepaid_block?: boolean;
+  prepaid_face_value_cents?: number | null;
+  prepaid_hours?: number | string | null;
   created_at: string;
   updated_at: string;
 }

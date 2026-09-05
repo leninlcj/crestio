@@ -33,6 +33,11 @@ type InvoiceData = {
   household_id: string | null;
   student_id: string | null;
   payment_token: string | null;
+  subtotal_cents: number | null;
+  credit_applied_cents: number | null;
+  is_prepaid_block: boolean | null;
+  prepaid_hours: number | string | null;
+  prepaid_face_value_cents: number | null;
   household: { id: string; display_name: string } | null;
   student: { id: string; name: string } | null;
 };
@@ -64,7 +69,7 @@ function Inner() {
       setLoading(true);
       const { data: inv, error: invErr } = await supabase
         .from('invoices')
-        .select('id, number, issued_on, due_on, total_cents, status, notes, billing_period_start, billing_period_end, is_batch_generated, household_id, student_id, payment_token, household:households(id, display_name), student:students(id, name)')
+        .select('*, household:households(id, display_name), student:students(id, name)')
         .eq('id', id)
         .maybeSingle();
       if (invErr || !inv) { setError(t('invoice_detail.not_found')); setLoading(false); return; }
@@ -187,6 +192,24 @@ function Inner() {
               >
                 {t('invoice_detail.pay_now')}
               </Link>
+            )}
+
+            {(invoice.credit_applied_cents ?? 0) > 0 && (
+              <div className="text-sm text-ink-muted pt-6 border-t border-rule mt-6">
+                <div className="flex justify-between gap-4"><span>{t('invoice_detail.lessons_total', { defaultValue: 'Lessons' })}</span><span className="font-mono tabular-nums text-ink">{formatAud(invoice.subtotal_cents ?? invoice.total_cents + (invoice.credit_applied_cents ?? 0))}</span></div>
+                <div className="flex justify-between gap-4 mt-1"><span>{t('invoice_detail.credit_applied', { defaultValue: 'Prepaid credit applied' })}</span><span className="font-mono tabular-nums text-ink">-{formatAud(invoice.credit_applied_cents ?? 0)}</span></div>
+                <div className="flex justify-between gap-4 mt-1 font-medium text-ink"><span>{invoice.total_cents === 0 ? t('invoice_detail.paid_from_credit', { defaultValue: 'Paid from credit' }) : t('invoice_detail.amount_due', { defaultValue: 'Amount due' })}</span><span className="font-mono tabular-nums">{formatAud(invoice.total_cents)}</span></div>
+              </div>
+            )}
+
+            {invoice.is_prepaid_block && (
+              <div className="text-sm text-ink-muted pt-6 border-t border-rule mt-6 leading-relaxed">
+                {t('invoice_detail.prepaid_block_note', {
+                  hours: invoice.prepaid_hours ? Number(invoice.prepaid_hours) : 10,
+                  value: formatAud(invoice.prepaid_face_value_cents ?? invoice.total_cents),
+                  defaultValue: 'This invoice buys {{hours}} hours of lesson credit worth {{value}}. Once it is paid, each lesson is drawn from the credit and your invoices show what is left.',
+                })}
+              </div>
             )}
 
             <div className="grid grid-cols-2 gap-6 text-sm pt-6 border-t border-rule mt-6">

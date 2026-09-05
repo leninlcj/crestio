@@ -69,7 +69,8 @@
       "members": "Members",
       "sessions": "Sessions",
       "invoices": "Invoices",
-      "notes": "Notes"
+      "notes": "Notes",
+      "credit": "Credit"
     },
     "members": {
       "parents_heading": "Parents",

@@ -35,6 +35,45 @@ export function checkRateLimit(opts: {
   return { allowed: true, remaining: limit - bucket.count, resetAt: bucket.resetAt };
 }
 
+// Shared limiter for the public forms. Counts in Postgres through the
+// rate_limit_hit() function (supabase/migrations/20260906_agency_chunk5.sql),
+// so every Vercel instance sees the same count. Falls back to the in-memory
+// limiter above when the function is missing or the database call fails, so
+// a form is never blocked by the limiter's own outage.
+export type SharedRateLimitClient = {
+  rpc: (fn: string, args: Record<string, unknown>) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
+};
+
+export async function checkRateLimitShared(
+  client: SharedRateLimitClient | null,
+  opts: { key: string; limit: number; windowMs: number },
+): Promise<RateLimitResult & { shared: boolean }> {
+  if (client) {
+    try {
+      const { data, error } = await client.rpc('rate_limit_hit', {
+        p_key: opts.key,
+        p_limit: opts.limit,
+        p_window_seconds: Math.max(1, Math.round(opts.windowMs / 1000)),
+      });
+      if (!error && data && typeof data === 'object') {
+        const d = data as { allowed?: boolean; retry_after_seconds?: number; remaining?: number; reset_at?: string };
+        if (d.allowed === false) {
+          return { allowed: false, retry_after_seconds: Math.max(1, Number(d.retry_after_seconds ?? 60)), shared: true };
+        }
+        if (d.allowed === true) {
+          return { allowed: true, remaining: Number(d.remaining ?? 0), resetAt: d.reset_at ? new Date(d.reset_at).getTime() : Date.now() + opts.windowMs, shared: true };
+        }
+      }
+      if (error && !/rate_limit_hit|function|schema cache|does not exist/i.test(error.message)) {
+        console.warn('[rateLimit] shared limiter error, using memory:', error.message);
+      }
+    } catch (e: any) {
+      console.warn('[rateLimit] shared limiter threw, using memory:', e?.message ?? e);
+    }
+  }
+  return { ...checkRateLimit(opts), shared: false };
+}
+
 // Convenience wrapper for rate-limited endpoints.
 export const LIMITS = {
   polish: { limit: 30, windowMs: 60 * 60 * 1000 },

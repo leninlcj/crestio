@@ -8,6 +8,7 @@ import { supabase } from '../../../lib/supabase';
 import { useMembership } from '../../../lib/membershipContext';
 import { cx, formatCents, formatDateTime, sessionAmount } from '../../../lib/utils';
 import { activeLocale } from '../../../lib/utils';
+import { HouseholdCreditTab } from '../../../components/households/HouseholdCreditTab';
 
 type Parent = {
   membership_id: string;
@@ -56,7 +57,7 @@ type Household = {
   archived_at: string | null;
 };
 
-type Tab = 'members' | 'sessions' | 'invoices' | 'notes';
+type Tab = 'members' | 'sessions' | 'invoices' | 'credit' | 'notes';
 
 function HouseholdDetailInner() {
   const { t } = useTranslation('households');
@@ -277,7 +278,7 @@ function HouseholdDetailInner() {
 
       <div className="border-b border-rule mb-6 overflow-x-auto">
         <nav className="flex gap-1 min-w-max" role="tablist">
-          {(['members', 'sessions', 'invoices', 'notes'] as Tab[]).map((tabKey) => (
+          {(['members', 'sessions', 'invoices', 'credit', 'notes'] as Tab[]).map((tabKey) => (
             <button
               key={tabKey}
               type="button"
@@ -313,6 +314,13 @@ function HouseholdDetailInner() {
       )}
       {tab === 'sessions' && <SessionsTab sessions={sessions} />}
       {tab === 'invoices' && <InvoicesTab invoices={invoices} />}
+      {tab === 'credit' && (
+        <HouseholdCreditTab
+          householdId={household.id}
+          students={students.map((s) => ({ id: s.id, name: s.name, hourly_rate_cents: s.hourly_rate_cents }))}
+          isTutor={!!isTutor}
+        />
+      )}
       {tab === 'notes' && (
         <NotesTab
           notes={household.notes ?? ''}

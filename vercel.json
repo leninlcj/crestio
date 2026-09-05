@@ -44,6 +44,14 @@
     {
       "path": "/api/cron/data-snapshot",
       "schedule": "0 16 * * 0"
+    },
+    {
+      "path": "/api/cron/agency-daily",
+      "schedule": "0 22 * * *"
+    },
+    {
+      "path": "/api/cron/owner-checkin",
+      "schedule": "0 20 * * 0"
     }
   ]
 }
