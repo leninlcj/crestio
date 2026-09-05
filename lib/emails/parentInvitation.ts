@@ -84,7 +84,7 @@ export function buildParentInvitationEmail({
           <tr>
             <td style="padding:0 0 28px 0;">
               <p style="margin:0;font-family:${FONT_BODY};font-size:16px;line-height:1.6;color:${INK};">
-                ${safeBiz} has invited you to view ${safeFirst}'s tutoring sessions on Crestio. You'll be able to see what's been covered in each session, homework set, and how ${safeFirst} is progressing — all in one place.
+                ${safeBiz} has invited you to view ${safeFirst}'s tutoring sessions on Crestio. You'll be able to see what's been covered in each session, homework set, and how ${safeFirst} is progressing, all in one place.
               </p>
             </td>
           </tr>

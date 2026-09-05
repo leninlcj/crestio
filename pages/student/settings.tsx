@@ -26,9 +26,9 @@ function Inner() {
 
       <section className="mt-6 card p-5">
         <h2 className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Profile</h2>
-        <Row label="Name" value={me?.profile.full_name ?? '—'} hint="Your tutor manages this." />
-        <Row label="Email" value={me?.profile.email ?? '—'} />
-        <Row label="Date of birth" value={me?.profile.date_of_birth ?? '—'} hint="Read-only." />
+        <Row label="Name" value={me?.profile.full_name ?? '–'} hint="Your tutor manages this." />
+        <Row label="Email" value={me?.profile.email ?? '–'} />
+        <Row label="Date of birth" value={me?.profile.date_of_birth ?? '–'} hint="Read-only." />
       </section>
 
       <section className="mt-4 card p-5">

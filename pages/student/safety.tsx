@@ -27,7 +27,7 @@ export default function StudentSafety() {
           <li>
             <strong>Email Crestio support directly.</strong>{' '}
             <a href="mailto:support@crestio.app" className="underline">support@crestio.app</a>.
-            Tell us what happened — we'll read it, take it seriously, and write back.
+            Tell us what happened. We'll read it, take it seriously, and write back.
           </li>
         </ul>
         <p className="mt-8 text-sm text-ink-muted">

@@ -45,7 +45,7 @@ export async function renderInvoicePdf(args: InvoicePdfArgs): Promise<Uint8Array
 
   const brandColor = hexToRgb(args.org.color);
 
-  // Brand band — 50px tall.
+  // Brand band, 50px tall.
   page.drawRectangle({ x: 0, y: A4_H - 50, width: A4_W, height: 50, color: brandColor });
   page.drawText(args.org.name, {
     x: MARGIN, y: A4_H - 32, size: 16, font: helvBold, color: BRAND.cream,
@@ -146,7 +146,7 @@ export async function renderInvoicePdf(args: InvoicePdfArgs): Promise<Uint8Array
       x: MARGIN, y, size: 9, font: helv, color: brandColor,
     });
     y -= 14;
-    page.drawText('Card payments via Stripe — settles in 2 business days.', {
+    page.drawText('Card payments via Stripe settle in 2 business days.', {
       x: MARGIN, y, size: 8, font: helv, color: BRAND.inkMuted,
     });
   }

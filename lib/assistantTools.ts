@@ -9,7 +9,7 @@
 const GET_UPCOMING_SESSIONS_TOOL = {
   name: 'get_upcoming_sessions',
   description:
-    "List upcoming tutoring sessions in the next N days. Use when the user asks what's on today/tomorrow/this week. Respects role — tutors see only their own sessions.",
+    "List upcoming tutoring sessions in the next N days. Use when the user asks what's on today/tomorrow/this week. Respects role, tutors see only their own sessions.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -106,7 +106,7 @@ const SEARCH_STUDENTS_TOOL = {
 export const LOG_SESSION_TOOL = {
   name: 'log_session',
   description:
-    "Log a tutoring session that already happened. Use when the user describes a session in the past tense. Do NOT use for scheduling future sessions — say it's not yet supported.",
+    "Log a tutoring session that already happened. Use when the user describes a session in the past tense. Do NOT use for scheduling future sessions, say it's not yet supported.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -231,7 +231,7 @@ const ARCHIVE_STUDENT_TOOL = {
 const CREATE_INVOICE_TOOL = {
   name: 'create_invoice',
   description:
-    "HIGH-RISK — Create a new invoice for a student. By default includes all unbilled completed sessions in the last 60 days. Confirmation requires typing 'confirm'.",
+    "HIGH-RISK. Create a new invoice for a student. By default includes all unbilled completed sessions in the last 60 days. Confirmation requires typing 'confirm'.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -250,7 +250,7 @@ const CREATE_INVOICE_TOOL = {
 const MARK_INVOICE_PAID_TOOL = {
   name: 'mark_invoice_paid',
   description:
-    "HIGH-RISK — Mark an invoice as paid. Confirmation requires typing 'confirm'.",
+    "HIGH-RISK. Mark an invoice as paid. Confirmation requires typing 'confirm'.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -266,7 +266,7 @@ const MARK_INVOICE_PAID_TOOL = {
 const SEND_PARENT_UPDATE_TOOL = {
   name: 'send_parent_update',
   description:
-    "HIGH-RISK — Draft and post a parent-facing update to the portal (no email is sent). Confirmation requires typing 'confirm'.",
+    "HIGH-RISK. Draft and post a parent-facing update to the portal (no email is sent). Confirmation requires typing 'confirm'.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -289,7 +289,7 @@ const SEND_PARENT_UPDATE_TOOL = {
 const ASSIGN_STUDENT_TO_TUTOR_TOOL = {
   name: 'assign_student_to_tutor',
   description:
-    "OWNER ONLY — Assign a student to a different primary tutor in the organisation.",
+    "OWNER ONLY. Assign a student to a different primary tutor in the organisation.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -317,7 +317,7 @@ const GET_RECENT_MESSAGES_TOOL = {
 const SEND_MESSAGE_TOOL = {
   name: 'send_message',
   description:
-    "HIGH-RISK — Send a message to a parent about a student. Confirmation requires typing 'confirm'. Urgency can be 'urgent', 'normal' (default), or 'info'.",
+    "HIGH-RISK. Send a message to a parent about a student. Confirmation requires typing 'confirm'. Urgency can be 'urgent', 'normal' (default), or 'info'.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -344,7 +344,7 @@ const GET_RECENT_NOTIFICATIONS_TOOL = {
 const GET_STUDENT_HOMEWORK_STATUS_TOOL = {
   name: 'get_student_homework_status',
   description:
-    "Get the latest homework assigned to a student — description, due date, completion status. Use when the user asks about a student's homework.",
+    "Get the latest homework assigned to a student, description, due date, completion status. Use when the user asks about a student's homework.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -385,7 +385,7 @@ const GET_UNBILLED_SUMMARY_TOOL = {
 const CREATE_BATCH_INVOICES_TOOL = {
   name: 'create_batch_invoices',
   description:
-    "HIGH-RISK — Create one invoice per household covering their unbilled sessions in a period, sending to primary parents immediately. Typed 'confirm' required. Use when the user says 'invoice everyone for this week' or picks specific households.",
+    "HIGH-RISK. Create one invoice per household covering their unbilled sessions in a period, sending to primary parents immediately. Typed 'confirm' required. Use when the user says 'invoice everyone for this week' or picks specific households.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -451,7 +451,7 @@ const FIND_HOUSEHOLD_BY_NAME_TOOL = {
 const ADD_STUDENT_TO_HOUSEHOLD_TOOL = {
   name: 'add_student_to_household',
   description:
-    "Move a student into a household. Normal-risk — no typed confirmation needed. Resolves the student and household by id or fuzzy name.",
+    "Move a student into a household. Normal-risk, no typed confirmation needed. Resolves the student and household by id or fuzzy name.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -465,7 +465,7 @@ const ADD_STUDENT_TO_HOUSEHOLD_TOOL = {
 const CREATE_TEST_ACCOUNT_TOOL = {
   name: 'create_test_account',
   description:
-    "OWNER-ONLY. Create a throwaway test account (tutor or parent) inside your own organisation so you can inspect the app from that role. These accounts are marked as test records and hidden from production views. Normal-risk — no typed confirmation.",
+    "OWNER-ONLY. Create a throwaway test account (tutor or parent) inside your own organisation so you can inspect the app from that role. These accounts are marked as test records and hidden from production views. Normal-risk, no typed confirmation.",
   input_schema: {
     type: 'object' as const,
     properties: {
@@ -480,7 +480,7 @@ const CREATE_TEST_ACCOUNT_TOOL = {
 const MARK_NOTIFICATIONS_READ_TOOL = {
   name: 'mark_notifications_read',
   description:
-    "Mark one or more notifications as read. Pass either a list of notification ids or the string 'all'. Low-risk — no typed confirmation required.",
+    "Mark one or more notifications as read. Pass either a list of notification ids or the string 'all'. Low-risk, no typed confirmation required.",
   input_schema: {
     type: 'object' as const,
     properties: {

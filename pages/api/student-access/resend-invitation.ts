@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Student has already accepted.' });
   }
   if (access.parental_consent_required && !access.parental_consent_given_at) {
-    return res.status(400).json({ error: 'Awaiting parental consent — resend the consent request instead.' });
+    return res.status(400).json({ error: 'Awaiting parental consent. Resend the consent request instead.' });
   }
   if (!access.invitation_email) {
     return res.status(400).json({ error: 'No invitation email on file.' });

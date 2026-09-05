@@ -62,7 +62,7 @@ export function ConfirmDrawer({
             <p className="text-sm text-ink-muted mt-0.5">{summary}</p>
             {skipCount > 0 && (
               <p className="text-xs text-amber-ink mt-1">
-                {skipCount} {skipCount === 1 ? 'item' : 'items'} will be skipped — see warnings below.
+                {skipCount} {skipCount === 1 ? 'item' : 'items'} will be skipped; see warnings below.
               </p>
             )}
           </div>

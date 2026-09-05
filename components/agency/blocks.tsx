@@ -64,19 +64,21 @@ function MatchCard() {
   );
 }
 
+// Four commitments, stated plainly. Not statistics: Crestio publishes no
+// numbers it cannot back with records.
 export function TrustStrip() {
   const items: Array<[string, string]> = [
-    ['1:1', 'One tutor, one student, every lesson'],
-    ['WWCC', 'Every tutor checked before they meet your child'],
-    ['24h', 'A reply within a day, from a person'],
-    ['$0', 'No joining fee and no lock-in'],
+    ['One tutor, one student', 'Every lesson is one-on-one, with the same tutor each week.'],
+    ['Checked before they meet your child', 'Interviewed, ID-checked and WWCC-verified.'],
+    [`A reply within ${AGENCY.policies.replyWithinHours} hours`, 'From the founder, not a call centre.'],
+    ['No joining fee, no lock-in', 'Pay after each lesson. Pause or stop any time.'],
   ];
   return (
     <div className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-rule border border-rule rounded-md overflow-hidden">
-      {items.map(([big, small]) => (
-        <div key={big} className="bg-surface p-4 md:p-5">
-          <div className="font-display text-2xl md:text-3xl tracking-tighter text-forest">{big}</div>
-          <div className="text-xs text-ink-muted mt-1 leading-snug">{small}</div>
+      {items.map(([title, body]) => (
+        <div key={title} className="bg-surface p-4 md:p-5">
+          <div className="text-sm font-semibold text-ink leading-snug">{title}</div>
+          <div className="text-xs text-ink-muted mt-1.5 leading-snug">{body}</div>
         </div>
       ))}
     </div>
@@ -96,7 +98,7 @@ export const STEPS = [
   {
     n: '2',
     title: 'We match a tutor',
-    body: 'We hand-pick a tutor for the subject and the student — interviewed, ID-checked and WWCC-verified. Never a random name from a list.',
+    body: 'We hand-pick a tutor for the subject and the student: interviewed, ID-checked and WWCC-verified. Never a random name from a list.',
   },
   {
     n: '3',
@@ -144,7 +146,7 @@ export function SubjectGrid() {
       id="subjects"
       eyebrow="Subjects and levels"
       heading="Maths from Year 7 to Extension 2. Physics for the HSC."
-      lead="We keep the list short so every tutor we send is strong in what they teach. Anything else, ask — if we cannot cover it well, we will say so."
+      lead="We keep the list short so every tutor we send is strong in what they teach. Anything else, ask. If we cannot cover it well, we will say so."
     >
       <div className="grid md:grid-cols-2 gap-6 md:gap-8">
         <div className="rounded-md border border-rule bg-surface p-6">
@@ -193,13 +195,13 @@ export const WHY = [
   ['A real person who answers', 'You deal directly with the founder. Messages get a reply the same day, not a ticket number.'],
   ['Verified, vetted tutors', 'Every tutor is 18 or older, WWCC-verified, ID-checked, and chosen for real results in their subject.'],
   ['Honest pricing, no lock-in', 'Rates are on the website, you pay as you go, and nothing is charged to your card without your say-so.'],
-  ['Home or online', 'Lessons at your home, a local library, or online — whatever suits your week. Switch whenever you like.'],
+  ['Home or online', 'Lessons at your home, a local library, or online, whichever suits your week. Switch whenever you like.'],
   ['Fair pay, better tutors', 'We pay tutors properly, so the good ones stay. That is who teaches your child.'],
 ] as const;
 
 export function WhyCrestio() {
   return (
-    <Section id="why" eyebrow="Why families choose Crestio" heading="The things other services get wrong, done right.">
+    <Section id="why" eyebrow="Why families choose Crestio" heading="What we do differently.">
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
         {WHY.map(([title, body]) => (
           <div key={title}>
@@ -235,13 +237,13 @@ export function RateTable({ compact = false }: { compact?: boolean }) {
                 {!compact && <div className="text-2xs text-ink-soft mt-0.5">{b.detail}</div>}
               </td>
               <td className="px-4 md:px-5 py-3.5 text-right align-top num tabular text-ink whitespace-nowrap">{formatRate(b.online, b.fromPrice)}</td>
-              <td className="px-4 md:px-5 py-3.5 text-right align-top num tabular text-ink whitespace-nowrap">{formatRate(b.inHome, b.fromPrice)}</td>
+              <td className="px-4 md:px-5 py-3.5 text-right align-top num tabular text-ink whitespace-nowrap">{b.inHome == null ? <span className="text-ink-soft">Online only</span> : formatRate(b.inHome, b.fromPrice)}</td>
             </tr>
           ))}
         </tbody>
       </table>
       <div className="px-4 md:px-5 py-3 border-t border-rule text-2xs text-ink-soft leading-relaxed">
-        Per hour, per student. The full price — no joining fee, no booking fee, nothing added at checkout. In-home rates cover the tutor's travel.
+        Per hour, per student. The full price: no joining fee, no booking fee, nothing added at checkout. In-home rates cover the tutor's travel.
       </div>
     </div>
   );
@@ -290,14 +292,14 @@ export function TutorBand() {
 }
 
 // ---------------------------------------------------------------------------
-// Reviews — only ever real ones. Empty until the first families are in.
+// Reviews: only ever real ones. Empty until the first families are in.
 // ---------------------------------------------------------------------------
 
 export function ReviewsBand() {
   return (
-    <Section eyebrow="What families say" heading="Earning our reputation, one family at a time." tone="surface">
+    <Section eyebrow="What families say" heading="No reviews yet. We would rather wait for real ones." tone="surface">
       <p className="text-sm text-ink-muted leading-relaxed max-w-2xl">
-        We are new, and we would rather show you real words than invented ones. Verified reviews from our first families will appear here as they come in — and we would love you to be one of them.
+        Crestio is new. Reviews from the first families will appear here as they come in, in their own words and with their permission. We will not write them ourselves.
       </p>
     </Section>
   );
@@ -326,7 +328,7 @@ export function FaqList({ items = FAQS, heading = 'Good questions, answered plai
 }
 
 // ---------------------------------------------------------------------------
-// Final CTA
+// Final call to action
 // ---------------------------------------------------------------------------
 
 export function FinalBand() {

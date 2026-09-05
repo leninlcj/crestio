@@ -90,7 +90,7 @@
   "account": {
     "pay_eyebrow": "Your pay rate",
     "pay_per_hour": "/ hour",
-    "pay_not_set": "Not set — ask your owner.",
+    "pay_not_set": "Not set. Ask your owner.",
     "pay_hint": "Set by your organisation owner. If this looks wrong, talk to them.",
     "profile_eyebrow": "Profile",
     "profile_heading_tutor": "Your profile",
@@ -136,7 +136,7 @@
     "deleting": "Deleting…",
     "owner_eyebrow": "Owner tools",
     "owner_heading": "Billing exemption",
-    "owner_body": "As the platform owner you have unlimited access to every feature. Toggle exemption off to temporarily experience the app as a paying customer — paywalls, trial prompts, and upgrade nudges will behave exactly as they do for real users.",
+    "owner_body": "As the platform owner you have unlimited access to every feature. Toggle exemption off to temporarily experience the app as a paying customer: paywalls, trial prompts, and upgrade nudges will behave exactly as they do for real users.",
     "owner_exemption_active": "Exemption active",
     "owner_exemption_off": "Exemption off",
     "owner_state_active": "Unlimited access. No paywalls will show.",
@@ -185,14 +185,14 @@
     "billed_line": "{{price}}{{period}} · billed {{interval}}",
     "interval_monthly": "monthly",
     "interval_annual": "annually",
-    "headline_ending": "Ending {{date}} — access continues until then",
+    "headline_ending": "Ending {{date}}; access continues until then",
     "headline_renews": "Renews {{date}}",
     "headline_active": "Active",
-    "headline_trial_converts": "Free trial — converts on {{date}}",
+    "headline_trial_converts": "Free trial, converts on {{date}}",
     "headline_trial": "Free trial",
-    "headline_trial_days": "Free trial — {{days_left}} left",
+    "headline_trial_days": "Free trial, {{days_left}} left",
     "headline_trial_expired": "Trial expired",
-    "headline_past_due": "Payment past due — update your card to keep access",
+    "headline_past_due": "Payment past due. Update your card to keep access",
     "headline_cancelled": "Cancelled",
     "headline_issue": "Subscription issue",
     "headline_paused": "Paused",
@@ -245,8 +245,8 @@
     "how_step_4": "Future polishes use that guide so the AI starts in your voice instead of a generic one.",
     "indicator_with_count_one": "Polishing in your voice ({{count}} edit learned)",
     "indicator_with_count_other": "Polishing in your voice ({{count}} edits learned)",
-    "indicator_in_progress_one": "{{count}} edit learned — {{remaining}} more until polish in your voice",
-    "indicator_in_progress_other": "{{count}} edits learned — {{remaining}} more until polish in your voice"
+    "indicator_in_progress_one": "{{count}} edit learned, {{remaining}} more until polish in your voice",
+    "indicator_in_progress_other": "{{count}} edits learned, {{remaining}} more until polish in your voice"
   },
   "referrals_page": {
     "page": {
@@ -255,7 +255,7 @@
     },
     "loading": "Loading…",
     "copy_prompt": "Copy this:",
-    "message_template": "Hey — I've been using Crestio to manage my tutoring. It's actually good. Here's 25% off your first month if you want to try: {{link}}",
+    "message_template": "Hey, I've been using Crestio to manage my tutoring. It's actually good. Here's 25% off your first month if you want to try: {{link}}",
     "share": {
       "eyebrow": "Referrals",
       "heading": "Share Crestio. Get 25% off each month you refer a friend.",

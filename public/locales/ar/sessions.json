@@ -60,7 +60,7 @@
   "errors": {
     "not_signed_in": "لم تقم بتسجيل الدخول.",
     "select_at_least_one": "اختر جلسة واحدة على الأقل.",
-    "no_organisation": "لا توجد منظمة مرتبطة بحسابك. اتصل بـ support@crestio.ai."
+    "no_organisation": "لا توجد منظمة مرتبطة بحسابك. اتصل بـ hello@crestio.ai."
   },
   "subtitle_session": "جلسة",
   "title_new": "تسجيل جلسة",

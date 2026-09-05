@@ -60,7 +60,7 @@
   "errors": {
     "not_signed_in": "Non connecté.",
     "select_at_least_one": "Sélectionnez au moins une séance.",
-    "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai."
+    "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez hello@crestio.ai."
   },
   "subtitle_session": "Séance",
   "title_new": "Enregistrer une séance",

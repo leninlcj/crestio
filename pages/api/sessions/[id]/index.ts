@@ -83,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'DELETE') {
     if (existing.status === 'completed') {
-      return res.status(400).json({ error: 'Cannot delete a completed session — cancel it instead.' });
+      return res.status(400).json({ error: 'Cannot delete a completed session. Cancel it instead.' });
     }
     const { error: delErr } = await admin.from('sessions').delete().eq('id', sessionId);
     if (delErr) return res.status(500).json({ error: delErr.message });

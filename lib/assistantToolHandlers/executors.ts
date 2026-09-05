@@ -211,7 +211,7 @@ export async function executeCreateStudent(
   const suffix = preview.parent_email
     ? inviteSent
       ? ' Parent invitation sent.'
-      : ' Parent invitation could not be sent — check email settings.'
+      : ' Parent invitation could not be sent; check email settings.'
     : '';
   return {
     ok: true,

@@ -9,10 +9,10 @@ const MODULES = [
 ] as const;
 
 const PHYSICS_FAQ = [
-  { q: 'Is physics mostly maths?', a: 'The HSC physics course is about half maths in practice: rearranging formulas, working with vectors, reading graphs, handling units. Students who are shaky on the maths lose marks on physics they understand. Our physics tutors teach the maths behind each module explicitly rather than assuming it.' },
-  { q: 'What about the depth study and practical work?', a: 'We help plan and write up the depth study, and we go over practical investigations — variables, uncertainty, graphing — because the exam tests them directly.' },
-  { q: 'Can the same tutor do maths and physics?', a: 'Often, yes. Many of our physics tutors also tutor Mathematics Advanced or Extension 1, and a single tutor for both subjects keeps the weekly plan coherent. Ask on the enquiry form.' },
-  { q: 'Do you tutor Year 10 science as physics preparation?', a: 'If the goal is a strong start to Year 11 physics, yes — we run a short bridging plan in Term 4 of Year 10 covering the maths and the core ideas. Mention it in your enquiry.' },
+  { q: 'Is physics mostly maths?', a: 'The HSC physics course is about half maths in practice: rearranging formulas, working with vectors, reading graphs, handling units. Students who are shaky on the maths lose marks on physics they understand. Crestio physics lessons teach the maths behind each module explicitly rather than assuming it.' },
+  { q: 'What about the depth study and practical work?', a: 'We help plan and write up the depth study, and we go over practical investigations (variables, uncertainty, graphing) because the exam tests them directly.' },
+  { q: 'Can the same tutor do maths and physics?', a: 'Often, yes. A physics tutor who also teaches Mathematics Advanced or Extension 1 keeps the weekly plan coherent, and we match one tutor for both subjects where we can. Ask on the enquiry form.' },
+  { q: 'Do you tutor Year 10 science as physics preparation?', a: 'If the goal is a strong start to Year 11 physics, yes. A short bridging plan in Term 4 of Year 10 covers the maths and the core ideas. Mention it in your enquiry.' },
 ];
 
 export default function PhysicsTutoring() {
@@ -30,7 +30,7 @@ export default function PhysicsTutoring() {
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">Physics · Years 11–12 · Sydney & online</div>
           <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">Physics tutoring with the maths made explicit.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed mb-7">
-            HSC physics is half concepts and half calculation. Our tutors teach both: the idea, the formula, what every symbol means, the units, the graph, and how the marker awards the marks.
+            HSC physics is half concepts and half calculation. Lessons teach both: the idea, the formula, what every symbol means, the units, the graph, and how the marker awards the marks.
           </p>
           <CtaRow />
         </div>

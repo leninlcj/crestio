@@ -84,7 +84,7 @@ function AiCostsInner() {
                 value={
                   data.total.calls
                     ? `${Math.round((data.total.escalations / data.total.calls) * 100)}%`
-                    : '—'
+                    : '–'
                 }
               />
             </div>

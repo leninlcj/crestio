@@ -26,7 +26,7 @@ export function InlineEditField({
   value,
   onSave,
   display,
-  placeholder = '—',
+  placeholder = '–',
   variant = 'body',
   multiline,
   className,

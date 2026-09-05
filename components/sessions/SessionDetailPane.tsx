@@ -217,7 +217,7 @@ function SessionMeta({ data, currency }: { data: Detail; currency: string }) {
     <div className="grid grid-cols-2 gap-3 text-xs">
       <Field label="When" value={`${formatDate(data.scheduled_at)} · ${formatTime(data.scheduled_at)}`} />
       <Field label="Duration" value={`${data.duration_minutes} min`} />
-      <Field label="Subject" value={[data.subject, data.topic].filter(Boolean).join(' · ') || '—'} />
+      <Field label="Subject" value={[data.subject, data.topic].filter(Boolean).join(' · ') || '–'} />
       <Field label="Tutor" value={data.tutor?.name ?? 'You'} />
       <Field label="Amount" value={formatCents(sessionAmount(data as any), currency)} />
       <Field label="Status" value={<StatusPill tone={tone as any}>{label}</StatusPill>} />

@@ -9,7 +9,7 @@ import crypto from 'crypto';
 
 function getSecret(): string {
   const s = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!s) throw new Error('SUPABASE_SERVICE_ROLE_KEY missing — cannot sign Connect tokens.');
+  if (!s) throw new Error('SUPABASE_SERVICE_ROLE_KEY missing, cannot sign Connect tokens.');
   return s;
 }
 

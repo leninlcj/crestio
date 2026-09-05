@@ -185,7 +185,7 @@ export function describeAction(a: ParsedAction): string {
         parts.push('today');
       }
       if (a.durationMinutes) parts.push(`${a.durationMinutes} min`);
-      return `Log session — ${parts.join(', ')}`;
+      return `Log session: ${parts.join(', ')}`;
     }
     case 'invoice':
       return a.studentName ? `New invoice for ${a.studentName}` : 'New invoice';

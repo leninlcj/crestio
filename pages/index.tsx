@@ -5,7 +5,7 @@ import { agencyOrganizationSchema, tutoringServiceSchema, agencyFaqSchema } from
 export default function Home() {
   return (
     <AgencyPage
-      title="Crestio Tutoring — Maths and physics tutors, carefully matched. Sydney & online."
+      title="Maths and physics tutoring in Sydney and online | Crestio Tutoring"
       noSuffix
       description="One-on-one maths and physics tutoring for Years 7–12 and the HSC. Every tutor interviewed, ID-checked and WWCC-verified. Sydney in-home and online across Australia. First lesson guaranteed."
       path="/"
@@ -15,7 +15,7 @@ export default function Home() {
     >
       <Hero
         heading={<>The right tutor,<br className="hidden sm:block" /> matched to your child.</>}
-        lead="One-on-one maths and physics tutoring across Sydney and online — Years 7 to 12 and the HSC. Every Crestio tutor is interviewed, ID-checked and WWCC-verified before they ever meet your child."
+        lead="One-on-one maths and physics tutoring across Sydney and online, Years 7 to 12 and the HSC. Every Crestio tutor is interviewed, ID-checked and WWCC-verified before they meet your child."
       />
       <HowItWorks />
       <SubjectGrid />

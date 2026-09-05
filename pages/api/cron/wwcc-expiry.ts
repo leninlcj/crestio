@@ -27,11 +27,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const soon: string[] = [];
   const missing: string[] = [];
   for (const t of tutors ?? []) {
-    if (!t.wwcc_number || !t.wwcc_verified_at) { missing.push(`${t.name}${t.email ? ` (${t.email})` : ''} — ${!t.wwcc_number ? 'no WWCC number' : 'not verified'}`); continue; }
-    if (!t.wwcc_expiry) { missing.push(`${t.name} — no expiry date recorded`); continue; }
+    if (!t.wwcc_number || !t.wwcc_verified_at) { missing.push(`${t.name}${t.email ? ` (${t.email})` : ''}: ${!t.wwcc_number ? 'no WWCC number' : 'not verified'}`); continue; }
+    if (!t.wwcc_expiry) { missing.push(`${t.name}: no expiry date recorded`); continue; }
     const days = Math.ceil((new Date(t.wwcc_expiry).getTime() - today.getTime()) / 86_400_000);
-    if (days < 0) expired.push(`${t.name} — expired ${t.wwcc_expiry} (${-days} days ago). Stand down until renewed.`);
-    else if (days <= 60) soon.push(`${t.name} — expires ${t.wwcc_expiry} (${days} days). Ask them to renew now.`);
+    if (days < 0) expired.push(`${t.name}: expired ${t.wwcc_expiry} (${-days} days ago). Stand down until renewed.`);
+    else if (days <= 60) soon.push(`${t.name}: expires ${t.wwcc_expiry} (${days} days). Ask them to renew now.`);
   }
 
   const total = expired.length + soon.length + missing.length;
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const result = await sendEmail({
     to: process.env.OWNER_ALERT_EMAIL || OWNER_EMAIL,
-    subject: `${expired.length ? 'ACTION: ' : ''}WWCC check — ${expired.length} expired, ${soon.length} expiring, ${missing.length} missing`,
+    subject: `${expired.length ? 'ACTION: ' : ''}WWCC check: ${expired.length} expired, ${soon.length} expiring, ${missing.length} missing`,
     text: lines,
     html: `<pre style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;white-space:pre-wrap;font-size:14px;line-height:1.5">${esc(lines)}</pre>`,
   });

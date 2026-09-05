@@ -341,7 +341,7 @@ function PayoutsInner() {
                                       <td className="px-5 py-1.5 text-ink-muted font-mono text-xs">{dateLabel}</td>
                                       <td className="px-5 py-1.5 text-ink">
                                         <Link href={`/app/sessions/${s.id}`} className="hover:underline">
-                                          {s.student?.name ?? '—'}
+                                          {s.student?.name ?? '–'}
                                         </Link>
                                       </td>
                                       <td className="px-5 py-1.5 text-right font-mono num text-xs">{s.duration_minutes}</td>

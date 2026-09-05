@@ -28,7 +28,7 @@ function fmt(cents: number, currency: string): string {
   catch { return `$${(cents / 100).toFixed(2)}`; }
 }
 function fmtDate(s: string | null): string {
-  if (!s) return '—';
+  if (!s) return '–';
   try { return new Date(s).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }); }
   catch { return s; }
 }
@@ -305,7 +305,7 @@ function ParentPayInner() {
               <div className="flex items-baseline justify-between mb-4">
                 <div className="text-2xs uppercase tracking-widest text-ink-muted">Total</div>
                 <div className="font-display text-3xl tracking-tightest num">
-                  {selectedInvoices.length > 0 ? fmt(total, currency) : '—'}
+                  {selectedInvoices.length > 0 ? fmt(total, currency) : '–'}
                 </div>
               </div>
 

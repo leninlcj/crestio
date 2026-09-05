@@ -292,7 +292,7 @@ export function CommandPalette() {
               autoFocus
               value={query}
               onValueChange={setQuery}
-              placeholder='Search anything — try "log session zane 1h"'
+              placeholder='Search anything: try "log session zane 1h"'
               className="flex-1 bg-transparent outline-none text-sm text-ink placeholder:text-ink-soft"
               data-test-id="cmdk-input"
             />
@@ -380,7 +380,7 @@ export function CommandPalette() {
                     value={`session:${s.id}`}
                     onSelect={() => executeNavigation(
                       `/app/sessions/${s.id}`,
-                      `${s.student_name} — ${formatSessionDate(s.scheduled_at)}`,
+                      `${s.student_name} · ${formatSessionDate(s.scheduled_at)}`,
                     )}
                     className="cmdk-item"
                     data-test-id="cmdk-session"
@@ -496,21 +496,21 @@ const QUICK_DEFAULTS: Array<{ id: string; label: string; href: string; hint?: st
 
 const PAGE_TARGETS: Array<{ label: string; href: string; hint?: string; aliases?: string[] }> = [
   { label: 'Home',                         href: '/app',                       hint: 'Morning briefing',     aliases: ['dashboard', 'briefing'] },
-  { label: 'Sessions — Today',             href: '/app/sessions?tab=today',    hint: 'Today timeline',       aliases: ['today', 'sessions today'] },
-  { label: 'Sessions — Upcoming',          href: '/app/sessions?tab=upcoming', hint: 'This week + later',    aliases: ['upcoming', 'this week', 'tomorrow'] },
-  { label: 'Sessions — Past',              href: '/app/sessions?tab=past',     hint: 'Logged sessions',      aliases: ['past', 'history'] },
-  { label: 'Sessions — Polish queue',      href: '/app/sessions/polish-queue', hint: 'Notes to polish',      aliases: ['polish', 'queue'] },
-  { label: 'Sessions — Templates',         href: '/app/templates',             hint: 'Recurring schedules',  aliases: ['recurring', 'template'] },
-  { label: 'People — Students',            href: '/app/students',              hint: 'All students',         aliases: ['students', 'roster'] },
-  { label: 'People — Households',          href: '/app/households',            hint: 'Households / families', aliases: ['households', 'families'] },
-  { label: 'People — Parents',             href: '/app/parents',               hint: 'Parent contacts',      aliases: ['parents'] },
-  { label: 'Money — Invoices',             href: '/app/invoices',              hint: 'All invoices',         aliases: ['invoices', 'money'] },
-  { label: 'Money — Batch invoice',        href: '/app/invoices/batch',        hint: 'Bill multiple parents at once', aliases: ['batch', 'bill'] },
-  { label: 'Resources — Lesson plans',     href: '/app/lesson-plans',          hint: 'AI lesson plans',      aliases: ['lesson plans', 'lessons', 'plans'] },
-  { label: 'Resources — Files',            href: '/app/files',                 hint: 'Uploaded files',       aliases: ['files'] },
+  { label: 'Sessions · Today',             href: '/app/sessions?tab=today',    hint: 'Today timeline',       aliases: ['today', 'sessions today'] },
+  { label: 'Sessions · Upcoming',          href: '/app/sessions?tab=upcoming', hint: 'This week + later',    aliases: ['upcoming', 'this week', 'tomorrow'] },
+  { label: 'Sessions · Past',              href: '/app/sessions?tab=past',     hint: 'Logged sessions',      aliases: ['past', 'history'] },
+  { label: 'Sessions · Polish queue',      href: '/app/sessions/polish-queue', hint: 'Notes to polish',      aliases: ['polish', 'queue'] },
+  { label: 'Sessions · Templates',         href: '/app/templates',             hint: 'Recurring schedules',  aliases: ['recurring', 'template'] },
+  { label: 'People · Students',            href: '/app/students',              hint: 'All students',         aliases: ['students', 'roster'] },
+  { label: 'People · Households',          href: '/app/households',            hint: 'Households / families', aliases: ['households', 'families'] },
+  { label: 'People · Parents',             href: '/app/parents',               hint: 'Parent contacts',      aliases: ['parents'] },
+  { label: 'Money · Invoices',             href: '/app/invoices',              hint: 'All invoices',         aliases: ['invoices', 'money'] },
+  { label: 'Money · Batch invoice',        href: '/app/invoices/batch',        hint: 'Bill multiple parents at once', aliases: ['batch', 'bill'] },
+  { label: 'Resources · Lesson plans',     href: '/app/lesson-plans',          hint: 'AI lesson plans',      aliases: ['lesson plans', 'lessons', 'plans'] },
+  { label: 'Resources · Files',            href: '/app/files',                 hint: 'Uploaded files',       aliases: ['files'] },
   { label: 'Messages',                     href: '/app/messages',              hint: 'Parent threads',       aliases: ['messages', 'inbox'] },
   { label: 'Settings',                     href: '/app/settings/account',      hint: 'Account & billing',    aliases: ['settings', 'preferences'] },
-  { label: 'Settings — Trash',             href: '/app/settings/trash',        hint: 'Archived & deleted items', aliases: ['trash', 'archived'] },
+  { label: 'Settings · Trash',             href: '/app/settings/trash',        hint: 'Archived & deleted items', aliases: ['trash', 'archived'] },
 ];
 
 function formatCents(c: number): string {

@@ -99,11 +99,11 @@ export function QuickCreate() {
       case 'session':         return { primary: 'Type "schedule …" or pick a student', secondary: 'When (e.g. tomorrow 4pm)', tertiary: '' };
       case 'household':       return { primary: 'Household display name (e.g. The Hartleys)', secondary: 'Address (optional)', tertiary: '' };
       case 'parent':          return { primary: 'Parent name', secondary: 'Email', tertiary: 'Phone (optional)' };
-      case 'invoice':         return { primary: 'Pick a household — opens the invoice composer', secondary: '', tertiary: '' };
+      case 'invoice':         return { primary: 'Pick a household to open the invoice composer', secondary: '', tertiary: '' };
       case 'lesson_plan':     return { primary: 'Topic (e.g. HSC essay structure)', secondary: 'Subject', tertiary: 'Duration mins' };
       case 'file':            return { primary: 'Click to choose a file…', secondary: '', tertiary: '' };
-      case 'template':        return { primary: 'Pick a student — opens the template builder', secondary: '', tertiary: '' };
-      case 'message_thread':  return { primary: 'Pick a parent — opens the composer', secondary: '', tertiary: '' };
+      case 'template':        return { primary: 'Pick a student to open the template builder', secondary: '', tertiary: '' };
+      case 'message_thread':  return { primary: 'Pick a parent to open the composer', secondary: '', tertiary: '' };
     }
   }, [type]);
 

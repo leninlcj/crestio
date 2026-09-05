@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // Public signup is closed since the agency pivot: the page must explain that,
 // and point to the three real doors (enquire, apply, sign in).
-test.describe('auth — signup is invitation-only', () => {
+test.describe('auth: signup is invitation-only', () => {
   test('renders the closed notice with the three doors', async ({ page }) => {
     await page.goto('/auth/signup');
     await expect(page.getByRole('heading', { name: /no public sign-up/i })).toBeVisible();
@@ -18,7 +18,7 @@ test.describe('auth — signup is invitation-only', () => {
   });
 });
 
-test.describe('auth — signin page', () => {
+test.describe('auth: signin page', () => {
   test('renders email + password fields and a submit button', async ({ page }) => {
     await page.goto('/auth/signin');
     await expect(page.locator('input[type="email"]')).toBeVisible();

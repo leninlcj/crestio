@@ -90,7 +90,7 @@ export function InvoiceDetailPane({ open, invoiceId, onClose, currency, onChange
       fullPageHref={invoiceId ? `/app/invoices/${invoiceId}` : undefined}
       title={
         loading || !data ? 'Invoice'
-        : <>{data.number}{' '}<span className="text-ink-muted text-xs font-normal">· {data.household?.display_name ?? data.student?.name ?? '—'}</span></>
+        : <>{data.number}{' '}<span className="text-ink-muted text-xs font-normal">· {data.household?.display_name ?? data.student?.name ?? '–'}</span></>
       }
     >
       {loading || !data ? (

@@ -34,7 +34,7 @@
       "topic_placeholder": "e.g. Introduction to integration by parts",
       "duration_label": "Duration (minutes)",
       "student_link_label": "Link to student (optional)",
-      "student_none": "—",
+      "student_none": "–",
       "plan_label": "Plan (markdown)",
       "plan_placeholder": "# Lesson plan\n\n## Objectives\n- …",
       "preview_toggle_edit": "Edit",
@@ -56,7 +56,7 @@
     "errors": {
       "subject_topic_required": "Subject and topic are required to generate.",
       "not_signed_in": "Not signed in.",
-      "no_organisation": "No organisation is linked to your account. Contact support@crestio.ai.",
+      "no_organisation": "No organisation is linked to your account. Contact hello@crestio.ai.",
       "server_returned": "Server returned {{status}}",
       "server_returned_with_text": "Server returned {{status}}: {{text}}",
       "no_plan": "Server returned no plan.",

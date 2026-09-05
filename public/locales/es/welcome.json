@@ -13,9 +13,9 @@
     "resend_pending": "Enviando…",
     "resend_done": "Ya está enviado. Echa un vistazo a tu bandeja de entrada dentro de un momento.",
     "resend_rate_limited": "Ya se ha enviado recientemente. Inténtalo de nuevo dentro de unos {{minutes}} minutos.",
-    "resend_failed": "No se ha podido reenviar. Inténtalo de nuevo o envía un correo electrónico a support@crestio.ai.",
+    "resend_failed": "No se ha podido reenviar. Inténtalo de nuevo o envía un correo electrónico a hello@crestio.ai.",
     "spam_hint": "Si no lo ves en un minuto, revisa tu carpeta de correo no deseado.",
-    "support_line": "¿Tienes algún problema? Envía un correo electrónico a support@crestio.ai y lo solucionaremos."
+    "support_line": "¿Tienes algún problema? Envía un correo electrónico a hello@crestio.ai y lo solucionaremos."
   },
   "logged_in": {
     "heading": "Ya has iniciado sesión.",
@@ -24,7 +24,7 @@
   },
   "unpaid": {
     "heading": "Tu pago no se ha completado.",
-    "body": "Stripe no ha confirmado que el pago de este pedido se haya realizado correctamente. Si se ha cargado el importe en tu tarjeta, envía un correo electrónico a support@crestio.ai indicando la hora en la que realizaste el pago y lo solucionaremos.",
+    "body": "Stripe no ha confirmado que el pago de este pedido se haya realizado correctamente. Si se ha cargado el importe en tu tarjeta, envía un correo electrónico a hello@crestio.ai indicando la hora en la que realizaste el pago y lo solucionaremos.",
     "back_to_pricing": "Volver a los precios"
   },
   "missing": {
@@ -34,6 +34,6 @@
   },
   "error": {
     "heading": "Ha ocurrido un error.",
-    "body": "No hemos podido consultar tu pago en este momento. Actualiza la página dentro de un momento o envía un correo electrónico a support@crestio.ai si el problema persiste."
+    "body": "No hemos podido consultar tu pago en este momento. Actualiza la página dentro de un momento o envía un correo electrónico a hello@crestio.ai si el problema persiste."
   }
 }

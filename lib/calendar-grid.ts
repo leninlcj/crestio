@@ -2,8 +2,8 @@
 // 60px per hour. Half-hour subgrid = 30px.
 
 export const HOUR_PX = 60;
-export const MIN_HOUR = 6;   // 6am — top of the visible default range
-export const MAX_HOUR = 23;  // 11pm — bottom
+export const MIN_HOUR = 6;   // 6am, top of the visible default range
+export const MAX_HOUR = 23;  // 11pm, bottom
 
 export function gridHeight(minHour = MIN_HOUR, maxHour = MAX_HOUR): number {
   return (maxHour - minHour) * HOUR_PX;

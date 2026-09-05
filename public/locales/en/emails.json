@@ -11,7 +11,7 @@
     "open_in_crestio_text": "Open in Crestio: {{url}}",
     "manage_notifications": "Manage notifications",
     "manage_notifications_text": "Manage notifications: {{url}}",
-    "footer_sender": "From Crestio — tutor business software."
+    "footer_sender": "From Crestio Tutoring."
   },
   "message_received": {
     "title": "New message about {{student}}",

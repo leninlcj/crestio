@@ -1,14 +1,18 @@
 {
-  "name": "Crestio",
+  "name": "Crestio Tutoring",
   "short_name": "Crestio",
-  "description": "Run your tutoring business with intent.",
+  "description": "The Crestio Tutoring app for tutors and parents: lessons, notes, homework and invoices.",
   "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FAF8F4",
   "theme_color": "#1F3A2E",
-  "categories": ["business", "education", "productivity"],
+  "categories": [
+    "business",
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/icon-192.png",

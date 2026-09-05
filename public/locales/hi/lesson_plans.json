@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "विषय और विषय-वस्तु उत्पन्न करने के लिए आवश्यक हैं।",
       "not_signed_in": "साइन इन नहीं किया गया।",
-      "no_organisation": "आपके खाते से कोई संगठन लिंक नहीं है। support@crestio.ai पर संपर्क करें।",
+      "no_organisation": "आपके खाते से कोई संगठन लिंक नहीं है। hello@crestio.ai पर संपर्क करें।",
       "server_returned": "सर्वर ने लौटाया: {{status}}",
       "server_returned_with_text": "सर्वर ने लौटाया {{status}}: {{text}}",
       "no_plan": "सर्वर ने कोई योजना नहीं लौटाई।",

@@ -32,7 +32,7 @@ export async function sendEmail({
 }: SendEmailArgs): Promise<SendEmailResult> {
   const resend = getClient();
   if (!resend) {
-    console.error('[email] RESEND_API_KEY not configured — email not sent');
+    console.error('[email] RESEND_API_KEY not configured, email not sent');
     return { success: false, error: 'RESEND_API_KEY not configured' };
   }
 

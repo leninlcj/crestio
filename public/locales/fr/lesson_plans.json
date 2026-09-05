@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "La matière et le thème sont obligatoires pour la génération.",
       "not_signed_in": "Vous n'êtes pas connecté.",
-      "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez support@crestio.ai.",
+      "no_organisation": "Aucune organisation n'est associée à votre compte. Contactez hello@crestio.ai.",
       "server_returned": "Le serveur a renvoyé {{status}}",
       "server_returned_with_text": "{{status}} renvoyée par le serveur : {{text}}",
       "no_plan": "Le serveur n'a renvoyé aucun plan.",

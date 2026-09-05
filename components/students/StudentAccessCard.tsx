@@ -134,7 +134,7 @@ export function StudentAccessCard({ studentId, studentName, dateOfBirth, parentE
           </button>
           <p className="text-2xs text-ink-soft">
             {requiresConsent
-              ? `${studentName.split(' ')[0]} is under 16 — invitation goes to a parent first for consent.`
+              ? `${studentName.split(' ')[0]} is under 16, so the invitation goes to a parent first for consent.`
               : `Invitation goes to ${studentName.split(' ')[0]} directly.`}
           </p>
         </div>
@@ -187,7 +187,7 @@ export function StudentAccessCard({ studentId, studentName, dateOfBirth, parentE
 
 function describe(a: Access | null): string {
   if (!a) return 'Not yet set up.';
-  if (a.disabled_at) return `Disabled${a.disabled_reason ? ` — ${a.disabled_reason}` : ''}.`;
+  if (a.disabled_at) return `Disabled${a.disabled_reason ? `: ${a.disabled_reason}` : ''}.`;
   if (a.accepted_at) return `Active since ${formatDate(a.enabled_at ?? a.accepted_at)}.`;
   if (a.parental_consent_required && !a.parental_consent_given_at) return 'Waiting for parental consent.';
   if (a.invitation_sent_at) return `Invitation sent to ${a.invitation_email ?? 'student'}.`;
@@ -195,7 +195,7 @@ function describe(a: Access | null): string {
 }
 
 function formatDate(iso: string | null): string {
-  if (!iso) return '—';
+  if (!iso) return '–';
   return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 

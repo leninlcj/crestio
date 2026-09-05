@@ -253,7 +253,7 @@ export function SessionDetailModal({ open, onClose, session, onChanged, mode }: 
                   </button>
                 )}
                 {isPast && (
-                  <span className="text-2xs text-ink-soft">Past session — no actions available.</span>
+                  <span className="text-2xs text-ink-soft">Past session. No actions available.</span>
                 )}
               </div>
             )}

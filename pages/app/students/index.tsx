@@ -448,7 +448,7 @@ function StudentCard({
             <span className="truncate">{student.name}</span>
           </div>
           <div className="text-2xs text-ink-soft truncate mt-0.5">
-            {[student.year_level, student.school].filter(Boolean).join(' · ') || '—'}
+            {[student.year_level, student.school].filter(Boolean).join(' · ') || '–'}
           </div>
         </div>
         {showRate && student.hourly_rate_cents && (

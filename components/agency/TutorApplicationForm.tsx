@@ -188,13 +188,13 @@ export function TutorApplicationForm() {
         </div>
         {err('subjects')}
         <div className="mt-4" data-error={!!errors.qualifications}>
-          <label htmlFor="ta-quals" className={label}>Your results — ATAR, HSC marks, university course and year</label>
+          <label htmlFor="ta-quals" className={label}>Your results: ATAR, HSC marks, university course and year</label>
           <textarea id="ta-quals" className="input" rows={3} value={s.qualifications} onChange={(e) => set('qualifications', e.target.value)} placeholder="e.g. ATAR 96.4 (2024). Maths Ext 1: 92, Physics: 89. 2nd-year Electrical Engineering, Macquarie." required />
           {err('qualifications')}
         </div>
         <div className="mt-4">
           <label htmlFor="ta-exp" className={label}>Tutoring or teaching experience <span className="text-ink-soft">(optional)</span></label>
-          <textarea id="ta-exp" className="input" rows={3} value={s.experience} onChange={(e) => set('experience', e.target.value)} placeholder="Where, how long, which subjects. None is fine — say so." />
+          <textarea id="ta-exp" className="input" rows={3} value={s.experience} onChange={(e) => set('experience', e.target.value)} placeholder="Where, how long, which subjects. None is fine, say so." />
         </div>
       </fieldset>
 
@@ -218,7 +218,7 @@ export function TutorApplicationForm() {
           </div>
         )}
         <div className="max-w-sm" data-error={!!errors.abn}>
-          <label htmlFor="ta-abn" className={label}>ABN <span className="text-ink-soft">(optional — tutors are engaged as contractors; we can help you get one)</span></label>
+          <label htmlFor="ta-abn" className={label}>ABN <span className="text-ink-soft">(optional now, required before your first paid lesson; we can help you get one)</span></label>
           <input id="ta-abn" className="input" value={s.abn} onChange={(e) => set('abn', e.target.value)} inputMode="numeric" autoComplete="off" />
           {err('abn')}
         </div>

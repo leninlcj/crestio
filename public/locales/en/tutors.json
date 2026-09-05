@@ -20,7 +20,7 @@
     "this_month": "This month",
     "linked_yes": "Yes",
     "linked_no": "No",
-    "em_dash": "—"
+    "em_dash": "–"
   },
   "new": {
     "page_subtitle": "Tutors",
@@ -38,7 +38,7 @@
     "saving": "Saving…",
     "cancel": "Cancel",
     "not_signed_in": "Not signed in.",
-    "no_organization": "No organisation is linked to your account. Contact support@crestio.ai."
+    "no_organization": "No organisation is linked to your account. Contact hello@crestio.ai."
   },
   "common": {
     "loading": "Loading…"
@@ -66,7 +66,7 @@
     "contact_eyebrow": "Contact",
     "no_contact": "No contact.",
     "teaches_eyebrow": "Teaches",
-    "no_subjects": "—",
+    "no_subjects": "–",
     "pay_eyebrow": "Pay",
     "rate_label": "Rate: ",
     "rate_per_hour": " / hr",
@@ -81,7 +81,7 @@
       "duration": "Duration",
       "status": "Status",
       "pay": "Pay",
-      "subject_dash": "—",
+      "subject_dash": "–",
       "duration_minutes": "{{count}} min"
     }
   }

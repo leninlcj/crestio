@@ -29,7 +29,7 @@ export default function PaySuccessPage() {
             {status === 'succeeded'
               ? 'Thanks. A receipt is on its way to your email if you provided one.'
               : status === 'processing'
-              ? 'Your payment is processing — we will email a receipt once it clears.'
+              ? 'Your payment is processing. We will email a receipt once it clears.'
               : 'We will email you once we have an update.'}
           </p>
           <Link href="/" className="btn-secondary text-sm">Done</Link>

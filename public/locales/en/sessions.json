@@ -63,7 +63,7 @@
     "schedule_prompt": "Schedule one to fill your week.",
     "unpaid_prompt": "Every completed session is paid for. Nice.",
     "past_prompt": "Once you log a session, it lands here.",
-    "all_prompt": "Log your first session — it only takes a minute."
+    "all_prompt": "Log your first session. It only takes a minute."
   },
   "fields": {
     "student": "Student",
@@ -84,7 +84,7 @@
     "status": "Status",
     "notes_internal": "Private notes",
     "notes_internal_placeholder": "What did you cover? How did it go?",
-    "notes_internal_hint": "Only you see these. Tap the mic to dictate — transcripts append. Click Polish with AI to publish a parent-friendly version.",
+    "notes_internal_hint": "Only you see these. Tap the mic to dictate; transcripts append. Click Polish with AI to publish a parent-friendly version.",
     "notes_parent_facing": "Shared with parent",
     "notes_parent_facing_hint": "What parents see in their portal. Auto-filled when you polish.",
     "notes_parent_facing_placeholder": "Parent-facing notes.",
@@ -128,7 +128,7 @@
     "day_ago_one": "1 day ago",
     "day_ago_other": "{{count}} days ago"
   },
-  "polish_error_generic": "Something went wrong. Your notes are still saved — please try again in a moment.",
+  "polish_error_generic": "Something went wrong. Your notes are still saved. Please try again in a moment.",
   "polish_needs_student_duration": "Select a student and duration first.",
   "polish_voice_indicator_one": "Polishing in your voice ({{count}} edit learned)",
   "polish_voice_indicator_other": "Polishing in your voice ({{count}} edits learned)",
@@ -158,6 +158,6 @@
   "errors": {
     "select_at_least_one": "Select at least one session.",
     "not_signed_in": "Not signed in.",
-    "no_organisation": "No organisation is linked to your account. Contact support@crestio.ai."
+    "no_organisation": "No organisation is linked to your account. Contact hello@crestio.ai."
   }
 }

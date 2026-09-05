@@ -50,7 +50,7 @@ const STATUS_TONE: Record<Enquiry['status'], 'neutral' | 'forest' | 'success' | 
 const MODE_LABEL = { online: 'Online', in_home: 'In-home', either: 'Either' } as const;
 
 function needLabel(key: string | null): string {
-  return NEEDS.find((n) => n.key === key)?.label ?? '—';
+  return NEEDS.find((n) => n.key === key)?.label ?? 'Not given';
 }
 
 function suggestedRate(e: Enquiry, mode: 'online' | 'in_home'): number | null {
@@ -280,13 +280,13 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
       <dl>
         {row('Received', formatDateTime(e.created_at))}
         {row('Email', <a className="text-forest underline underline-offset-2" href={`mailto:${e.email}`}>{e.email}</a>)}
-        {row('Phone', e.phone ? <a className="text-forest underline underline-offset-2" href={`tel:${e.phone}`}>{e.phone}</a> : '—')}
+        {row('Phone', e.phone ? <a className="text-forest underline underline-offset-2" href={`tel:${e.phone}`}>{e.phone}</a> : 'Not given')}
         {row('Who', e.who === 'me' ? 'Themselves' : e.who === 'my_child' ? 'Their child' : 'Someone else')}
-        {row('Student', `${e.student_first_name ?? '—'} · ${e.year_level}`)}
+        {row('Student', `${e.student_first_name ?? 'Name not given'} · ${e.year_level}`)}
         {row('Subjects', subjectLabels(e.subjects).join(', '))}
         {row('Lessons', `${MODE_LABEL[e.mode]}${e.suburb ? ` · ${e.suburb}` : ''}`)}
         {row('Focus', needLabel(e.need))}
-        {row('Source', e.source ?? '—')}
+        {row('Source', e.source ?? 'Direct')}
         {e.contacted_at && row('Contacted', formatDateTime(e.contacted_at))}
       </dl>
 
@@ -305,7 +305,7 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
       <div>
         <label className="label" htmlFor="lead-tutor">Assigned tutor</label>
         <select id="lead-tutor" className="input" value={tutorId} onChange={(ev) => { setTutorId(ev.target.value); onUpdate({ assigned_tutor_id: ev.target.value || null }, ev.target.value ? 'Tutor assigned.' : 'Tutor cleared.'); }}>
-          <option value="">— Not yet —</option>
+          <option value="">Not yet</option>
           {tutors.map((t) => <option key={t.id} value={t.id}>{t.name}{t.suburb ? ` · ${t.suburb}` : ''}</option>)}
         </select>
         {tutors.length === 0 && <p className="mt-1.5 text-2xs text-ink-soft">No tutors yet. Accepted applications appear here.</p>}

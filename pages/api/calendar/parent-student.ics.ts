@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   const ics = buildIcs({
-    calendarName: `Crestio — ${studentName}`,
+    calendarName: `Crestio · ${studentName}`,
     calendarDescription: `Tutoring sessions for ${studentName}.`,
     events,
   });

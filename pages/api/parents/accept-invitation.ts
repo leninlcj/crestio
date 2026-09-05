@@ -91,7 +91,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const msg = createErr?.message ?? 'Could not create account.';
       if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('registered')) {
         return res.status(409).json({
-          error: 'An account with this email already exists. Sign in at /parent/signin and it will be linked automatically — or contact your tutor.',
+          error: 'An account with this email already exists. Sign in at /parent/signin and it will be linked automatically, or contact your tutor.',
         });
       }
       return res.status(500).json({ error: msg });

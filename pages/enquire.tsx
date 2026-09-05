@@ -25,12 +25,12 @@ export default function Enquire() {
             <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Get matched</div>
             <h1 className="font-display text-4xl md:text-5xl tracking-tighter text-ink text-balance leading-[1.05] mb-4">Book a free consultation.</h1>
             <p className="text-base text-ink-muted leading-relaxed mb-6">
-              A quick, no-obligation chat about what your child needs — then we find the right tutor. There is no charge to enquire and no lock-in.
+              A quick, no-obligation chat about what your child needs. Then we find the right tutor. There is no charge to enquire and no lock-in.
             </p>
             <dl className="space-y-4 text-sm">
               <div>
                 <dt className="font-medium text-ink">You will hear back within a day</dt>
-                <dd className="text-ink-muted">From {AGENCY.founder.firstName}, the founder — not a call centre.</dd>
+                <dd className="text-ink-muted">From {AGENCY.founder.firstName}, the founder, not a call centre.</dd>
               </div>
               <div>
                 <dt className="font-medium text-ink">Prefer to email?</dt>

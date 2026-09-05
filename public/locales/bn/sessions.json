@@ -60,7 +60,7 @@
   "errors": {
     "not_signed_in": "সাইন ইন করা হয়নি।",
     "select_at_least_one": "অন্তত একটি সেশন নির্বাচন করুন।",
-    "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা লিংক করা নেই। support@crestio.ai-তে যোগাযোগ করুন।"
+    "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা লিংক করা নেই। hello@crestio.ai-তে যোগাযোগ করুন।"
   },
   "subtitle_session": "সেশন",
   "title_new": "সেশন লগ করুন",

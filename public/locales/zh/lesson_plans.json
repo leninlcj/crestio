@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "生成时必须填写学科和主题。",
       "not_signed_in": "尚未登录。",
-      "no_organisation": "您的账户未关联任何组织。请联系 support@crestio.ai。",
+      "no_organisation": "您的账户未关联任何组织。请联系 hello@crestio.ai。",
       "server_returned": "服务器返回 {{status}}",
       "server_returned_with_text": "服务器返回{{status}}：{{text}}",
       "no_plan": "服务器未返回任何教案。",

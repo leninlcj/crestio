@@ -46,7 +46,7 @@ function Inner() {
       setSessions(((data ?? []) as any[]).map((s) => ({
         id: s.id,
         student_id: s.student_id,
-        student_name: s.student?.name ?? '—',
+        student_name: s.student?.name ?? '–',
         scheduled_at: s.scheduled_at,
         duration_minutes: s.duration_minutes,
         subject: s.subject,

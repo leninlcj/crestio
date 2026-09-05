@@ -470,7 +470,7 @@ function HouseholdCard({
                   These students don't have a household. Assign one before batching.
                 </div>
               ) : (
-                <div className="text-2xs text-claret">No primary parent — add one first.</div>
+                <div className="text-2xs text-claret">No primary parent. Add one first.</div>
               )}
             </div>
             <div className="flex items-center gap-3">
@@ -539,7 +539,7 @@ function HouseholdCard({
                               <td className="py-1">
                                 {formatDate(s.scheduled_at, { weekday: 'short', day: 'numeric', month: 'short' })}
                               </td>
-                              <td className="py-1">{s.subject ?? '—'}</td>
+                              <td className="py-1">{s.subject ?? '–'}</td>
                               <td className="py-1 text-right font-mono">{s.duration_minutes}</td>
                               <td className="py-1 text-right">
                                 <input
@@ -575,7 +575,7 @@ function HouseholdCard({
                     className="input text-sm"
                     value={draft.householdNotes[group.household_id] ?? ''}
                     onChange={(e) => onSetNote(group.household_id!, e.target.value)}
-                    placeholder="e.g. Thanks — bank transfer preferred."
+                    placeholder="e.g. Thanks, bank transfer preferred."
                   />
                 </div>
               )}

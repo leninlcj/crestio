@@ -4,10 +4,10 @@ type Template = { key: string; label: string; body: string };
 
 const DEFAULT_TEMPLATES: Template[] = [
   { key: 'reschedule_confirm', label: 'Reschedule confirmation', body: "Confirming our session has been moved. See you at the new time." },
-  { key: 'homework_reminder',  label: 'Homework reminder',       body: "Just a quick reminder about the homework from our last session — happy to clarify anything." },
+  { key: 'homework_reminder',  label: 'Homework reminder',       body: "Just a quick reminder about the homework from our last session. Happy to clarify anything." },
   { key: 'session_summary',    label: 'Session summary follow-up', body: "Quick summary of what we covered today and what to focus on for next session:" },
-  { key: 'payment_reminder',   label: 'Payment reminder',         body: "Just a gentle reminder — the latest invoice is still outstanding. Let me know if anything's unclear." },
-  { key: 'welcome_parent',     label: 'Welcome new parent',       body: "Welcome — looking forward to working with you and your child. Here's how things will run from my side:" },
+  { key: 'payment_reminder',   label: 'Payment reminder',         body: "Just a gentle reminder: the latest invoice is still outstanding. Let me know if anything's unclear." },
+  { key: 'welcome_parent',     label: 'Welcome new parent',       body: "Welcome. Looking forward to working with you and your child. Here's how things will run from my side:" },
 ];
 
 const STORAGE_KEY = 'crestio.canned_responses.v1';

@@ -96,8 +96,8 @@ export function formatMoney(
   locale: string,
   opts?: { showZero?: boolean; maximumFractionDigits?: number },
 ): string {
-  if (cents === null || cents === undefined) return '—';
-  if (cents === 0 && !opts?.showZero) return '—';
+  if (cents === null || cents === undefined) return '–';
+  if (cents === 0 && !opts?.showZero) return '–';
   const fractionDigits = opts?.maximumFractionDigits ?? (cents % 100 === 0 ? 0 : 2);
   try {
     return new Intl.NumberFormat(resolveIntlLocale(locale), {
@@ -119,9 +119,9 @@ export function formatDate(
   locale: string,
   opts?: Intl.DateTimeFormatOptions,
 ): string {
-  if (!iso) return '—';
+  if (!iso) return '–';
   const d = typeof iso === 'string' ? new Date(iso) : iso;
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return '–';
   try {
     return d.toLocaleDateString(resolveIntlLocale(locale), opts ?? { day: 'numeric', month: 'short', year: 'numeric' });
   } catch {
@@ -134,9 +134,9 @@ export function formatDateTime(
   locale: string,
   opts?: Intl.DateTimeFormatOptions,
 ): string {
-  if (!iso) return '—';
+  if (!iso) return '–';
   const d = typeof iso === 'string' ? new Date(iso) : iso;
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return '–';
   try {
     return d.toLocaleString(resolveIntlLocale(locale), opts ?? {
       day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',

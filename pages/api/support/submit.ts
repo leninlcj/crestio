@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
   if (!rl.allowed) {
     return res.status(429).json({
-      error: "You've sent a lot of support messages today. Please try again tomorrow, or email support@crestio.ai directly.",
+      error: "You've sent a lot of support messages today. Please try again tomorrow, or email hello@crestio.ai directly.",
       retry_after_seconds: rl.retry_after_seconds,
     });
   }

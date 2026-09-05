@@ -421,7 +421,7 @@ function MembersTab({
                     {s.name}
                   </Link>
                   <div className="text-2xs text-ink-muted">
-                    {s.year_level ?? '—'}
+                    {s.year_level ?? '–'}
                     {s.subjects && s.subjects.length > 0 && ` · ${s.subjects.join(', ')}`}
                   </div>
                 </div>
@@ -625,8 +625,8 @@ function SessionsTab({ sessions }: { sessions: SessionRow[] }) {
           {sessions.map((s) => (
             <tr key={s.id} className="row-link" onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
               <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
-              <td className="text-ink">{s.student?.name ?? '—'}</td>
-              <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}</td>
+              <td className="text-ink">{s.student?.name ?? '–'}</td>
+              <td className="text-ink-muted">{[s.subject, s.topic].filter(Boolean).join(' · ') || '–'}</td>
               <td>
                 <span className={cx(
                   s.status === 'completed' && (s.paid ? 'badge-forest' : 'badge-rust'),

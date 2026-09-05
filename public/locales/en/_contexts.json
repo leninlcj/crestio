@@ -13,7 +13,7 @@
   "sessions.fields.next_focus": "What to cover in the next lesson, not a camera focus",
   "sessions.fields.tutor": "Person who teaches privately, not a legal guardian",
   "students.title_list": "People the tutor teaches, K-12 children typically",
-  "students.subtitle": "People the tutor works with — students and their families",
+  "students.subtitle": "People the tutor works with: students and their families",
   "students.tabs.track": "To follow progress over time, not a racetrack or song",
   "invoices.title_list": "Bills issued to parents for tutoring; noun",
   "invoices.columns.billed_to": "The parent or household paying the invoice",
@@ -226,7 +226,7 @@
   "owner.test_accounts.create.success_hint": "Reminder that the password is shown once; quoted phrase 'Log in as test' is the table button label",
 
   "settings.referrals_page.share.heading": "Marketing-style share headline; '25%' is a discount amount",
-  "settings.referrals_page.share.body": "Explanation of the referral reward — both referrer and friend get 25% off",
+  "settings.referrals_page.share.body": "Explanation of the referral reward: both referrer and friend get 25% off",
   "settings.referrals_page.message_template": "Suggested SMS/DM template referrer can paste; tone is casual peer-to-peer",
   "settings.referrals_page.share.email_subject": "Subject line for a pre-filled mailto share email",
   "settings.referrals_page.history.usage_line": "Counter line; <bold>used</bold> and <bold>max</bold> wrap dynamic numbers",

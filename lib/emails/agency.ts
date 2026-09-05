@@ -74,7 +74,7 @@ function shell({ kicker, heading, preheader, paragraphs, cta, facts }: ShellArgs
 
 // Plaintext must stay pure ASCII (see parentInvitation.ts for why).
 function ascii(s: string): string {
-  return s.replace(/[–—]/g, '-').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/·/g, '-').replace(/[^\x00-\x7F]/g, '');
+  return s.replace(/[\u2013\u2014]/g, '-').replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\u00B7/g, '-').replace(/[^\x00-\x7F]/g, '');
 }
 
 function needLabel(key: string | null): string | null {
@@ -105,7 +105,7 @@ export type EnquiryEmailArgs = {
 export function buildEnquiryReceivedEmail(a: EnquiryEmailArgs): Built {
   const first = a.parentName.split(' ')[0] || 'there';
   const subjects = subjectLabels(a.subjects).join(', ');
-  const subject = `Thanks ${first} — we've got your enquiry`;
+  const subject = `Thanks ${first}, we have your enquiry`;
   const paragraphs = [
     `Thanks for getting in touch with ${escapeHtml(AGENCY.name)}. ${escapeHtml(AGENCY.founder.firstName)} reads every enquiry personally and will reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor and next steps.`,
     `Here is what you told us. If anything is wrong, just reply to this email.`,
@@ -141,11 +141,11 @@ export function buildEnquiryAlertEmail(a: EnquiryEmailArgs): Built {
   const facts: Array<[string, string]> = [
     ['Parent', a.parentName],
     ['Email', a.email],
-    ['Phone', a.phone ?? '—'],
+    ['Phone', a.phone ?? 'Not given'],
     ['Student', a.studentFirstName ? `${a.studentFirstName} · ${a.yearLevel}` : a.yearLevel],
     ['Subjects', subjects],
     ['Lessons', modeLabel(a.mode) + (a.suburb ? ` · ${a.suburb}` : '')],
-    ['Focus', needLabel(a.need) ?? '—'],
+    ['Focus', needLabel(a.need) ?? 'Not given'],
   ];
   if (a.message) facts.push(['Message', a.message]);
   const html = shell({
@@ -186,7 +186,7 @@ function wwccLabel(s: string): string {
 
 export function buildApplicationReceivedEmail(a: ApplicationEmailArgs): Built {
   const first = a.fullName.split(' ')[0] || 'there';
-  const subject = `Thanks ${first} — your Crestio tutor application`;
+  const subject = `Thanks ${first}, we have your tutor application`;
   const html = shell({
     kicker: 'Application received',
     heading: 'Thanks for applying to tutor with Crestio.',

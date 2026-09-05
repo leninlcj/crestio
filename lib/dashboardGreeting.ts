@@ -6,7 +6,7 @@
 const MORNING = [
   'Good morning, {{name}}.',
   'Morning, {{name}}.',
-  'Hi {{name}} — quiet morning ahead?',
+  'Hi {{name}}, quiet morning ahead?',
   'Welcome back, {{name}}.',
 ];
 
@@ -20,7 +20,7 @@ const AFTERNOON = [
 const EVENING = [
   'Good evening, {{name}}.',
   'Evening, {{name}}.',
-  'Hi {{name}} — ready to wrap up?',
+  'Hi {{name}}, ready to wrap up?',
   'Welcome back, {{name}}.',
 ];
 
@@ -36,7 +36,7 @@ export function pickGreeting(name: string | null | undefined, now: Date = new Da
   const seed = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
   const idx = hashDateString(seed) % pool.length;
   const template = pool[idx];
-  if (!name) return template.replace(/, \{\{name\}\}/, '').replace('Hi {{name}} — ', 'Hi — ').replace('{{name}}', '');
+  if (!name) return template.replace(/, \{\{name\}\}/, '').replace('Hi {{name}}, ', 'Hi, ').replace('{{name}}', '');
   return template.replace('{{name}}', name);
 }
 

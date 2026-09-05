@@ -27,7 +27,7 @@ export default function NotFound() {
   return (
     <>
       <Head>
-        <title>Page not found · Crestio</title>
+        <title>Page not found · Crestio Tutoring</title>
         <meta name="description" content="That page doesn't exist or has moved." />
         <meta name="robots" content="noindex" />
       </Head>
@@ -58,7 +58,7 @@ export default function NotFound() {
               {home === '/app' ? 'Go to dashboard' : 'Go home'}
             </Link>
             <a
-              href="mailto:support@crestio.ai?subject=Broken%20link"
+              href="mailto:hello@crestio.ai?subject=Broken%20link"
               className="text-sm text-ink-muted hover:text-ink underline underline-offset-2"
             >
               Report broken link

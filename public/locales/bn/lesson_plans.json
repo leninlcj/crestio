@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "বিষয় এবং বিষয়বস্তু তৈরি করতে প্রয়োজন।",
       "not_signed_in": "সাইন ইন করা নেই।",
-      "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। support@crestio.ai-এ যোগাযোগ করুন।",
+      "no_organisation": "আপনার অ্যাকাউন্টের সাথে কোনো সংস্থা সংযুক্ত নেই। hello@crestio.ai-এ যোগাযোগ করুন।",
       "server_returned": "সার্ভার ফেরত দিয়েছে {{status}}",
       "server_returned_with_text": "সার্ভার ফেরত দিয়েছে {{status}}: {{text}}",
       "no_plan": "সার্ভার কোনো পরিকল্পনা ফেরত দেয়নি।",

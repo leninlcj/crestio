@@ -550,10 +550,10 @@ function StudentDetailInner() {
             <div className="card p-6">
               <div className="text-2xs uppercase tracking-widest text-ink-muted mb-3">Academic</div>
               <div className="space-y-2 text-sm">
-                <div><span className="text-ink-muted">Year: </span>{student.year_level ?? '—'}</div>
-                <div><span className="text-ink-muted">School: </span>{student.school ?? '—'}</div>
+                <div><span className="text-ink-muted">Year: </span>{student.year_level ?? '–'}</div>
+                <div><span className="text-ink-muted">School: </span>{student.school ?? '–'}</div>
                 <div><span className="text-ink-muted">Subjects: </span>
-                  {student.subjects && student.subjects.length > 0 ? student.subjects.join(', ') : '—'}
+                  {student.subjects && student.subjects.length > 0 ? student.subjects.join(', ') : '–'}
                 </div>
               </div>
             </div>
@@ -831,7 +831,7 @@ function StudentDetailInner() {
                       <tr key={s.id} className="row-link" onClick={() => window.location.assign(`/app/sessions/${s.id}`)}>
                         <td className="text-ink">{formatDateTime(s.scheduled_at)}</td>
                         <td className="text-ink-muted">
-                          {[s.subject, s.topic].filter(Boolean).join(' · ') || '—'}
+                          {[s.subject, s.topic].filter(Boolean).join(' · ') || '–'}
                         </td>
                         <td className="text-ink-muted font-mono text-xs">{s.duration_minutes} min</td>
                         <td>

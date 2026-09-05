@@ -23,8 +23,8 @@ export function formatCents(
   currency = 'AUD',
   opts: { showZero?: boolean } = {}
 ): string {
-  if (cents === null || cents === undefined) return '—';
-  if (cents === 0 && !opts.showZero) return '—';
+  if (cents === null || cents === undefined) return '–';
+  if (cents === 0 && !opts.showZero) return '–';
   return new Intl.NumberFormat(activeLocale(), {
     style: 'currency',
     currency,
@@ -54,13 +54,13 @@ export function centsToDollars(cents: number | null | undefined): string {
 // Dates
 // -----------------------------------------------------------------------------
 export function formatDate(iso: string | null | undefined, opts?: Intl.DateTimeFormatOptions): string {
-  if (!iso) return '—';
+  if (!iso) return '–';
   const d = new Date(iso);
   return d.toLocaleDateString(activeLocale(), opts ?? { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export function formatDateTime(iso: string | null | undefined): string {
-  if (!iso) return '—';
+  if (!iso) return '–';
   const d = new Date(iso);
   return d.toLocaleString(activeLocale(), {
     day: 'numeric',
@@ -72,7 +72,7 @@ export function formatDateTime(iso: string | null | undefined): string {
 }
 
 export function formatTime(iso: string | null | undefined): string {
-  if (!iso) return '—';
+  if (!iso) return '–';
   const d = new Date(iso);
   return d.toLocaleTimeString(activeLocale(), { hour: 'numeric', minute: '2-digit' });
 }

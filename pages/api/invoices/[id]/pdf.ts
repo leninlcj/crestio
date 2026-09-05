@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { isPlatformOwner } from '../../../../lib/owner';
-import { agencyInvoiceNote } from '../../../../lib/agency';
+import { buildAgencyInvoiceNote } from '../../../../lib/agencyInvoice';
 import { createClient } from '@supabase/supabase-js';
 import { renderInvoicePdf } from '../../../../lib/pdf/invoice';
 
-// GET /api/invoices/:id/pdf — returns the invoice as a downloadable PDF.
+// GET /api/invoices/:id/pdf returns the invoice as a downloadable PDF.
 // Authorization: the tutor (membership) OR the parent linked to the invoice.
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -70,15 +70,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data: tp } = await admin.from('profiles').select('full_name, email').eq('id', (org as any).owner_user_id).maybeSingle();
     tutorName = (tp as any)?.full_name ?? null;
     // Agency model: the lesson is delivered by the student's tutor; Crestio
-    // collects payment on the tutor's behalf and keeps a service fee.
-    if (isPlatformOwner((tp as any)?.email) && (invoice as any).student_id) {
-      const { data: st } = await admin.from('students').select('primary_tutor_id').eq('id', (invoice as any).student_id).maybeSingle();
-      let lessonTutor: string | null = null;
-      if ((st as any)?.primary_tutor_id) {
-        const { data: tu } = await admin.from('tutors').select('name').eq('id', (st as any).primary_tutor_id).maybeSingle();
-        lessonTutor = (tu as any)?.name ?? null;
-      }
-      agencyNote = agencyInvoiceNote(lessonTutor);
+    // collects payment on the tutor's behalf and keeps a service fee. The
+    // note names the tutor and shows the fee split.
+    if (isPlatformOwner((tp as any)?.email)) {
+      agencyNote = await buildAgencyInvoiceNote(admin, {
+        invoiceId: (invoice as any).id,
+        studentId: (invoice as any).student_id ?? null,
+        ownerUserId: (org as any).owner_user_id,
+        totalCents: (invoice as any).total_cents ?? 0,
+        currency: (invoice as any).currency ?? 'AUD',
+      });
     }
   }
 

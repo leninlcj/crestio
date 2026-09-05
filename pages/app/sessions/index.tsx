@@ -482,13 +482,13 @@ function SessionsInner() {
           : bulkDrawer?.kind === 'invoice-combine' ? 'Create one combined invoice'
           : 'Create separate invoices'}
         summary={bulkDrawer?.kind === 'polish'
-          ? `${selected.size} selected — each will be polished and ready to send.`
+          ? `${selected.size} selected: each will be polished and ready to send.`
           : bulkDrawer?.kind === 'invoice-combine'
           ? `${selected.size} sessions will be billed in a single invoice.`
           : `${selected.size} sessions will be billed individually.`}
         items={rows.filter((r) => selected.has(r.id)).map((r) => ({
           id: r.id,
-          label: r.student?.name ?? '—',
+          label: r.student?.name ?? '–',
           sublabel: formatDate(r.scheduled_at, { day: 'numeric', month: 'short' }),
           warning: bulkDrawer?.kind?.startsWith('invoice') && !r.charge_rate_cents ? 'No rate set' : undefined,
         }))}
@@ -642,7 +642,7 @@ function SessionListRow({
         <Avatar name={row.student?.name ?? '?'} size={20} className="shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="text-sm text-ink truncate flex items-center gap-1.5">
-            {row.student?.name ?? '—'}
+            {row.student?.name ?? '–'}
             <PipelineIcons row={row} />
           </div>
           <div className="text-2xs text-ink-muted truncate">

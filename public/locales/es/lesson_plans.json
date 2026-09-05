@@ -55,7 +55,7 @@
     "errors": {
       "subject_topic_required": "Para generarlo, es necesario indicar la asignatura y el tema.",
       "not_signed_in": "No has iniciado sesión.",
-      "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con support@crestio.ai.",
+      "no_organisation": "No hay ninguna organización vinculada a tu cuenta. Ponte en contacto con hello@crestio.ai.",
       "server_returned": "El servidor devolvió {{status}}",
       "server_returned_with_text": "El servidor devolvió un error «{{status}}»: {{text}}",
       "no_plan": "El servidor no ha devuelto ningún plan.",

@@ -225,17 +225,17 @@ function TrashInner() {
                     onChange={() => toggleSelect(r.id)}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm text-ink truncate">{r.label || '—'}</div>
+                    <div className="text-sm text-ink truncate">{r.label || '–'}</div>
                     <div className="text-2xs text-ink-soft">
                       {r.from === 'archive' ? 'Archived' : 'Deleted'}
                       {r.reason ? ` · ${r.reason}` : ''}
                     </div>
                   </div>
                   <div className="w-32 hidden sm:block text-2xs text-ink-muted tabular">
-                    {r.at ? formatRelative(r.at) : '—'}
+                    {r.at ? formatRelative(r.at) : '–'}
                   </div>
                   <div className="w-32 hidden md:block text-2xs text-ink-muted truncate">
-                    {r.actor ?? '—'}
+                    {r.actor ?? '–'}
                   </div>
                   <div className="w-32 hidden md:block text-2xs text-ink-muted tabular">
                     {r.purges_at ? `in ${daysUntil(r.purges_at)} d` : 'Never'}

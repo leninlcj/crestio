@@ -18,12 +18,12 @@ export default function ServerError() {
     setRequestId(makeRequestId());
   }, []);
 
-  const mailtoBody = `Hi — got a 500 on Crestio.\n\nRequest ID: ${requestId}\nURL: ${typeof window !== 'undefined' ? window.location.href : ''}\n\nWhat I was doing:\n`;
+  const mailtoBody = `Hi, I got a 500 error on crestio.ai.\n\nRequest ID: ${requestId}\nURL: ${typeof window !== 'undefined' ? window.location.href : ''}\n\nWhat I was doing:\n`;
 
   return (
     <>
       <Head>
-        <title>Something broke · Crestio</title>
+        <title>Something broke · Crestio Tutoring</title>
         <meta name="robots" content="noindex" />
       </Head>
       <div className="min-h-screen bg-cream flex flex-col">
@@ -42,10 +42,10 @@ export default function ServerError() {
             <p className="text-ink-muted mb-3 max-w-prose mx-auto">
               Not you. Refresh in a minute. If it keeps happening, email{' '}
               <a
-                href={`mailto:support@crestio.ai?subject=Crestio%20500%20%E2%80%94%20${encodeURIComponent(requestId)}&body=${encodeURIComponent(mailtoBody)}`}
+                href={`mailto:hello@crestio.ai?subject=${encodeURIComponent(`Crestio 500 error, request ${requestId}`)}&body=${encodeURIComponent(mailtoBody)}`}
                 className="text-forest underline underline-offset-2"
               >
-                support@crestio.ai
+                hello@crestio.ai
               </a>{' '}
               and include the request ID below.
             </p>

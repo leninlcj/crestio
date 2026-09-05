@@ -59,7 +59,7 @@ export function ErrorState({
               const subject = encodeURIComponent('Crestio error report');
               const body = encodeURIComponent(`Couldn't load ${thing}.\n\nRequest ID: ${requestId ?? 'n/a'}\nURL: ${typeof window !== 'undefined' ? window.location.href : ''}`);
               if (typeof window !== 'undefined') {
-                window.open(`mailto:support@crestio.ai?subject=${subject}&body=${body}`, '_blank');
+                window.open(`mailto:hello@crestio.ai?subject=${subject}&body=${body}`, '_blank');
               }
             }}
             className="text-xs text-ink-muted hover:text-ink underline underline-offset-2"

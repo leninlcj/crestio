@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (!webhookSecret) {
-    console.warn('[stripe/webhook] STRIPE_WEBHOOK_SECRET not set — acknowledging without verification');
+    console.warn('[stripe/webhook] STRIPE_WEBHOOK_SECRET not set, acknowledging without verification');
     return res.status(200).json({ received: true, verified: false });
   }
   if (!signature || typeof signature !== 'string') {
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const admin = getAdmin();
   if (!admin) {
-    console.error('[stripe/webhook] SUPABASE_SERVICE_ROLE_KEY missing — skipping DB write');
+    console.error('[stripe/webhook] SUPABASE_SERVICE_ROLE_KEY missing, skipping DB write');
     return res.status(200).json({ received: true, persisted: false });
   }
 
@@ -212,7 +212,7 @@ async function handleTrialToActiveReferral(
 ): Promise<void> {
   const customerId = typeof sub.customer === 'string' ? sub.customer : sub.customer.id;
   const refereeUserId = await resolveOwnerUserIdForCustomer(admin, customerId);
-  if (!refereeUserId) return; // Not linked — nothing to do.
+  if (!refereeUserId) return; // Not linked, nothing to do.
 
   // Compute the referee's monthly-equivalent price. Annual plans normalise
   // to per-month so the 25% credit is measured against a single bill.
@@ -465,7 +465,7 @@ async function syncSubscriptionToOrg(
     // Missing-column errors: strip the newer columns and retry so Stripe doesn't
     // retry forever during a partial migration.
     if (error.code === 'PGRST204' || error.code === '42703') {
-      console.warn('[stripe/webhook] column missing — retrying with core fields only', error.message);
+      console.warn('[stripe/webhook] column missing, retrying with core fields only', error.message);
       const fallback: Record<string, unknown> = {
         stripe_subscription_id: update.stripe_subscription_id,
         stripe_customer_id: update.stripe_customer_id,

@@ -46,7 +46,7 @@ function Inner({ children, active, title }: Props) {
       >
         <div className="max-w-[820px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between gap-3">
           <Link href="/student" className="font-display text-lg tracking-tighter truncate" style={{ color: accent }}>
-            {me?.tutor.name ?? '—'}
+            {me?.tutor.name ?? '–'}
           </Link>
           <AvatarMenu name={me?.profile.full_name ?? ''} onSignOut={signOut} />
         </div>

@@ -28,7 +28,7 @@ export default function About() {
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           <div className="lg:col-span-7 space-y-4 text-sm md:text-base text-ink-muted leading-relaxed">
             <p>
-              Lenin has tutored high-school maths and physics across Sydney for years — first with a national agency, then through his own practice, Ace Tutors Australia. He is studying Electrical Engineering (Honours) at Macquarie University, which means the maths and physics he teaches are the maths and physics he uses.
+              Lenin has tutored high-school maths and physics across Sydney, first with a national agency and then through his own practice, Ace Tutors Australia. He is studying Electrical Engineering (Honours) at Macquarie University, which means the maths and physics he teaches are the maths and physics he uses.
             </p>
             <p>
               He also wrote the software Crestio runs on: the scheduling, the parent notes, the invoicing and the payments. It was built for tutors first, so the admin gets out of the way of the teaching.
@@ -55,7 +55,7 @@ export default function About() {
       <Section eyebrow="Where we work" heading="Sydney in-home. Online anywhere in Australia.">
         <div className="grid md:grid-cols-2 gap-8">
           <p className="text-sm md:text-base text-ink-muted leading-relaxed">
-            In-home lessons run across Sydney, with {AGENCY.serviceArea.inHomeFocus} best covered because that is where our tutors live. Online lessons run anywhere in Australia over video with a shared whiteboard — the same tutor, the same plan, the same written note after every lesson.
+            In-home lessons run across Sydney, with {AGENCY.serviceArea.inHomeFocus} best covered because that is where Crestio is based. Online lessons run anywhere in Australia over video with a shared whiteboard: the same tutor, the same plan, the same written note after every lesson.
           </p>
           <div>
             <CtaRow />

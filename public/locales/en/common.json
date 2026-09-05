@@ -124,7 +124,7 @@
     "stop": "Stop",
     "recording": "Recording…",
     "transcribing": "Transcribing…",
-    "error": "Couldn't transcribe that — please try again."
+    "error": "Couldn't transcribe that. Please try again."
   },
   "support": {
     "open_button": "Need a hand?",

@@ -147,7 +147,7 @@ export function buildStudentInvitationEmail(args: {
       <div style="font-family:${FONT_BODY};font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:${INK_MUTED};">Student portal</div>
     </td></tr>
     <tr><td style="padding:0 0 16px 0;">
-      <h1 style="margin:0;font-family:${FONT_DISPLAY};font-weight:600;font-size:30px;line-height:1.2;letter-spacing:-0.02em;color:${INK};">Hi ${escapeHtml(args.studentFirstName)} — set up your portal</h1>
+      <h1 style="margin:0;font-family:${FONT_DISPLAY};font-weight:600;font-size:30px;line-height:1.2;letter-spacing:-0.02em;color:${INK};">Hi ${escapeHtml(args.studentFirstName)}, set up your portal</h1>
     </td></tr>
     <tr><td style="padding:0 0 24px 0;">
       <p style="margin:0;font-family:${FONT_BODY};font-size:16px;line-height:1.6;color:${INK};">
@@ -180,7 +180,7 @@ export function buildStudentWelcomeEmail(args: {
   portalUrl: string;
 }): Built {
   const accent = args.brandColor && /^#[0-9A-Fa-f]{6}$/.test(args.brandColor) ? args.brandColor : FOREST_DEFAULT;
-  const subject = `You're set up — your portal is ready`;
+  const subject = `You're set up. Your portal is ready`;
   const text =
     `You're set, ${args.studentFirstName}.\n\n` +
     `Your portal is at:\n${args.portalUrl}\n\n` +

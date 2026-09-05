@@ -79,7 +79,7 @@ function NewInvoiceInner() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { setError('Not signed in.'); setLoading(false); return; }
     const organizationId = await getCurrentOrganizationId();
-    if (!organizationId) { setError('No organisation is linked to your account. Contact support@crestio.ai.'); setLoading(false); return; }
+    if (!organizationId) { setError('No organisation is linked to your account. Contact hello@crestio.ai.'); setLoading(false); return; }
 
     // Get count of existing invoices to generate next number
     const { count } = await supabase
@@ -163,7 +163,7 @@ function NewInvoiceInner() {
                             {formatDateTime(s.scheduled_at)}
                           </div>
                           <div className="text-xs text-ink-muted truncate">
-                            {[s.subject, s.topic].filter(Boolean).join(' · ') || '—'} · {s.duration_minutes} min
+                            {[s.subject, s.topic].filter(Boolean).join(' · ') || '–'} · {s.duration_minutes} min
                           </div>
                         </div>
                         <div className="font-mono num text-sm">

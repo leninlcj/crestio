@@ -5,7 +5,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { PlanTier } from './billing';
 
-export const MAX_CLIP_SECONDS = 300; // 5 min per clip — client enforces too
+export const MAX_CLIP_SECONDS = 300; // 5 min per clip, client enforces too
 export const MAX_CLIP_BYTES = 25 * 1024 * 1024; // Whisper hard limit is 25MB
 export const WHISPER_COST_CENTS_PER_MINUTE = 0.6; // 0.006 USD/min → integer cents rounded at aggregate
 

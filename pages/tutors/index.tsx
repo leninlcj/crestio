@@ -9,20 +9,20 @@ const STAGES = [
   ['Subject test', 'A 30-minute paper in your subject at the level you would tutor. You should find it comfortable.'],
   ['Checks', 'We verify your NSW Working With Children Check online and sight photo ID.'],
   ['Practice lesson', 'A 20-minute lesson on a topic we give you. We are watching for patience and clarity, not polish.'],
-  ['Onboarding', 'Contractor agreement, code of conduct, how lessons, notes and payments work. Then your first student.'],
+  ['Onboarding', 'Tutor agreement, code of conduct, how lessons, notes and payments work. Then your first student.'],
 ];
 
 const YOU_GET = [
   ['Pay set to your level', 'Rates are tied to the level you tutor and your experience, and you know the exact rate before you accept a student. Paid within seven days of each lesson.'],
   ['Students matched to your strengths', 'You tutor the subjects you are actually strong in. We do the matching, the parent communication and the invoicing.'],
   ['Flexible hours', 'You set your availability. Online, local in-home, or both. Say no to a student without explaining yourself.'],
-  ['Everything in one place', 'A schedule, a session log with an AI assistant that turns your rough notes into a parent update, homework tracking and a resource library.'],
+  ['Everything in one place', 'Your schedule, a session log that turns rough notes into a tidy parent update, homework tracking and a resource library, all in the Crestio app.'],
 ];
 
 export default function ForTutors() {
   return (
     <AgencyPage
-      title="Tutor with Crestio — maths and physics tutoring jobs in Sydney"
+      title="Tutor with Crestio: maths and physics tutoring jobs in Sydney"
       noSuffix
       description="Tutor maths or physics with Crestio: fair pay set to your level, students matched to your strengths, flexible hours online or in-home across Sydney. Apply in five minutes."
       path="/tutors"
@@ -47,7 +47,7 @@ export default function ForTutors() {
       <Section tone="surface" eyebrow="Who we look for" heading="Strong in the subject. Patient with people. Reliable.">
         <div className="grid md:grid-cols-3 gap-8">
           {[
-            ['A strong record', 'A high ATAR, strong HSC marks in the subject, or relevant university study — engineering, maths, physics, science, education. Current university students are very welcome.'],
+            ['A strong record', 'A high ATAR, strong HSC marks in the subject, or relevant university study: engineering, maths, physics, science, education. Current university students are very welcome.'],
             ['18 or older, with a WWCC', 'You must be 18 or older and hold a NSW Working With Children Check (paid-worker type), or be willing to get one before your first student. We verify it.'],
             ['Reliable and clear', 'Turns up on time, every week. Explains one thing at a time. Writes a short honest note after each lesson. Tells us early when something is off.'],
           ].map(([t, b]) => (

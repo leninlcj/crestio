@@ -21,8 +21,8 @@ export function AuditLogPage({ scope, selfUserId }: Props) {
   const exportCsv = () => {
     const csv = Papa.unparse(rows.map((r) => ({
       time: r.created_at,
-      actor: r.actor?.name ?? r.actor?.email ?? r.actor_user_id ?? '—',
-      role: r.actor_role ?? '—',
+      actor: r.actor?.name ?? r.actor?.email ?? r.actor_user_id ?? '–',
+      role: r.actor_role ?? '–',
       action: r.action,
       entity_type: r.entity_type ?? '',
       entity_id: r.entity_id ?? '',

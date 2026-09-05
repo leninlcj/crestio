@@ -95,7 +95,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     organizationId = resolved.organizationId;
-    tutorUserId = resolved.tutorUserId; // always the student's assigned tutor — new messages go there
+    tutorUserId = resolved.tutorUserId; // always the student's assigned tutor, new messages go there
 
     // Tutor must pick a parent to message (students may have multiple linked parents).
     const parentIdInput = typeof body.parent_id === 'string' ? body.parent_id : '';

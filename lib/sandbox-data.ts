@@ -76,16 +76,16 @@ export const SANDBOX_POLISH_SAMPLES: Record<string, { rough: string; polished: s
     polished: `Lily worked through persuasive techniques in advertising today. She was engaged throughout the session and picked up several new terms confidently, especially when we connected them to examples she could recognise.\n\nFor homework, she is going to find one advertisement and label the techniques we covered so we can check her understanding next lesson.`,
   },
   'sess-pp-1': {
-    rough: 'Hector — went over Handmaids Tale ch 23-24, did colour symbolism. Topic sentence good, link sentences need work. HW: paragraph on the Aunts as control mechanism. Re-read 23/24 bring 2 quotes.',
-    polished: `Hector came in well-prepared with his annotations on chapters 23-24 of "The Handmaid's Tale." We focused the session on colour symbolism — he identified four distinct functions of the colour red across the novel and we built an analytical paragraph linking two of them to the broader argument about female autonomy.\n\nHis topic sentences are sharp and confident. The link sentences between evidence and analysis still need work — they tend to restate the quote rather than develop the argument.\n\nFor next session, Hector is drafting an analytical paragraph on the Aunts as a control mechanism. He's also re-reading chapters 23 and 24 and bringing two quotes he'd like to discuss.`,
+    rough: 'Hector: went over Handmaids Tale ch 23-24, did colour symbolism. Topic sentence good, link sentences need work. HW: paragraph on the Aunts as control mechanism. Re-read 23/24 bring 2 quotes.',
+    polished: `Hector came in well-prepared with his annotations on chapters 23-24 of "The Handmaid's Tale." We focused the session on colour symbolism, he identified four distinct functions of the colour red across the novel and we built an analytical paragraph linking two of them to the broader argument about female autonomy.\n\nHis topic sentences are sharp and confident. The link sentences between evidence and analysis still need work, they tend to restate the quote rather than develop the argument.\n\nFor next session, Hector is drafting an analytical paragraph on the Aunts as a control mechanism. He's also re-reading chapters 23 and 24 and bringing two quotes he'd like to discuss.`,
   },
   'sess-pp-2': {
-    rough: 'Mia — Module B Cassandra. Strong essay structure, transitions weak. Need to work on contextual analysis. Practiced exam writing 40 min, decent.',
-    polished: `Mia delivered a focused session on Module B's Cassandra. Her essay structure is strong — clear thesis, considered evidence, controlled argument. The transitions between paragraphs are still soft, sometimes restating rather than building.\n\nWe spent forty minutes on timed exam writing. She produced a respectable response under pressure, with the introduction and second body paragraph coming through clearly.\n\nThe area to develop next is contextual analysis — weaving the historical and literary context into the argument rather than treating it as a separate paragraph. We'll focus on this approach next session.`,
+    rough: 'Mia. Module B Cassandra. Strong essay structure, transitions weak. Need to work on contextual analysis. Practiced exam writing 40 min, decent.',
+    polished: `Mia delivered a focused session on Module B's Cassandra. Her essay structure is strong, clear thesis, considered evidence, controlled argument. The transitions between paragraphs are still soft, sometimes restating rather than building.\n\nWe spent forty minutes on timed exam writing. She produced a respectable response under pressure, with the introduction and second body paragraph coming through clearly.\n\nThe area to develop next is contextual analysis, weaving the historical and literary context into the argument rather than treating it as a separate paragraph. We'll focus on this approach next session.`,
   },
   'sess-pp-3': {
-    rough: 'Diego — linear eqs done, word problems w/ rates and ratios. Misses units check at end. Did 3 problems together with deliberate pause for units, caught his own mistake on the third one. HW: 5.3 1-8 + recipe scaling problem.',
-    polished: `Diego is comfortable with linear equations now. We spent most of the hour on word problems involving rates and ratios. He gets the setup quickly but has been losing marks by skipping the units check at the end.\n\nWe worked through three problems together with a deliberate pause after each to verify units. By the third problem, he caught his own mistake without prompting — a clear sign the habit is forming.\n\nHomework is exercises 5.3 questions 1-8, plus an extension problem about recipe scaling. We'll move on to inequalities next week.`,
+    rough: 'Diego: linear eqs done, word problems w/ rates and ratios. Misses units check at end. Did 3 problems together with deliberate pause for units, caught his own mistake on the third one. HW: 5.3 1-8 + recipe scaling problem.',
+    polished: `Diego is comfortable with linear equations now. We spent most of the hour on word problems involving rates and ratios. He gets the setup quickly but has been losing marks by skipping the units check at the end.\n\nWe worked through three problems together with a deliberate pause after each to verify units. By the third problem, he caught his own mistake without prompting, a clear sign the habit is forming.\n\nHomework is exercises 5.3 questions 1-8, plus an extension problem about recipe scaling. We'll move on to inequalities next week.`,
   },
 };
 
@@ -275,7 +275,7 @@ export function getSandboxData(): SandboxData {
     {
       id: 'thread-1',
       parent_name: 'Priya Patel',
-      preview: 'Thanks for the notes on Hector — the analysis on the Aunts was so clear. Quick question about exam prep…',
+      preview: 'Thanks for the notes on Hector, the analysis on the Aunts was so clear. Quick question about exam prep…',
       unread: 1,
       last_at: dateAt(today, 0, 10, 30).toISOString(),
     },

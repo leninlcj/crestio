@@ -101,7 +101,7 @@ function Welcome({ name, tutorFirst, practice, initials, about }: { name: string
         Welcome{name ? `, ${name.split(' ')[0]}` : ''}.
       </h2>
       <p className="text-sm text-ink-muted leading-relaxed">
-        {tutorFirst} uses Crestio to keep you in the loop on what you're paying for. Sessions, polished notes, invoices — all in one place.
+        {tutorFirst} uses Crestio to keep you in the loop on what you're paying for. Sessions, polished notes, invoices, all in one place.
       </p>
       {about && (
         <div className="mt-4 pt-4 border-t border-rule">
@@ -119,7 +119,7 @@ function Overview({ tutorFirst }: { tutorFirst: string }) {
       <h2 id="welcome-title" className="font-display text-xl tracking-tighter text-ink mb-1 leading-tight">
         Here's what you can see.
       </h2>
-      <p className="text-2xs text-ink-soft mb-5">No surprises — same things {tutorFirst} sees from their side, just for your child.</p>
+      <p className="text-2xs text-ink-soft mb-5">No surprises: the same things {tutorFirst} sees from their side, just for your child.</p>
       <ul className="space-y-3">
         <Item icon={<IconCal />} title="Sessions" body={`A history of every lesson with ${tutorFirst}'s polished notes.`} />
         <Item icon={<IconDollar />} title="Invoices" body="Pay by card. No bank transfers. Save your card to auto-pay later." />

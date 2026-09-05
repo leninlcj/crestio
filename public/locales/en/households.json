@@ -91,7 +91,7 @@
       "loading": "Loading parents…",
       "select_placeholder": "Pick an existing parent…",
       "no_name": "(no name)",
-      "invite_hint": "To add a brand-new parent, invite them from the student's page — they'll be created when they accept.",
+      "invite_hint": "To add a brand-new parent, invite them from the student's page; they'll be created when they accept.",
       "submit": "Add parent",
       "submitting": "Adding…",
       "error_default": "Could not add parent."
@@ -115,7 +115,7 @@
       "col_amount": "Amount"
     },
     "invoices_tab": {
-      "empty": "No invoices for this household yet. Batch invoicing is coming soon — you can invoice individual students from the Invoices page.",
+      "empty": "No invoices for this household yet. You can invoice individual students from the Invoices page.",
       "household_fallback": "Household",
       "issued_prefix": "Issued {{date}}"
     },

@@ -14,10 +14,10 @@ const SECTIONS: (isOwner: boolean) => Section[] = (isOwner) => {
     { title: 'Polish session notes for the parent portal', example: '"Polish my last session notes for Mia."' },
     { title: 'Add a new student (and send a parent invitation)', example: '"Add Sarah Kim, Year 10, maths, $90/hr. Parent: sarah.mum@email.com."' },
     { title: "Update a student's details", example: '"Change Aarav’s subject from chemistry to physics."' },
-    { title: 'Archive a student', example: '"Archive Jake — he’s not continuing this term."' },
+    { title: 'Archive a student', example: '"Archive Jake, he’s not continuing this term."' },
     { title: 'Create an invoice', example: '"Invoice the Chen family for April’s sessions."', flags: ['Typed confirmation'] },
     { title: 'Mark an invoice as paid', example: '"Mark INV-0014 paid."', flags: ['Typed confirmation'] },
-    { title: 'Send a parent update via the portal', example: '"Draft a quick update to Aarav’s mum about this week."', flags: ['Typed confirmation', 'No email — portal only'] },
+    { title: 'Send a parent update via the portal', example: '"Draft a quick update to Aarav’s mum about this week."', flags: ['Typed confirmation', 'No email, portal only'] },
   ];
 
   if (isOwner) {

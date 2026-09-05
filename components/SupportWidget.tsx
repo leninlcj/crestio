@@ -212,7 +212,7 @@ export function SupportWidget() {
             ) : (
               <div className="p-8 text-center">
                 <div className="text-2xs uppercase tracking-widest text-forest mb-3">Sent</div>
-                <h3 className="font-display text-2xl tracking-tightest mb-2">Thanks — we've got your message.</h3>
+                <h3 className="font-display text-2xl tracking-tightest mb-2">Thanks, we have your message.</h3>
                 <p className="text-sm text-ink-muted">
                   We'll respond to <strong>{userEmail}</strong> within 1 business day.
                 </p>

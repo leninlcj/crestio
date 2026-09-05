@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const spec = ENTITY_SPECS[entityType];
   if (!spec.archiveCol) {
-    return res.status(400).json({ error: `${spec.label} does not support archive — use soft-delete.` });
+    return res.status(400).json({ error: `${spec.label} does not support archive; use soft-delete.` });
   }
 
   // Tutor archive is owner-only.

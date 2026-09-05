@@ -377,7 +377,7 @@ function InvoicesInner() {
         }
         items={invoices.filter((i) => selected.has(i.id)).map((i) => ({
           id: i.id,
-          label: `${i.number} · ${i.household?.display_name ?? i.student?.name ?? '—'}`,
+          label: `${i.number} · ${i.household?.display_name ?? i.student?.name ?? '–'}`,
           sublabel: formatCents(i.total_cents, currency),
           warning: bulkDrawer === 'send' && i.status === 'paid' ? 'Already paid' : undefined,
         }))}
@@ -494,7 +494,7 @@ function InvoiceRow({
       <div className="font-mono text-2xs text-ink-muted shrink-0 w-20 truncate num tabular">{invoice.number}</div>
       <div className="flex-1 min-w-0">
         <div className="text-sm text-ink truncate">
-          {invoice.household?.display_name ?? invoice.student?.name ?? '—'}
+          {invoice.household?.display_name ?? invoice.student?.name ?? '–'}
         </div>
         <div className="text-2xs text-ink-muted truncate num tabular">
           Issued {formatDate(invoice.issued_on)}
@@ -578,7 +578,7 @@ function PaydayBanner({ invoices, currency }: { invoices: InvoiceRow[]; currency
     return (
       <div className="mb-4">
         <Banner id={`payday-${now.toISOString().slice(0, 10)}`} tone="forest">
-          It's Friday — {drafts.length} draft {drafts.length === 1 ? 'invoice' : 'invoices'} ready ({formatCents(draftTotal, currency)}).{' '}
+          It's Friday: {drafts.length} draft {drafts.length === 1 ? 'invoice' : 'invoices'} ready ({formatCents(draftTotal, currency)}).{' '}
           <Link className="underline underline-offset-2" href="/app/invoices?status=draft">
             Review and send
           </Link>

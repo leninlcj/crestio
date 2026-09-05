@@ -99,7 +99,7 @@ export default function AutoPayCard({ parentId }: Props) {
         <div className="min-w-0">
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-1">Auto-pay</div>
           <h3 className="font-display text-base tracking-tightest text-ink m-0">
-            {enabled ? 'On — invoices charge automatically' : last4 ? 'Card saved · ready when you are' : 'Save a card to auto-pay'}
+            {enabled ? 'On: invoices charge automatically' : last4 ? 'Card saved · ready when you are' : 'Save a card to auto-pay'}
           </h3>
         </div>
         <button
