@@ -23,8 +23,10 @@ export default function MarketingFooter(_props: Props = {}) {
             { label: 'How it works', href: '/how-it-works' },
             { label: 'Maths tutoring', href: '/maths-tutoring' },
             { label: 'Physics tutoring', href: '/physics-tutoring' },
+            { label: 'Where we tutor', href: '/tutoring' },
             { label: 'Pricing', href: '/pricing' },
             { label: 'FAQ', href: '/faq' },
+            { label: 'En español', href: '/es' },
           ]} />
 
           <FooterColumn title="Get started" links={[

@@ -31,7 +31,7 @@ const STATES: Record<HealthState, { label: string; color: string; tooltip: strin
   },
   unknown: {
     label: 'No sessions yet',
-    color: '#A0A39E',
+    color: '#70746F',
     tooltip: 'No sessions logged yet.',
     pos: 50,
   },

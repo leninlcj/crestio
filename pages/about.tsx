@@ -59,7 +59,7 @@ export default function About() {
           </p>
           <div>
             <CtaRow />
-            <p className="mt-4 text-sm text-ink-muted">Questions first? <Link href="/contact" className="text-forest underline underline-offset-2">Contact us</Link> or read the <Link href="/faq" className="text-forest underline underline-offset-2">FAQ</Link>.</p>
+            <p className="mt-4 text-sm text-ink-muted">See the <Link href="/tutoring" className="text-forest underline underline-offset-2">suburbs we cover</Link>. Questions first? <Link href="/contact" className="text-forest underline underline-offset-2">Contact us</Link> or read the <Link href="/faq" className="text-forest underline underline-offset-2">FAQ</Link>.</p>
           </div>
         </div>
       </Section>

@@ -146,7 +146,7 @@ export function SubjectGrid() {
       id="subjects"
       eyebrow="Subjects and levels"
       heading="Maths from Year 7 to Extension 2. Physics for the HSC."
-      lead="We keep the list short so every tutor we send is strong in what they teach. Anything else, ask. If we cannot cover it well, we will say so."
+      lead={<>We keep the list short so every tutor we send is strong in what they teach. Anything else, ask. If we cannot cover it well, we will say so. In-home lessons are matched by suburb: see <Link href="/tutoring" className="text-forest underline underline-offset-2">where we tutor</Link>.</>}
     >
       <div className="grid md:grid-cols-2 gap-6 md:gap-8">
         <div className="rounded-md border border-rule bg-surface p-6">
@@ -251,7 +251,7 @@ export function RateTable({ compact = false }: { compact?: boolean }) {
 
 export function PricingSummary() {
   return (
-    <Section id="pricing" eyebrow="Pricing" heading="Simple hourly rates." lead="Online is the most popular option. Pay by card after each lesson, or in prepaid blocks if you prefer." tone="surface">
+    <Section id="pricing" eyebrow="Pricing" heading="Simple hourly rates." lead="Online costs less; in-home rates cover the tutor's travel. Pay by card after each lesson, or in prepaid blocks if you prefer." tone="surface">
       <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
         <div className="lg:col-span-7"><RateTable /></div>
         <div className="lg:col-span-5">

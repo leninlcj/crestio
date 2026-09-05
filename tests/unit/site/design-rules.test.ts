@@ -94,7 +94,7 @@ describe('design rules: shapes, colours, icons, badges', () => {
   });
 
   it('no gradients, purple or violet', () => {
-    const targets = [...files, path.join(ROOT, 'styles/globals.css'), path.join(ROOT, 'tailwind.config.js')];
+    const targets = [...files, path.join(ROOT, 'styles/globals.css'), path.join(ROOT, 'tailwind.config.ts')];
     const offenders = targets.filter((f) => fs.existsSync(f) && /gradient|purple|violet|indigo|fuchsia/i.test(fs.readFileSync(f, 'utf8'))).map(rel);
     expect(offenders).toEqual([]);
   });

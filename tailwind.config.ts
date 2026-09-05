@@ -4,7 +4,7 @@ import type { Config } from 'tailwindcss';
 // Spacing: rely on Tailwind's 4px base (1=4, 2=8, 3=12, 4=16, 6=24, 8=32, 12=48, 16=64).
 // Color: forest green is the only brand accent.
 // Borders: one value (rule). RuleSoft is reserved for hover backgrounds.
-// Text: three colors only — ink (primary), ink-muted, ink-soft (faint).
+// Text: three colors only: ink (primary), ink-muted, ink-soft (faint). All pass WCAG AA on cream and white.
 // Radii: 8px on cards/inputs/buttons, 12px on modals, 999px on pills.
 const config: Config = {
   content: [
@@ -21,8 +21,8 @@ const config: Config = {
         // Text — three values only
         ink: {
           DEFAULT: '#0F1714', // primary
-          muted: '#6B6F6A',   // secondary / labels
-          soft: '#A0A39E',    // faint / hints / micro
+          muted: '#5F635E',   // secondary / labels (5.9:1 on cream)
+          soft: '#70746F',    // faint / hints / micro (4.5:1 on cream, the WCAG AA floor for small text)
         },
 
         // Borders — one value across the app

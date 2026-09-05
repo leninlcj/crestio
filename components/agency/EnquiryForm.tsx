@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { AGENCY, ENQUIRY_MODES, NEEDS, SUBJECTS, YEAR_LEVELS, type SubjectKey } from '../../lib/agency';
+import { AGENCY, SUBJECTS, YEAR_LEVELS, NEEDS, type SubjectKey } from '../../lib/agency';
 import { EMAIL_RE } from '../../lib/agencyForms';
+import { enquiryCopy, type EnquiryLang } from '../../lib/enquiryCopy';
 
 type Who = 'my_child' | 'me' | 'someone_else';
+type Mode = 'online' | 'in_home' | 'either';
 
 type State = {
   who: Who | '';
   year_level: string;
   subjects: SubjectKey[];
-  mode: 'online' | 'in_home' | 'either' | '';
+  mode: Mode | '';
   suburb: string;
   need: string;
   parent_name: string;
@@ -25,8 +27,6 @@ const EMPTY: State = {
   parent_name: '', email: '', phone: '', student_first_name: '', message: '', website: '',
 };
 
-const STEPS = ['Who', 'Year', 'Subjects', 'Lessons', 'Focus', 'Contact'] as const;
-
 function subjectsForYear(year: string): typeof SUBJECTS[number][] {
   if (/^Year (7|8|9|10)$/.test(year)) return SUBJECTS.filter((s) => s.key === 'maths_7_10');
   if (year === 'Year 11') return SUBJECTS.filter((s) => ['maths_standard', 'maths_advanced', 'maths_ext1', 'physics'].includes(s.key));
@@ -34,23 +34,37 @@ function subjectsForYear(year: string): typeof SUBJECTS[number][] {
   return [...SUBJECTS];
 }
 
-function readSource(): string | null {
+function readSource(lang: EnquiryLang): string | null {
   if (typeof window === 'undefined') return null;
   const p = new URLSearchParams(window.location.search);
   const utm = p.get('utm_source') || p.get('src') || p.get('ref');
-  if (utm) return utm.slice(0, 120);
-  try {
-    const ref = document.referrer ? new URL(document.referrer).hostname : '';
-    if (ref && !ref.endsWith('crestio.ai')) return `referrer:${ref}`.slice(0, 120);
-  } catch { /* ignore */ }
-  return 'direct';
+  let source = 'direct';
+  if (utm) source = utm.slice(0, 100);
+  else {
+    try {
+      const ref = document.referrer ? new URL(document.referrer).hostname : '';
+      if (ref && !ref.endsWith('crestio.ai')) source = `referrer:${ref}`.slice(0, 100);
+    } catch { /* ignore */ }
+  }
+  return lang === 'es' ? `es:${source}` : source;
 }
 
-export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: string; initialSubjects?: SubjectKey[] }) {
+export type EnquiryFormProps = {
+  initialYear?: string;
+  initialSubjects?: SubjectKey[];
+  initialMode?: Mode;
+  initialSuburb?: string;
+  lang?: EnquiryLang;
+};
+
+export function EnquiryForm({ initialYear, initialSubjects, initialMode, initialSuburb, lang = 'en' }: EnquiryFormProps) {
+  const c = enquiryCopy(lang);
   const [state, setState] = useState<State>({
     ...EMPTY,
     year_level: initialYear ?? '',
     subjects: initialSubjects ?? [],
+    mode: initialMode ?? '',
+    suburb: initialSuburb ?? '',
   });
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -73,16 +87,16 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
   function validateStep(i: number): boolean {
     const e: Record<string, string> = {};
-    if (i === 0 && !state.who) e.who = 'Choose one.';
-    if (i === 1 && !state.year_level) e.year_level = 'Choose a year level.';
-    if (i === 2 && state.subjects.length === 0) e.subjects = 'Choose at least one subject.';
+    if (i === 0 && !state.who) e.who = c.who.error;
+    if (i === 1 && !state.year_level) e.year_level = c.year.error;
+    if (i === 2 && state.subjects.length === 0) e.subjects = c.subjects.error;
     if (i === 3) {
-      if (!state.mode) e.mode = 'Choose online, in-home, or either.';
-      if (state.mode && state.mode !== 'online' && !state.suburb.trim()) e.suburb = 'Tell us the suburb for in-home lessons.';
+      if (!state.mode) e.mode = c.lessons.error;
+      if (state.mode && state.mode !== 'online' && !state.suburb.trim()) e.suburb = c.lessons.suburbError;
     }
     if (i === 5) {
-      if (state.parent_name.trim().length < 2) e.parent_name = 'Enter your name.';
-      if (!EMAIL_RE.test(state.email.trim())) e.email = 'Enter a valid email address.';
+      if (state.parent_name.trim().length < 2) e.parent_name = c.contact.nameError;
+      if (!EMAIL_RE.test(state.email.trim())) e.email = c.contact.emailError;
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -90,9 +104,21 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
   function next() {
     if (!validateStep(step)) return;
-    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+    setStep((s) => Math.min(s + 1, c.steps.length - 1));
   }
   function back() { setStep((s) => Math.max(s - 1, 0)); }
+
+  // Server-side field errors arrive in English; show the local wording for the
+  // fields we know, and the server's text for anything else.
+  function localiseFieldErrors(fields: Record<string, string>): Record<string, string> {
+    const map: Record<string, string> = {
+      who: c.who.error, year_level: c.year.error, subjects: c.subjects.error, mode: c.lessons.error, suburb: c.lessons.suburbError,
+      parent_name: c.contact.nameError, email: c.contact.emailError, phone: c.contact.phoneError,
+    };
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(fields)) out[k] = lang === 'en' ? v : (map[k] ?? v);
+    return out;
+  }
 
   async function submit(ev: FormEvent) {
     ev.preventDefault();
@@ -116,29 +142,25 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
           student_first_name: state.who === 'me' ? null : state.student_first_name,
           message: state.message,
           website: state.website,
-          source: readSource(),
+          source: readSource(lang),
           page_path: typeof window !== 'undefined' ? window.location.pathname : null,
         }),
       });
       const payload = await res.json().catch(() => ({}));
       if (!res.ok) {
         if (payload?.fields) {
-          setErrors(payload.fields);
+          setErrors(localiseFieldErrors(payload.fields));
           // Jump to the first step with an error.
           const order: Array<[string, number]> = [['who', 0], ['year_level', 1], ['subjects', 2], ['mode', 3], ['suburb', 3], ['parent_name', 5], ['email', 5], ['phone', 5]];
           const first = order.find(([k]) => payload.fields[k]);
           if (first) setStep(first[1]);
         }
-        setServerError(
-          res.status >= 500 || !payload?.error
-            ? `Something went wrong on our side. Please email ${AGENCY.email} and we will sort it out.`
-            : payload.error,
-        );
+        setServerError(res.status >= 500 || !payload?.error ? c.serverError : (lang === 'en' ? payload.error : c.serverError));
         return;
       }
       setDone(true);
     } catch {
-      setServerError(`Something went wrong. Please email ${AGENCY.email} instead.`);
+      setServerError(c.genericError);
     } finally {
       setSubmitting(false);
     }
@@ -147,15 +169,13 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
   if (done) {
     return (
       <div className="rounded-md border border-rule bg-surface p-6 md:p-8" role="status">
-        <div className="text-2xs uppercase tracking-widest text-forest mb-3">Enquiry sent</div>
-        <h2 className="font-display text-2xl md:text-3xl tracking-tighter text-ink mb-3">Thanks, {state.parent_name.split(' ')[0]}.</h2>
-        <p className="text-sm text-ink-muted leading-relaxed mb-2">
-          A confirmation is on its way to {state.email}. {AGENCY.founder.firstName} will reply within {AGENCY.policies.replyWithinHours} hours with a suggested tutor and next steps.
-        </p>
+        <div className="text-2xs uppercase tracking-widest text-forest mb-3">{c.done.kicker}</div>
+        <h2 className="font-display text-2xl md:text-3xl tracking-tighter text-ink mb-3">{c.done.heading(state.parent_name.split(' ')[0])}</h2>
+        <p className="text-sm text-ink-muted leading-relaxed mb-2">{c.done.body(state.email)}</p>
         <p className="text-sm text-ink-muted leading-relaxed">
-          Prefer to talk sooner? Email <a className="text-forest underline underline-offset-2" href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>.
+          {c.done.sooner} <a className="text-forest underline underline-offset-2" href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>.
         </p>
-        <div className="mt-6"><Link href="/" className="btn-secondary">Back to home</Link></div>
+        <div className="mt-6"><Link href={lang === 'es' ? '/es' : '/'} className="btn-secondary">{c.buttons.home}</Link></div>
       </div>
     );
   }
@@ -163,11 +183,14 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
   const label = 'block text-xs font-medium text-ink-muted mb-1.5';
   const chip = (active: boolean) =>
     `px-4 py-2.5 rounded-md border text-sm transition-colors duration-100 text-left ${active ? 'bg-forest text-cream border-forest' : 'bg-surface border-rule text-ink hover:bg-ruleSoft'}`;
+  const yearLabel = (y: string) => (y === 'University' ? c.year.university : y === 'Other' ? c.year.other : lang === 'es' ? y.replace('Year ', 'Año ') : y);
+  const yearsLabel = (years: string) => (lang === 'es' ? years.replace('Years ', 'Años ').replace('Year ', 'Año ') : years);
+  const consentParts = c.contact.consent.split(c.contact.privacyLink);
 
   return (
-    <form onSubmit={submit} className="rounded-md border border-rule bg-surface p-6 md:p-8" noValidate>
+    <form onSubmit={submit} className="rounded-md border border-rule bg-surface p-6 md:p-8" noValidate lang={lang}>
       <ol className="flex flex-wrap gap-x-4 gap-y-1 mb-6 text-2xs uppercase tracking-widest" aria-label="Progress">
-        {STEPS.map((s, i) => (
+        {c.steps.map((s, i) => (
           <li key={s} className={i === step ? 'text-forest' : i < step ? 'text-ink-muted' : 'text-ink-soft'}>
             {i + 1}. {s}
           </li>
@@ -181,9 +204,9 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
       {step === 0 && (
         <fieldset>
-          <legend className="font-display text-2xl tracking-tighter text-ink mb-4">Who needs tutoring?</legend>
+          <legend className="font-display text-2xl tracking-tighter text-ink mb-4">{c.who.legend}</legend>
           <div className="grid sm:grid-cols-3 gap-2">
-            {([['my_child', 'My child'], ['me', 'Me'], ['someone_else', 'Someone else']] as Array<[Who, string]>).map(([k, l]) => (
+            {c.who.options.map(([k, l]) => (
               <button key={k} type="button" className={chip(state.who === k)} onClick={() => set('who', k)} aria-pressed={state.who === k}>{l}</button>
             ))}
           </div>
@@ -193,10 +216,10 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
       {step === 1 && (
         <fieldset>
-          <legend className="font-display text-2xl tracking-tighter text-ink mb-4">Which year level?</legend>
+          <legend className="font-display text-2xl tracking-tighter text-ink mb-4">{c.year.legend}</legend>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {YEAR_LEVELS.map((y) => (
-              <button key={y} type="button" className={chip(state.year_level === y)} onClick={() => set('year_level', y)} aria-pressed={state.year_level === y}>{y}</button>
+              <button key={y} type="button" className={chip(state.year_level === y)} onClick={() => set('year_level', y)} aria-pressed={state.year_level === y}>{yearLabel(y)}</button>
             ))}
           </div>
           {errors.year_level && <p className="mt-2 text-xs text-claret">{errors.year_level}</p>}
@@ -205,8 +228,8 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
       {step === 2 && (
         <fieldset>
-          <legend className="font-display text-2xl tracking-tighter text-ink mb-1">Which subjects?</legend>
-          <p className="text-xs text-ink-soft mb-4">Choose all that apply.</p>
+          <legend className="font-display text-2xl tracking-tighter text-ink mb-1">{c.subjects.legend}</legend>
+          <p className="text-xs text-ink-soft mb-4">{c.subjects.hint}</p>
           <div className="grid sm:grid-cols-2 gap-2">
             {options.map((s) => {
               const active = state.subjects.includes(s.key);
@@ -218,31 +241,31 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
                   aria-pressed={active}
                   onClick={() => set('subjects', active ? state.subjects.filter((k) => k !== s.key) : [...state.subjects, s.key])}
                 >
-                  <span className="block">{s.label}</span>
-                  <span className={`block text-2xs mt-0.5 ${active ? 'text-cream/70' : 'text-ink-soft'}`}>{s.years}</span>
+                  <span className="block">{c.subjects.labels[s.key]}</span>
+                  <span className={`block text-2xs mt-0.5 ${active ? 'text-cream/70' : 'text-ink-soft'}`}>{yearsLabel(s.years)}</span>
                 </button>
               );
             })}
           </div>
           {errors.subjects && <p className="mt-2 text-xs text-claret">{errors.subjects}</p>}
-          <p className="mt-4 text-xs text-ink-soft">Need something not listed? Mention it on the last step and we will tell you honestly whether we can help.</p>
+          <p className="mt-4 text-xs text-ink-soft">{c.subjects.notListed}</p>
         </fieldset>
       )}
 
       {step === 3 && (
         <fieldset>
-          <legend className="font-display text-2xl tracking-tighter text-ink mb-4">Online or in-home?</legend>
+          <legend className="font-display text-2xl tracking-tighter text-ink mb-4">{c.lessons.legend}</legend>
           <div className="grid sm:grid-cols-3 gap-2">
-            {ENQUIRY_MODES.map((m) => (
-              <button key={m.key} type="button" className={chip(state.mode === m.key)} onClick={() => set('mode', m.key)} aria-pressed={state.mode === m.key}>{m.label}</button>
+            {c.lessons.modes.map(([k, l]) => (
+              <button key={k} type="button" className={chip(state.mode === k)} onClick={() => set('mode', k)} aria-pressed={state.mode === k}>{l}</button>
             ))}
           </div>
           {errors.mode && <p className="mt-2 text-xs text-claret">{errors.mode}</p>}
           {state.mode && state.mode !== 'online' && (
             <div className="mt-5 max-w-sm">
-              <label htmlFor="enq-suburb" className={label}>Suburb for in-home lessons</label>
+              <label htmlFor="enq-suburb" className={label}>{c.lessons.suburbLabel}</label>
               <input id="enq-suburb" className="input" value={state.suburb} onChange={(e) => set('suburb', e.target.value)} placeholder={AGENCY.serviceArea.homeSuburb} autoComplete="address-level2" />
-              {errors.suburb ? <p className="mt-1.5 text-xs text-claret">{errors.suburb}</p> : <p className="mt-1.5 text-2xs text-ink-soft">In-home covers Sydney. {AGENCY.serviceArea.inHomeFocus} are best covered.</p>}
+              {errors.suburb ? <p className="mt-1.5 text-xs text-claret">{errors.suburb}</p> : <p className="mt-1.5 text-2xs text-ink-soft">{c.lessons.suburbHint}</p>}
             </div>
           )}
         </fieldset>
@@ -250,11 +273,11 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
       {step === 4 && (
         <fieldset>
-          <legend className="font-display text-2xl tracking-tighter text-ink mb-1">What is the main goal?</legend>
-          <p className="text-xs text-ink-soft mb-4">Optional, but it helps us pick the right tutor.</p>
+          <legend className="font-display text-2xl tracking-tighter text-ink mb-1">{c.focus.legend}</legend>
+          <p className="text-xs text-ink-soft mb-4">{c.focus.hint}</p>
           <div className="grid sm:grid-cols-2 gap-2">
             {NEEDS.map((n) => (
-              <button key={n.key} type="button" className={chip(state.need === n.key)} onClick={() => set('need', state.need === n.key ? '' : n.key)} aria-pressed={state.need === n.key}>{n.label}</button>
+              <button key={n.key} type="button" className={chip(state.need === n.key)} onClick={() => set('need', state.need === n.key ? '' : n.key)} aria-pressed={state.need === n.key}>{c.focus.labels[n.key]}</button>
             ))}
           </div>
         </fieldset>
@@ -262,36 +285,36 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
 
       {step === 5 && (
         <fieldset className="space-y-4">
-          <legend className="font-display text-2xl tracking-tighter text-ink mb-2">How do we reach you?</legend>
+          <legend className="font-display text-2xl tracking-tighter text-ink mb-2">{c.contact.legend}</legend>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="enq-name" className={label}>Your name</label>
+              <label htmlFor="enq-name" className={label}>{c.contact.name}</label>
               <input id="enq-name" className="input" value={state.parent_name} onChange={(e) => set('parent_name', e.target.value)} autoComplete="name" required />
               {errors.parent_name && <p className="mt-1.5 text-xs text-claret">{errors.parent_name}</p>}
             </div>
             {state.who !== 'me' && (
               <div>
-                <label htmlFor="enq-student" className={label}>Student's first name <span className="text-ink-soft">(optional)</span></label>
+                <label htmlFor="enq-student" className={label}>{c.contact.student} <span className="text-ink-soft">{c.contact.optional}</span></label>
                 <input id="enq-student" className="input" value={state.student_first_name} onChange={(e) => set('student_first_name', e.target.value)} autoComplete="off" />
               </div>
             )}
             <div>
-              <label htmlFor="enq-email" className={label}>Email</label>
+              <label htmlFor="enq-email" className={label}>{c.contact.email}</label>
               <input id="enq-email" type="email" className="input" value={state.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" inputMode="email" required />
               {errors.email && <p className="mt-1.5 text-xs text-claret">{errors.email}</p>}
             </div>
             <div>
-              <label htmlFor="enq-phone" className={label}>Phone <span className="text-ink-soft">(optional)</span></label>
+              <label htmlFor="enq-phone" className={label}>{c.contact.phone} <span className="text-ink-soft">{c.contact.optional}</span></label>
               <input id="enq-phone" type="tel" className="input" value={state.phone} onChange={(e) => set('phone', e.target.value)} autoComplete="tel" inputMode="tel" />
               {errors.phone && <p className="mt-1.5 text-xs text-claret">{errors.phone}</p>}
             </div>
           </div>
           <div>
-            <label htmlFor="enq-message" className={label}>Anything else <span className="text-ink-soft">(optional)</span></label>
-            <textarea id="enq-message" className="input" rows={4} value={state.message} onChange={(e) => set('message', e.target.value)} placeholder="Current marks, what is going wrong, preferred days and times, anything that helps us choose well." />
+            <label htmlFor="enq-message" className={label}>{c.contact.message} <span className="text-ink-soft">{c.contact.optional}</span></label>
+            <textarea id="enq-message" className="input" rows={4} value={state.message} onChange={(e) => set('message', e.target.value)} placeholder={c.contact.messagePlaceholder} />
           </div>
           <p className="text-2xs text-ink-soft leading-relaxed">
-            By sending, you agree to our <Link href="/privacy" className="underline underline-offset-2">privacy policy</Link>. Your details are used to match a tutor and are shared only with the tutor we match.
+            {consentParts[0]}<Link href="/privacy" className="underline underline-offset-2">{c.contact.privacyLink}</Link>{consentParts[1] ?? ''}
           </p>
         </fieldset>
       )}
@@ -299,11 +322,11 @@ export function EnquiryForm({ initialYear, initialSubjects }: { initialYear?: st
       {serverError && <p className="mt-4 text-sm text-claret" role="alert">{serverError}</p>}
 
       <div className="mt-6 flex items-center justify-between gap-3">
-        <button type="button" onClick={back} disabled={step === 0} className="btn-ghost text-sm disabled:opacity-0">← Back</button>
-        {step < STEPS.length - 1 ? (
-          <button type="button" onClick={next} className="btn-primary px-6">Continue →</button>
+        <button type="button" onClick={back} disabled={step === 0} className="btn-ghost text-sm disabled:opacity-0">← {c.buttons.back}</button>
+        {step < c.steps.length - 1 ? (
+          <button type="button" onClick={next} className="btn-primary px-6">{c.buttons.next} →</button>
         ) : (
-          <button type="submit" disabled={submitting} className="btn-primary px-6">{submitting ? 'Sending…' : 'Send enquiry →'}</button>
+          <button type="submit" disabled={submitting} className="btn-primary px-6">{submitting ? `${c.buttons.sending}…` : `${c.buttons.send} →`}</button>
         )}
       </div>
     </form>

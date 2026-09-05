@@ -1,51 +1,33 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import i18nSingleton from 'i18next';
-import { I18nextProvider } from 'react-i18next';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { Analytics } from '@vercel/analytics/react';
-import { OrganizationProvider } from '../lib/organizationContext';
-import { MembershipProvider } from '../lib/membershipContext';
-import { AssistantConversationProvider } from '../lib/assistantConversation';
-import { BillingProvider } from '../lib/billingContext';
-import { LocaleProvider } from '../lib/localeContext';
-import {
-  createServerI18n,
-  initI18nFromSsrProps,
-  type I18nResources,
-} from '../lib/i18n';
-import BillingRequiredModal from '../components/BillingRequiredModal';
-import ErrorBoundary from '../components/ErrorBoundary';
-import ReferralCapture from '../components/ReferralCapture';
-import { ToastProvider } from '../components/design/Toast';
 import { RouteProgressBar } from '../components/design/RouteProgressBar';
-import { KeyboardShortcutsOverlay } from '../components/design/KeyboardShortcutsOverlay';
-import GlobalKeyboardNav from '../components/GlobalKeyboardNav';
-import { TimeTickProvider } from '../lib/useTimeAgo';
-import { UndoProvider } from '../lib/useUndo';
-import { InlineComposer } from '../components/design/InlineComposer';
-import { QuickCreate } from '../components/quickcreate/QuickCreate';
-import { DetailPaneStackProvider, DetailPaneStackOverlay } from '../components/depth/DetailPaneStack';
-import { UndoKeybind } from '../components/UndoKeybind';
-import { TrashZone } from '../components/depth/TrashZone';
-// Side-effect import: registers default pane renderers with the stack.
-import '../components/panes/StackPanes';
+import type { SsrI18n } from '../components/AppProviders';
 import '../styles/globals.css';
 
-type SsrI18n = { locale: string; resources: I18nResources };
+// The public site (crestio.ai) renders with no app context at all, so its
+// pages ship none of the app's providers, keyboard handlers or panels.
+// Everything else (the app, the portals, sign-in, payment pages) gets the
+// full provider tree from components/AppProviders.tsx, loaded as its own chunk.
+
+const AppProviders = dynamic(() => import('../components/AppProviders').then((m) => m.AppProviders), { ssr: true });
+
+const PUBLIC_PATHS = new Set([
+  '/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement',
+  '/enquire', '/faq', '/about', '/contact', '/child-safe', '/report', '/privacy', '/terms', '/cookies', '/es',
+  '/tutoring', '/tutoring/[suburb]', '/auth/signup', '/404', '/500',
+]);
+
+export function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.has(pathname);
+}
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
   const ssr = (pageProps as { _i18n?: SsrI18n })._i18n;
-
-  // Per-request fresh instance on the server (no cross-request leakage); on
-  // the client we patch the singleton synchronously and reuse it. Pages that
-  // don't preload translations (e.g. /app routes) get the bare singleton;
-  // LocaleProvider boots it via initI18n() in its useEffect as before.
-  const i18nInstance =
-    typeof window === 'undefined'
-      ? ssr
-        ? createServerI18n(ssr.locale, ssr.resources)
-        : i18nSingleton
-      : (ssr && initI18nFromSsrProps(ssr.locale, ssr.resources), i18nSingleton);
+  const page = <Component {...pageProps} />;
 
   return (
     <>
@@ -53,46 +35,15 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Crestio Tutoring</title>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <meta
           name="description"
           content="One-on-one maths and physics tutoring in Sydney and online, Years 7 to 12 and the HSC. Every tutor interviewed, ID-checked and WWCC-verified."
         />
       </Head>
-      <I18nextProvider i18n={i18nInstance}>
-        <LocaleProvider>
-          <OrganizationProvider>
-            <MembershipProvider>
-              <BillingProvider>
-                <ErrorBoundary>
-                  <AssistantConversationProvider>
-                    <ToastProvider>
-                      <UndoProvider>
-                        <TimeTickProvider>
-                          <DetailPaneStackProvider>
-                            <RouteProgressBar />
-                            <KeyboardShortcutsOverlay />
-                            <GlobalKeyboardNav />
-                            <UndoKeybind />
-                            <ReferralCapture />
-                            <Component {...pageProps} />
-                            <BillingRequiredModal />
-                            <InlineComposer />
-                            <QuickCreate />
-                            <TrashZone />
-                            <DetailPaneStackOverlay />
-                          </DetailPaneStackProvider>
-                        </TimeTickProvider>
-                      </UndoProvider>
-                    </ToastProvider>
-                  </AssistantConversationProvider>
-                </ErrorBoundary>
-              </BillingProvider>
-            </MembershipProvider>
-          </OrganizationProvider>
-        </LocaleProvider>
-      </I18nextProvider>
+      <RouteProgressBar />
+      {isPublicPath(router.pathname) ? page : <AppProviders ssr={ssr}>{page}</AppProviders>}
       <Analytics />
     </>
   );

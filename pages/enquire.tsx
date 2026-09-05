@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AgencyPage } from '../components/agency/AgencyPage';
 import { EnquiryForm } from '../components/agency/EnquiryForm';
@@ -9,6 +10,9 @@ export default function Enquire() {
   const year = typeof router.query.year === 'string' && (YEAR_LEVELS as readonly string[]).includes(router.query.year) ? router.query.year : undefined;
   const subjectParam = typeof router.query.subject === 'string' ? router.query.subject : undefined;
   const subjects = subjectParam && (SUBJECT_KEYS as string[]).includes(subjectParam) ? [subjectParam as SubjectKey] : undefined;
+  const modeParam = typeof router.query.mode === 'string' ? router.query.mode : undefined;
+  const mode = modeParam === 'online' || modeParam === 'in_home' || modeParam === 'either' ? modeParam : undefined;
+  const suburb = typeof router.query.suburb === 'string' ? router.query.suburb.slice(0, 80) : undefined;
 
   return (
     <AgencyPage
@@ -33,13 +37,17 @@ export default function Enquire() {
                 <dd className="text-ink-muted">From {AGENCY.founder.firstName}, the founder, not a call centre.</dd>
               </div>
               <div>
+                <dt className="font-medium text-ink">¿Prefieres español?</dt>
+                <dd className="text-ink-muted"><Link href="/es" className="text-forest underline underline-offset-2">Consulta en español</Link>, con respuesta en español.</dd>
+              </div>
+              <div>
                 <dt className="font-medium text-ink">Prefer to email?</dt>
                 <dd className="text-ink-muted">Reach us at <a className="text-forest underline underline-offset-2" href={`mailto:${AGENCY.email}`}>{AGENCY.email}</a>.</dd>
               </div>
             </dl>
           </div>
           <div className="lg:col-span-8">
-            {router.isReady && <EnquiryForm key={`${year ?? ''}-${subjectParam ?? ''}`} initialYear={year} initialSubjects={subjects} />}
+            {router.isReady && <EnquiryForm key={`${year ?? ''}-${subjectParam ?? ''}-${mode ?? ''}-${suburb ?? ''}`} initialYear={year} initialSubjects={subjects} initialMode={mode} initialSuburb={suburb} />}
           </div>
         </div>
       </section>

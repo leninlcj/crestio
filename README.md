@@ -27,6 +27,12 @@ Since 3 September 2026 (agency pivot, chunk 1). The plan and checklist live in `
 | Invoice disclosure (agency model) | `buildAgencyInvoiceNote()` in `lib/agencyInvoice.ts`: names the tutor and shows the tutor fee / service fee split from the sessions' pay rates. Printed on the PDF and the `/pay` page |
 | Open Graph images | `pages/api/og.tsx` (edge runtime, `@vercel/og`, fonts in `assets/fonts/`). PNG, because social platforms do not render SVG previews |
 | Legal pages layout | `components/agency/LegalArticle.tsx` (privacy, terms, cookies) |
+| Suburb pages | `lib/suburbs.ts` (34 suburbs, regions, neighbours, stations) rendered by `pages/tutoring/[suburb].tsx`; hub at `/tutoring`. Facts only, no tutor claims. Enquiry links prefill `?mode=in_home&suburb=` |
+| Spanish path | `/es` (`pages/es.tsx`) with the enquiry form in Spanish (`lib/enquiryCopy.ts`, `EnquiryForm lang="es"`); enquiries carry `source: es:<origin>`; follow-ups go out in Spanish |
+| Enquiry follow-ups | `/api/cron/enquiry-followups` daily: owner nudge after 24h with no reply, family follow-up on day 3 and day 10, never more. Columns from `20260905_agency_chunk3.sql` |
+| Weekly snapshots | `/api/cron/data-snapshot` (Sunday 16:00 UTC) copies every table to the private `snapshots` bucket, keeps 8; `GET/POST /api/owner/snapshots`; card in Settings > Data. Not a substitute for Supabase Pro backups |
+| Public pages stay light | `pages/_app.tsx` renders the public routes with no app providers; `components/AppProviders.tsx` is loaded only for the app, portals and sign-in |
+| Search Console | `AGENCY.googleSiteVerification` or `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` renders the verification meta tag |
 
 ## Design rules
 
@@ -75,7 +81,7 @@ All migrations run manually in Supabase SQL Editor. Order matters:
 6. **Session 9**: assistant_conversations, assistant_messages, bump_conversation_timestamps trigger.
 7. **Session 10**: subscription columns on organizations, billing_events table.
 8. **Session 10.5**: `org_billing_ok(uuid)` helper, `cancel_at_period_end` column, billing-gated INSERT policies on students/sessions/invoices/lesson_plans.
-9. Everything under `supabase/migrations/` in filename order; the latest are `20260903_agency_enquiries_applications.sql` (enquiries, tutor_applications, tutor vetting columns) and `20260904_agency_chunk2.sql` (agreement/vetting timestamps, late cancellations + view, incidents).
+9. Everything under `supabase/migrations/` in filename order; the latest are `20260903_agency_enquiries_applications.sql` (enquiries, tutor_applications, tutor vetting columns), `20260904_agency_chunk2.sql` (agreement/vetting timestamps, late cancellations + view, incidents) and `20260905_agency_chunk3.sql` (enquiry follow-up timestamps). `~/LENIN_OS/05_CRESTIO/60_MIGRATIONS_TO_RUN/00_RUN_ALL_PENDING.sql` concatenates whatever production has not had yet.
 
 `supabase/schema.sql` is a consolidated reference: it does NOT reflect the production `handle_new_user` trigger (which carries the Session 5 tutor-invitation branch). See Known limitations.
 

@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import { AGENCY } from '../lib/agency';
+import { SUBURBS } from '../lib/suburbs';
 
 const SITE = AGENCY.siteUrl;
 
@@ -20,6 +21,9 @@ const STATIC_PATHS: Array<{ path: string; changefreq: string; priority: string }
   { path: '/privacy', changefreq: 'yearly', priority: '0.2' },
   { path: '/terms', changefreq: 'yearly', priority: '0.2' },
   { path: '/cookies', changefreq: 'yearly', priority: '0.1' },
+  { path: '/tutoring', changefreq: 'monthly', priority: '0.7' },
+  { path: '/es', changefreq: 'monthly', priority: '0.6' },
+  ...SUBURBS.map((s) => ({ path: `/tutoring/${s.slug}`, changefreq: 'monthly', priority: '0.6' })),
 ];
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {

@@ -13,8 +13,8 @@
     --color-cream: #FAFAF8;
     --color-surface: #FFFFFF;
     --color-ink: #0F1714;
-    --color-ink-muted: #6B6F6A;
-    --color-ink-soft: #A0A39E;
+    --color-ink-muted: #5F635E;
+    --color-ink-soft: #70746F;
     --color-rule: #EAEAE6;
     --color-rule-soft: #F4F4F0;
     --color-forest: #1F3A2E;
@@ -294,7 +294,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ink-soft, #6b6f6a);
+  color: var(--ink-soft, #70746F);
   font-weight: 500;
 }
 .cmdk-root [cmdk-item] {
@@ -316,7 +316,7 @@
 .cmdk-root [cmdk-empty] {
   padding: 2.5rem 1rem;
   text-align: center;
-  color: var(--ink-muted, #757871);
+  color: var(--ink-muted, #5F635E);
   font-size: 13px;
 }
 .cmdk-item-action[data-selected='true'] {

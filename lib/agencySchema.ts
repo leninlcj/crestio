@@ -13,7 +13,7 @@ export function agencyOrganizationSchema() {
     logo: `${SITE}/icon-512.png`,
     image: `${SITE}/api/og?type=marketing`,
     email: AGENCY.email,
-    description: 'Carefully matched one-on-one maths and physics tutoring for Years 7–12 and the HSC. Sydney in-home and online across Australia.',
+    description: 'One-on-one maths and physics tutoring for Years 7 to 12 and the HSC. Sydney in-home and online across Australia. Every tutor interviewed, ID-checked and WWCC-verified.',
     areaServed: [
       { '@type': 'City', name: 'Sydney' },
       { '@type': 'Country', name: 'Australia' },
@@ -25,14 +25,18 @@ export function agencyOrganizationSchema() {
   };
 }
 
-export function tutoringServiceSchema(subject: 'maths' | 'physics' | 'all') {
-  const name = subject === 'maths' ? 'Mathematics tutoring' : subject === 'physics' ? 'Physics tutoring' : 'Maths and physics tutoring';
+export function tutoringServiceSchema(subject: 'maths' | 'physics' | 'all', area?: { suburb: string; region: string }) {
+  const base = subject === 'maths' ? 'Mathematics tutoring' : subject === 'physics' ? 'Physics tutoring' : 'Maths and physics tutoring';
+  const name = area ? `${base} in ${area.suburb}` : base;
+  const areaServed = area
+    ? [{ '@type': 'Place', name: `${area.suburb}, NSW`, containedInPlace: { '@type': 'City', name: 'Sydney' } }, { '@type': 'City', name: 'Sydney' }, { '@type': 'Country', name: 'Australia' }]
+    : [{ '@type': 'City', name: 'Sydney' }, { '@type': 'Country', name: 'Australia' }];
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     serviceType: name,
     provider: { '@id': `${SITE}/#organization` },
-    areaServed: [{ '@type': 'City', name: 'Sydney' }, { '@type': 'Country', name: 'Australia' }],
+    areaServed,
     audience: { '@type': 'EducationalAudience', educationalRole: 'student', audienceType: 'High school students, Years 7–12' },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
