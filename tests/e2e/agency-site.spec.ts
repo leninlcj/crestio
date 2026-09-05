@@ -214,6 +214,28 @@ test.describe('agency site: chunk 4 pages', () => {
     await expect(page.locator('a[href="/tutors/handbook"]').first()).toBeVisible();
   });
 
+  test('a tutor application made after landing with a src tag is attributed to it', async ({ page }) => {
+    let body: any = null;
+    await page.route('**/api/tutor-applications', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'x' }) });
+    });
+    await page.goto('/tutors?src=mq-careers');
+    await page.locator('a[href="/tutors/apply"]').first().click();
+    await expect(page).toHaveURL(/\/tutors\/apply$/);
+    await page.fill('#ta-name', 'Sam Lee');
+    await page.fill('#ta-email', 'sam@example.com');
+    await page.fill('#ta-phone', '0400 000 000');
+    await page.fill('#ta-suburb', 'Kogarah');
+    await page.getByRole('button', { name: /Physics/ }).click();
+    await page.fill('#ta-quals', 'ATAR 97. Physics 93.');
+    await page.getByRole('button', { name: 'Yes, current' }).click();
+    await page.getByRole('button', { name: 'Both' }).click();
+    await page.getByRole('button', { name: 'Send application →' }).click();
+    await expect(page.getByRole('status')).toContainText(/Thanks, Sam/);
+    expect(body?.source).toBe('mq-careers');
+  });
+
   test('sitemap includes the programs page and the handbook', async ({ request }) => {
     const xml = await (await request.get('/sitemap.xml')).text();
     expect(xml).toContain('<loc>https://crestio.ai/programs</loc>');

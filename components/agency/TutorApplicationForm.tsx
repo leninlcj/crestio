@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { AGENCY, SUBJECTS, TUTOR_MODES, WWCC_STATUSES, type SubjectKey } from '../../lib/agency';
 import { EMAIL_RE } from '../../lib/agencyForms';
+import { currentSource, sessionStorageOrNull } from '../../lib/attribution';
 
 type State = {
   full_name: string;
@@ -26,18 +27,6 @@ const EMPTY: State = {
   full_name: '', email: '', phone: '', suburb: '', subjects: [], qualifications: '', wwcc_status: '', wwcc_number: '',
   abn: '', mode: '', availability: '', has_transport: '', experience: '', cv_url: '', message: '', website: '',
 };
-
-function readSource(): string | null {
-  if (typeof window === 'undefined') return null;
-  const p = new URLSearchParams(window.location.search);
-  const utm = p.get('utm_source') || p.get('src') || p.get('ref');
-  if (utm) return utm.slice(0, 120);
-  try {
-    const ref = document.referrer ? new URL(document.referrer).hostname : '';
-    if (ref && !ref.endsWith('crestio.ai')) return `referrer:${ref}`.slice(0, 120);
-  } catch { /* ignore */ }
-  return 'direct';
-}
 
 export function TutorApplicationForm() {
   const [s, setS] = useState<State>(EMPTY);
@@ -95,7 +84,7 @@ export function TutorApplicationForm() {
           cv_url: s.cv_url,
           message: s.message,
           website: s.website,
-          source: readSource(),
+          source: typeof window === 'undefined' ? null : currentSource(window, sessionStorageOrNull()),
           page_path: typeof window !== 'undefined' ? window.location.pathname : null,
         }),
       });
