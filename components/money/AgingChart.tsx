@@ -13,7 +13,7 @@ type Props = {
 
 const BUCKET_ORDER: Bucket[] = ['0-7', '8-14', '15-30', '30+'];
 const BUCKET_TONES: Record<Bucket, string> = {
-  '0-7': '#A0A39E',     // ink-soft
+  '0-7': '#70746F',     // ink-soft
   '8-14': '#B8860B',    // amber
   '15-30': '#8B4A1F',   // rust
   '30+': '#7A2233',     // claret

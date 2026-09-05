@@ -540,7 +540,7 @@ function computeStudentStatus(s: StudentRow): { tone: 'active' | 'dormant' | 'ne
   if (hasSession && Date.now() - new Date(s._last_session_at!).getTime() < 30 * 86_400_000) {
     return { tone: 'active', color: '#2F7D4F', label: 'Active (session in the last 30 days)' };
   }
-  return { tone: 'dormant', color: '#A0A39E', label: 'Dormant (no session in the last 30 days)' };
+  return { tone: 'dormant', color: '#70746F', label: 'Dormant (no session in the last 30 days)' };
 }
 
 function relativeDays(iso: string): string {

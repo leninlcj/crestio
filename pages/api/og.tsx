@@ -15,7 +15,7 @@ const WIDTH = 1200;
 const HEIGHT = 630;
 const CREAM = '#FAFAF8';
 const INK = '#0F1714';
-const INK_MUTED = '#6B6F6A';
+const INK_MUTED = '#5F635E';
 const FOREST = '#1F3A2E';
 const RULE = '#E4E2DC';
 

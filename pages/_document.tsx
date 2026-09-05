@@ -1,4 +1,7 @@
 import { Html, Head, Main, NextScript } from 'next/document';
+import { AGENCY } from '../lib/agency';
+
+const GOOGLE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || AGENCY.googleSiteVerification;
 
 // Site-wide head tags. Page titles, descriptions, canonical URLs and Open
 // Graph tags are set per page (components/agency/AgencyPage.tsx); this file
@@ -23,8 +26,8 @@ export default function Document() {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
 
+        {GOOGLE_VERIFICATION && <meta name="google-site-verification" content={GOOGLE_VERIFICATION} />}
         <meta property="og:site_name" content="Crestio Tutoring" />
-        <meta property="og:locale" content="en_AU" />
       </Head>
       <body>
         <Main />

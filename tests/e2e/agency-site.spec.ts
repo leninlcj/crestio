@@ -78,6 +78,90 @@ test.describe('agency site: pages', () => {
   });
 });
 
+test.describe('agency site: chunk 3 pages', () => {
+  test('suburb hub and suburb pages render with their own titles and prefilled enquiry links', async ({ page, request }) => {
+    await page.goto('/tutoring');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/Sydney in-home/);
+    await expect(page.locator('a[href="/tutoring/hurstville"]').first()).toBeVisible();
+
+    const res = await page.goto('/tutoring/hurstville');
+    expect(res?.status()).toBe(200);
+    await expect(page).toHaveTitle(/tutoring in Hurstville/);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Hurstville');
+    await expect(page.locator('a[href*="/enquire?mode=in_home&suburb=Hurstville"]').first()).toBeVisible();
+    const html = await (await request.get('/tutoring/hurstville')).text();
+    expect(html).toContain('"areaServed"');
+    expect(html).toContain('Hurstville, NSW');
+    expect(html).not.toContain('\u2014');
+
+    const missing = await request.get('/tutoring/not-a-suburb');
+    expect(missing.status()).toBe(404);
+  });
+
+  test('the enquiry form prefills mode and suburb from the URL', async ({ page }) => {
+    await page.goto('/enquire?mode=in_home&suburb=Oatley');
+    await page.getByRole('button', { name: 'My child' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('button', { name: 'Year 9' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('button', { name: /Mathematics, Years 7/ }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByRole('button', { name: 'In-home', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#enq-suburb')).toHaveValue('Oatley');
+  });
+
+  test('the Spanish page renders the form in Spanish and sends source es:', async ({ page, request }) => {
+    const html = await (await request.get('/es')).text();
+    expect(html).toMatch(/hreflang="es"/i);
+    expect(html).toMatch(/hreflang="en-AU"/i);
+    expect(html).toContain('lang="es"');
+
+    let body: any = null;
+    await page.route('**/api/enquiries', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'x', stored: true }) });
+    });
+    await page.goto('/es');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('en español');
+    await page.getByRole('button', { name: 'Mi hijo o hija' }).click();
+    await page.getByRole('button', { name: 'Continuar' }).click();
+    await page.getByRole('button', { name: 'Año 10' }).click();
+    await page.getByRole('button', { name: 'Continuar' }).click();
+    await page.getByRole('button', { name: /Matemáticas, años 7 a 10/ }).click();
+    await page.getByRole('button', { name: 'Continuar' }).click();
+    await page.getByRole('button', { name: 'En línea' }).click();
+    await page.getByRole('button', { name: 'Continuar' }).click();
+    await page.getByRole('button', { name: 'Continuar' }).click();
+    await page.locator('#enq-name').fill('María Pérez');
+    await page.locator('#enq-email').fill('maria@example.com');
+    await page.getByRole('button', { name: /Enviar consulta/ }).click();
+    await expect(page.getByRole('status')).toContainText('Gracias, María');
+    expect(body?.source).toMatch(/^es:/);
+    expect(body?.page_path).toBe('/es');
+  });
+
+  test('sitemap includes the suburb pages and the Spanish page', async ({ request }) => {
+    const xml = await (await request.get('/sitemap.xml')).text();
+    expect(xml).toContain('<loc>https://crestio.ai/tutoring/hurstville</loc>');
+    expect(xml).toContain('<loc>https://crestio.ai/es</loc>');
+  });
+});
+
+test.describe('agency site: mobile', () => {
+  test.use({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
+
+  test('no horizontal overflow on a phone, and the menu opens', async ({ page }) => {
+    for (const path of ['/', '/pricing', '/enquire', '/tutoring/hurstville', '/es', '/tutors/apply']) {
+      await page.goto(path);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);
+    }
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Open menu' }).click();
+    await expect(page.getByRole('link', { name: 'Tutor or parent sign in' })).toBeVisible();
+  });
+});
+
 test.describe('agency site: enquiry form', () => {
   test('walks all six steps, validates, and shows the success state', async ({ page }) => {
     await page.route('**/api/enquiries', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'test' }) }));

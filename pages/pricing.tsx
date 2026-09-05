@@ -21,7 +21,7 @@ export default function Pricing() {
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">Pricing</div>
           <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">Simple hourly rates.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed">
-            No joining fee, no lock-in. Online is the most popular option; in-home rates cover the tutor's travel. Prices are per hour and are the full amount you pay.
+            No joining fee, no lock-in. Online costs less; in-home rates cover the tutor's travel. Prices are per hour and are the full amount you pay.
           </p>
         </div>
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
@@ -55,7 +55,7 @@ export default function Pricing() {
           ))}
         </div>
         <p className="mt-8 text-sm text-ink-muted">
-          Longer or shorter lessons are priced pro rata; most students do one hour a week, HSC students often 90 minutes. Full terms are on the <Link href="/terms" className="text-forest underline underline-offset-2">terms page</Link>.
+          Longer or shorter lessons are priced pro rata. The usual booking is one hour a week; for HSC students we suggest 90 minutes. Full terms are on the <Link href="/terms" className="text-forest underline underline-offset-2">terms page</Link>.
         </p>
       </Section>
 

@@ -44,7 +44,7 @@ export default function MarketingNav() {
       ].join(' ')}
     >
       <nav className="px-6 md:px-12 h-16 flex items-center justify-between" aria-label="Primary">
-        <Link href="/" className="font-display text-2xl tracking-tightest shrink-0" aria-label="Crestio Tutoring home">
+        <Link href="/" className="font-display text-2xl tracking-tightest shrink-0">
           crest<span className="italic text-forest">io</span>
           <span className="hidden sm:inline text-sm font-sans tracking-normal text-ink-muted ml-2 align-middle">Tutoring</span>
         </Link>

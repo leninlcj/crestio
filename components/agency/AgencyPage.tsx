@@ -13,10 +13,12 @@ type Props = {
   jsonLd?: Array<Record<string, unknown>>;
   noSuffix?: boolean;
   noIndex?: boolean;
+  lang?: 'en' | 'es';
+  alternates?: Array<{ hrefLang: string; path: string }>;   // hreflang pairs, e.g. the Spanish landing page
   children: ReactNode;
 };
 
-export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, jsonLd = [], noSuffix, noIndex, children }: Props) {
+export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, jsonLd = [], noSuffix, noIndex, lang = 'en', alternates = [], children }: Props) {
   const fullTitle = noSuffix ? title : `${title} · ${AGENCY.name}`;
   const url = `${AGENCY.siteUrl}${path === '/' ? '' : path}`;
   // Absolute URL: Facebook, LinkedIn and iMessage ignore relative og:image values.
@@ -27,7 +29,11 @@ export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, json
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
         <link rel="canonical" href={url} />
+        {alternates.map((a) => (
+          <link key={a.hrefLang} rel="alternate" hrefLang={a.hrefLang} href={`${AGENCY.siteUrl}${a.path === '/' ? '' : a.path}`} />
+        ))}
         {noIndex && <meta name="robots" content="noindex, nofollow" />}
+        <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_AU'} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={fullTitle} />
         <meta property="og:description" content={description} />
@@ -41,7 +47,7 @@ export function AgencyPage({ title, description, path, ogTitle, ogSubtitle, json
           <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(obj) }} />
         ))}
       </Head>
-      <div className="min-h-screen bg-cream text-ink">
+      <div className="min-h-screen bg-cream text-ink" lang={lang}>
         <MarketingNav />
         <main>{children}</main>
         <MarketingFooter />

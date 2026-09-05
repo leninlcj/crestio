@@ -1,14 +1,68 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AuthGuard from '../../../components/AuthGuard';
 import Layout from '../../../components/Layout';
 import SettingsTabs from '../../../components/SettingsTabs';
 import { supabase } from '../../../lib/supabase';
 import { useToast } from '../../../components/design/Toast';
+import { useIsPlatformOwner } from '../../../lib/useIsPlatformOwner';
+import { authFetch } from '../../../lib/authFetch';
+import { formatDateTime } from '../../../lib/utils';
+
+type Snapshot = { path: string; bytes: number | null; created_at: string | null; url: string | null };
+
+// Weekly full-database snapshots (lib/snapshot.ts). Platform owner only.
+function SnapshotsCard() {
+  const toast = useToast();
+  const [rows, setRows] = useState<Snapshot[] | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function load() {
+    const res = await authFetch('/api/owner/snapshots');
+    const payload = await res.json().catch(() => ({}));
+    if (res.ok) setRows(payload.snapshots ?? []);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function takeNow() {
+    setBusy(true);
+    const res = await authFetch('/api/owner/snapshots', { method: 'POST' });
+    const payload = await res.json().catch(() => ({}));
+    setBusy(false);
+    if (!res.ok) { toast.show({ message: payload?.error ?? 'Snapshot failed.', tone: 'error' }); return; }
+    toast.show({ message: `Snapshot saved (${Math.round((payload.bytes ?? 0) / 1024)} KB).`, tone: 'success' });
+    load();
+  }
+
+  return (
+    <section className="card p-5 md:p-6">
+      <h2 className="text-[16px] font-display font-semibold tracking-tightest mb-1">Weekly snapshots</h2>
+      <p className="text-sm text-ink-muted leading-relaxed mb-4">
+        Every Monday morning the whole database is copied into a private storage bucket, and the newest eight copies are kept. Links below last one hour. This protects against a bad edit or an accidental delete; daily backups of the project itself come with the Supabase Pro plan.
+      </p>
+      <button type="button" onClick={takeNow} disabled={busy} className="btn-secondary text-sm mb-4">{busy ? 'Saving…' : 'Take a snapshot now'}</button>
+      {rows === null ? (
+        <p className="text-xs text-ink-soft">Loading…</p>
+      ) : rows.length === 0 ? (
+        <p className="text-xs text-ink-soft">No snapshots yet. The first one runs on Monday, or take one now.</p>
+      ) : (
+        <ul className="divide-y divide-rule border-y border-rule">
+          {rows.map((r) => (
+            <li key={r.path} className="py-2 flex items-center justify-between gap-3 text-sm">
+              <span className="text-ink">{r.created_at ? formatDateTime(r.created_at) : r.path}<span className="text-ink-soft"> · {r.bytes ? `${Math.round(r.bytes / 1024)} KB` : ''}</span></span>
+              {r.url ? <a href={r.url} className="text-forest underline underline-offset-2 text-xs" target="_blank" rel="noopener noreferrer">Download</a> : <span className="text-xs text-ink-soft">No link</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
 
 // Data — export and account deletion. Self-serve, calm copy, clear consequences.
 function DataInner() {
   const toast = useToast();
+  const isOwner = useIsPlatformOwner();
   const [deleting, setDeleting] = useState(false);
   const [confirmText, setConfirmText] = useState('');
 
@@ -56,6 +110,8 @@ function DataInner() {
             Export sessions (CSV)
           </button>
         </section>
+
+        {isOwner && <SnapshotsCard />}
 
         <section className="card p-5 md:p-6 border-claret/30">
           <h2 className="text-[16px] font-display font-semibold tracking-tightest mb-1">Delete your account</h2>

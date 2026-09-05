@@ -36,6 +36,14 @@
     {
       "path": "/api/cron/wwcc-expiry",
       "schedule": "0 21 * * 1"
+    },
+    {
+      "path": "/api/cron/enquiry-followups",
+      "schedule": "30 22 * * *"
+    },
+    {
+      "path": "/api/cron/data-snapshot",
+      "schedule": "0 16 * * 0"
     }
   ]
 }

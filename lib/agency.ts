@@ -35,6 +35,9 @@ export const AGENCY = {
     minimumTutorAge: 18,
   },
   abn: null as string | null, // Set once "Crestio Tutoring" is registered under the ABN.
+  // Google Search Console "HTML tag" verification token (the content="..."
+  // value). Not a secret. Paste it here, or set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION.
+  googleSiteVerification: null as string | null,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -266,7 +269,7 @@ export const FAQS: readonly Faq[] = [
   },
   {
     q: 'Online or in-home: which should I choose, and where do you cover?',
-    a: `Online works anywhere in Australia and is the most popular option. In-home covers Sydney, and we match by suburb to keep your tutor local; ${AGENCY.serviceArea.inHomeFocus} are the best covered. You can switch between online and in-home whenever you like.`,
+    a: `Online works anywhere in Australia and costs less. In-home covers Sydney, and we match by suburb to keep your tutor local; ${AGENCY.serviceArea.inHomeFocus} are the best covered. You can switch between online and in-home whenever you like.`,
   },
   {
     q: 'Are the tutors safe and qualified?',

@@ -291,3 +291,81 @@ export function buildTutorProposalEmail(a: TutorProposalArgs): Built {
   );
   return { subject, html, text };
 }
+
+// ---------------------------------------------------------------------------
+// Follow-ups when an enquiry goes quiet. Sent by /api/cron/enquiry-followups:
+// once on day 3, once on day 10, never again. Spanish when the family enquired
+// through /es (source starts with "es:").
+// ---------------------------------------------------------------------------
+
+export type FollowupArgs = {
+  parentName: string;
+  studentFirstName: string | null;
+  subjects: readonly string[];
+  createdAt: string;      // ISO
+  step: 1 | 2;
+  lang: 'en' | 'es';
+};
+
+function dateLabel(iso: string, lang: 'en' | 'es'): string {
+  try {
+    return new Intl.DateTimeFormat(lang === 'es' ? 'es' : 'en-AU', { day: 'numeric', month: 'long', timeZone: 'Australia/Sydney' }).format(new Date(iso));
+  } catch {
+    return iso.slice(0, 10);
+  }
+}
+
+export function buildEnquiryFollowupEmail(a: FollowupArgs): Built {
+  const first = a.parentName.split(' ')[0] || (a.lang === 'es' ? 'hola' : 'there');
+  const subjects = subjectLabels(a.subjects).join(', ');
+  const who = a.studentFirstName || (a.lang === 'es' ? 'el estudiante' : 'your student');
+  const when = dateLabel(a.createdAt, a.lang);
+  const founder = AGENCY.founder.firstName;
+  const enquireUrl = `${AGENCY.siteUrl}${a.lang === 'es' ? '/es#consulta' : '/enquire'}`;
+
+  if (a.lang === 'es') {
+    const subject = a.step === 1 ? `¿Sigues buscando tutor para ${who}?` : `Cierro tu consulta (puedes responder cuando quieras)`;
+    const raw = a.step === 1
+      ? [
+          `Soy ${founder}, de ${AGENCY.name}. El ${when} nos escribiste sobre ${subjects} para ${who}.`,
+          `Si todavía lo estás pensando, responde a este correo con cualquier duda (horarios, el tutor, el precio) y te contesto yo mismo, en español. Si ya lo resolviste, no hace falta responder: no insistiré más allá de un último mensaje.`,
+        ]
+      : [
+          `Soy ${founder}, de ${AGENCY.name}. Como no supe más de ti después de tu consulta del ${when}, la cierro de mi lado para no seguir escribiéndote.`,
+          `Si las cosas cambian, responde a este correo o vuelve a escribirnos en crestio.ai/es. Mucha suerte a ${who} con ${subjects}.`,
+        ];
+    const paragraphs = raw.map(escapeHtml);
+    const html = shell({
+      kicker: a.step === 1 ? 'Tu consulta' : 'Cierro tu consulta',
+      heading: a.step === 1 ? `¿Sigues buscando tutor para ${escapeHtml(who)}?` : `Cierro tu consulta, pero la puerta queda abierta.`,
+      preheader: a.step === 1 ? 'Responde con cualquier duda y te contesto en español.' : 'Responde cuando quieras.',
+      paragraphs,
+      cta: a.step === 1 ? { label: 'Retomar la consulta', url: enquireUrl } : null,
+    });
+    // Spanish keeps its accents: the only link here is short, so the
+    // quoted-printable encoding the accents trigger cannot break a URL.
+    const text = `Hola ${first},\n\n` + raw.join('\n\n') + `\n\n--\n${AGENCY.name} | Sydney | ${AGENCY.siteUrl}\n`;
+    return { subject, html, text };
+  }
+
+  const subject = a.step === 1 ? `Still looking for a ${subjects.split(',')[0].trim()} tutor for ${who}?` : `Closing your enquiry (reply any time)`;
+  const raw = a.step === 1
+    ? [
+        `${founder} here from ${AGENCY.name}. On ${when} you enquired about ${subjects} for ${who}.`,
+        `If you are still deciding, reply to this email with any question (times, the tutor, the price) and I will answer it personally. If you have already sorted it, no reply needed, and I will not chase beyond one more note.`,
+      ]
+    : [
+        `${founder} here from ${AGENCY.name}. I have not heard back since your enquiry on ${when}, so I am closing it on my side so you do not keep hearing from me.`,
+        `If things change, reply to this email or enquire again at crestio.ai/enquire. Good luck to ${who} with ${subjects}.`,
+      ];
+  const paragraphs = raw.map(escapeHtml);
+  const html = shell({
+    kicker: a.step === 1 ? 'Your enquiry' : 'Closing your enquiry',
+    heading: a.step === 1 ? `Still looking for a tutor for ${escapeHtml(who)}?` : 'Closing your enquiry, with the door left open.',
+    preheader: a.step === 1 ? 'Reply with any question and I will answer it personally.' : 'Reply any time.',
+    paragraphs,
+    cta: a.step === 1 ? { label: 'Pick up where you left off', url: enquireUrl } : null,
+  });
+  const text = ascii(`Hi ${first},\n\n` + raw.join('\n\n') + `\n\n--\n${AGENCY.name} | Sydney | ${AGENCY.siteUrl}\n`);
+  return { subject, html, text };
+}
