@@ -37,7 +37,7 @@ export const AGENCY = {
   abn: null as string | null, // Set once "Crestio Tutoring" is registered under the ABN.
   // Google Search Console "HTML tag" verification token (the content="..."
   // value). Not a secret. Paste it here, or set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION.
-  googleSiteVerification: null as string | null,
+  googleSiteVerification: 'ueo8wbrFaLCTdgmZ0XWr0fZY2jpRI9S-LnqX7NxqIq8' as string | null,
 } as const;
 
 // ---------------------------------------------------------------------------
