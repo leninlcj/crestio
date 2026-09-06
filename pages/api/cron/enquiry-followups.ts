@@ -24,7 +24,7 @@ type Row = {
   created_at: string;
   status: string;
   parent_name: string;
-  email: string;
+  email: string | null;
   student_first_name: string | null;
   year_level: string;
   subjects: string[];
@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const overdue = rows.filter((r) => r.status === 'new' && ageDays(r) >= 1 && !r.owner_nudged_at);
   let nudged = 0;
   if (overdue.length > 0) {
-    const lines = overdue.map((r) => `- ${r.parent_name} (${r.email}), ${r.year_level}, ${Math.floor(ageDays(r))} day(s) waiting: ${AGENCY.siteUrl}/app/leads?enquiry=${r.id}`);
+    const lines = overdue.map((r) => `- ${r.parent_name} (${r.email ?? 'phone only: call them'}), ${r.year_level}, ${Math.floor(ageDays(r))} day(s) waiting: ${AGENCY.siteUrl}/app/leads?enquiry=${r.id}`);
     const text = `These enquiries have had no reply for more than 24 hours. The site promises a reply within ${AGENCY.policies.replyWithinHours} hours.\n\n${lines.join('\n')}\n\nOpen leads: ${AGENCY.siteUrl}/app/leads`;
     const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const result = await sendEmail({
@@ -92,6 +92,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let sent1 = 0;
   let sent2 = 0;
   for (const r of rows) {
+    // Phone-only call requests are chased by phone, never by an email they did not give.
+    if (!r.email) continue;
     const age = ageDays(r);
     const lang: 'en' | 'es' = (r.source ?? '').startsWith('es:') ? 'es' : 'en';
     const common = { parentName: r.parent_name, studentFirstName: r.student_first_name, subjects: r.subjects ?? [], createdAt: r.created_at, lang };

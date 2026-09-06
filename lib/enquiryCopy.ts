@@ -2,7 +2,7 @@
 // year-level and goal options keep their keys from lib/agency.ts; only the
 // labels are translated. Anything not translated falls back to English.
 
-import { AGENCY, NEEDS, SUBJECTS, type SubjectKey, type NeedKey } from './agency';
+import { AGENCY, BEST_TIMES, NEEDS, SUBJECTS, type BestTimeKey, type SubjectKey, type NeedKey } from './agency';
 
 export type EnquiryLang = 'en' | 'es';
 
@@ -11,7 +11,7 @@ export type EnquiryCopy = {
   steps: [string, string, string, string, string, string];
   who: { legend: string; options: Array<[('my_child' | 'me' | 'someone_else'), string]>; error: string };
   year: { legend: string; error: string; university: string; other: string };
-  subjects: { legend: string; hint: string; error: string; notListed: string; labels: Record<SubjectKey, string> };
+  subjects: { legend: string; hint: string; error: string; notListed: string; labels: Record<SubjectKey, string>; tiers: { core: string; request: string; ib: string } };
   lessons: { legend: string; modes: Array<[('online' | 'in_home' | 'either'), string]>; error: string; suburbLabel: string; suburbHint: string; suburbError: string };
   focus: { legend: string; hint: string; labels: Record<NeedKey, string> };
   contact: {
@@ -30,8 +30,9 @@ export const ENQUIRY_COPY_EN: EnquiryCopy = {
   year: { legend: 'Which year level?', error: 'Choose a year level.', university: 'University', other: 'Other' },
   subjects: {
     legend: 'Which subjects?', hint: 'Choose all that apply.', error: 'Choose at least one subject.',
-    notListed: 'Need something not listed? Mention it on the last step and we will tell you honestly whether we can help.',
+    notListed: 'Need something not listed? Mention it on the last step and we will tell you plainly whether we can help.',
     labels: Object.fromEntries(SUBJECTS.map((s) => [s.key, s.label])) as Record<SubjectKey, string>,
+    tiers: { core: 'Maths and science', request: 'Other HSC subjects, by request', ib: 'IB Diploma' },
   },
   lessons: {
     legend: 'Online or in-home?', modes: [['online', 'Online'], ['in_home', 'In-home'], ['either', 'Either']], error: 'Choose online, in-home, or either.',
@@ -66,13 +67,29 @@ export const ENQUIRY_COPY_ES: EnquiryCopy = {
   subjects: {
     legend: '¿Qué materias?', hint: 'Elige todas las que necesites.', error: 'Elige al menos una materia.',
     notListed: '¿Necesitas algo que no aparece aquí? Escríbelo en el último paso y te diremos con franqueza si podemos ayudar.',
+    tiers: { core: 'Matemáticas y ciencias', request: 'Otras materias del HSC, a pedido', ib: 'Bachillerato Internacional (IB)' },
     labels: {
       maths_7_10: 'Matemáticas, años 7 a 10',
+      science_7_10: 'Ciencias, años 7 a 10',
       maths_standard: 'Mathematics Standard 2',
       maths_advanced: 'Mathematics Advanced',
       maths_ext1: 'Mathematics Extension 1',
       maths_ext2: 'Mathematics Extension 2',
       physics: 'Física',
+      chemistry: 'Química',
+      biology: 'Biología',
+      english_standard: 'English Standard',
+      english_advanced: 'English Advanced',
+      economics: 'Economía',
+      business_studies: 'Business Studies',
+      legal_studies: 'Legal Studies',
+      modern_history: 'Historia Moderna',
+      ancient_history: 'Historia Antigua',
+      ib_maths_aa: 'IB Matemáticas: Analysis and Approaches',
+      ib_maths_ai: 'IB Matemáticas: Applications and Interpretation',
+      ib_physics: 'IB Física',
+      ib_chemistry: 'IB Química',
+      ib_biology: 'IB Biología',
     },
   },
   lessons: {
@@ -109,4 +126,94 @@ export const ENQUIRY_COPY_ES: EnquiryCopy = {
 
 export function enquiryCopy(lang: EnquiryLang): EnquiryCopy {
   return lang === 'es' ? ENQUIRY_COPY_ES : ENQUIRY_COPY_EN;
+}
+
+// ---------------------------------------------------------------------------
+// The call-back form. Short on purpose: a number, a year, a good time.
+// ---------------------------------------------------------------------------
+
+export type CallCopy = {
+  lang: EnquiryLang;
+  kicker: string;
+  heading: string;
+  lead: string;
+  classLead: (title: string) => string;
+  name: string; nameError: string;
+  phone: string; phoneHint: string; phoneError: string;
+  year: string; yearError: string;
+  subjects: string; subjectsHint: string;
+  bestTime: string;
+  bestTimes: Record<BestTimeKey, string>;
+  email: string; emailHint: string; emailError: string;
+  suburb: string; suburbHint: string;
+  message: string; messagePlaceholder: string;
+  consent: string; privacyLink: string;
+  send: string; sending: string;
+  writeInstead: string; writeInsteadLink: string;
+  done: { kicker: string; heading: (first: string) => string; body: (phone: string) => string; emailNote: (email: string) => string; classNote: (title: string) => string; home: string };
+  serverError: string; genericError: string;
+};
+
+export const CALL_COPY_EN: CallCopy = {
+  lang: 'en',
+  kicker: 'Request a call',
+  heading: 'Leave your number. Lenin calls you back.',
+  lead: AGENCY.callBack.promise + ' Ten minutes on the phone is how we get the match right.',
+  classLead: (title) => `You are registering interest in ${title}. Leave your number and ${AGENCY.founder.firstName} will call to confirm the day, the time and the venue.`,
+  name: 'Your name', nameError: 'Enter your name.',
+  phone: 'Mobile number', phoneHint: 'The number we will call.', phoneError: 'Enter the number to call.',
+  year: 'Year level', yearError: 'Choose a year level.',
+  subjects: 'Subjects', subjectsHint: 'Optional. Choose any that apply; we can work it out on the call.',
+  bestTime: 'Best time to call',
+  bestTimes: Object.fromEntries(BEST_TIMES.map((b) => [b.key, b.label])) as Record<BestTimeKey, string>,
+  email: 'Email', emailHint: 'Optional. We send a note confirming the call, and use it if we cannot reach you.', emailError: 'Enter a valid email address, or leave it blank.',
+  suburb: 'Suburb', suburbHint: 'Optional. Only needed for in-home lessons.',
+  message: 'Anything else', messagePlaceholder: 'What is going on at school, days that suit, anything that helps.',
+  consent: 'By sending, you agree to our privacy policy. Your details are used to call you back and to match a tutor, and are shared only with the tutor we match.', privacyLink: 'privacy policy',
+  send: 'Request a call', sending: 'Sending',
+  writeInstead: 'Prefer to write it all down?', writeInsteadLink: 'Send the full enquiry instead.',
+  done: {
+    kicker: 'Call request received',
+    heading: (first) => `Thanks, ${first}.`,
+    body: (phone) => `${AGENCY.callBack.promise} We will call ${phone}.`,
+    emailNote: (email) => `We have also sent this to ${email}.`,
+    classNote: (title) => `Registered interest: ${title}. The class runs once four families have confirmed.`,
+    home: 'Back to home',
+  },
+  serverError: `Something went wrong on our side. Please email ${AGENCY.email} with your number and we will call you.`,
+  genericError: `Something went wrong. Please email ${AGENCY.email} with your number and we will call you.`,
+};
+
+export const CALL_COPY_ES: CallCopy = {
+  lang: 'es',
+  kicker: 'Pide una llamada',
+  heading: 'Deja tu número. Lenin te llama.',
+  lead: 'Lenin te llamará pronto: normalmente en menos de dos horas entre las 9 am y las 8 pm, y siempre dentro de un día hábil. Diez minutos por teléfono, en español si lo prefieres, es como acertamos con el tutor.',
+  classLead: (title) => `Estás registrando interés en ${title}. Deja tu número y ${AGENCY.founder.firstName} te llamará para confirmar el día, la hora y el lugar.`,
+  name: 'Tu nombre', nameError: 'Escribe tu nombre.',
+  phone: 'Número de móvil', phoneHint: 'El número al que llamaremos.', phoneError: 'Escribe el número al que llamar.',
+  year: 'Año escolar', yearError: 'Elige el año escolar.',
+  subjects: 'Materias', subjectsHint: 'Opcional. Elige las que apliquen; lo aclaramos en la llamada.',
+  bestTime: 'Mejor hora para llamar',
+  bestTimes: { any: 'Cualquier hora, de 9 am a 8 pm', morning: 'Mañana, de 9 am a 12 pm', afternoon: 'Tarde, de 12 pm a 5 pm', evening: 'Noche, de 5 pm a 8 pm', weekend: 'Fin de semana' },
+  email: 'Correo electrónico', emailHint: 'Opcional. Te enviamos una confirmación y lo usamos si no logramos comunicarnos.', emailError: 'Escribe un correo válido o déjalo en blanco.',
+  suburb: 'Suburbio', suburbHint: 'Opcional. Solo para clases a domicilio.',
+  message: 'Algo más', messagePlaceholder: 'Qué está pasando en la escuela, días que convienen, cualquier cosa que ayude.',
+  consent: 'Al enviar, aceptas nuestra política de privacidad. Tus datos se usan para llamarte y asignar un tutor, y solo se comparten con el tutor asignado.', privacyLink: 'política de privacidad',
+  send: 'Pedir una llamada', sending: 'Enviando',
+  writeInstead: '¿Prefieres escribirlo todo?', writeInsteadLink: 'Envía la consulta completa.',
+  done: {
+    kicker: 'Solicitud recibida',
+    heading: (first) => `Gracias, ${first}.`,
+    body: (phone) => `Lenin te llamará pronto al ${phone}: normalmente en menos de dos horas entre las 9 am y las 8 pm, y siempre dentro de un día hábil.`,
+    emailNote: (email) => `También te lo enviamos a ${email}.`,
+    classNote: (title) => `Interés registrado: ${title}. La clase empieza cuando cuatro familias confirman.`,
+    home: 'Volver al inicio',
+  },
+  serverError: `Algo falló de nuestro lado. Escríbenos a ${AGENCY.email} con tu número y te llamamos.`,
+  genericError: `Algo falló. Escríbenos a ${AGENCY.email} con tu número y te llamamos.`,
+};
+
+export function callCopy(lang: EnquiryLang): CallCopy {
+  return lang === 'es' ? CALL_COPY_ES : CALL_COPY_EN;
 }

@@ -84,3 +84,33 @@ create or replace function public.set_updated_at() returns trigger language plpg
 begin new.updated_at = now(); return new; end $$;
 create or replace function public.is_org_member(org_id uuid) returns boolean language sql stable as $$ select true $$;
 create or replace function public.is_org_owner(org_id uuid) returns boolean language sql stable as $$ select true $$;
+
+-- Enquiries, as created by 20260903_agency_enquiries_applications.sql, so the
+-- chunk 6 migration (nullable email, call-request columns) can be exercised.
+create table public.enquiries (
+  id uuid primary key default gen_random_uuid(),
+  organization_id uuid not null references public.organizations(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  status text not null default 'new'
+    check (status in ('new','contacted','trial_booked','matched','lost','spam')),
+  who text not null default 'my_child'
+    check (who in ('my_child','me','someone_else')),
+  parent_name text not null,
+  email text not null,
+  phone text null,
+  student_first_name text null,
+  year_level text not null,
+  subjects text[] not null default '{}',
+  mode text not null default 'either'
+    check (mode in ('online','in_home','either')),
+  suburb text null,
+  need text null,
+  message text null,
+  source text null,
+  page_path text null,
+  ip_hash text null,
+  owner_notes text null,
+  contacted_at timestamptz null,
+  converted_at timestamptz null
+);

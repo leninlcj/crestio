@@ -68,7 +68,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const parentName: string = enq.parent_name;
-  const parentEmail: string = String(enq.email).toLowerCase();
+  // A call request may have no email. The parent record needs one for the
+  // portal invitation, so the owner supplies it (asked for on the call).
+  const bodyEmail = typeof body.parent_email === 'string' ? body.parent_email.trim().toLowerCase() : '';
+  const parentEmail: string = (enq.email ? String(enq.email).toLowerCase() : bodyEmail);
+  if (!parentEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parentEmail)) {
+    return res.status(400).json({ error: 'This family gave a phone number only. Enter the parent email (from the call) to create the household.' });
+  }
   const lastName = parentName.trim().split(/\s+/).slice(-1)[0] ?? '';
   const studentName = typeof body.student_name === 'string' && body.student_name.trim()
     ? body.student_name.trim().slice(0, 120)
@@ -148,6 +154,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       assigned_tutor_id: tutorId,
       converted_at: new Date().toISOString(),
       status: enq.status === 'new' || enq.status === 'contacted' ? 'trial_booked' : enq.status,
+      // A phone-only call request gets the email the owner collected on the call.
+      ...(enq.email ? {} : { email: parentEmail }),
     })
     .eq('id', id);
   if (uErr) console.error('convert: enquiry link update failed', uErr);

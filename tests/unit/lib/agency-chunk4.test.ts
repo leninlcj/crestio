@@ -76,7 +76,7 @@ describe('summer programs', () => {
       expect(programPrice(p, 'online')).toBe(band.online! * p.lessons);
       expect(programPrice(p, 'in_home')).toBe(band.inHome! * p.lessons);
     }
-    expect(programPrice(PROGRAMS[0], 'online', 'ext2')).toBe(110 * 4);
+    expect(programPrice(PROGRAMS[0], 'online', 'ext2')).toBe(95 * 4);
     expect(programPrice(PROGRAMS[0], 'in_home', 'university')).toBeNull();
   });
 

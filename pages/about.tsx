@@ -8,7 +8,7 @@ export default function About() {
   return (
     <AgencyPage
       title="About"
-      description="Crestio Tutoring is run by Lenin Joaquin, a Sydney maths and physics tutor and engineering student. Small on purpose: hand-matched tutors, one person who answers, no fabricated reviews."
+      description="Crestio Tutoring is run by Lenin Joaquin, a Sydney maths and science tutor and engineering student. Small on purpose: hand-matched tutors, one person who answers, no fabricated reviews."
       path="/about"
       ogTitle="Small on purpose."
       ogSubtitle="Run by a tutor, from Sydney. One person who answers."
@@ -19,7 +19,7 @@ export default function About() {
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">About Crestio</div>
           <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">Small on purpose.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed">
-            Crestio Tutoring is run by {AGENCY.founder.name}, a maths and physics tutor in Sydney's south and an electrical engineering student. It exists because of what he saw from the inside of bigger agencies: tutors allocated from a list, rotated mid-term, and paid so little that the good ones left.
+            Crestio Tutoring is run by {AGENCY.founder.name}, a maths and science tutor in Sydney's south and an electrical engineering student. It exists because of what he saw from the inside of bigger agencies: tutors allocated from a list, rotated mid-term, and paid so little that the good ones left.
           </p>
         </div>
       </section>
@@ -28,7 +28,7 @@ export default function About() {
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           <div className="lg:col-span-7 space-y-4 text-sm md:text-base text-ink-muted leading-relaxed">
             <p>
-              Lenin has tutored high-school maths and physics across Sydney, first with a national agency and then through his own practice, Ace Tutors Australia. He is studying Electrical Engineering (Honours) at Macquarie University, which means the maths and physics he teaches are the maths and physics he uses.
+              Lenin has tutored high-school maths and physics across Sydney's south since 2022, through a national agency and directly for families who found him by word of mouth. He is studying Electrical Engineering (Honours) at Macquarie University, which means the maths and physics he teaches are the maths and physics he uses.
             </p>
             <p>
               He also wrote the software Crestio runs on: the scheduling, the parent notes, the invoicing and the payments. It was built for tutors first, so the admin gets out of the way of the teaching.

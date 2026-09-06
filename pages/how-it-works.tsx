@@ -6,8 +6,8 @@ import { breadcrumb } from '../lib/agencySchema';
 
 const DETAIL = [
   {
-    title: 'The consultation',
-    body: 'A short call or a few emails, whichever you prefer. We ask about the student, the subject, what has been tried, what a good outcome looks like, and the practical things: days, times, online or at home. No pitch, no pressure. If we are not the right fit, we say so.',
+    title: 'The call',
+    body: `You leave a number and a good time, and ${AGENCY.founder.firstName} calls you back: usually within two hours between ${AGENCY.callBack.hoursFrom} and ${AGENCY.callBack.hoursTo}, always within one business day. If he cannot reach you, you get a message saying so and another call within a business day. On the call we ask about the student, the subject, what has been tried, what a good outcome looks like, and the practical things: days, times, online or at home. No pitch, no pressure. If we are not the right fit, we say so. Prefer to write? The enquiry form gets a reply within a day.`,
   },
   {
     title: 'The match',
@@ -19,7 +19,7 @@ const DETAIL = [
   },
   {
     title: 'Every week after',
-    body: 'Same tutor, same slot, a note after every lesson, and homework that is set on purpose. You pay after each lesson by card, or in prepaid blocks. Change or pause any time with a day\'s notice. If anything is off, you email the founder and it gets fixed.',
+    body: 'Same tutor, same slot, a note after every lesson, and homework that is set on purpose. You pay after each lesson by card, or in prepaid blocks. Change or pause any time with a day\'s notice. If anything is off, you call or email the founder and it gets fixed.',
   },
 ];
 
@@ -27,14 +27,14 @@ export default function HowItWorksPage() {
   return (
     <AgencyPage
       title="How it works"
-      description="From enquiry to the right tutor in days: a short consultation, a hand-picked and WWCC-verified tutor, a guaranteed first lesson, then the same tutor every week."
+      description="From one phone call to the right tutor in days: you leave a number, the founder calls back, a hand-picked and WWCC-verified tutor, a guaranteed first lesson, then the same tutor every week."
       path="/how-it-works"
       jsonLd={[breadcrumb([{ name: 'Home', url: '/' }, { name: 'How it works', url: '/how-it-works' }])]}
     >
       <section className="px-6 md:px-12 pt-14 md:pt-20 pb-6 max-w-6xl mx-auto">
         <div className="max-w-2xl">
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">How it works</div>
-          <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">From enquiry to the right tutor, in days.</h1>
+          <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">From one phone call to the right tutor, in days.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed mb-7">No call centres, no random allocation. You deal with one person, and your tutor is hand-picked.</p>
           <CtaRow />
         </div>

@@ -12,7 +12,8 @@ import { useToast } from '../../../components/design/Toast';
 import { IconUsers } from '../../../components/design/icons';
 import { authFetch } from '../../../lib/authFetch';
 import { formatDate, formatDateTime } from '../../../lib/utils';
-import { NEEDS, subjectLabels, hourlyRateCents, rateBandForYearLevel, rateBand, type SubjectKey } from '../../../lib/agency';
+import { NEEDS, bestTimeLabel, subjectLabels, hourlyRateCents, rateBandForYearLevel, rateBand, type SubjectKey } from '../../../lib/agency';
+import { classByKey } from '../../../lib/classes';
 
 type Enquiry = {
   id: string;
@@ -21,7 +22,7 @@ type Enquiry = {
   status: 'new' | 'contacted' | 'trial_booked' | 'matched' | 'lost' | 'spam';
   who: 'my_child' | 'me' | 'someone_else';
   parent_name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   student_first_name: string | null;
   year_level: string;
@@ -37,6 +38,13 @@ type Enquiry = {
   student_id: string | null;
   contacted_at: string | null;
   converted_at: string | null;
+  // Chunk 6 columns; absent until the migration runs.
+  preferred_contact?: 'email' | 'call' | null;
+  best_time?: string | null;
+  class_key?: string | null;
+  call_attempts?: number | null;
+  last_call_attempt_at?: string | null;
+  unreachable_notice_sent_at?: string | null;
 };
 
 type Tutor = { id: string; name: string; subjects: string[] | null; suburb: string | null; mode: string | null };
@@ -127,15 +135,28 @@ function LeadsInner() {
     return true;
   }
 
-  async function convert(e: Enquiry, mode: 'online' | 'in_home', rateCents: number | null, tutorId: string | null, studentName: string) {
+  async function convert(e: Enquiry, mode: 'online' | 'in_home', rateCents: number | null, tutorId: string | null, studentName: string, parentEmail: string | null) {
     const res = await authFetch(`/api/owner/enquiries/${e.id}/convert`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode, hourly_rate_cents: rateCents, tutor_id: tutorId, student_name: studentName }),
+      body: JSON.stringify({ mode, hourly_rate_cents: rateCents, tutor_id: tutorId, student_name: studentName, parent_email: parentEmail }),
     });
     const payload = await res.json().catch(() => ({}));
     if (!res.ok) { toast.show({ message: payload?.error ?? 'Could not convert.', tone: 'error' }); return; }
-    patchLocal(e.id, { household_id: payload.household_id, student_id: payload.student_id, converted_at: new Date().toISOString(), assigned_tutor_id: tutorId, status: e.status === 'new' || e.status === 'contacted' ? 'trial_booked' : e.status });
+    patchLocal(e.id, { household_id: payload.household_id, student_id: payload.student_id, converted_at: new Date().toISOString(), assigned_tutor_id: tutorId, status: e.status === 'new' || e.status === 'contacted' ? 'trial_booked' : e.status, ...(e.email ? {} : { email: parentEmail }) });
     toast.show({ message: 'Household and student created. Invite the parent from People → Parents when ready.', tone: 'success' });
+  }
+
+  async function noAnswer(e: Enquiry) {
+    const res = await authFetch(`/api/owner/enquiries/${e.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'no_answer' }) });
+    const payload = await res.json().catch(() => ({}));
+    if (!res.ok) { toast.show({ message: payload?.error ?? 'Could not record the attempt.', tone: 'error' }); return; }
+    if (payload.enquiry) patchLocal(e.id, payload.enquiry);
+    toast.show({
+      message: payload.notice_sent
+        ? 'Attempt recorded. The family has been emailed that you tried and will call again within a business day.'
+        : payload.has_email ? 'Attempt recorded. The family was already told today; no second email.' : 'Attempt recorded. No email on file, so only a call can reach them.',
+      tone: 'success',
+    });
   }
 
   async function propose(e: Enquiry, tutorId: string, message: string, times: string) {
@@ -143,7 +164,7 @@ function LeadsInner() {
     const payload = await res.json().catch(() => ({}));
     if (!res.ok) { toast.show({ message: payload?.error ?? 'Could not send the proposal.', tone: 'error' }); return; }
     if (payload.enquiry) patchLocal(e.id, payload.enquiry);
-    toast.show({ message: `Proposal emailed to ${e.email}.`, tone: 'success' });
+    toast.show({ message: `Proposal emailed to ${e.email ?? 'the family'}.`, tone: 'success' });
   }
 
   return (
@@ -181,7 +202,7 @@ function LeadsInner() {
         <EmptyState
           icon={<IconUsers />}
           title={filter === 'open' ? 'No open enquiries.' : 'Nothing here.'}
-          description="Enquiries from crestio.ai/enquire land here, and you get an email for each one."
+          description="Call requests and enquiries from crestio.ai land here. You get an email, and a phone push if ntfy is set up, for each one."
         />
       ) : (
         <div className="card overflow-hidden">
@@ -195,11 +216,13 @@ function LeadsInner() {
               >
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] text-ink truncate">
+                    {e.preferred_contact === 'call' && <span className="text-forest font-medium">Call </span>}
                     {e.parent_name}
                     <span className="text-ink-soft"> · {e.student_first_name ? `${e.student_first_name}, ` : ''}{e.year_level}</span>
+                    {e.preferred_contact === 'call' && e.phone && <span className="text-ink-soft num tabular"> · {e.phone}</span>}
                   </div>
                   <div className="text-2xs text-ink-soft truncate">
-                    {subjectLabels(e.subjects).join(', ')} · {MODE_LABEL[e.mode]}{e.suburb ? ` · ${e.suburb}` : ''}{e.source ? ` · via ${e.source}` : ''}
+                    {e.subjects.length > 0 ? subjectLabels(e.subjects).join(', ') : 'Subjects to be discussed'}{e.class_key && classByKey(e.class_key) ? ` · ${classByKey(e.class_key)!.title}` : ''} · {MODE_LABEL[e.mode]}{e.suburb ? ` · ${e.suburb}` : ''}{e.source ? ` · via ${e.source}` : ''}
                   </div>
                 </div>
                 <div className="hidden md:block text-2xs text-ink-soft num tabular shrink-0">{formatDate(e.created_at, { day: 'numeric', month: 'short' })}</div>
@@ -218,7 +241,8 @@ function LeadsInner() {
             e={selected}
             tutors={tutors}
             onUpdate={(body, msg) => update(selected.id, body, msg)}
-            onConvert={(mode, rate, tutorId, name) => convert(selected, mode, rate, tutorId, name)}
+            onNoAnswer={() => noAnswer(selected)}
+            onConvert={(mode, rate, tutorId, name, parentEmail) => convert(selected, mode, rate, tutorId, name, parentEmail)}
             onPropose={(tutorId, message, times) => propose(selected, tutorId, message, times)}
           />
         )}
@@ -227,11 +251,12 @@ function LeadsInner() {
   );
 }
 
-function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
+function LeadDetail({ e, tutors, onUpdate, onNoAnswer, onConvert, onPropose }: {
   e: Enquiry;
   tutors: Tutor[];
   onUpdate: (body: Record<string, unknown>, okMessage?: string) => Promise<boolean>;
-  onConvert: (mode: 'online' | 'in_home', rateCents: number | null, tutorId: string | null, studentName: string) => Promise<void>;
+  onNoAnswer: () => Promise<void>;
+  onConvert: (mode: 'online' | 'in_home', rateCents: number | null, tutorId: string | null, studentName: string, parentEmail: string | null) => Promise<void>;
   onPropose: (tutorId: string, message: string, times: string) => Promise<void>;
 }) {
   const [notes, setNotes] = useState(e.owner_notes ?? '');
@@ -243,6 +268,7 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
     return e.who === 'me' ? e.parent_name : [e.student_first_name, last].filter(Boolean).join(' ');
   });
   const [busy, setBusy] = useState(false);
+  const [parentEmail, setParentEmail] = useState('');
   const [proposeMsg, setProposeMsg] = useState('');
   const [proposeTimes, setProposeTimes] = useState('');
   const [proposing, setProposing] = useState(false);
@@ -261,8 +287,33 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
     </div>
   );
 
+  const isCall = e.preferred_contact === 'call';
+  const groupClass = classByKey(e.class_key);
+  const [calling, setCalling] = useState(false);
+
   return (
     <div className="space-y-6 text-sm">
+      {isCall && !e.converted_at && (
+        <div className="card p-4 bg-forest-soft/30 border-forest/30 space-y-3">
+          <div className="text-2xs uppercase tracking-widest text-forest">Call request{e.best_time ? ` · ${bestTimeLabel(e.best_time)}` : ''}</div>
+          {e.phone ? (
+            <a href={`tel:${e.phone}`} className="btn-primary w-full text-base py-3 block text-center num tabular">Call {e.phone}</a>
+          ) : (
+            <p className="text-sm text-claret">No phone number was stored. Email them instead.</p>
+          )}
+          <p className="text-2xs text-ink-soft">The family was told: usually within two hours, always within one business day.{e.call_attempts ? ` ${e.call_attempts} attempt${e.call_attempts === 1 ? '' : 's'} so far${e.last_call_attempt_at ? `, last ${formatDateTime(e.last_call_attempt_at)}` : ''}.` : ''}</p>
+          {e.status === 'new' && (
+            <div className="grid grid-cols-2 gap-2">
+              <button type="button" className="btn-secondary w-full" onClick={() => onUpdate({ status: 'contacted' }, 'Marked reached.')}>Reached them</button>
+              <button type="button" className="btn-secondary w-full" disabled={calling} onClick={async () => { setCalling(true); try { await onNoAnswer(); } finally { setCalling(false); } }}>{calling ? 'Recording…' : 'No answer'}</button>
+            </div>
+          )}
+          {e.status === 'new' && <p className="text-2xs text-ink-soft">No answer sends the family a note that you tried and will call again within a business day (if they gave an email), and counts the attempt.</p>}
+        </div>
+      )}
+      {groupClass && (
+        <div className="card p-3 text-xs text-ink-muted">Registering interest in <span className="text-ink font-medium">{groupClass.title}</span>, {groupClass.term}. Confirm the day, time and venue on the call; the class runs at four students.</div>
+      )}
       <div className="flex flex-wrap gap-2">
         {(['new', 'contacted', 'trial_booked', 'matched', 'lost', 'spam'] as Enquiry['status'][]).map((s) => (
           <button
@@ -279,11 +330,11 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
 
       <dl>
         {row('Received', formatDateTime(e.created_at))}
-        {row('Email', <a className="text-forest underline underline-offset-2" href={`mailto:${e.email}`}>{e.email}</a>)}
+        {row('Email', e.email ? <a className="text-forest underline underline-offset-2" href={`mailto:${e.email}`}>{e.email}</a> : 'Not given (phone only)')}
         {row('Phone', e.phone ? <a className="text-forest underline underline-offset-2" href={`tel:${e.phone}`}>{e.phone}</a> : 'Not given')}
         {row('Who', e.who === 'me' ? 'Themselves' : e.who === 'my_child' ? 'Their child' : 'Someone else')}
         {row('Student', `${e.student_first_name ?? 'Name not given'} · ${e.year_level}`)}
-        {row('Subjects', subjectLabels(e.subjects).join(', '))}
+        {row('Subjects', e.subjects.length > 0 ? subjectLabels(e.subjects).join(', ') : 'To be discussed')}
         {row('Lessons', `${MODE_LABEL[e.mode]}${e.suburb ? ` · ${e.suburb}` : ''}`)}
         {row('Focus', needLabel(e.need))}
         {row('Source', e.source ?? 'Direct')}
@@ -345,6 +396,13 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
             <label className="label" htmlFor="lead-student-name">Student name</label>
             <input id="lead-student-name" className="input" value={studentName} onChange={(ev) => setStudentName(ev.target.value)} />
           </div>
+          {!e.email && (
+            <div>
+              <label className="label" htmlFor="lead-parent-email">Parent email (ask on the call)</label>
+              <input id="lead-parent-email" className="input" type="email" value={parentEmail} onChange={(ev) => setParentEmail(ev.target.value)} placeholder="parent@example.com" />
+              <p className="mt-1.5 text-2xs text-ink-soft">Needed for the portal invitation and invoices. This lead came in by phone only.</p>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label" htmlFor="lead-mode">Lessons</label>
@@ -361,9 +419,9 @@ function LeadDetail({ e, tutors, onUpdate, onConvert, onPropose }: {
           <p className="text-2xs text-ink-soft">Rate comes from the rate card for the level and format; change it if you agreed something else. The parent invitation is sent separately from People → Parents.</p>
           <button
             type="button"
-            disabled={busy || !studentName.trim()}
+            disabled={busy || !studentName.trim() || (!e.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parentEmail.trim()))}
             className="btn-primary w-full"
-            onClick={async () => { setBusy(true); try { await onConvert(mode, rateCents, tutorId || null, studentName.trim()); } finally { setBusy(false); } }}
+            onClick={async () => { setBusy(true); try { await onConvert(mode, rateCents, tutorId || null, studentName.trim(), e.email ? null : parentEmail.trim().toLowerCase()); } finally { setBusy(false); } }}
           >
             {busy ? 'Creating…' : 'Create household and student'}
           </button>

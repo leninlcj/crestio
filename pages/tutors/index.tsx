@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { AgencyPage, Section } from '../../components/agency/AgencyPage';
-import { AGENCY, SUBJECTS } from '../../lib/agency';
+import { AGENCY, CORE_SUBJECTS, IB_SUBJECTS, REQUEST_SUBJECTS } from '../../lib/agency';
 import { breadcrumb } from '../../lib/agencySchema';
 
 const STAGES = [
@@ -22,9 +22,9 @@ const YOU_GET = [
 export default function ForTutors() {
   return (
     <AgencyPage
-      title="Tutor with Crestio: maths and physics tutoring jobs in Sydney"
+      title="Tutor with Crestio: maths, science and HSC tutoring jobs in Sydney"
       noSuffix
-      description="Tutor maths or physics with Crestio: fair pay set to your level, students matched to your strengths, flexible hours online or in-home across Sydney. Apply in five minutes."
+      description="Tutor maths, science or another HSC subject with Crestio: $40 to $70 an hour by level, paid weekly, students matched to your strengths, online or in-home across Sydney. Apply in five minutes."
       path="/tutors"
       ogTitle="Tutor with Crestio."
       ogSubtitle="Fair pay, students matched to your strengths, flexible hours. Sydney and online."
@@ -35,7 +35,7 @@ export default function ForTutors() {
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">Become a tutor · Sydney & online</div>
           <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">Tutor with Crestio.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed mb-7">
-            We are building a small team of maths and physics tutors who are good at their subject and good with people. If that is you, we would like to hear from you.
+            We are building a small team of maths and science tutors, plus tutors for the other HSC subjects, who are good at their subject and good with people. If that is you, we would like to hear from you.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/tutors/apply" className="btn-primary px-6 w-full sm:w-auto">Apply to tutor</Link>
@@ -58,8 +58,9 @@ export default function ForTutors() {
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-2">
-          {SUBJECTS.map((s) => <span key={s.key} className="pill pill-neutral">{s.label}</span>)}
+          {CORE_SUBJECTS.map((s) => <span key={s.key} className="pill pill-neutral">{s.label}</span>)}
         </div>
+        <p className="mt-4 text-sm text-ink-muted">Also wanted, for families who ask: {REQUEST_SUBJECTS.map((s) => s.label).join(', ')}, and IB {IB_SUBJECTS.map((s) => s.short.replace('IB ', '')).join(', ')} for tutors with IB experience.</p>
       </Section>
 
       <Section eyebrow="What you get" heading="Fair pay, better matches, less admin.">

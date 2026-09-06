@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <AgencyPage
       title="Contact"
-      description={`Email ${AGENCY.email} or book a free consultation. Replies within a day, from the founder.`}
+      description={`Leave your number for a call back, or email ${AGENCY.email}. Replies within a day, from the founder.`}
       path="/contact"
       ogTitle="Contact Crestio Tutoring."
       ogSubtitle="A reply within a day, from the founder."
@@ -40,7 +40,7 @@ export default function Contact() {
             <div className="rounded-md border border-rule bg-surface p-6">
               <h2 className="font-display text-xl tracking-tighter text-ink mb-2">Looking for a tutor?</h2>
               <p className="text-sm text-ink-muted leading-relaxed mb-4">The enquiry form asks the few things we need to match well: year level, subject, online or in-home, and how to reach you.</p>
-              <Link href="/enquire" className="btn-primary px-6">Book a free consultation</Link>
+              <Link href="/request-a-call" className="btn-primary px-6">Request a call</Link>
             </div>
             <div className="rounded-md border border-rule bg-surface p-6">
               <h2 className="font-display text-xl tracking-tighter text-ink mb-2">Want to tutor?</h2>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { AGENCY, SUBJECTS, YEAR_LEVELS, NEEDS, type SubjectKey } from '../../lib/agency';
+import { AGENCY, SUBJECTS, YEAR_LEVELS, NEEDS, subjectsForYearLevel, type Subject, type SubjectKey, type SubjectTier } from '../../lib/agency';
 import { EMAIL_RE } from '../../lib/agencyForms';
 import { enquiryCopy, type EnquiryLang } from '../../lib/enquiryCopy';
 import { currentSource, sessionStorageOrNull } from '../../lib/attribution';
@@ -28,12 +28,11 @@ const EMPTY: State = {
   parent_name: '', email: '', phone: '', student_first_name: '', message: '', website: '',
 };
 
-function subjectsForYear(year: string): typeof SUBJECTS[number][] {
-  if (/^Year (7|8|9|10)$/.test(year)) return SUBJECTS.filter((s) => s.key === 'maths_7_10');
-  if (year === 'Year 11') return SUBJECTS.filter((s) => ['maths_standard', 'maths_advanced', 'maths_ext1', 'physics'].includes(s.key));
-  if (year === 'Year 12') return SUBJECTS.filter((s) => s.key !== 'maths_7_10');
-  return [...SUBJECTS];
+function subjectsForYear(year: string): Subject[] {
+  return year ? subjectsForYearLevel(year) : [...SUBJECTS];
 }
+
+const TIER_ORDER: SubjectTier[] = ['core', 'request', 'ib'];
 
 export type EnquiryFormProps = {
   initialYear?: string;
@@ -218,23 +217,33 @@ export function EnquiryForm({ initialYear, initialSubjects, initialMode, initial
         <fieldset>
           <legend className="font-display text-2xl tracking-tighter text-ink mb-1">{c.subjects.legend}</legend>
           <p className="text-xs text-ink-soft mb-4">{c.subjects.hint}</p>
-          <div className="grid sm:grid-cols-2 gap-2">
-            {options.map((s) => {
-              const active = state.subjects.includes(s.key);
-              return (
-                <button
-                  key={s.key}
-                  type="button"
-                  className={chip(active)}
-                  aria-pressed={active}
-                  onClick={() => set('subjects', active ? state.subjects.filter((k) => k !== s.key) : [...state.subjects, s.key])}
-                >
-                  <span className="block">{c.subjects.labels[s.key]}</span>
-                  <span className={`block text-2xs mt-0.5 ${active ? 'text-cream/70' : 'text-ink-soft'}`}>{yearsLabel(s.years)}</span>
-                </button>
-              );
-            })}
-          </div>
+          {TIER_ORDER.map((tier) => {
+            const group = options.filter((s) => s.tier === tier);
+            if (group.length === 0) return null;
+            const showHeading = options.some((s) => s.tier !== tier);
+            return (
+              <div key={tier} className={showHeading ? 'mb-5' : ''}>
+                {showHeading && <div className="text-2xs uppercase tracking-widest text-ink-soft mb-2">{c.subjects.tiers[tier]}</div>}
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {group.map((s) => {
+                    const active = state.subjects.includes(s.key);
+                    return (
+                      <button
+                        key={s.key}
+                        type="button"
+                        className={chip(active)}
+                        aria-pressed={active}
+                        onClick={() => set('subjects', active ? state.subjects.filter((k) => k !== s.key) : [...state.subjects, s.key])}
+                      >
+                        <span className="block">{c.subjects.labels[s.key]}</span>
+                        <span className={`block text-2xs mt-0.5 ${active ? 'text-cream/70' : 'text-ink-soft'}`}>{yearsLabel(s.years)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
           {errors.subjects && <p className="mt-2 text-xs text-claret">{errors.subjects}</p>}
           <p className="mt-4 text-xs text-ink-soft">{c.subjects.notListed}</p>
         </fieldset>

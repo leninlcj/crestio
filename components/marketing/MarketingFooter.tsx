@@ -14,7 +14,7 @@ export default function MarketingFooter(_props: Props = {}) {
               <span className="text-sm font-sans tracking-normal text-ink-muted ml-2 align-middle">Tutoring</span>
             </Link>
             <p className="text-sm text-ink-muted leading-relaxed max-w-sm mb-4">
-              Carefully matched one-on-one maths and physics tutoring. Sydney in-home and online across Australia.
+              Carefully matched one-on-one maths and science tutoring for the HSC and the IB, and small classes in Kogarah. Sydney in-home and online across Australia.
             </p>
             <a href={`mailto:${AGENCY.email}`} className="text-sm text-forest hover:underline underline-offset-2">{AGENCY.email}</a>
           </div>
@@ -31,7 +31,9 @@ export default function MarketingFooter(_props: Props = {}) {
           ]} />
 
           <FooterColumn title="Get started" links={[
-            { label: 'Book a consultation', href: '/enquire' },
+            { label: 'Request a call', href: '/request-a-call' },
+            { label: 'Send an enquiry', href: '/enquire' },
+            { label: 'Classes', href: '/classes' },
             { label: 'Become a tutor', href: '/tutors' },
             { label: 'Apply to tutor', href: '/tutors/apply' },
             { label: 'Tutor agreement', href: '/tutors/agreement' },

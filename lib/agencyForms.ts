@@ -3,18 +3,23 @@
 // the API routes and (where useful) the client.
 
 import {
+  BEST_TIMES,
   ENQUIRY_MODES,
   NEEDS,
+  PREFERRED_CONTACT,
   SUBJECT_KEYS,
   TUTOR_MODES,
   WWCC_STATUSES,
   YEAR_LEVELS,
+  type BestTimeKey,
   type EnquiryMode,
   type NeedKey,
+  type PreferredContact,
   type SubjectKey,
   type TutorMode,
   type WwccStatus,
 } from './agency';
+import { CLASS_KEYS, type ClassKey } from './classes';
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -55,7 +60,8 @@ export type ValidationResult<T> = { ok: true; value: T } | { ok: false; errors: 
 export type EnquiryInput = {
   who: 'my_child' | 'me' | 'someone_else';
   parent_name: string;
-  email: string;
+  /** Null only for a call request that gave no email. */
+  email: string | null;
   phone: string | null;
   student_first_name: string | null;
   year_level: (typeof YEAR_LEVELS)[number];
@@ -66,10 +72,18 @@ export type EnquiryInput = {
   message: string | null;
   source: string | null;
   page_path: string | null;
+  /** 'email' is the long form; 'call' is the phone-first form. */
+  preferred_contact: PreferredContact;
+  best_time: BestTimeKey | null;
+  /** A group class the family is registering interest in. */
+  class_key: ClassKey | null;
 };
 
 const WHO = ['my_child', 'me', 'someone_else'] as const;
 
+// Two forms share this validator. The long form needs an email and at least
+// one subject. The call request needs a phone number; everything else is
+// worked out on the call, so subjects, suburb and email are optional.
 export function validateEnquiry(body: unknown): ValidationResult<EnquiryInput> {
   const b = (body && typeof body === 'object' ? body : {}) as Record<string, unknown>;
   const errors: Record<string, string> = {};
@@ -79,28 +93,36 @@ export function validateEnquiry(body: unknown): ValidationResult<EnquiryInput> {
     return { ok: false, errors: { website: 'Spam check failed.' } };
   }
 
+  const preferred_contact = oneOf(b.preferred_contact, PREFERRED_CONTACT) ?? 'email';
+  const isCall = preferred_contact === 'call';
+
   const who = oneOf(b.who, WHO) ?? 'my_child';
   const parent_name = str(b.parent_name, 120);
   if (parent_name.length < 2) errors.parent_name = 'Enter your name.';
 
-  const email = str(b.email, 200).toLowerCase();
-  if (!EMAIL_RE.test(email)) errors.email = 'Enter a valid email address.';
+  const rawEmail = str(b.email, 200).toLowerCase();
+  const email = rawEmail || null;
+  if (!isCall && !EMAIL_RE.test(rawEmail)) errors.email = 'Enter a valid email address.';
+  if (isCall && rawEmail && !EMAIL_RE.test(rawEmail)) errors.email = 'Enter a valid email address, or leave it blank.';
 
   const rawPhone = str(b.phone, 40);
   const phone = rawPhone ? normalisePhone(rawPhone) : null;
   if (rawPhone && !phone) errors.phone = 'Enter a valid phone number.';
+  if (isCall && !phone) errors.phone = 'Enter the number to call.';
 
   const year_level = oneOf(b.year_level, YEAR_LEVELS);
   if (!year_level) errors.year_level = 'Choose a year level.';
 
   const subjects = subjectList(b.subjects);
-  if (subjects.length === 0) errors.subjects = 'Choose at least one subject.';
+  if (!isCall && subjects.length === 0) errors.subjects = 'Choose at least one subject.';
 
   const mode = oneOf(b.mode, ENQUIRY_MODES.map((m) => m.key)) ?? 'either';
   const suburb = str(b.suburb, 80) || null;
-  if (mode !== 'online' && !suburb) errors.suburb = 'Tell us the suburb for in-home lessons.';
+  if (!isCall && mode !== 'online' && !suburb) errors.suburb = 'Tell us the suburb for in-home lessons.';
 
   const need = oneOf(b.need, NEEDS.map((n) => n.key));
+  const best_time = oneOf(b.best_time, BEST_TIMES.map((t) => t.key));
+  const class_key = oneOf(b.class_key, CLASS_KEYS);
   const message = str(b.message, 2000) || null;
   const student_first_name = str(b.student_first_name, 60) || null;
   const source = str(b.source, 120) || null;
@@ -123,6 +145,9 @@ export function validateEnquiry(body: unknown): ValidationResult<EnquiryInput> {
       message,
       source,
       page_path,
+      preferred_contact,
+      best_time: isCall ? best_time : null,
+      class_key,
     },
   };
 }

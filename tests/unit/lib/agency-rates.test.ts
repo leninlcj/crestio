@@ -6,10 +6,12 @@ describe('rate card', () => {
     for (const s of SUBJECTS) expect(RATE_CARD.some((b) => b.key === s.rateBand)).toBe(true);
   });
   it('prices HSC physics and Extension 2 as expected', () => {
-    expect(hourlyRateCents('physics', 'online')).toBe(9500);
+    expect(hourlyRateCents('physics', 'online')).toBe(8500);
     expect(hourlyRateCents('physics', 'in_home')).toBe(11000);
     expect(hourlyRateCents('maths_ext2', 'in_home')).toBe(12500);
-    expect(hourlyRateCents('maths_7_10', 'online')).toBe(8000);
+    expect(hourlyRateCents('maths_7_10', 'online')).toBe(7500);
+    expect(hourlyRateCents('ib_physics', 'in_home')).toBe(12500);
+    expect(hourlyRateCents('chemistry', 'online')).toBe(8500);
   });
   it('in-home is always dearer than online where offered', () => {
     for (const b of RATE_CARD) if (b.inHome != null && b.online != null) expect(b.inHome).toBeGreaterThan(b.online);

@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { AgencyPage, Section } from '../../components/agency/AgencyPage';
 import { RateTable, HowItWorks, FinalBand } from '../../components/agency/blocks';
-import { AGENCY, INCLUDED, SUBJECTS, rateBand } from '../../lib/agency';
+import { AGENCY, INCLUDED, CORE_SUBJECTS, IB_SUBJECTS, REQUEST_SUBJECTS, rateBand } from '../../lib/agency';
 import { tutoringServiceSchema, breadcrumb, agencyFaqSchema } from '../../lib/agencySchema';
 import { SUBURBS, suburbBySlug, neighboursOf, suburbsInRegion, listNames, type Suburb } from '../../lib/suburbs';
 
@@ -15,6 +15,7 @@ type Props = { suburb: Suburb; neighbours: Suburb[]; sameRegion: Suburb[] };
 function enquiryHref(s: Suburb): string {
   return `/enquire?mode=in_home&suburb=${encodeURIComponent(s.name)}`;
 }
+
 
 function coverageParagraph(s: Suburb, neighbours: Suburb[]): string {
   const near = neighbours.length ? ` We also cover ${listNames(neighbours)} and the suburbs around them.` : '';
@@ -36,7 +37,7 @@ function faqFor(s: Suburb, neighbours: Suburb[]) {
   return [
     {
       q: `Do you offer in-home tutoring in ${s.name}?`,
-      a: `Yes. ${s.name} is covered for in-home maths and physics lessons, and online lessons are available anywhere. Tell us your suburb on the enquiry form and we match a tutor who can get to you.`,
+      a: `Yes. ${s.name} is covered for in-home maths and science lessons, and online lessons are available anywhere. Tell us your suburb on the enquiry form and we match a tutor who can get to you.`,
     },
     {
       q: `Which suburbs near ${s.name} do you cover?`,
@@ -58,7 +59,7 @@ function faqFor(s: Suburb, neighbours: Suburb[]) {
 export default function SuburbPage({ suburb, neighbours, sameRegion }: Props) {
   const faq = faqFor(suburb, neighbours);
   const title = `Maths and physics tutoring in ${suburb.name}`;
-  const description = `One-on-one maths and physics tutoring in ${suburb.name}, in-home or online, Years 7 to 12 and the HSC. Tutors matched by suburb, interviewed and WWCC-verified. First lesson guaranteed.`;
+  const description = `One-on-one maths and science tutoring in ${suburb.name}, in-home or online, Years 7 to 12, the HSC and the IB. Tutors matched by suburb, interviewed and WWCC-verified. First lesson guaranteed.`;
   const travel = travelSentence(suburb);
   const others = sameRegion.filter((x) => x.slug !== suburb.slug);
 
@@ -80,13 +81,13 @@ export default function SuburbPage({ suburb, neighbours, sameRegion }: Props) {
           <div className="text-2xs uppercase tracking-widest text-ink-soft mb-4">{suburb.region} · Sydney</div>
           <h1 className="font-display text-4xl md:text-6xl tracking-tighter text-ink text-balance leading-[1.05] mb-5">{title}.</h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed mb-7">
-            One tutor, one student, at your home in {suburb.name} or online. Maths from Year 7 to Extension 2 and HSC physics, with every tutor interviewed, ID-checked and WWCC-verified before they meet your child.
+            One tutor, one student, at your home in {suburb.name} or online. Maths from Year 7 to Extension 2 and the HSC sciences, with every tutor interviewed, ID-checked and WWCC-verified before they meet your child.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href={enquiryHref(suburb)} className="btn-primary px-6 w-full sm:w-auto">Book a free consultation</Link>
-            <Link href="/pricing" className="btn-secondary px-6 w-full sm:w-auto">See pricing</Link>
+            <Link href="/request-a-call" className="btn-primary px-6 w-full sm:w-auto">Request a call</Link>
+            <Link href={enquiryHref(suburb)} className="btn-secondary px-6 w-full sm:w-auto">Send an enquiry</Link>
           </div>
-          <p className="mt-4 text-2xs text-ink-soft">No joining fee. No lock-in. A reply within {AGENCY.policies.replyWithinHours} hours, from the founder.</p>
+          <p className="mt-4 text-2xs text-ink-soft">No joining fee. No lock-in. {AGENCY.callBack.promise}</p>
         </div>
       </section>
 
@@ -115,9 +116,9 @@ export default function SuburbPage({ suburb, neighbours, sameRegion }: Props) {
         </div>
       </Section>
 
-      <Section eyebrow="Subjects" heading="Maths from Year 7 to Extension 2. Physics for the HSC.">
+      <Section eyebrow="Subjects" heading="Maths and science from Year 7 to the HSC. Other subjects and the IB by request.">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SUBJECTS.map((s) => (
+          {CORE_SUBJECTS.map((s) => (
             <div key={s.key} className="rounded-md border border-rule bg-surface p-5">
               <div className="flex items-baseline justify-between gap-4 mb-1.5">
                 <h3 className="text-base font-semibold text-ink">{s.label}</h3>
@@ -127,6 +128,9 @@ export default function SuburbPage({ suburb, neighbours, sameRegion }: Props) {
             </div>
           ))}
         </div>
+        <p className="mt-6 text-sm text-ink-muted">
+          By request, when a tested tutor is available: {REQUEST_SUBJECTS.map((x) => x.label).join(', ')}. IB Diploma: {IB_SUBJECTS.map((x) => x.short.replace('IB ', '')).join(', ')}.
+        </p>
         <p className="mt-6 text-sm text-ink-muted">
           More on each course: <Link href="/maths-tutoring" className="text-forest underline underline-offset-2">maths tutoring</Link> and <Link href="/physics-tutoring" className="text-forest underline underline-offset-2">physics tutoring</Link>.
         </p>

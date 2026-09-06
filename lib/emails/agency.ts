@@ -2,7 +2,7 @@
 // application received (applicant), application alert (owner).
 // One shared shell keeps them consistent with the parent-portal emails.
 
-import { AGENCY, NEEDS, subjectLabels } from '../agency';
+import { AGENCY, NEEDS, bestTimeLabel, subjectLabels } from '../agency';
 
 export type Built = { subject: string; html: string; text: string };
 
@@ -90,7 +90,8 @@ function modeLabel(mode: string): string {
 
 export type EnquiryEmailArgs = {
   parentName: string;
-  email: string;
+  /** Null for a call request that gave no email; the family email is then skipped. */
+  email: string | null;
   phone: string | null;
   studentFirstName: string | null;
   yearLevel: string;
@@ -100,33 +101,58 @@ export type EnquiryEmailArgs = {
   need: string | null;
   message: string | null;
   enquiryId: string;
+  /** 'call' for the phone-first form. Default 'email'. */
+  preferredContact?: 'email' | 'call';
+  bestTime?: string | null;
+  /** Title of the group class the family asked about, if any. */
+  className?: string | null;
 };
+
+function subjectsOrTbc(subjects: readonly string[]): string {
+  return subjects.length > 0 ? subjectLabels(subjects).join(', ') : 'To be discussed on the call';
+}
 
 export function buildEnquiryReceivedEmail(a: EnquiryEmailArgs): Built {
   const first = a.parentName.split(' ')[0] || 'there';
-  const subjects = subjectLabels(a.subjects).join(', ');
-  const subject = `Thanks ${first}, we have your enquiry`;
-  const paragraphs = [
-    `Thanks for getting in touch with ${escapeHtml(AGENCY.name)}. ${escapeHtml(AGENCY.founder.firstName)} reads every enquiry personally and will reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor and next steps.`,
-    `Here is what you told us. If anything is wrong, just reply to this email.`,
-  ];
+  const isCall = a.preferredContact === 'call';
+  const subjects = subjectsOrTbc(a.subjects);
+  const subject = isCall ? `Thanks ${first}, ${AGENCY.founder.firstName} will call you shortly` : `Thanks ${first}, we have your enquiry`;
+  const paragraphs = isCall
+    ? [
+        `Thanks for asking ${escapeHtml(AGENCY.name)} to call. ${escapeHtml(AGENCY.callBack.promise)}${a.phone ? ` We will call ${escapeHtml(a.phone)}.` : ''}`,
+        `The call takes about ten minutes: what your student needs, which days suit, online or at home. Then ${escapeHtml(AGENCY.founder.firstName)} hand-picks the tutor.`,
+        `Here is what you told us. If anything is wrong, just reply to this email.`,
+      ]
+    : [
+        `Thanks for getting in touch with ${escapeHtml(AGENCY.name)}. ${escapeHtml(AGENCY.founder.firstName)} reads every enquiry personally and will reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor and next steps.`,
+        `Here is what you told us. If anything is wrong, just reply to this email.`,
+      ];
   const facts: Array<[string, string]> = [
     ['Student', a.studentFirstName ? `${a.studentFirstName} · ${a.yearLevel}` : a.yearLevel],
     ['Subjects', subjects],
-    ['Lessons', modeLabel(a.mode) + (a.suburb ? ` · ${a.suburb}` : '')],
   ];
+  if (a.className) facts.push(['Class', a.className]);
+  if (!isCall || a.mode !== 'either' || a.suburb) facts.push(['Lessons', modeLabel(a.mode) + (a.suburb ? ` · ${a.suburb}` : '')]);
   const nl = needLabel(a.need);
   if (nl) facts.push(['Focus', nl]);
+  if (isCall) {
+    const bt = bestTimeLabel(a.bestTime);
+    if (bt) facts.push(['Best time to call', bt]);
+  }
   const html = shell({
-    kicker: 'Enquiry received',
-    heading: `We'll match ${a.studentFirstName ? escapeHtml(a.studentFirstName) : 'your student'} with the right tutor.`,
-    preheader: `Reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor.`,
+    kicker: isCall ? 'Call request received' : 'Enquiry received',
+    heading: isCall
+      ? `${escapeHtml(AGENCY.founder.firstName)} will call you shortly.`
+      : `We'll match ${a.studentFirstName ? escapeHtml(a.studentFirstName) : 'your student'} with the right tutor.`,
+    preheader: isCall ? AGENCY.callBack.promise : `Reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor.`,
     paragraphs,
     facts,
   });
+  const intro = isCall
+    ? `Thanks for asking ${AGENCY.name} to call. ${AGENCY.callBack.promise}${a.phone ? ` We will call ${a.phone}.` : ''}\n\nThe call takes about ten minutes: what your student needs, which days suit, online or at home. Then ${AGENCY.founder.firstName} hand-picks the tutor.`
+    : `Thanks for getting in touch with ${AGENCY.name}. ${AGENCY.founder.firstName} reads every enquiry personally and will reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor and next steps.`;
   const text = ascii(
-    `Hi ${first},\n\n` +
-    `Thanks for getting in touch with ${AGENCY.name}. ${AGENCY.founder.firstName} reads every enquiry personally and will reply within ${AGENCY.policies.replyWithinHours} hours with a suggested tutor and next steps.\n\n` +
+    `Hi ${first},\n\n${intro}\n\n` +
     `What you told us:\n` +
     facts.map(([k, v]) => `- ${k}: ${v}`).join('\n') + `\n\n` +
     `If anything is wrong, just reply to this email.\n\n--\n${AGENCY.name} | Sydney | ${AGENCY.siteUrl}\n`,
@@ -135,29 +161,77 @@ export function buildEnquiryReceivedEmail(a: EnquiryEmailArgs): Built {
 }
 
 export function buildEnquiryAlertEmail(a: EnquiryEmailArgs): Built {
-  const subjects = subjectLabels(a.subjects).join(', ');
-  const subject = `New enquiry: ${a.yearLevel} ${subjects} · ${modeLabel(a.mode)}${a.suburb ? ` · ${a.suburb}` : ''}`;
+  const isCall = a.preferredContact === 'call';
+  const subjects = subjectsOrTbc(a.subjects);
+  const where = `${modeLabel(a.mode)}${a.suburb ? ` · ${a.suburb}` : ''}`;
+  const subject = isCall
+    ? `CALL ${a.phone ?? ''}: ${a.parentName} · ${a.yearLevel}${a.subjects.length > 0 ? ` ${subjectLabels(a.subjects).join(', ')}` : ''}${a.className ? ` · ${a.className}` : ''}`
+    : `New enquiry: ${a.yearLevel} ${subjects} · ${where}`;
   const url = `${AGENCY.siteUrl}/app/leads?enquiry=${a.enquiryId}`;
   const facts: Array<[string, string]> = [
     ['Parent', a.parentName],
-    ['Email', a.email],
     ['Phone', a.phone ?? 'Not given'],
+    ['Email', a.email ?? 'Not given'],
+  ];
+  if (isCall) facts.push(['Best time', bestTimeLabel(a.bestTime) ?? 'Any time']);
+  facts.push(
     ['Student', a.studentFirstName ? `${a.studentFirstName} · ${a.yearLevel}` : a.yearLevel],
     ['Subjects', subjects],
-    ['Lessons', modeLabel(a.mode) + (a.suburb ? ` · ${a.suburb}` : '')],
-    ['Focus', needLabel(a.need) ?? 'Not given'],
-  ];
+  );
+  if (a.className) facts.push(['Class', a.className]);
+  facts.push(['Lessons', where], ['Focus', needLabel(a.need) ?? 'Not given']);
   if (a.message) facts.push(['Message', a.message]);
   const html = shell({
-    kicker: 'New enquiry',
-    heading: `${escapeHtml(a.parentName)} wants a ${escapeHtml(subjects)} tutor.`,
-    preheader: `${a.yearLevel} · ${modeLabel(a.mode)}${a.suburb ? ` · ${a.suburb}` : ''}`,
-    paragraphs: [`Reply within ${AGENCY.policies.replyWithinHours} hours. Open the lead to log contact, assign a tutor, or convert it to a household.`],
+    kicker: isCall ? 'Call request' : 'New enquiry',
+    heading: isCall
+      ? `Call ${escapeHtml(a.parentName)}${a.phone ? ` on ${escapeHtml(a.phone)}` : ''}.`
+      : `${escapeHtml(a.parentName)} wants a ${escapeHtml(subjects)} tutor.`,
+    preheader: isCall ? `${a.yearLevel} · ${subjects}` : `${a.yearLevel} · ${where}`,
+    paragraphs: [
+      isCall
+        ? `The family was told: ${escapeHtml(AGENCY.callBack.promise)} Open the lead, tap the number to call, then mark it reached or send the no-answer note.`
+        : `Reply within ${AGENCY.policies.replyWithinHours} hours. Open the lead to log contact, assign a tutor, or convert it to a household.`,
+    ],
     facts,
     cta: { label: 'Open lead', url },
   });
   const text = ascii(
-    `New enquiry\n\n` + facts.map(([k, v]) => `${k}: ${v}`).join('\n') + `\n\nOpen: ${url}\n`,
+    `${isCall ? 'Call request' : 'New enquiry'}\n\n` + facts.map(([k, v]) => `${k}: ${v}`).join('\n') + `\n\nOpen: ${url}\n`,
+  );
+  return { subject, html, text };
+}
+
+// Sent when the owner tried to call and nobody answered. The promise the site
+// made ("always within one business day") is restated, and the family is
+// asked for a better time so the second attempt lands.
+export type CallbackMissedArgs = {
+  parentName: string;
+  phone: string | null;
+  attempts: number;
+  lang?: 'en' | 'es';
+};
+
+export function buildCallbackMissedEmail(a: CallbackMissedArgs): Built {
+  const first = a.parentName.split(' ')[0] || 'there';
+  if (a.lang === 'es') {
+    const subject = `Intentamos llamarte, ${first}`;
+    const paragraphs = [
+      `${escapeHtml(AGENCY.founder.firstName)} de ${escapeHtml(AGENCY.name)} acaba de intentar llamarte${a.phone ? ` al ${escapeHtml(a.phone)}` : ''} y no pudo comunicarse.`,
+      `Volveremos a intentarlo dentro de un día hábil. Si hay un horario que te venga mejor, responde a este correo con el día y la hora y llamaremos entonces.`,
+    ];
+    const html = shell({ kicker: 'Intentamos llamarte', heading: 'No pudimos comunicarnos. Lo intentaremos de nuevo.', preheader: 'Volveremos a llamar dentro de un día hábil.', paragraphs });
+    const text = ascii(`Hola ${first},\n\n${AGENCY.founder.firstName} de ${AGENCY.name} acaba de intentar llamarte${a.phone ? ` al ${a.phone}` : ''} y no pudo comunicarse.\n\nVolveremos a intentarlo dentro de un dia habil. Si hay un horario que te venga mejor, responde a este correo con el dia y la hora y llamaremos entonces.\n\n--\n${AGENCY.name} | Sydney | ${AGENCY.siteUrl}\n`);
+    return { subject, html, text };
+  }
+  const subject = `We tried to call you, ${first}`;
+  const paragraphs = [
+    `${escapeHtml(AGENCY.founder.firstName)} from ${escapeHtml(AGENCY.name)} just tried to call${a.phone ? ` ${escapeHtml(a.phone)}` : ''} and could not get through.`,
+    `We will try again within one business day. If there is a time that suits you better, reply to this email with the day and time and we will call then.`,
+  ];
+  const html = shell({ kicker: 'We tried to call', heading: 'We could not reach you. We will try again.', preheader: 'Another call within one business day.', paragraphs });
+  const text = ascii(
+    `Hi ${first},\n\n${AGENCY.founder.firstName} from ${AGENCY.name} just tried to call${a.phone ? ` ${a.phone}` : ''} and could not get through.\n\n` +
+    `We will try again within one business day. If there is a time that suits you better, reply to this email with the day and time and we will call then.\n\n--\n${AGENCY.name} | Sydney | ${AGENCY.siteUrl}\n`,
   );
   return { subject, html, text };
 }

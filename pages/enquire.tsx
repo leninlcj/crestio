@@ -22,10 +22,10 @@ export default function Enquire() {
 
   return (
     <AgencyPage
-      title="Book a free consultation"
-      description="Tell us what your child needs and we will reply within a day with a suggested maths or physics tutor. No charge to enquire, no lock-in."
+      title="Send an enquiry"
+      description="Tell us what your child needs in writing and we reply within a day with a suggested tutor. Or leave your number and the founder calls you back. No charge to enquire, no lock-in."
       path="/enquire"
-      ogTitle="Book a free consultation."
+      ogTitle="Send an enquiry."
       ogSubtitle="Tell us what your child needs. A reply within a day, from the founder."
       jsonLd={[breadcrumb([{ name: 'Home', url: '/' }, { name: 'Enquire', url: '/enquire' }])]}
     >
@@ -33,9 +33,9 @@ export default function Enquire() {
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-14">
           <div className="lg:col-span-4">
             <div className="text-2xs uppercase tracking-widest text-ink-soft mb-3">Get matched</div>
-            <h1 className="font-display text-4xl md:text-5xl tracking-tighter text-ink text-balance leading-[1.05] mb-4">Book a free consultation.</h1>
+            <h1 className="font-display text-4xl md:text-5xl tracking-tighter text-ink text-balance leading-[1.05] mb-4">Send an enquiry.</h1>
             <p className="text-base text-ink-muted leading-relaxed mb-6">
-              A quick, no-obligation chat about what your child needs. Then we find the right tutor. There is no charge to enquire and no lock-in.
+              Write it all down and {AGENCY.founder.firstName} replies within a day with a suggested tutor. In a hurry? <Link href="/request-a-call" className="text-forest underline underline-offset-2">Request a call</Link> instead and he phones you back, usually within two hours. No charge to enquire, no lock-in.
             </p>
             <dl className="space-y-4 text-sm">
               {program && (

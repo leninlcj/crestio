@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta
           name="description"
-          content="One-on-one maths and physics tutoring in Sydney and online, Years 7 to 12 and the HSC. Every tutor interviewed, ID-checked and WWCC-verified."
+          content="One-on-one maths and science tutoring in Sydney and online, Years 7 to 12, the HSC and the IB. Every tutor interviewed, ID-checked and WWCC-verified."
         />
       </Head>
       <RouteProgressBar />

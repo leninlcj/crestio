@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { AgencyPage, Section } from '../components/agency/AgencyPage';
 import { EnquiryForm } from '../components/agency/EnquiryForm';
+import { RequestCallForm } from '../components/agency/RequestCallForm';
 import { AGENCY, RATE_CARD, formatRate } from '../lib/agency';
 import { agencyOrganizationSchema, breadcrumb } from '../lib/agencySchema';
 
@@ -51,7 +52,7 @@ export default function EspanolPage() {
             Clases particulares de matemáticas y física, de los años 7 a 12 y el HSC, en tu casa en Sydney o en línea. Cada tutor fue entrevistado, mostró identificación y tiene el Working With Children Check verificado antes de conocer a tu hijo. Y si prefieres explicarnos todo en español, aquí te entendemos.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <a href="#consulta" className="btn-primary px-6 w-full sm:w-auto">Pedir una consulta gratis</a>
+            <a href="#consulta" className="btn-primary px-6 w-full sm:w-auto">Pedir una llamada</a>
             <a href="#precios" className="btn-secondary px-6 w-full sm:w-auto">Ver precios</a>
           </div>
           <p className="mt-4 text-2xs text-ink-soft">Sin cuota de inscripción. Sin permanencia. Respuesta en menos de {AGENCY.policies.replyWithinHours} horas, del fundador.</p>
@@ -106,13 +107,19 @@ export default function EspanolPage() {
         </div>
       </Section>
 
-      <Section id="consulta" eyebrow="Consulta gratis" heading="Cuéntanos qué necesita tu hijo." lead="Un formulario corto, en español. Te respondemos en menos de un día con un tutor sugerido y los siguientes pasos. Sin costo y sin compromiso.">
+      <Section id="consulta" eyebrow="Pide una llamada" heading="Deja tu número y Lenin te llama, en español." lead="Normalmente en menos de dos horas entre las 9 am y las 8 pm, y siempre dentro de un día hábil. Diez minutos por teléfono para elegir bien al tutor. Sin costo y sin compromiso.">
+        <div className="max-w-3xl">
+          <RequestCallForm lang="es" />
+        </div>
+      </Section>
+
+      <Section id="consulta-completa" tone="surface" eyebrow="¿Prefieres escribir?" heading="Cuéntanos qué necesita tu hijo por escrito." lead="Un formulario corto, en español. Te respondemos en menos de un día con un tutor sugerido y los siguientes pasos.">
         <div className="max-w-3xl">
           <EnquiryForm lang="es" />
         </div>
       </Section>
 
-      <Section tone="surface" eyebrow="Preguntas frecuentes" heading="Lo que las familias nos preguntan." narrow>
+      <Section eyebrow="Preguntas frecuentes" heading="Lo que las familias nos preguntan." narrow>
         <div className="divide-y divide-rule border-y border-rule">
           {PREGUNTAS.map((f) => (
             <details key={f.q} className="group py-4">
