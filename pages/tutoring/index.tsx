@@ -15,7 +15,7 @@ export default function WhereWeTutor() {
   return (
     <AgencyPage
       title="Where we tutor in Sydney"
-      description="In-home maths and physics tutoring across the St George area, the Sutherland Shire and south-west Sydney, and online anywhere in Australia. Find your suburb."
+      description="In-home maths and science tutoring across the St George area, the Sutherland Shire and south-west Sydney, and online anywhere in Australia. Find your suburb."
       path="/tutoring"
       ogTitle="Where we tutor."
       ogSubtitle="St George, the Sutherland Shire and south-west Sydney in-home. Online anywhere."

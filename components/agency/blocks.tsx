@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AGENCY, FAQS, INCLUDED, RATE_CARD, SUBJECTS, formatRate, type Faq } from '../../lib/agency';
+import { AGENCY, CORE_SUBJECTS, FAQS, IB_SUBJECTS, INCLUDED, RATE_CARD, REQUEST_SUBJECTS, formatRate, type Faq } from '../../lib/agency';
 import { Section, CtaRow } from './AgencyPage';
 
 // ---------------------------------------------------------------------------
@@ -7,7 +7,7 @@ import { Section, CtaRow } from './AgencyPage';
 // ---------------------------------------------------------------------------
 
 export function Hero({
-  eyebrow = `Sydney & online · Maths and Physics, Years 7–12`,
+  eyebrow = `Sydney in-home & online Australia-wide · Years 7–12, HSC and IB`,
   heading,
   lead,
 }: {
@@ -25,7 +25,7 @@ export function Hero({
           </h1>
           <p className="text-base md:text-lg text-ink-muted leading-relaxed max-w-xl mb-7">{lead}</p>
           <CtaRow />
-          <p className="mt-4 text-2xs text-ink-soft">No joining fee. No lock-in. A reply within {AGENCY.policies.replyWithinHours} hours, from the founder.</p>
+          <p className="mt-4 text-2xs text-ink-soft">No joining fee. No lock-in. {AGENCY.callBack.promise} Prefer to write? <Link href="/enquire" className="underline underline-offset-2 hover:text-ink">Send an enquiry</Link>.</p>
         </div>
         <div className="lg:col-span-5">
           <MatchCard />
@@ -70,7 +70,7 @@ export function TrustStrip() {
   const items: Array<[string, string]> = [
     ['One tutor, one student', 'Every lesson is one-on-one, with the same tutor each week.'],
     ['Checked before they meet your child', 'Interviewed, ID-checked and WWCC-verified.'],
-    [`A reply within ${AGENCY.policies.replyWithinHours} hours`, 'From the founder, not a call centre.'],
+    ['A call back the same day', `Usually within ${AGENCY.callBack.usualHours} hours, ${AGENCY.callBack.hoursFrom} to ${AGENCY.callBack.hoursTo}. From the founder, not a call centre.`],
     ['No joining fee, no lock-in', 'Pay after each lesson. Pause or stop any time.'],
   ];
   return (
@@ -92,8 +92,8 @@ export function TrustStrip() {
 export const STEPS = [
   {
     n: '1',
-    title: 'Tell us what you need',
-    body: 'Year level, subject, and whether you want lessons online or at home. The form takes two minutes.',
+    title: 'Request a call',
+    body: `Leave your number, the year level and the subject. ${AGENCY.founder.firstName} calls you back, usually within two hours, always within one business day, to hear what your child needs.`,
   },
   {
     n: '2',
@@ -117,7 +117,7 @@ export function HowItWorks({ compact = false }: { compact?: boolean }) {
     <Section
       id="how"
       eyebrow="How it works"
-      heading="From enquiry to the right tutor, in days."
+      heading="From one phone call to the right tutor, in days."
       lead={compact ? undefined : 'No call centres, no random allocation. You deal with one person, and your tutor is hand-picked.'}
       tone="surface"
     >
@@ -139,44 +139,48 @@ export function HowItWorks({ compact = false }: { compact?: boolean }) {
 // ---------------------------------------------------------------------------
 
 export function SubjectGrid() {
-  const maths = SUBJECTS.filter((s) => s.key !== 'physics');
-  const physics = SUBJECTS.filter((s) => s.key === 'physics');
+  const maths = CORE_SUBJECTS.filter((s) => s.group === 'maths');
+  const science = CORE_SUBJECTS.filter((s) => s.group === 'science');
+  const row = (label: string, years: string, key: string) => (
+    <li key={key} className="py-3 flex items-baseline justify-between gap-4">
+      <span className="text-sm text-ink">{label}</span>
+      <span className="text-2xs text-ink-soft whitespace-nowrap">{years}</span>
+    </li>
+  );
   return (
     <Section
       id="subjects"
       eyebrow="Subjects and levels"
-      heading="Maths from Year 7 to Extension 2. Physics for the HSC."
-      lead={<>We keep the list short so every tutor we send is strong in what they teach. Anything else, ask. If we cannot cover it well, we will say so. In-home lessons are matched by suburb: see <Link href="/tutoring" className="text-forest underline underline-offset-2">where we tutor</Link>.</>}
+      heading="Maths and science first. Other HSC subjects and the IB by request."
+      lead={<>Maths and the sciences are the core: every tutor is tested by the founder before they meet a student. English, economics, business, legal and history are matched only when a tutor has passed our test in that subject. In-home lessons are matched by suburb: see <Link href="/tutoring" className="text-forest underline underline-offset-2">where we tutor</Link>.</>}
     >
-      <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+      <div className="grid md:grid-cols-3 gap-6 md:gap-8">
         <div className="rounded-md border border-rule bg-surface p-6">
           <div className="flex items-baseline justify-between mb-4">
             <h3 className="font-display text-2xl tracking-tighter text-ink">Mathematics</h3>
             <Link href="/maths-tutoring" className="text-xs text-forest hover:underline">Maths tutoring →</Link>
           </div>
-          <ul className="divide-y divide-rule">
-            {maths.map((s) => (
-              <li key={s.key} className="py-3 flex items-baseline justify-between gap-4">
-                <span className="text-sm text-ink">{s.label}</span>
-                <span className="text-2xs text-ink-soft whitespace-nowrap">{s.years}</span>
-              </li>
-            ))}
-          </ul>
+          <ul className="divide-y divide-rule">{maths.map((s) => row(s.label, s.years, s.key))}</ul>
         </div>
         <div className="rounded-md border border-rule bg-surface p-6">
           <div className="flex items-baseline justify-between mb-4">
-            <h3 className="font-display text-2xl tracking-tighter text-ink">Physics</h3>
-            <Link href="/physics-tutoring" className="text-xs text-forest hover:underline">Physics tutoring →</Link>
+            <h3 className="font-display text-2xl tracking-tighter text-ink">Science</h3>
+            <Link href="/science-tutoring" className="text-xs text-forest hover:underline">Science tutoring →</Link>
+          </div>
+          <ul className="divide-y divide-rule">{science.map((s) => row(s.label, s.years, s.key))}</ul>
+          <p className="mt-4 text-xs text-ink-soft"><Link href="/physics-tutoring" className="underline underline-offset-2 hover:text-ink">Physics in detail →</Link></p>
+        </div>
+        <div className="rounded-md border border-rule bg-surface p-6">
+          <div className="flex items-baseline justify-between mb-4">
+            <h3 className="font-display text-2xl tracking-tighter text-ink">By request, and IB</h3>
+            <Link href="/subjects" className="text-xs text-forest hover:underline">All subjects →</Link>
           </div>
           <ul className="divide-y divide-rule">
-            {physics.map((s) => (
-              <li key={s.key} className="py-3 flex items-baseline justify-between gap-4">
-                <span className="text-sm text-ink">{s.label}</span>
-                <span className="text-2xs text-ink-soft whitespace-nowrap">{s.years}</span>
-              </li>
-            ))}
-            <li className="py-3 text-sm text-ink-muted">
-              Modules 1–8 of the NSW syllabus, with the maths behind each one made explicit.
+            <li className="py-3 text-sm text-ink-muted leading-relaxed">
+              {REQUEST_SUBJECTS.map((s) => s.label).join(', ')}: matched when we have a tutor who has passed our test in it.
+            </li>
+            <li className="py-3 text-sm text-ink-muted leading-relaxed">
+              IB Diploma: {IB_SUBJECTS.map((s) => s.short.replace('IB ', '')).join(', ')}, SL and HL, taught to the IB mark schemes. <Link href="/ib-tutoring" className="text-forest underline underline-offset-2">IB tutoring →</Link>
             </li>
           </ul>
           <p className="mt-4 text-xs text-ink-soft">University maths and physics by arrangement.</p>
@@ -192,10 +196,10 @@ export function SubjectGrid() {
 
 export const WHY = [
   ['The same tutor, every week', 'Consistency is how progress happens. We do not rotate tutors on you mid-term.'],
-  ['A real person who answers', 'You deal directly with the founder. Messages get a reply the same day, not a ticket number.'],
+  ['A real person who calls back', 'You deal directly with the founder. Leave a number and he calls, usually within two hours, not a ticket number.'],
   ['Verified, vetted tutors', 'Every tutor is 18 or older, WWCC-verified, ID-checked, and chosen for real results in their subject.'],
   ['Honest pricing, no lock-in', 'Rates are on the website, you pay as you go, and nothing is charged to your card without your say-so.'],
-  ['Home or online', 'Lessons at your home, a local library, or online, whichever suits your week. Switch whenever you like.'],
+  ['Home, online, or a small class', 'Lessons at your home in Sydney, online anywhere in Australia, or a class of six in Kogarah. Switch whenever you like.'],
   ['Fair pay, better tutors', 'We pay tutors properly, so the good ones stay. That is who teaches your child.'],
 ] as const;
 
@@ -280,7 +284,7 @@ export function TutorBand() {
     <Section tone="forest" eyebrow="Become a tutor" heading="Tutor with Crestio.">
       <div className="grid lg:grid-cols-12 gap-8 items-start">
         <p className="lg:col-span-7 text-base text-cream/85 leading-relaxed">
-          We are building a small team of maths and physics tutors who are good at their subject and good with people. Pay set to your level and experience, students matched to your strengths, flexible hours, online or local in-home work.
+          We are building a small team of maths and science tutors, plus tutors for the other HSC subjects, who are good at their subject and good with people. $40 to $70 an hour by level and mode, paid every week, students matched to your strengths, online or local in-home work.
         </p>
         <div className="lg:col-span-5 flex flex-col sm:flex-row gap-3 lg:justify-end">
           <Link href="/tutors" className="btn border border-cream/30 text-cream hover:bg-cream/10 px-6">How it works</Link>
@@ -380,9 +384,9 @@ export function FinalBand() {
       <div className="max-w-2xl">
         <h2 className="font-display text-3xl md:text-4xl tracking-tighter text-cream text-balance mb-4">Ready to find your tutor?</h2>
         <p className="text-base text-cream/80 leading-relaxed mb-7">
-          Book a free, no-obligation consultation. Tell us what your child needs, and we will match the right tutor.
+          Leave your number. {AGENCY.founder.firstName} calls you back, hears what your child needs, and matches the right tutor. No obligation, no joining fee.
         </p>
-        <CtaRow tone="forest" />
+        <CtaRow tone="forest" secondaryHref="/enquire" secondaryLabel="Send an enquiry instead" />
       </div>
     </Section>
   );

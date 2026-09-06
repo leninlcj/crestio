@@ -7,7 +7,7 @@ export default function ApplyToTutor() {
   return (
     <AgencyPage
       title="Apply to tutor"
-      description="Apply to tutor maths or physics with Crestio Tutoring in Sydney or online. Five minutes. We read every application personally."
+      description="Apply to tutor maths, science or another HSC subject with Crestio Tutoring in Sydney or online. Five minutes. We read every application personally."
       path="/tutors/apply"
       ogTitle="Apply to tutor with Crestio."
       ogSubtitle="Maths and physics. Sydney and online. Five minutes."

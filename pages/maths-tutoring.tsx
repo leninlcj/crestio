@@ -12,7 +12,7 @@ const MATHS_FAQ = [
 ];
 
 export default function MathsTutoring() {
-  const maths = SUBJECTS.filter((s) => s.key !== 'physics');
+  const maths = SUBJECTS.filter((s) => s.group === 'maths');
   return (
     <AgencyPage
       title="Maths tutoring, Years 7–12 and HSC"

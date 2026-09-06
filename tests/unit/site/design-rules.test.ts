@@ -12,6 +12,7 @@ const ROOT = path.resolve(__dirname, '../../..');
 const PUBLIC_DIRS = ['components/agency', 'components/marketing'];
 const PUBLIC_FILES = [
   'pages/index.tsx', 'pages/how-it-works.tsx', 'pages/maths-tutoring.tsx', 'pages/physics-tutoring.tsx',
+  'pages/science-tutoring.tsx', 'pages/ib-tutoring.tsx', 'pages/subjects.tsx', 'pages/classes.tsx', 'pages/request-a-call.tsx', 'lib/classes.ts', 'lib/notify.ts',
   'pages/pricing.tsx', 'pages/tutors/index.tsx', 'pages/tutors/apply.tsx', 'pages/tutors/agreement.tsx',
   'pages/enquire.tsx', 'pages/faq.tsx', 'pages/about.tsx', 'pages/programs.tsx', 'pages/tutors/handbook.tsx',
   'pages/tutoring/index.tsx', 'pages/tutoring/[suburb].tsx', 'pages/es.tsx', 'lib/programs.ts', 'lib/tutorHandbook.ts', 'lib/suburbs.ts', 'lib/enquiryCopy.ts', 'pages/contact.tsx', 'pages/child-safe.tsx',

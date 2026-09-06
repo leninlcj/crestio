@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { AgencyPage, Section, CtaRow } from '../components/agency/AgencyPage';
 import { RateTable, FinalBand } from '../components/agency/blocks';
 import { AGENCY, INCLUDED, FAQS, PREPAID_BLOCK, REFERRAL } from '../lib/agency';
+import { CLASS_RULES, GROUP_CLASSES, TERM_1_2027, classTermPrice, formatDollars } from '../lib/classes';
 import { tutoringServiceSchema, breadcrumb, agencyFaqSchema } from '../lib/agencySchema';
 
 const PRICING_FAQ = FAQS.filter((f) => /cost|cancellation|pay|guarantee/i.test(f.q));
@@ -10,10 +11,10 @@ export default function Pricing() {
   return (
     <AgencyPage
       title="Pricing"
-      description="Simple hourly rates for maths and physics tutoring in Sydney and online. No joining fee, no lock-in, first lesson guaranteed. Pay by card after each lesson or in prepaid blocks."
+      description="Simple hourly rates for maths, science, HSC and IB tutoring in Sydney and online, and small-group classes at less than half the one-to-one price. No joining fee, no lock-in, first lesson guaranteed."
       path="/pricing"
       ogTitle="Simple hourly rates. No joining fee. No lock-in."
-      ogSubtitle="Maths and physics tutoring, Years 7–12. Sydney in-home and online."
+      ogSubtitle="Maths, science, HSC and IB tutoring, Years 7–12. Sydney in-home and online."
       jsonLd={[tutoringServiceSchema('all'), agencyFaqSchema(PRICING_FAQ), breadcrumb([{ name: 'Home', url: '/' }, { name: 'Pricing', url: '/pricing' }])]}
     >
       <section className="px-6 md:px-12 pt-14 md:pt-20 pb-10 max-w-6xl mx-auto">
@@ -41,7 +42,44 @@ export default function Pricing() {
         </div>
       </section>
 
-      <Section tone="surface" eyebrow="The fine print, in plain words" heading="How paying works.">
+      <Section tone="surface" eyebrow="Small-group classes" heading="Classes of six, at less than half the one-to-one price.">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="lg:col-span-7">
+            <div className="rounded-md border border-rule bg-cream overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-2xs uppercase tracking-widest text-ink-soft border-b border-rule">
+                    <th className="text-left font-medium px-4 md:px-5 py-3">Class</th>
+                    <th className="text-right font-medium px-4 md:px-5 py-3">Per hour</th>
+                    <th className="text-right font-medium px-4 md:px-5 py-3">Per term</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-rule">
+                  {GROUP_CLASSES.filter((c) => c.term === TERM_1_2027.label).map((c) => (
+                    <tr key={c.key}>
+                      <td className="px-4 md:px-5 py-3.5 align-top">
+                        <div className="text-ink">{c.title}</div>
+                        <div className="text-2xs text-ink-soft mt-0.5">{c.hoursPerWeek === 1.5 ? '90 minutes' : `${c.hoursPerWeek} hours`} a week, {c.weeks} weeks</div>
+                      </td>
+                      <td className="px-4 md:px-5 py-3.5 text-right align-top num tabular text-ink whitespace-nowrap">{formatDollars(c.pricePerHour)}</td>
+                      <td className="px-4 md:px-5 py-3.5 text-right align-top num tabular text-ink whitespace-nowrap">{formatDollars(classTermPrice(c))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="px-4 md:px-5 py-3 border-t border-rule text-2xs text-ink-soft leading-relaxed">
+                Per student. {CLASS_RULES.minStudents} to {CLASS_RULES.maxStudents} students, taught by the founder, in Kogarah with an online seat. {CLASS_RULES.proRata}
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-5 text-sm text-ink-muted leading-relaxed">
+            <p className="mb-4">A class follows the course in step with school, one topic ahead, with a marked past-paper set every week. It is the right choice for a student who is keeping up and wants to get ahead; one-to-one is the right choice for a student who is stuck. Many families do both before exams.</p>
+            <p><Link href="/classes" className="text-forest underline underline-offset-2">The {TERM_1_2027.label} classes and the January intensives →</Link></p>
+          </div>
+        </div>
+      </Section>
+
+      <Section eyebrow="The fine print, in plain words" heading="How paying works.">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             ['Pay as you go', 'After each lesson you get an invoice with a secure card link. Nothing is charged to your card without your say-so.'],
@@ -60,7 +98,7 @@ export default function Pricing() {
         </p>
       </Section>
 
-      <Section eyebrow="Pricing questions" heading="What parents ask before they book." narrow>
+      <Section tone="surface" eyebrow="Pricing questions" heading="What parents ask before they book." narrow>
         <div className="divide-y divide-rule border-y border-rule">
           {PRICING_FAQ.map((f) => (
             <details key={f.q} className="group py-4">

@@ -100,7 +100,9 @@ export function Section({
   );
 }
 
-export function CtaRow({ tone = 'cream' }: { tone?: 'cream' | 'forest' }) {
+// The primary action everywhere is a call request: a number and a good time,
+// and the founder calls back. The long enquiry form stays one click away.
+export function CtaRow({ tone = 'cream', secondaryHref = '/pricing', secondaryLabel = 'See pricing' }: { tone?: 'cream' | 'forest'; secondaryHref?: string; secondaryLabel?: string }) {
   const secondary = tone === 'forest'
     ? 'btn border border-cream/30 text-cream hover:bg-cream/10 px-6 w-full sm:w-auto'
     : 'btn-secondary px-6 w-full sm:w-auto';
@@ -109,8 +111,8 @@ export function CtaRow({ tone = 'cream' }: { tone?: 'cream' | 'forest' }) {
     : 'btn-primary px-6 w-full sm:w-auto';
   return (
     <div className="flex flex-col sm:flex-row gap-3">
-      <a href="/enquire" className={primary}>Book a free consultation</a>
-      <a href="/pricing" className={secondary}>See pricing</a>
+      <a href="/request-a-call" className={primary}>Request a call</a>
+      <a href={secondaryHref} className={secondary}>{secondaryLabel}</a>
     </div>
   );
 }

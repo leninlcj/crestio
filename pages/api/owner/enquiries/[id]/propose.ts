@@ -39,6 +39,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: `${tutor.name} does not have a verified, current Working With Children Check on file. Record it on their tutor page first.` });
   }
 
+  if (!enq.email) return res.status(400).json({ error: 'This family gave a phone number only. Call them, or add their email to the household after converting.' });
+
   const built = buildTutorProposalEmail({
     parentName: enq.parent_name,
     studentFirstName: enq.student_first_name ?? null,

@@ -133,9 +133,9 @@ export const TUTOR_AGREEMENT: LegalDoc = {
         'Per hour of lesson delivered. Confirmed in writing for each student before you accept them.',
       ],
       bullets: [
-        `Years 7–10 Mathematics: $${TUTOR_PAY_BANDS.years_7_10.online} online · $${TUTOR_PAY_BANDS.years_7_10.inHome} in-home`,
-        `Years 11–12 HSC (Mathematics Standard 2, Advanced, Extension 1, Physics): $${TUTOR_PAY_BANDS.hsc.online} online · $${TUTOR_PAY_BANDS.hsc.inHome} in-home`,
-        `Mathematics Extension 2: $${TUTOR_PAY_BANDS.ext2.online} online · $${TUTOR_PAY_BANDS.ext2.inHome} in-home`,
+        `Years 7–10 Mathematics and Science: $${TUTOR_PAY_BANDS.years_7_10.online} online · $${TUTOR_PAY_BANDS.years_7_10.inHome} in-home`,
+        `Years 11–12 HSC (Mathematics Standard 2, Advanced and Extension 1; Physics, Chemistry, Biology; English, Economics, Business Studies, Legal Studies, Modern and Ancient History): $${TUTOR_PAY_BANDS.hsc.online} online · $${TUTOR_PAY_BANDS.hsc.inHome} in-home`,
+        `Mathematics Extension 2 and IB Diploma subjects: $${TUTOR_PAY_BANDS.ext2.online} online · $${TUTOR_PAY_BANDS.ext2.inHome} in-home`,
         'In-home fees include your travel. Lessons longer or shorter than an hour are paid pro rata.',
         `Paid weekly, within 7 days of the end of the week of the lesson. Late cancellation by the family (under ${H} hours): full fee.`,
       ],

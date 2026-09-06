@@ -126,5 +126,26 @@ begin
     raise notice 'ok  reviews: rating check enforced';
   end;
 
+  -- Chunk 6: call requests. Email may be null when a phone exists; never both null.
+  insert into public.enquiries (organization_id, parent_name, email, phone, year_level, preferred_contact, best_time)
+  values (v_org, 'Priya Nair', null, '0400 000 000', 'Year 11', 'call', 'evening');
+  perform public._expect('call request stored without email', (select count(*)::int from public.enquiries where parent_name = 'Priya Nair' and email is null), 1);
+  perform public._expect('call_attempts defaults to 0', (select call_attempts from public.enquiries where parent_name = 'Priya Nair'), 0);
+  begin
+    insert into public.enquiries (organization_id, parent_name, email, phone, year_level) values (v_org, 'Nobody', null, null, 'Year 9');
+    raise exception 'an enquiry with neither email nor phone should have been rejected';
+  exception when check_violation then
+    raise notice 'ok  enquiries: contact-present check enforced';
+  end;
+  begin
+    insert into public.enquiries (organization_id, parent_name, email, year_level, preferred_contact) values (v_org, 'Bad Contact', 'x@example.com', 'Year 9', 'carrier_pigeon');
+    raise exception 'preferred_contact outside email/call should have been rejected';
+  exception when check_violation then
+    raise notice 'ok  enquiries: preferred_contact check enforced';
+  end;
+  -- The old long form still works unchanged.
+  insert into public.enquiries (organization_id, parent_name, email, year_level, subjects) values (v_org, 'Sam Lee', 'sam@example.com', 'Year 8', array['maths_7_10']);
+  perform public._expect('long form default preferred_contact', (select preferred_contact from public.enquiries where parent_name = 'Sam Lee'), 'email');
+
   raise notice 'ALL SCENARIOS PASSED';
 end $$;

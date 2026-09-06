@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useIsSignedIn } from '../../lib/useIsSignedIn';
+import { AGENCY } from '../../lib/agency';
 
 // Public site navigation for Crestio Tutoring. Signed-in tutors/parents get
 // a "Go to app" link instead of "Sign in".
 
 const LINKS: Array<{ href: string; label: string }> = [
   { href: '/how-it-works', label: 'How it works' },
-  { href: '/maths-tutoring', label: 'Maths' },
-  { href: '/physics-tutoring', label: 'Physics' },
+  { href: '/subjects', label: 'Subjects' },
+  { href: '/classes', label: 'Classes' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/tutors', label: 'For tutors' },
   { href: '/faq', label: 'FAQ' },
@@ -68,7 +69,10 @@ export default function MarketingNav() {
           ) : (
             <Link href="/auth/signin" className="text-sm text-ink-muted hover:text-ink transition-colors">Sign in</Link>
           )}
-          <Link href="/enquire" className="btn-primary text-xs px-4">Book a free consultation</Link>
+          {AGENCY.phone && AGENCY.phoneDisplay && (
+            <a href={`tel:${AGENCY.phone}`} className="text-sm text-ink num tabular hover:text-forest transition-colors">{AGENCY.phoneDisplay}</a>
+          )}
+          <Link href="/request-a-call" className="btn-primary text-xs px-4">Request a call</Link>
         </div>
 
         <button
@@ -95,8 +99,12 @@ export default function MarketingNav() {
               ))}
             </div>
             <div className="pt-2 space-y-3">
-              <Link href="/enquire" className="btn-primary w-full text-base py-3 block text-center">Book a free consultation</Link>
-              <Link href="/tutors/apply" className="btn-secondary w-full text-base py-3 block text-center">Apply to tutor</Link>
+              {AGENCY.phone && AGENCY.phoneDisplay && (
+                <a href={`tel:${AGENCY.phone}`} className="btn-secondary w-full text-base py-3 block text-center num tabular">Call {AGENCY.phoneDisplay}</a>
+              )}
+              <Link href="/request-a-call" className="btn-primary w-full text-base py-3 block text-center">Request a call</Link>
+              <Link href="/enquire" className="btn-secondary w-full text-base py-3 block text-center">Send an enquiry</Link>
+              <Link href="/tutors/apply" className="text-base text-ink-muted py-1.5 block text-center">Apply to tutor</Link>
               {signedIn ? (
                 <Link href="/app" className="text-base text-ink-muted py-1.5 block text-center">Go to app</Link>
               ) : (

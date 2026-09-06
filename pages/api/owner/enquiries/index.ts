@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let query = ctx.admin
     .from('enquiries')
-    .select('id, created_at, updated_at, status, who, parent_name, email, phone, student_first_name, year_level, subjects, mode, suburb, need, message, source, owner_notes, assigned_tutor_id, household_id, student_id, contacted_at, converted_at')
+    .select('*')  // '*' so the list works before and after the chunk 6 columns exist
     .eq('organization_id', org.id)
     .order('created_at', { ascending: false })
     .limit(500);
@@ -47,5 +47,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .eq('archived', false)
     .order('name');
 
-  return res.status(200).json({ enquiries: rows, tutors: tutors ?? [] });
+  const safe = rows.map((r: Record<string, unknown>) => {
+    const { ip_hash: _ip, ...rest } = r;
+    return rest;
+  });
+  return res.status(200).json({ enquiries: safe, tutors: tutors ?? [] });
 }

@@ -7,15 +7,16 @@ test.describe('agency site: pages', () => {
   test('home renders the hero, rate card and enquiry CTA', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/right tutor/i);
-    await expect(page.locator('main')).toContainText('$80');
+    await expect(page.locator('main')).toContainText('$75');
     await expect(page.locator('main')).toContainText('$125');
-    await expect(page.locator('a[href="/enquire"]').first()).toBeVisible();
+    await expect(page.locator('main a[href="/request-a-call"]').first()).toBeVisible();
+    await expect(page.locator('main a[href="/enquire"]').first()).toBeVisible();
     // No fabricated social proof.
     await expect(page.locator('main')).not.toContainText(/\d+\+ (tutors|families|students)/);
   });
 
   test('every nav destination renders a heading', async ({ page }) => {
-    for (const path of ['/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/faq', '/about', '/contact', '/tutors/apply', '/enquire']) {
+    for (const path of ['/how-it-works', '/subjects', '/classes', '/maths-tutoring', '/physics-tutoring', '/science-tutoring', '/ib-tutoring', '/pricing', '/tutors', '/faq', '/about', '/contact', '/tutors/apply', '/enquire', '/request-a-call']) {
       const res = await page.goto(path);
       expect(res?.status(), path).toBe(200);
       await expect(page.getByRole('heading', { level: 1 }), path).toBeVisible();
@@ -31,7 +32,7 @@ test.describe('agency site: pages', () => {
   });
 
   test('rendered pages carry no em dashes, badges or emoji', async ({ request }) => {
-    for (const path of ['/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement', '/faq', '/about', '/contact', '/enquire', '/privacy', '/terms', '/cookies', '/child-safe', '/report', '/auth/signin', '/auth/signup', '/review/abcdefghijklmnopqrstuvwxyz012345']) {
+    for (const path of ['/', '/how-it-works', '/maths-tutoring', '/physics-tutoring', '/science-tutoring', '/ib-tutoring', '/subjects', '/classes', '/request-a-call', '/pricing', '/tutors', '/tutors/apply', '/tutors/agreement', '/faq', '/about', '/contact', '/enquire', '/privacy', '/terms', '/cookies', '/child-safe', '/report', '/auth/signin', '/auth/signup', '/review/abcdefghijklmnopqrstuvwxyz012345']) {
       const res = await request.get(path);
       expect(res.status(), path).toBe(200);
       const html = await res.text();
@@ -125,7 +126,7 @@ test.describe('agency site: chunk 3 pages', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText('en español');
     await page.getByRole('button', { name: 'Mi hijo o hija' }).click();
     await page.getByRole('button', { name: 'Continuar' }).click();
-    await page.getByRole('button', { name: 'Año 10' }).click();
+    await page.locator('#consulta-completa').getByRole('button', { name: 'Año 10' }).click();
     await page.getByRole('button', { name: 'Continuar' }).click();
     await page.getByRole('button', { name: /Matemáticas, años 7 a 10/ }).click();
     await page.getByRole('button', { name: 'Continuar' }).click();
@@ -154,7 +155,7 @@ test.describe('agency site: chunk 4 pages', () => {
     await expect(page.getByRole('heading', { name: /January HSC head start/ })).toBeVisible();
     await expect(page.getByRole('heading', { name: /Year 10 to 11 maths bridging/ })).toBeVisible();
     const html = await (await request.get('/programs')).text();
-    for (const price of ['$380', '$440', '$500', '$320']) expect(html).toContain(price);
+    for (const price of ['$340', '$440', '$500', '$300']) expect(html).toContain(price);
     expect(html).toContain('/enquire?program=hsc-head-start');
     expect(html).toContain('/enquire?program=year-11-bridging');
     expect(html).toContain('"FAQPage"');
@@ -169,7 +170,7 @@ test.describe('agency site: chunk 4 pages', () => {
     await next();
     await expect(page.getByRole('button', { name: 'Year 12' })).toHaveAttribute('aria-pressed', 'true');
     await next();
-    await page.getByRole('button', { name: /Physics/ }).click();
+    await page.getByRole('button', { name: /^Physics/ }).click();
     await next();
     await page.getByRole('button', { name: 'Online', exact: true }).click();
     await next();
@@ -191,7 +192,7 @@ test.describe('agency site: chunk 4 pages', () => {
     await next();
     await page.getByRole('button', { name: 'Year 11' }).click();
     await next();
-    await page.getByRole('button', { name: /Physics/ }).click();
+    await page.getByRole('button', { name: /^Physics/ }).click();
     await next();
     await next();
     await next();
@@ -227,7 +228,7 @@ test.describe('agency site: chunk 4 pages', () => {
     await page.fill('#ta-email', 'sam@example.com');
     await page.fill('#ta-phone', '0400 000 000');
     await page.fill('#ta-suburb', 'Kogarah');
-    await page.getByRole('button', { name: /Physics/ }).click();
+    await page.getByRole('button', { name: /^Physics/ }).click();
     await page.fill('#ta-quals', 'ATAR 97. Physics 93.');
     await page.getByRole('button', { name: 'Yes, current' }).click();
     await page.getByRole('button', { name: 'Both' }).click();
@@ -272,8 +273,8 @@ test.describe('agency site: enquiry form', () => {
     await page.getByRole('button', { name: 'Year 11' }).click();
     await next();
 
-    await expect(page.getByRole('button', { name: /Physics/ })).toBeVisible();
-    await page.getByRole('button', { name: /Physics/ }).click();
+    await expect(page.getByRole('button', { name: /^Physics/ })).toBeVisible();
+    await page.getByRole('button', { name: /^Physics/ }).click();
     await next();
 
     await page.getByRole('button', { name: 'In-home' }).click();
@@ -422,5 +423,98 @@ test.describe('agency site: chunk 5', () => {
     expect(bad.status()).toBe(404);
     const html = await (await request.get(`/review/${token}`)).text();
     expect(html).toContain('noindex');
+  });
+});
+
+test.describe('agency site: chunk 6', () => {
+  test('the call request form validates, then posts preferred_contact call and shows the promise', async ({ page }) => {
+    let body: Record<string, unknown> | null = null;
+    await page.route('**/api/enquiries', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'e-test', stored: true }) });
+    });
+    await page.goto('/request-a-call?year=Year%2011&subject=physics');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/one call/i);
+    await page.getByRole('button', { name: 'Request a call' }).click();
+    await expect(page.getByText('Enter your name.')).toBeVisible();
+    await expect(page.getByText('Enter the number to call.')).toBeVisible();
+    await page.getByLabel('Your name').fill('Priya Nair');
+    await page.getByLabel('Mobile number').fill('0400 000 000');
+    await page.getByLabel('Best time to call').selectOption('evening');
+    await page.getByRole('button', { name: 'Request a call' }).click();
+    await expect(page.getByText('Call request received')).toBeVisible();
+    await expect(page.locator('main')).toContainText('We will call 0400 000 000');
+    await expect(page.locator('main')).toContainText('always within one business day');
+    expect(body).not.toBeNull();
+    expect(body!.preferred_contact).toBe('call');
+    expect(body!.phone).toBe('0400 000 000');
+    expect(body!.year_level).toBe('Year 11');
+    expect(body!.subjects).toEqual(['physics']);
+    expect(body!.best_time).toBe('evening');
+    expect(body!.email).toBeNull();
+  });
+
+  test('a class link registers interest with the class key fixed', async ({ page }) => {
+    let body: Record<string, unknown> | null = null;
+    await page.route('**/api/enquiries', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'e-test', stored: true }) });
+    });
+    await page.goto('/classes');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/six students/i);
+    await expect(page.locator('main')).toContainText('$900');
+    await expect(page.locator('main')).toContainText('$600');
+    await page.locator('a[href="/request-a-call?class=y12_physics"]').first().click();
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Year 12 Physics');
+    await page.getByLabel('Your name').fill('Priya Nair');
+    await page.getByLabel('Mobile number').fill('0400 000 000');
+    await page.getByRole('button', { name: 'Request a call' }).click();
+    await expect(page.locator('main')).toContainText('Registered interest: Year 12 Physics');
+    expect(body!.class_key).toBe('y12_physics');
+    expect(body!.year_level).toBe('Year 12');
+  });
+
+  test('the subjects page shows the three tiers with prices, and the pricing page shows the classes', async ({ page }) => {
+    await page.goto('/subjects');
+    await expect(page.locator('main')).toContainText('Maths and science');
+    await expect(page.locator('main')).toContainText('Other HSC subjects, by request');
+    await expect(page.locator('main')).toContainText('IB Diploma');
+    await expect(page.locator('main')).toContainText('English Advanced');
+    await expect(page.locator('main')).toContainText('IB Mathematics: Analysis and Approaches');
+    await page.goto('/pricing');
+    await expect(page.locator('main')).toContainText('Year 12 Mathematics Advanced');
+    await expect(page.locator('main')).toContainText('$45');
+    await expect(page.locator('main')).toContainText('$85');
+  });
+
+  test('the Spanish page leads with the call form and posts source es:', async ({ page }) => {
+    let body: Record<string, unknown> | null = null;
+    await page.route('**/api/enquiries', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, id: 'e-test', stored: true }) });
+    });
+    await page.goto('/es');
+    const form = page.locator('form[aria-label="Pide una llamada"]');
+    await expect(form).toBeVisible();
+    await form.getByLabel('Tu nombre').fill('Carla Ríos');
+    await form.getByLabel('Número de móvil').fill('0400 000 000');
+    await form.getByRole('button', { name: 'Año 10' }).click();
+    await form.getByRole('button', { name: 'Pedir una llamada' }).click();
+    await expect(page.getByText('Solicitud recibida')).toBeVisible();
+    expect(body!.preferred_contact).toBe('call');
+    expect(String(body!.source)).toMatch(/^es:/);
+  });
+
+  test('the enquiry form groups senior subjects into tiers', async ({ page }) => {
+    await page.goto('/enquire');
+    await page.getByRole('button', { name: 'My child' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('button', { name: 'Year 12' }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.locator('form')).toContainText('Maths and science');
+    await expect(page.locator('form')).toContainText('Other HSC subjects, by request');
+    await expect(page.locator('form')).toContainText('IB Diploma');
+    await expect(page.getByRole('button', { name: /^Chemistry/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Economics/ })).toBeVisible();
   });
 });

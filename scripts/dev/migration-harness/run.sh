@@ -3,13 +3,14 @@
 # exercises its triggers. Needs the postgresql server binaries on the machine
 # (brew install postgresql@16 on a Mac; apt install postgresql on Linux).
 #
-#   scripts/dev/migration-harness/run.sh supabase/migrations/20260906_agency_chunk5.sql
+#   scripts/dev/migration-harness/run.sh supabase/migrations/20260906_agency_chunk5.sql [more.sql ...]
 #
-# The migration is applied twice to prove it is idempotent, then the
-# scenarios in scenarios.sql run. Nothing here touches Supabase.
+# Each migration is applied twice, in order, to prove it is idempotent, then
+# the scenarios in scenarios.sql run. Nothing here touches Supabase.
 set -euo pipefail
 
-MIGRATION="${1:?path to migration .sql}"
+[ "$#" -ge 1 ] || { echo "usage: $0 migration.sql [more.sql ...]" >&2; exit 2; }
+MIGRATIONS=("$@")
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PGBIN="${PGBIN:-$(dirname "$(command -v pg_ctl 2>/dev/null || ls /usr/lib/postgresql/*/bin/pg_ctl 2>/dev/null | tail -1)")}"
 DATA="$(mktemp -d /tmp/crestio-pg.XXXXXX)"
@@ -32,8 +33,10 @@ for _ in $(seq 1 30); do "$PGBIN/pg_isready" -q && break; sleep 0.5; done
 
 psql -v ON_ERROR_STOP=1 -q -f "$HERE/stub-schema.sql"
 echo "stub schema loaded"
-psql -v ON_ERROR_STOP=1 -q -f "$MIGRATION"
-echo "migration applied (1st run)"
-psql -v ON_ERROR_STOP=1 -q -f "$MIGRATION"
-echo "migration applied (2nd run: idempotent)"
+for MIGRATION in "${MIGRATIONS[@]}"; do
+  psql -v ON_ERROR_STOP=1 -q -f "$MIGRATION"
+  echo "$(basename "$MIGRATION") applied (1st run)"
+  psql -v ON_ERROR_STOP=1 -q -f "$MIGRATION"
+  echo "$(basename "$MIGRATION") applied (2nd run: idempotent)"
+done
 psql -v ON_ERROR_STOP=1 -q -f "$HERE/scenarios.sql" 2>&1 | sed 's/^psql:.*NOTICE:  //'
